@@ -850,6 +850,37 @@ svg{display:block;flex:none}
 #tplA .hint,#tplC .hint{font-size:11px;color:var(--mut);font-weight:500}
 #tplC .hint{font-weight:600}
 
+/* ---------- écrans ERP Mata : chat agent IA ---------- */
+#tplA .chat{display:flex;flex-direction:column;gap:12px}
+#tplA .bub{max-width:88%;border-radius:12px;padding:11px 14px;font-size:12.5px;line-height:1.6}
+#tplA .bub.user{align-self:flex-end;background:var(--red-tint);border:1px solid var(--red-line);border-bottom-right-radius:4px}
+#tplA .bub.bot{align-self:flex-start;background:var(--card-2);border:1px solid var(--line);border-bottom-left-radius:4px}
+#tplA .bub .meta{font-size:10px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--mut);margin-bottom:5px;display:flex;align-items:center;gap:6px}
+#tplA .bub .meta svg{width:12px;height:12px}
+#tplA .bub b{font-weight:800}
+#tplA .srcs{display:flex;gap:6px;flex-wrap:wrap;margin-top:9px}
+#tplA .srcs .tag{background:var(--card-3);color:var(--ink-2)}
+#tplA .chatbar{display:flex;gap:9px;margin-top:4px}
+#tplA .chatbar .inp{flex:1}
+#tplA .quota{display:flex;flex-direction:column;gap:5px}
+#tplA .quota .cap2{display:flex;justify-content:space-between;font-size:11px;color:var(--ink-2)}
+#tplA .quota .cap2 b{font-family:'Fira Code',monospace;font-weight:600;color:var(--ink)}
+#tplC .chat{display:flex;flex-direction:column;gap:12px}
+#tplC .bub{max-width:88%;border-radius:16px;padding:12px 15px;font-size:12.5px;line-height:1.6;font-weight:600}
+#tplC .bub.user{align-self:flex-end;background:linear-gradient(140deg,var(--red),var(--red-2));color:#fff;border-bottom-right-radius:5px;box-shadow:var(--sh-red)}
+#tplC .bub.bot{align-self:flex-start;background:var(--card-2);border-bottom-left-radius:5px}
+#tplC .bub.user .meta{color:rgba(255,255,255,.8)}
+#tplC .bub .meta{font-size:10px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--mut);margin-bottom:5px;display:flex;align-items:center;gap:6px}
+#tplC .bub .meta svg{width:12px;height:12px}
+#tplC .bub b{font-weight:800}
+#tplC .srcs{display:flex;gap:6px;flex-wrap:wrap;margin-top:9px}
+#tplC .srcs .tag{background:var(--card-3);color:var(--ink-2)}
+#tplC .chatbar{display:flex;gap:9px;margin-top:4px}
+#tplC .chatbar .inp{flex:1}
+#tplC .quota{display:flex;flex-direction:column;gap:5px}
+#tplC .quota .cap2{display:flex;justify-content:space-between;font-size:11px;color:var(--ink-2);font-weight:600}
+#tplC .quota .cap2 b{font-family:'Fira Code',monospace;font-weight:600;color:var(--ink)}
+
 </style>
 <style>
 /* P&L strips per proposition */
@@ -925,9 +956,9 @@ svg{display:block;flex:none}
     <button class="ni" data-screen="creances" data-title="Créances &amp; Remboursements"><svg><use href="#i-coins"/></svg>Créances &amp; Remb.</button>
     <button class="ni" data-screen="transferts" data-title="Transferts"><svg><use href="#i-swap"/></svg>Transferts</button>
     <h2>ERP Mata</h2>
-    <button class="ni ext-b" data-screen="ia"><svg><use href="#i-bot"/></svg>Agent IA<span class="ext">Lecture</span></button>
-    <button class="ni ext-b" data-screen="audit"><svg><use href="#i-shield"/></svg>Audit central<span class="ext">ERP</span></button>
-    <button class="ni ext-b" data-screen="admin"><svg><use href="#i-sliders"/></svg>Administration<span class="ext">ERP</span></button>
+    <button class="ni ext-b" data-screen="ia" data-title="Agent IA"><svg><use href="#i-bot"/></svg>Agent IA<span class="ext">Lecture</span></button>
+    <button class="ni ext-b" data-screen="audit" data-title="Audit central"><svg><use href="#i-shield"/></svg>Audit central<span class="ext">ERP</span></button>
+    <button class="ni ext-b" data-screen="admin" data-title="Administration"><svg><use href="#i-sliders"/></svg>Administration<span class="ext">ERP</span></button>
   </nav>
   <div class="sb-foot">
     <div class="gel">
@@ -1361,6 +1392,99 @@ svg{display:block;flex:none}
       </div>
     </section>
 
+<!-- ÉCRAN : AGENT IA (A) -->
+    <section class="scr" data-scr="ia" hidden>
+      <div class="note-strip" style="margin:0 0 14px"><svg><use href="#i-bot"/></svg>Agent conseiller <b>central de l'ERP Mata</b>, autonomie niveau 1 : lecture, analyse, recommandation. Jamais d'écriture. Il interroge tous les modules par leurs API de lecture, mais reste borné par votre périmètre effectif.</div>
+      <div class="grid2" style="margin-top:0">
+        <div class="card">
+          <div class="ch"><h3>Analyse</h3><span class="hint-r">Accessible depuis le Super Dashboard · aperçu</span></div>
+          <div class="cb chat" data-chat>
+            <div class="bub user"><div class="meta">S. Doucouré · 22:41</div>Pourquoi un écart de 25 000 sur la Sous-caisse Marché aujourd'hui ?</div>
+            <div class="bub bot"><div class="meta"><svg><use href="#i-bot"/></svg>Agent Mata · lecture seule</div>Le comptage déclaré en aveugle (<b>1 250 000</b>) est inférieur de <b>25 000</b> au solde calculé (<b>1 275 000</b>). Deux pistes dans les données : la dépense Carburant « pas sûr » de 85 000 reste ouverte sur le périmètre voisin, et le versement de 25 000 du MaaS Pikine validé à 02:04 ressemble à 3 cas passés où le rattachement visait la mauvaise sous-caisse.<br><b>Recommandation :</b> vérifier le rattachement du versement MaaS Pikine avant de valider l'écart en correction.
+              <div class="srcs"><span class="tag">Comptes</span><span class="tag">Dépenses</span><span class="tag">Créances</span><span class="tag">Réconciliation</span><span class="tag api"><svg><use href="#i-lock"/></svg>Lecture</span></div>
+            </div>
+            <div class="chatbar">
+              <input class="inp" data-chat-input placeholder="Poser une question sur vos données…">
+              <button class="btn pri" data-chat-send><svg><use href="#i-arr"/></svg>Envoyer</button>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="ch"><h3>Cadre d'exécution</h3><span class="hint-r">Registre central des agents</span></div>
+          <div class="cb">
+            <div class="due"><span>Autonomie</span><span class="st mut">Niveau 1 — conseiller</span></div>
+            <div class="due"><span>Écriture</span><span class="st bad"><svg><use href="#i-lock"/></svg>Interdite</span></div>
+            <div class="due"><span>Périmètre</span><span class="hint" style="font-size:11.5px">Celui de S. Doucouré (Super Admin)</span></div>
+            <div class="due"><span>Registre</span><span class="st ok"><svg><use href="#i-check"/></svg>Déclaré</span></div>
+            <div class="quota" style="margin-top:10px">
+              <div class="cap2"><span>Quota mensuel</span><b>62 %</b></div>
+              <div class="prog"><i style="width:62%;background:var(--warn)"></i></div>
+            </div>
+            <div class="hint" style="margin-top:12px;font-size:11px;color:var(--mut)">Un seul agent transverse pour tout l'ERP : pas d'orchestration multi-agents, pas d'agent par module. Réponses limitées aux périmètres que vous pouvez déjà consulter.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ÉCRAN : AUDIT CENTRAL (A) -->
+    <section class="scr" data-scr="audit" hidden>
+      <div class="note-strip" style="margin:0 0 14px"><svg><use href="#i-shield"/></svg>Module transverse ERP. Toute modification est auditée. La <b>consultation</b> l'est aussi pour les périmètres hautement sensibles (Comptes, Transferts). created_at et updated_by sont automatiques et non modifiables.</div>
+      <div class="actionbar">
+        <div class="chips">
+          <button class="chip on">Tout</button><button class="chip">Modifications</button><button class="chip">Consultations</button><button class="chip">Hautement sensible</button>
+        </div>
+        <div class="sp" style="flex:1"></div>
+        <button class="btn ghost"><svg><use href="#i-dl"/></svg>Exporter le journal</button>
+      </div>
+      <div class="card">
+        <div class="ch"><h3>Journal d'audit — 27 août 2026</h3><span class="hint-r">Utilisateurs, agents et API confondus</span></div>
+        <div class="tbl-scroll"><table>
+          <thead><tr><th>Horodatage</th><th>Acteur</th><th>Module</th><th>Action</th><th>Détail</th></tr></thead>
+          <tbody>
+            <tr><td class="hint">27/08 19:02</td><td>S. Doucouré</td><td>Comptes</td><td><span class="st warn">Ajustement</span></td><td class="hint">+180 000 Caisse générale · double validation, validé O. Seck</td></tr>
+            <tr><td class="hint">27/08 16:42</td><td>S. Doucouré</td><td>Transferts</td><td><span class="st mut">Proposition</span></td><td class="hint">1 500 000 Caisse générale → Banque BOA · en attente 2ᵉ validation</td></tr>
+            <tr><td class="hint">27/08 15:22</td><td>API Achat</td><td>Dépenses</td><td><span class="st ok">Écriture auto</span></td><td class="hint">Lot BV-260827-04 · 850 000 · identifiant externe unique (idempotent)</td></tr>
+            <tr><td class="hint">27/08 14:05</td><td>O. Seck (DG)</td><td>Comptes</td><td><span class="st bad"><svg><use href="#i-eyeoff"/></svg>Consultation sensible</span></td><td class="hint">Historique Caisse générale · auditée car « hautement sensible »</td></tr>
+            <tr><td class="hint">27/08 08:12</td><td>API Bictorys</td><td>Comptes</td><td><span class="st ok">Lecture API</span></td><td class="hint">Rafraîchissement du solde Bictorys · 2 890 000</td></tr>
+            <tr><td class="hint">27/08 02:04</td><td>Moteur réconciliation</td><td>Créances</td><td><span class="st ok">Auto-validation</span></td><td class="hint">Collecte MaaS · Source A = Source B · 4 725 000</td></tr>
+            <tr><td class="hint">26/08 23:59</td><td>Système</td><td>Clôture</td><td><span class="st warn"><svg><use href="#i-clock"/></svg>Gel</span></td><td class="hint">2 opérations passées « À réconcilier » au filet de sécurité</td></tr>
+          </tbody>
+        </table></div>
+      </div>
+    </section>
+
+    <!-- ÉCRAN : ADMINISTRATION (A) -->
+    <section class="scr" data-scr="admin" hidden>
+      <div class="note-strip" style="margin:0 0 14px"><svg><use href="#i-sliders"/></svg>Référentiels ERP : les identités (fournisseurs, MaaS, gros clients) et les rôles vivent <b>ici</b>, pas dans Mata Finance. Un module peut demander un override local pour un écran précis, mais la permission reste gérée par le moteur central. Le rôle global n'est jamais redéfini dans un module.</div>
+      <div class="grid2b" style="margin-top:0">
+        <div class="card">
+          <div class="ch"><h3>Utilisateurs &amp; rôles</h3><span class="hint-r">Paquets de permissions par défaut + overrides</span></div>
+          <div class="tbl-scroll"><table style="min-width:520px">
+            <thead><tr><th>Utilisateur</th><th>Rôle</th><th>Override local</th></tr></thead>
+            <tbody>
+              <tr><td><b>O. Seck</b></td><td>DG</td><td class="hint">Créditeur — Caisse générale</td></tr>
+              <tr><td><b>S. Doucouré</b></td><td>Super Admin</td><td class="hint">Aucune auto-validation : la double validation reste intacte</td></tr>
+              <tr><td><b>F. Sarr</b></td><td>Directeur Opérations</td><td class="hint">Dépenses — création</td></tr>
+              <tr><td><b>M. Diop</b></td><td>Gestionnaire caisse</td><td class="hint">Déclarant comptage — Caisse générale</td></tr>
+              <tr><td><b>A. Ndiaye</b></td><td>Collecteur</td><td class="hint">Déclarant collecte — versements MaaS</td></tr>
+              <tr><td><b>I. Kane</b></td><td>Investisseur</td><td class="hint">Lecture seule — périmètre P&amp;L explicite, refus par défaut ailleurs</td></tr>
+            </tbody>
+          </table></div>
+        </div>
+        <div class="card">
+          <div class="ch"><h3>Référentiels &amp; registre</h3><span class="hint-r">Source unique — jamais dupliqués dans Mata Finance</span></div>
+          <div class="cb">
+            <div class="due"><span><b>MaaS</b> <span class="hint">référencés par entity_id</span></span><span class="amt">12</span></div>
+            <div class="due"><span><b>Fournisseurs</b> <span class="hint">compte financier auto à la validation</span></span><span class="amt">9</span></div>
+            <div class="due"><span><b>Gros clients</b></span><span class="amt">5</span></div>
+            <div class="due"><span><b>Gros bouchers</b></span><span class="amt">3</span></div>
+            <div class="due"><span><b>Agents IA déclarés</b> <span class="hint">registre central</span></span><span class="amt">1</span></div>
+            <div class="hint" style="margin-top:10px;font-size:11px;color:var(--mut)">La création d'un fournisseur ici déclenche la création de son compte financier dans Mata Finance, rattaché au gestionnaire par défaut de sa catégorie.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
   </div>
 </div>
 </div>
@@ -1575,8 +1699,9 @@ svg{display:block;flex:none}
     <button class="ni" data-screen="creances" data-title="Créances &amp; Remboursements"><svg><use href="#i-coins"/></svg>Créances &amp; Remb.</button>
     <button class="ni" data-screen="transferts" data-title="Transferts"><svg><use href="#i-swap"/></svg>Transferts</button>
     <h2>ERP Mata</h2>
-    <button class="ni ext-b" data-screen="ia"><svg><use href="#i-bot"/></svg>Agent IA<span class="ext">Lecture</span></button>
-    <button class="ni ext-b" data-screen="admin"><svg><use href="#i-sliders"/></svg>Administration<span class="ext">ERP</span></button>
+    <button class="ni ext-b" data-screen="ia" data-title="Agent IA"><svg><use href="#i-bot"/></svg>Agent IA<span class="ext">Lecture</span></button>
+    <button class="ni ext-b" data-screen="audit" data-title="Audit central"><svg><use href="#i-shield"/></svg>Audit central<span class="ext">ERP</span></button>
+    <button class="ni ext-b" data-screen="admin" data-title="Administration"><svg><use href="#i-sliders"/></svg>Administration<span class="ext">ERP</span></button>
   </nav>
   <div class="sb-foot">
     <div class="gel">
@@ -2009,6 +2134,99 @@ svg{display:block;flex:none}
       </div>
     </section>
 
+<!-- ÉCRAN : AGENT IA (C) -->
+    <section class="scr" data-scr="ia" hidden>
+      <div class="note-strip" style="margin:0 0 14px"><svg><use href="#i-bot"/></svg>Agent conseiller <b>central de l'ERP Mata</b>, autonomie niveau 1 : lecture, analyse, recommandation. Jamais d'écriture. Il interroge tous les modules par leurs API de lecture, mais reste borné par votre périmètre effectif.</div>
+      <div class="grid2" style="margin-top:0">
+        <div class="card">
+          <div class="chd"><h3>Analyse</h3><span class="hint-r">Accessible depuis le Super Dashboard · aperçu</span></div>
+          <div class="cbd chat" data-chat>
+            <div class="bub user"><div class="meta">S. Doucouré · 22:41</div>Pourquoi un écart de 25 000 sur la Sous-caisse Marché aujourd'hui ?</div>
+            <div class="bub bot"><div class="meta"><svg><use href="#i-bot"/></svg>Agent Mata · lecture seule</div>Le comptage déclaré en aveugle (<b>1 250 000</b>) est inférieur de <b>25 000</b> au solde calculé (<b>1 275 000</b>). Deux pistes dans les données : la dépense Carburant « pas sûr » de 85 000 reste ouverte sur le périmètre voisin, et le versement de 25 000 du MaaS Pikine validé à 02:04 ressemble à 3 cas passés où le rattachement visait la mauvaise sous-caisse.<br><b>Recommandation :</b> vérifier le rattachement du versement MaaS Pikine avant de valider l'écart en correction.
+              <div class="srcs"><span class="tag">Comptes</span><span class="tag">Dépenses</span><span class="tag">Créances</span><span class="tag">Réconciliation</span><span class="tag api"><svg><use href="#i-lock"/></svg>Lecture</span></div>
+            </div>
+            <div class="chatbar">
+              <input class="inp" data-chat-input placeholder="Poser une question sur vos données…">
+              <button class="btn pri" data-chat-send><svg><use href="#i-arr"/></svg>Envoyer</button>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="chd"><h3>Cadre d'exécution</h3><span class="hint-r">Registre central des agents</span></div>
+          <div class="cbd">
+            <div class="due"><span>Autonomie</span><span class="st mut">Niveau 1 — conseiller</span></div>
+            <div class="due"><span>Écriture</span><span class="st bad"><svg><use href="#i-lock"/></svg>Interdite</span></div>
+            <div class="due"><span>Périmètre</span><span class="hint" style="font-size:11.5px">Celui de S. Doucouré (Super Admin)</span></div>
+            <div class="due"><span>Registre</span><span class="st ok"><svg><use href="#i-check"/></svg>Déclaré</span></div>
+            <div class="quota" style="margin-top:10px">
+              <div class="cap2"><span>Quota mensuel</span><b>62 %</b></div>
+              <div class="prog"><i style="width:62%;background:var(--warn)"></i></div>
+            </div>
+            <div class="hint" style="margin-top:12px;font-size:11px;color:var(--mut)">Un seul agent transverse pour tout l'ERP : pas d'orchestration multi-agents, pas d'agent par module. Réponses limitées aux périmètres que vous pouvez déjà consulter.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ÉCRAN : AUDIT CENTRAL (C) -->
+    <section class="scr" data-scr="audit" hidden>
+      <div class="note-strip" style="margin:0 0 14px"><svg><use href="#i-shield"/></svg>Module transverse ERP. Toute modification est auditée. La <b>consultation</b> l'est aussi pour les périmètres hautement sensibles (Comptes, Transferts). created_at et updated_by sont automatiques et non modifiables.</div>
+      <div class="actionbar">
+        <div class="chips">
+          <button class="chip on">Tout</button><button class="chip">Modifications</button><button class="chip">Consultations</button><button class="chip">Hautement sensible</button>
+        </div>
+        <div class="sp" style="flex:1"></div>
+        <button class="btn ghost"><svg><use href="#i-dl"/></svg>Exporter le journal</button>
+      </div>
+      <div class="card">
+        <div class="chd"><h3>Journal d'audit — 27 août 2026</h3><span class="hint-r">Utilisateurs, agents et API confondus</span></div>
+        <div class="tbl-scroll"><table>
+          <thead><tr><th>Horodatage</th><th>Acteur</th><th>Module</th><th>Action</th><th>Détail</th></tr></thead>
+          <tbody>
+            <tr><td class="hint">27/08 19:02</td><td>S. Doucouré</td><td>Comptes</td><td><span class="st warn">Ajustement</span></td><td class="hint">+180 000 Caisse générale · double validation, validé O. Seck</td></tr>
+            <tr><td class="hint">27/08 16:42</td><td>S. Doucouré</td><td>Transferts</td><td><span class="st mut">Proposition</span></td><td class="hint">1 500 000 Caisse générale → Banque BOA · en attente 2ᵉ validation</td></tr>
+            <tr><td class="hint">27/08 15:22</td><td>API Achat</td><td>Dépenses</td><td><span class="st ok">Écriture auto</span></td><td class="hint">Lot BV-260827-04 · 850 000 · identifiant externe unique (idempotent)</td></tr>
+            <tr><td class="hint">27/08 14:05</td><td>O. Seck (DG)</td><td>Comptes</td><td><span class="st bad"><svg><use href="#i-eyeoff"/></svg>Consultation sensible</span></td><td class="hint">Historique Caisse générale · auditée car « hautement sensible »</td></tr>
+            <tr><td class="hint">27/08 08:12</td><td>API Bictorys</td><td>Comptes</td><td><span class="st ok">Lecture API</span></td><td class="hint">Rafraîchissement du solde Bictorys · 2 890 000</td></tr>
+            <tr><td class="hint">27/08 02:04</td><td>Moteur réconciliation</td><td>Créances</td><td><span class="st ok">Auto-validation</span></td><td class="hint">Collecte MaaS · Source A = Source B · 4 725 000</td></tr>
+            <tr><td class="hint">26/08 23:59</td><td>Système</td><td>Clôture</td><td><span class="st warn"><svg><use href="#i-clock"/></svg>Gel</span></td><td class="hint">2 opérations passées « À réconcilier » au filet de sécurité</td></tr>
+          </tbody>
+        </table></div>
+      </div>
+    </section>
+
+    <!-- ÉCRAN : ADMINISTRATION (C) -->
+    <section class="scr" data-scr="admin" hidden>
+      <div class="note-strip" style="margin:0 0 14px"><svg><use href="#i-sliders"/></svg>Référentiels ERP : les identités (fournisseurs, MaaS, gros clients) et les rôles vivent <b>ici</b>, pas dans Mata Finance. Un module peut demander un override local pour un écran précis, mais la permission reste gérée par le moteur central. Le rôle global n'est jamais redéfini dans un module.</div>
+      <div class="grid2b" style="margin-top:0">
+        <div class="card">
+          <div class="chd"><h3>Utilisateurs &amp; rôles</h3><span class="hint-r">Paquets de permissions par défaut + overrides</span></div>
+          <div class="tbl-scroll"><table style="min-width:520px">
+            <thead><tr><th>Utilisateur</th><th>Rôle</th><th>Override local</th></tr></thead>
+            <tbody>
+              <tr><td><b>O. Seck</b></td><td>DG</td><td class="hint">Créditeur — Caisse générale</td></tr>
+              <tr><td><b>S. Doucouré</b></td><td>Super Admin</td><td class="hint">Aucune auto-validation : la double validation reste intacte</td></tr>
+              <tr><td><b>F. Sarr</b></td><td>Directeur Opérations</td><td class="hint">Dépenses — création</td></tr>
+              <tr><td><b>M. Diop</b></td><td>Gestionnaire caisse</td><td class="hint">Déclarant comptage — Caisse générale</td></tr>
+              <tr><td><b>A. Ndiaye</b></td><td>Collecteur</td><td class="hint">Déclarant collecte — versements MaaS</td></tr>
+              <tr><td><b>I. Kane</b></td><td>Investisseur</td><td class="hint">Lecture seule — périmètre P&amp;L explicite, refus par défaut ailleurs</td></tr>
+            </tbody>
+          </table></div>
+        </div>
+        <div class="card">
+          <div class="chd"><h3>Référentiels &amp; registre</h3><span class="hint-r">Source unique — jamais dupliqués dans Mata Finance</span></div>
+          <div class="cbd">
+            <div class="due"><span><b>MaaS</b> <span class="hint">référencés par entity_id</span></span><span class="amt">12</span></div>
+            <div class="due"><span><b>Fournisseurs</b> <span class="hint">compte financier auto à la validation</span></span><span class="amt">9</span></div>
+            <div class="due"><span><b>Gros clients</b></span><span class="amt">5</span></div>
+            <div class="due"><span><b>Gros bouchers</b></span><span class="amt">3</span></div>
+            <div class="due"><span><b>Agents IA déclarés</b> <span class="hint">registre central</span></span><span class="amt">1</span></div>
+            <div class="hint" style="margin-top:10px;font-size:11px;color:var(--mut)">La création d'un fournisseur ici déclenche la création de son compte financier dans Mata Finance, rattaché au gestionnaire par défaut de sa catégorie.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
   </div>
 </div>
 </div>
@@ -2162,6 +2380,25 @@ document.querySelectorAll('.tpl').forEach(function(tpl){
     if(amt)amt.value='';
     toast('Transfert proposé — en attente d’une validation par un second (DG, Admin ou Super Admin)');
   });
+
+  /* agent IA — démo de conversation (lecture seule) */
+  var chatBox=tpl.querySelector('[data-chat]');
+  if(chatBox){
+    var cIn=chatBox.querySelector('[data-chat-input]'),cBtn=chatBox.querySelector('[data-chat-send]'),cBar=chatBox.querySelector('.chatbar');
+    function sendChat(){
+      var q=cIn&&cIn.value.trim();if(!q)return;
+      var u=document.createElement('div');u.className='bub user';
+      u.innerHTML='<div class="meta">S. Doucouré</div>';u.appendChild(document.createTextNode(q));
+      chatBox.insertBefore(u,cBar);
+      var b=document.createElement('div');b.className='bub bot';
+      b.innerHTML='<div class="meta"><svg style="width:12px;height:12px"><use href="#i-bot"/></svg>Agent Mata · lecture seule</div>Réponse simulée pour la maquette : en production, l’agent interroge ici les API de lecture des modules concernés (Comptes, Dépenses, Créances, P&amp;L), dans les limites de votre périmètre, et cite ses sources.'+
+        '<div class="srcs"><span class="tag">Comptes</span><span class="tag">P&amp;L</span></div>';
+      cIn.value='';
+      setTimeout(function(){chatBox.insertBefore(b,cBar);},450);
+    }
+    if(cBtn)cBtn.addEventListener('click',sendChat);
+    if(cIn)cIn.addEventListener('keydown',function(e){if(e.key==='Enter')sendChat();});
+  }
 });
 document.addEventListener('keydown',function(e){
   if(e.key==='Escape')document.querySelectorAll('[data-modal].on').forEach(function(m){m.classList.remove('on');});

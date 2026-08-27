@@ -14,11 +14,11 @@ Trois directions de design, toutes en rouge et blanc, à comparer avec le sélec
 
 | Proposition | Caractère | Écrans |
 |---|---|---|
-| A — Continuité | Console métier dans la lignée de Matix : ivoire chaud, cartes blanches, rouge boucherie, Rubik + Nunito Sans | Les 7 écrans |
+| A — Continuité | Console métier dans la lignée de Matix : ivoire chaud, cartes blanches, rouge boucherie, Rubik + Nunito Sans | Les 10 écrans |
 | B — Signal | Éditorial : papier blanc, filets d'encre, carmin en aplats, Archivo, angles vifs | Tableau de bord + Réconciliation (vitrine) |
-| C — Studio | SaaS doux : gris perle, cartes flottantes arrondies, rouge vif en touches, Manrope | Les 7 écrans |
+| C — Studio | SaaS doux : gris perle, cartes flottantes arrondies, rouge vif en touches, Manrope | Les 10 écrans |
 
-Écrans couverts pour A et C : Tableau de bord, Réconciliation, Comptes, Dépenses, Créances & Remboursements, Transferts, P&L & KPI.
+Écrans couverts pour A et C : Tableau de bord, Réconciliation, Comptes, Dépenses, Créances & Remboursements, Transferts, P&L & KPI, plus les trois écrans transverses ERP en aperçu (Agent IA en lecture seule, Audit central, Administration / Référentiels).
 
 ## Interactions à tester
 
@@ -28,6 +28,7 @@ Trois directions de design, toutes en rouge et blanc, à comparer avec le sélec
 - Réconciliation : bouton « Déclarer » ouvre la déclaration en aveugle (solde système masqué)
 - Transferts : le formulaire ajoute une ligne « En attente 2ᵉ validation »
 - P&L : onglets des 4 variantes avec leurs formules
+- Agent IA : posez une question, la réponse est simulée (lecture seule, sources citées)
 
 Les montants sont fictifs mais cohérents entre eux (totaux, KPI et équation de réconciliation B se recoupent).
 
