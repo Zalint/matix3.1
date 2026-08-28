@@ -2,10 +2,10 @@
 
 Module financier de l'ERP Mata. Cahier des charges V13 (local : `Cahier_des_charges_Mata_Finance_V13.docx`, jamais poussé — le dépôt est public). Dépôt : https://github.com/Zalint/matix3.1. Maquette validée : `design/`.
 
-Les règles complètes et contraignantes sont dans `REGLES_DEVELOPPEMENT.md` — les lire avant tout développement. Résumé opérationnel :
+Les règles complètes et contraignantes sont dans `REGLES_DEVELOPPEMENT.md` — les lire avant tout développement. Un document `ARCHITECTURE.md` (à venir) fixera la stack et les conventions techniques ; dès qu'il existe, le lire et l'appliquer aussi. Priorité en cas de conflit : cahier des charges, puis architecture, puis règles de process. Résumé opérationnel :
 
 ## Avant de coder
-- Cadrage écrit court (objectif, périmètre, critères d'acceptation, modules touchés, §§ du cahier) validé par Saliou avant toute ligne de code. Cadrage allégé (une phrase dans le commit) uniquement pour les corrections triviales. Questions au cadrage, pas de suppositions.
+- Cadrage écrit court (objectif, périmètre, critères d'acceptation, modules touchés, §§ du cahier) validé par Saliou et Ousmane (DG) avant toute ligne de code. Cadrage allégé (une phrase dans le commit) uniquement pour les corrections triviales. Questions au cadrage, pas de suppositions.
 - Vérifier ce qui existe déjà (moteurs transverses : permissions, validation, audit, calcul) et le réutiliser.
 
 ## En codant

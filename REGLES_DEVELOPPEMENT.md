@@ -2,12 +2,14 @@
 
 Ce document fixe les règles de travail pour tout le développement de Mata Finance et des modules liés. Il s'applique à chaque contribution, humaine ou assistée par IA. Le cahier des charges fonctionnel V13 fait foi sur le métier ; en cas de conflit entre ce document et le cahier des charges, le cahier des charges gagne et l'écart est signalé. En cas de conflit entre une règle UI (§5) et une règle métier (§6), la règle métier gagne.
 
+Un document d'architecture technique (`ARCHITECTURE.md`, à venir) complétera ces règles : choix de stack, structure des modules, conventions d'API et de base de données. Dès sa publication, il devient contraignant au même titre que le présent document. Ordre de priorité en cas de conflit : cahier des charges (métier), puis architecture technique, puis présent document (process).
+
 ## 1. Cadrage avant le code
 
 Aucune ligne de code sans cadrage validé.
 
 - Toute demande commence par un cadrage écrit court : objectif, périmètre inclus et exclu, critères d'acceptation vérifiables, modules touchés, API consommées ou exposées, référence aux sections du cahier des charges concernées.
-- Le cadrage est validé par Saliou avant de commencer. Une ambiguïté se règle par des questions au cadrage, pas par des suppositions en cours de route.
+- Le cadrage est validé par Saliou et par Ousmane (DG) avant de commencer. Une ambiguïté se règle par des questions au cadrage, pas par des suppositions en cours de route.
 - Cadrage allégé pour les corrections triviales (bug évident localisé, typo, libellé) : une phrase dans le message de commit décrivant le problème et la correction suffit. Le cadrage complet reste obligatoire dès la taille M, dès qu'un moteur critique, un contrat d'API ou une règle métier du §6 est concerné, ou au moindre doute sur le périmètre.
 - Chaque demande reçoit une taille (S : moins d'une demi-journée, M : une journée, L : plus). Une demande L est découpée en lots livrables et testables séparément.
 - Le cadrage indique ce qui existe déjà et sera réutilisé (moteur de validation, permissions, audit, calcul financier) pour éviter de recoder un mécanisme transverse.
@@ -87,7 +89,7 @@ Ces règles sont vérifiées à chaque code review. Aucun code ne peut les conto
 
 - Chaque module a un README court : son rôle, les API qu'il expose et consomme, ses dépendances, comment lancer ses tests.
 - Les décisions d'architecture importantes sont notées en quelques lignes (contexte, décision, conséquences) dans `docs/decisions/`.
-- Un écart au cahier des charges, même minime, est documenté et validé par Saliou avant implémentation, puis reporté dans le cahier à sa prochaine version.
+- Un écart au cahier des charges, même minime, est documenté et validé par Saliou et Ousmane avant implémentation, puis reporté dans le cahier à sa prochaine version.
 
 ## 8. Définition de « terminé »
 
