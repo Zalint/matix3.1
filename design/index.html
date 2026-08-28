@@ -877,6 +877,53 @@ svg{display:block;flex:none}
   #tplA .actionbar .btn,#tplC .actionbar .btn{padding:8px 11px;font-size:11.5px}
 }
 
+/* ---------- Enrichissements Continuité (A) ---------- */
+#tplA .dback{position:fixed;inset:0;background:rgba(12,10,9,.45);z-index:125;display:none}
+#tplA .dback.on{display:block}
+#tplA .drawer{position:fixed;top:0;right:0;bottom:0;width:min(400px,94vw);background:var(--card);border-left:1px solid var(--line);box-shadow:-20px 0 50px rgba(0,0,0,.22);z-index:130;transform:translateX(105%);transition:transform .25s ease;display:flex;flex-direction:column}
+#tplA .drawer.on{transform:none}
+#tplA .drawer .dh{display:flex;align-items:center;gap:10px;padding:16px 18px;border-bottom:1px solid var(--line)}
+#tplA .drawer .dh h3{font-family:var(--head);font-size:15px;font-weight:600;flex:1;min-width:0}
+#tplA .drawer .db{padding:16px 18px;overflow-y:auto;flex:1}
+#tplA .drawer .big-amt{font-family:'Fira Code',monospace;font-size:24px;font-weight:600;letter-spacing:-.02em;margin:4px 0 2px}
+#tplA .drawer .meta-l{display:flex;gap:7px;flex-wrap:wrap;margin:8px 0 14px}
+#tplA .drawer .df{display:flex;gap:9px;padding:14px 18px;border-top:1px solid var(--line)}
+#tplA .maas-list{margin-top:4px;border:1px dashed var(--line-2);border-radius:8px;padding:4px 12px}
+#tplA .maas-list .mrow{display:flex;justify-content:space-between;font-size:11.5px;padding:4.5px 0;border-bottom:1px dashed var(--line);color:var(--ink-2)}
+#tplA .maas-list .mrow:last-child{border-bottom:none}
+#tplA .maas-list .mrow .amt{font-size:11.5px;color:var(--ink);font-weight:600}
+#tplA .maas-list .mrow.tot{font-weight:800;color:var(--ink)}
+#tplA .linkish{background:none;border:none;color:var(--red);font-size:11px;font-weight:800;cursor:pointer;padding:2px 0;display:inline-flex;align-items:center;gap:5px}
+#tplA .linkish svg{width:12px;height:12px;transition:transform .18s}
+#tplA .linkish.open svg{transform:rotate(180deg)}
+#tplA .rline{display:flex;align-items:center;gap:9px;padding:8px 11px;border:1px solid var(--line-2);border-radius:9px;margin-bottom:8px;cursor:pointer;font-size:12.5px}
+#tplA .rline:hover{border-color:var(--red-line)}
+#tplA .rline input[type=radio]{accent-color:var(--red);width:15px;height:15px}
+#tplA .rline.sel{border-color:var(--red);background:var(--red-tint)}
+#tplA .rline .rh{font-size:10.5px;color:var(--mut);margin-left:auto}
+#tplA .fifo-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px dashed var(--line);font-size:12px}
+#tplA .fifo-row:last-child{border-bottom:none}
+#tplA .fifo-row .dt2{font-family:'Fira Code',monospace;font-size:10.5px;color:var(--warn);font-weight:600;width:52px}
+#tplA .fifo-row .fbar{flex:1;height:5px;border-radius:3px;background:var(--card-3);overflow:hidden}
+#tplA .fifo-row .fbar i{display:block;height:100%;background:var(--ok);border-radius:3px;transition:width .2s}
+#tplA .fifo-row .fa{font-family:'Fira Code',monospace;font-size:11px;width:150px;text-align:right;color:var(--ink-2)}
+#tplA .fifo-row .fa b{color:var(--ok);font-weight:600}
+#tplA .notifpop{position:fixed;z-index:140;width:min(360px,92vw);background:var(--card);border:1px solid var(--line);border-radius:13px;box-shadow:var(--sh),0 18px 48px rgba(0,0,0,.18);display:none;overflow:hidden}
+#tplA .notifpop.on{display:block}
+#tplA .notifpop .nh{display:flex;align-items:center;padding:11px 14px;border-bottom:1px solid var(--line);font-family:var(--head);font-weight:600;font-size:13px}
+#tplA .notifpop .nh .hint{margin-left:auto}
+#tplA .notifpop .ni2{display:flex;gap:10px;padding:11px 14px;border-bottom:1px solid var(--line);align-items:flex-start;width:100%;text-align:left;transition:background .14s}
+#tplA .notifpop .ni2:last-child{border-bottom:none}
+#tplA .notifpop .ni2:hover{background:var(--card-2)}
+#tplA .cmp-t{width:100%;border-collapse:collapse;font-size:12px;margin:12px 0}
+#tplA .cmp-t th{font-size:9.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--mut);text-align:right;padding:6px 8px;border-bottom:1px solid var(--line)}
+#tplA .cmp-t th:first-child,#tplA .cmp-t td:first-child{text-align:left}
+#tplA .cmp-t td{padding:7px 8px;border-bottom:1px dashed var(--line);text-align:right}
+#tplA .cmp-t td .amt{font-size:12px;font-weight:600}
+#tplA .modal.wide{width:min(500px,100%)}
+#tplA tbody tr.rowlink{cursor:pointer}
+@media (max-width:640px){#tplA .fifo-row .fa{width:112px}}
+
 /* ---------- écrans ERP Mata : chat agent IA ---------- */
 #tplA .chat{display:flex;flex-direction:column;gap:12px}
 #tplA .bub{max-width:88%;border-radius:12px;padding:11px 14px;font-size:12.5px;line-height:1.6}
@@ -1011,7 +1058,7 @@ svg{display:block;flex:none}
     <div class="chip-day"><span class="pl"></span><b>Jeudi 27 août 2026</b><span class="g">·&nbsp;gel <b>23:59 GMT</b></span></div>
     <button class="ent"><svg><use href="#i-bank"/></svg>Mata Group<svg style="width:12px;height:12px"><use href="#i-chevd"/></svg></button>
     <button class="ib" aria-label="Rechercher"><svg><use href="#i-search"/></svg></button>
-    <button class="ib bell" aria-label="Notifications — 3 non lues"><svg><use href="#i-bell"/></svg><span class="n">3</span></button>
+    <button class="ib bell" data-notif aria-label="Notifications — 3 non lues"><svg><use href="#i-bell"/></svg><span class="n">3</span></button>
   </header>
   <div class="ct">
 
@@ -1113,6 +1160,23 @@ svg{display:block;flex:none}
           <div class="kv"><span>Source A · agrégation 12 déclarations MaaS</span><span class="amt" data-amt="4725000" data-nocur></span></div>
           <div class="kv"><span>Source B · collecteur A. Ndiaye</span><span class="amt" data-amt="4725000" data-nocur></span></div>
           <div class="prog"><i style="width:100%"></i></div>
+          <button class="linkish" data-acc-toggle><svg><use href="#i-chevd"/></svg>Voir les 12 déclarations individuelles</button>
+          <div class="maas-list" data-acc hidden>
+            <div class="mrow"><span>MaaS Keur Massar</span><span class="amt">420 000</span></div>
+            <div class="mrow"><span>MaaS Ouakam</span><span class="amt">385 000</span></div>
+            <div class="mrow"><span>MaaS Pikine</span><span class="amt">512 000</span></div>
+            <div class="mrow"><span>MaaS Rufisque</span><span class="amt">298 000</span></div>
+            <div class="mrow"><span>MaaS Grand Yoff</span><span class="amt">445 000</span></div>
+            <div class="mrow"><span>MaaS Parcelles</span><span class="amt">367 000</span></div>
+            <div class="mrow"><span>MaaS Médina</span><span class="amt">402 000</span></div>
+            <div class="mrow"><span>MaaS Yoff</span><span class="amt">356 000</span></div>
+            <div class="mrow"><span>MaaS Ngor</span><span class="amt">489 000</span></div>
+            <div class="mrow"><span>MaaS Thiaroye</span><span class="amt">315 000</span></div>
+            <div class="mrow"><span>MaaS Guédiawaye</span><span class="amt">378 000</span></div>
+            <div class="mrow"><span>MaaS HLM</span><span class="amt">358 000</span></div>
+            <div class="mrow tot"><span>Source A — agrégation</span><span class="amt">4 725 000</span></div>
+            <div class="mrow tot"><span>Source B — collecteur A. Ndiaye</span><span class="amt" style="color:var(--ok)">4 725 000 ✓</span></div>
+          </div>
           <div class="foot"><span class="hint2">Égalité de deux sources indépendantes · validée 02:04 · chaque versement enregistré en Remboursement</span></div>
         </div>
         <div class="card rcard">
@@ -1181,15 +1245,15 @@ svg{display:block;flex:none}
         <div class="tbl-scroll"><table>
           <thead><tr><th>Compte</th><th>Type</th><th>Solde calculé</th><th>Statut</th><th>Dernier mouvement</th></tr></thead>
           <tbody>
-            <tr data-type="tres"><td><b>Caisse générale</b></td><td>Trésorerie</td><td><span class="amt" data-amt="8450000" data-nocur></span></td><td><span class="st ok">Actif</span></td><td class="hint">Crédit collecte MaaS · 02:04</td></tr>
-            <tr data-type="tres"><td><b>Banque BOA</b></td><td>Trésorerie</td><td><span class="amt" data-amt="45200000" data-nocur></span></td><td><span class="st ok">Actif</span></td><td class="hint">Import relevé · 08:00</td></tr>
-            <tr data-type="tres"><td><b>Dépôt en cours</b></td><td>Trésorerie · relais</td><td><span class="amt" data-amt="2500000" data-nocur></span></td><td><span class="st ok">Actif</span></td><td class="hint">Dépôt du 27/08 · 07:45</td></tr>
-            <tr data-type="tres"><td><b>Bictorys — solde</b> <span class="tag api"><svg><use href="#i-lock"/></svg>API</span></td><td>Trésorerie · API</td><td><span class="amt" data-amt="2890000" data-nocur></span></td><td><span class="st ok">Actif</span></td><td class="hint">Maj API · 08:12</td></tr>
-            <tr data-type="tres"><td><b>Bictorys — transfert en cours</b></td><td>Trésorerie · relais</td><td><span class="amt" data-amt="350000" data-nocur></span></td><td><span class="st ok">Actif</span></td><td class="hint">Crédit manuel · 26/08</td></tr>
-            <tr data-type="tres"><td><b>Sous-caisse Marché</b></td><td>Sous-caisse</td><td><span class="amt" data-amt="1275000" data-nocur></span></td><td><span class="st bad"><svg><use href="#i-alert"/></svg>Écart</span></td><td class="hint">Déclaration en aveugle · 21:12</td></tr>
-            <tr data-type="tres"><td><b>Sous-caisse Livraisons</b></td><td>Sous-caisse</td><td><span class="amt" data-amt="640000" data-nocur></span></td><td><span class="st warn"><svg><use href="#i-clock"/></svg>À réconcilier</span></td><td class="hint">Gel 23:59 GMT si non résolue</td></tr>
-            <tr data-type="dep"><td><b>Carburant</b></td><td>Dépense → SC Livraisons</td><td><span class="amt neg">−85 000</span></td><td><span class="st ok">Actif</span></td><td class="hint">Débit · 17:40 · réappro auto au prochain cycle</td></tr>
-            <tr data-type="fourn"><td><b>AGNEAUX</b></td><td>Fournisseur</td><td><span class="amt" data-amt="12400000" data-nocur></span></td><td><span class="st warn"><svg><use href="#i-alert"/></svg>Plafond dépassé</span></td><td class="hint">Dépense lot BV-260827-04 · 15:22</td></tr>
+            <tr data-type="tres" class="rowlink" data-acc-nm="Caisse générale" data-acc-ty="Trésorerie" data-acc-amt="8450000" data-acc-st="ok"><td><b>Caisse générale</b></td><td>Trésorerie</td><td><span class="amt" data-amt="8450000" data-nocur></span></td><td><span class="st ok">Actif</span></td><td class="hint">Crédit collecte MaaS · 02:04</td></tr>
+            <tr data-type="tres" class="rowlink" data-acc-nm="Banque BOA" data-acc-ty="Trésorerie" data-acc-amt="45200000" data-acc-st="ok"><td><b>Banque BOA</b></td><td>Trésorerie</td><td><span class="amt" data-amt="45200000" data-nocur></span></td><td><span class="st ok">Actif</span></td><td class="hint">Import relevé · 08:00</td></tr>
+            <tr data-type="tres" class="rowlink" data-acc-nm="Dépôt en cours" data-acc-ty="Trésorerie · relais" data-acc-amt="2500000" data-acc-st="ok"><td><b>Dépôt en cours</b></td><td>Trésorerie · relais</td><td><span class="amt" data-amt="2500000" data-nocur></span></td><td><span class="st ok">Actif</span></td><td class="hint">Dépôt du 27/08 · 07:45</td></tr>
+            <tr data-type="tres" class="rowlink" data-acc-nm="Bictorys — solde" data-acc-ty="Trésorerie · API" data-acc-amt="2890000" data-acc-st="ok"><td><b>Bictorys — solde</b> <span class="tag api"><svg><use href="#i-lock"/></svg>API</span></td><td>Trésorerie · API</td><td><span class="amt" data-amt="2890000" data-nocur></span></td><td><span class="st ok">Actif</span></td><td class="hint">Maj API · 08:12</td></tr>
+            <tr data-type="tres" class="rowlink" data-acc-nm="Bictorys — transfert en cours" data-acc-ty="Trésorerie · relais" data-acc-amt="350000" data-acc-st="ok"><td><b>Bictorys — transfert en cours</b></td><td>Trésorerie · relais</td><td><span class="amt" data-amt="350000" data-nocur></span></td><td><span class="st ok">Actif</span></td><td class="hint">Crédit manuel · 26/08</td></tr>
+            <tr data-type="tres" class="rowlink" data-acc-nm="Sous-caisse Marché" data-acc-ty="Sous-caisse" data-acc-amt="1275000" data-acc-st="bad"><td><b>Sous-caisse Marché</b></td><td>Sous-caisse</td><td><span class="amt" data-amt="1275000" data-nocur></span></td><td><span class="st bad"><svg><use href="#i-alert"/></svg>Écart</span></td><td class="hint">Déclaration en aveugle · 21:12</td></tr>
+            <tr data-type="tres" class="rowlink" data-acc-nm="Sous-caisse Livraisons" data-acc-ty="Sous-caisse" data-acc-amt="640000" data-acc-st="warn"><td><b>Sous-caisse Livraisons</b></td><td>Sous-caisse</td><td><span class="amt" data-amt="640000" data-nocur></span></td><td><span class="st warn"><svg><use href="#i-clock"/></svg>À réconcilier</span></td><td class="hint">Gel 23:59 GMT si non résolue</td></tr>
+            <tr data-type="dep" class="rowlink" data-acc-nm="Carburant" data-acc-ty="Dépense" data-acc-amt="-85000" data-acc-st="ok"><td><b>Carburant</b></td><td>Dépense → SC Livraisons</td><td><span class="amt neg">−85 000</span></td><td><span class="st ok">Actif</span></td><td class="hint">Débit · 17:40 · réappro auto au prochain cycle</td></tr>
+            <tr data-type="fourn" class="rowlink" data-acc-nm="AGNEAUX" data-acc-ty="Fournisseur" data-acc-amt="12400000" data-acc-st="warn"><td><b>AGNEAUX</b></td><td>Fournisseur</td><td><span class="amt" data-amt="12400000" data-nocur></span></td><td><span class="st warn"><svg><use href="#i-alert"/></svg>Plafond dépassé</span></td><td class="hint">Dépense lot BV-260827-04 · 15:22</td></tr>
             <tr data-empty hidden><td colspan="5" style="text-align:center;padding:18px"><span class="hint" style="font-size:12px">Les comptes créance sont rattachés aux contreparties clientes — ils se gèrent dans l’écran Créances &amp; Remboursements.</span>&nbsp;&nbsp;<button class="btn ghost" data-goto="creances" style="min-height:30px;padding:5px 11px">Ouvrir Créances</button></td></tr>
           </tbody>
         </table></div>
@@ -1230,7 +1294,7 @@ svg{display:block;flex:none}
         </div>
         <div class="sp" style="flex:1"></div>
         <button class="btn ghost"><svg><use href="#i-dl"/></svg>Relevé fournisseur PDF</button>
-        <button class="btn pri"><svg><use href="#i-plus"/></svg>Nouvelle dépense</button>
+        <button class="btn pri" data-open="m-dep"><svg><use href="#i-plus"/></svg>Nouvelle dépense</button>
       </div>
       <div class="card">
         <div class="ch"><h3>Dépenses — jeudi 27 août</h3><span class="hint-r">created_at automatique · updated_by tracé</span></div>
@@ -1255,7 +1319,7 @@ svg{display:block;flex:none}
           <div class="due"><span class="amt" data-amt="2000000" data-nocur></span><span class="dt">avant le <b>10/09</b></span></div>
           <div class="due"><span class="amt" data-amt="3000000" data-nocur></span><span class="dt">avant le <b>14/09</b></span></div>
           <div class="due"><span class="amt" data-amt="7400000" data-nocur></span><span class="dt">avant le <b>30/09</b></span></div>
-          <div style="display:flex;gap:8px;align-items:center;margin-top:auto"><button class="btn pri">Payer — FIFO par échéance</button></div>
+          <div style="display:flex;gap:8px;align-items:center;margin-top:auto"><button class="btn pri" data-open="m-fifo">Payer — FIFO par échéance</button></div>
           <div class="hint" style="font-size:10.5px;color:var(--mut)">Notification envoyée · aucun blocage de saisie. Affectation manuelle à un lot précis : exceptionnelle et auditée.</div>
         </div>
         <div class="card enc">
@@ -1337,7 +1401,8 @@ svg{display:block;flex:none}
         <div class="tbl-scroll"><table>
           <thead><tr><th>Date</th><th>De → Vers</th><th>Montant</th><th>Auteur</th><th>Validateur</th><th>Statut</th></tr></thead>
           <tbody data-thist>
-            <tr><td class="hint">27/08 16:42</td><td><b>Caisse générale → Banque BOA</b></td><td><span class="amt" data-amt="1500000" data-nocur></span></td><td>S. Doucouré</td><td>—</td><td><span class="st warn"><svg><use href="#i-clock"/></svg>En attente 2ᵉ validation</span></td></tr>
+            <tr><td class="hint">27/08 18:05</td><td><b>Banque BOA → Caisse générale</b></td><td><span class="amt" data-amt="600000" data-nocur></span></td><td>F. Sarr</td><td data-val-target>—</td><td data-val-status><span class="st warn"><svg><use href="#i-clock"/></svg>En attente</span> <button class="btn pri" data-open="m-val" style="min-height:28px;padding:4px 11px;font-size:11px">Valider</button></td></tr>
+            <tr><td class="hint">27/08 16:42</td><td><b>Caisse générale → Banque BOA</b></td><td><span class="amt" data-amt="1500000" data-nocur></span></td><td>S. Doucouré</td><td>—</td><td><span class="st warn"><svg><use href="#i-clock"/></svg>En attente</span> <button class="btn ghost" data-val-self style="min-height:28px;padding:4px 11px;font-size:11px">Valider</button></td></tr>
             <tr><td class="hint">26/08 18:10</td><td><b>Caisse générale → Banque BOA</b></td><td><span class="amt" data-amt="3000000" data-nocur></span></td><td>O. Seck (DG)</td><td>S. Doucouré</td><td><span class="st ok"><svg><use href="#i-check"/></svg>Validé</span></td></tr>
             <tr><td class="hint">24/08 11:05</td><td><b>Banque BOA → Caisse générale</b></td><td><span class="amt" data-amt="800000" data-nocur></span></td><td>F. Sarr</td><td>O. Seck</td><td><span class="st ok"><svg><use href="#i-check"/></svg>Validé</span></td></tr>
           </tbody>
@@ -1374,6 +1439,10 @@ svg{display:block;flex:none}
             <div class="fcode">= Même moteur · Cash Burn recalculé en excluant les comptes<br>configurés « investissement » (−<b>4 330 000</b>)</div>
           </div>
         </div>
+      </div>
+      <div class="card" style="margin-top:14px">
+        <div class="ch"><h3>Encaissements clients vs Cash Burn</h3><div class="legend" style="margin-left:auto"><span><i style="background:var(--d2)"></i>Encaissements (Banque)</span><span><i style="background:var(--d1)"></i>Cash Burn</span></div></div>
+        <div class="cb"><div class="chart-wrap"><div class="dualchart" style="height:210px"></div></div></div>
       </div>
       <div class="grid2b">
         <div class="card">
@@ -1417,7 +1486,7 @@ svg{display:block;flex:none}
             <div class="snap"><span class="ic2"><svg><use href="#i-lock"/></svg></span><span><b>25 août 2026</b><small>Clôture 23:59</small></span><span class="st mut" style="margin-left:auto"><svg><use href="#i-lock"/></svg>Immuable</span></div>
             <div class="snap"><span class="ic2"><svg><use href="#i-lock"/></svg></span><span><b>24 août 2026</b><small>Clôture 23:59</small></span><span class="st mut" style="margin-left:auto"><svg><use href="#i-lock"/></svg>Immuable</span></div>
             <div class="hint" style="margin:10px 0;font-size:11px;color:var(--mut)">Une correction ultérieure ne réécrit jamais le snapshot : l'état recalculé se compare au snapshot pour mesurer l'impact.</div>
-            <button class="btn ghost"><svg><use href="#i-layers"/></svg>Comparer à l'état actuel</button>
+            <button class="btn ghost" data-open="m-cmp"><svg><use href="#i-layers"/></svg>Comparer à l’état actuel</button>
           </div>
         </div>
       </div>
@@ -1519,6 +1588,90 @@ svg{display:block;flex:none}
   </div>
 </div>
 </div>
+<!-- surcouches A : notifications, fiche compte, modales -->
+<div class="notifpop" data-ov="notif" role="menu" aria-label="Notifications">
+  <div class="nh">Notifications<span class="hint">3 non lues</span></div>
+  <button class="ni2" data-goto="recon"><div style="width:26px;height:26px;border-radius:7px;display:grid;place-items:center;background:var(--bad-bg);color:var(--bad);flex:none"><svg style="width:13px;height:13px"><use href="#i-alert"/></svg></div><div style="font-size:12px;line-height:1.45"><b>Écart de réconciliation — Sous-caisse Marché</b><small style="display:block;color:var(--mut);font-size:10.5px">Email envoyé à Admin, DG, Collecteur · il y a 2 h</small></div></button>
+  <button class="ni2" data-goto="depenses"><div style="width:26px;height:26px;border-radius:7px;display:grid;place-items:center;background:var(--warn-bg);color:var(--warn);flex:none"><svg style="width:13px;height:13px"><use href="#i-alert"/></svg></div><div style="font-size:12px;line-height:1.45"><b>Plafond d'encours dépassé — AGNEAUX</b><small style="display:block;color:var(--mut);font-size:10.5px">12,4 M / 10 M · notification informative, aucun blocage · 15:24</small></div></button>
+  <button class="ni2" data-goto="transferts"><div style="width:26px;height:26px;border-radius:7px;display:grid;place-items:center;background:var(--red-tint);color:var(--red);flex:none"><svg style="width:13px;height:13px"><use href="#i-swap"/></svg></div><div style="font-size:12px;line-height:1.45"><b>Transfert 1 500 000 en attente de 2ᵉ validation</b><small style="display:block;color:var(--mut);font-size:10.5px">Caisse générale → Banque BOA · proposé par vous · 16:42</small></div></button>
+</div>
+
+<div class="dback" data-dback></div>
+<aside class="drawer" data-drawer aria-label="Détail du compte">
+  <div class="dh"><h3 data-d-title>Compte</h3><button class="ib" data-d-close aria-label="Fermer"><svg><use href="#i-x"/></svg></button></div>
+  <div class="db">
+    <div class="hint" style="font-size:10.5px;letter-spacing:.07em;text-transform:uppercase;font-weight:800">Solde calculé</div>
+    <div class="big-amt"><span data-d-amt>0</span> <span class="hint">FCFA</span></div>
+    <div class="meta-l"><span class="st mut" data-d-type>Type</span><span class="st ok" data-d-status>Actif</span></div>
+    <div class="hint" style="margin-bottom:10px">Le solde n'est jamais un champ modifiable : il résulte des mouvements ci-dessous. Chaque mouvement porte created_at et updated_by.</div>
+    <div class="ch" style="padding:10px 0 8px;border-bottom:1px solid var(--line)"><h3 style="font-family:var(--head);font-size:12.5px;font-weight:600">Derniers mouvements</h3><span class="hint-r">Audit Flux</span></div>
+    <div data-d-mvts></div>
+  </div>
+  <div class="df">
+    <button class="btn ghost" data-d-adjust style="flex:1">Ajuster le solde</button>
+    <button class="btn ghost" data-d-disable style="flex:1">Désactiver</button>
+  </div>
+</aside>
+
+<div class="mback" data-ov="m-dep">
+  <div class="modal wide" role="dialog" aria-modal="true" aria-label="Nouvelle dépense">
+    <h3><svg><use href="#i-receipt"/></svg>Nouvelle dépense</h3>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-top:14px">
+      <div class="fld" style="grid-column:1/-1"><label for="a-d-des">Désignation</label><input id="a-d-des" class="inp" placeholder="Ex. Achat bœuf — lot"></div>
+      <div class="fld"><label for="a-d-fou">Fournisseur</label><select id="a-d-fou" class="inp"><option>— Aucun —</option><option>AGNEAUX</option><option>MATA VOLAILLE CHAIR</option><option>MATA VOLAILLE ŒUFS</option><option>Bétail Thiès</option><option>Abattoirs Dakar</option></select></div>
+      <div class="fld"><label for="a-d-cat">Catégorie</label><select id="a-d-cat" class="inp"><option>Achat bœuf</option><option>Achat volaille</option><option>Achat agneau</option><option>Logistique</option><option>Abattage</option><option>Maintenance</option><option>Divers</option></select></div>
+      <div class="fld"><label for="a-d-mt">Montant (FCFA)</label><input id="a-d-mt" class="inp mono" inputmode="numeric" placeholder="0"></div>
+      <div class="fld"><label for="a-d-dt">Date métier</label><input id="a-d-dt" class="inp" type="date" value="2026-08-27"></div>
+    </div>
+    <div class="fld" style="margin-top:12px"><label>Paiement cash</label>
+      <label class="rline sel"><input type="radio" name="a-cash" value="precis" checked>Montant précis payé en cash<span class="rh">saisir le montant</span></label>
+      <label class="rline"><input type="radio" name="a-cash" value="zero">Zéro — rien payé en cash<span class="rh">tout à crédit</span></label>
+      <label class="rline"><input type="radio" name="a-cash" value="passur">« Pas sûr »<span class="rh" style="color:var(--warn)">bloque la réconciliation du périmètre</span></label>
+    </div>
+    <div class="hint" style="font-size:11px;margin-top:6px">created_at est automatique et non modifiable · updated_by tracé · la réconciliation de fin de journée sert de garde-fou (aucune validation à la création).</div>
+    <div class="acts"><button class="btn ghost" data-close>Annuler</button><button class="btn pri" data-dep-submit>Enregistrer la dépense</button></div>
+  </div>
+</div>
+
+<div class="mback" data-ov="m-fifo">
+  <div class="modal wide" role="dialog" aria-modal="true" aria-label="Paiement fournisseur AGNEAUX">
+    <h3><svg><use href="#i-coins"/></svg>Paiement fournisseur — AGNEAUX</h3>
+    <div class="row-m" style="margin-top:13px"><span>Encours calculé</span><span class="amt">12 400 000</span></div>
+    <label for="a-f-mt">Montant à payer (FCFA)</label>
+    <input id="a-f-mt" class="inp mono" data-fifo-input inputmode="numeric" placeholder="0" style="margin-bottom:12px">
+    <div class="hint" style="font-size:10.5px;letter-spacing:.07em;text-transform:uppercase;font-weight:800;margin-bottom:4px">Affectation FIFO par échéance</div>
+    <div class="fifo-row" data-due="2000000"><span class="dt2">10/09</span><div class="fbar"><i style="width:0%"></i></div><span class="fa"><b>0</b> / 2 000 000</span></div>
+    <div class="fifo-row" data-due="3000000"><span class="dt2">14/09</span><div class="fbar"><i style="width:0%"></i></div><span class="fa"><b>0</b> / 3 000 000</span></div>
+    <div class="fifo-row" data-due="7400000"><span class="dt2">30/09</span><div class="fbar"><i style="width:0%"></i></div><span class="fa"><b>0</b> / 7 400 000</span></div>
+    <div class="hint" style="font-size:11px;margin-top:10px">La dette dont l'échéance est la plus proche est réduite en premier. Une affectation manuelle à un lot précis reste possible par exception et sera auditée.</div>
+    <div class="acts"><button class="btn ghost" data-close>Annuler</button><button class="btn pri" data-fifo-submit>Payer</button></div>
+  </div>
+</div>
+
+<div class="mback" data-ov="m-cmp">
+  <div class="modal wide" role="dialog" aria-modal="true" aria-label="Comparaison snapshot">
+    <h3><svg><use href="#i-layers"/></svg>Snapshot 26 août vs état actuel</h3>
+    <table class="cmp-t">
+      <thead><tr><th>Indicateur</th><th>Snapshot 26/08 · 23:59</th><th>Recalculé maintenant</th><th>Écart</th></tr></thead>
+      <tbody>
+        <tr><td>Trésorerie totale</td><td><span class="amt">57 010 000</span></td><td><span class="amt">57 190 000</span></td><td><span class="amt" style="color:var(--ok)">+180 000</span></td></tr>
+        <tr><td>P&amp;L brut avec écart stock</td><td><span class="amt">24 605 000</span></td><td><span class="amt">24 785 000</span></td><td><span class="amt" style="color:var(--ok)">+180 000</span></td></tr>
+        <tr><td>Σ créances clients</td><td><span class="amt">18 450 000</span></td><td><span class="amt">18 450 000</span></td><td><span class="amt">0</span></td></tr>
+      </tbody>
+    </table>
+    <div class="hint" style="font-size:11px">Le snapshot reste immuable : l'écart provient de l'ajustement de +180 000 validé en double validation après la clôture (contrepassation tracée du 26/08 19:02). Comparer l'état recalculé au snapshot mesure l'impact des corrections.</div>
+    <div class="acts"><button class="btn pri" data-close>Fermer</button></div>
+  </div>
+</div>
+
+<div class="mback" data-ov="m-val">
+  <div class="modal" role="dialog" aria-modal="true" aria-label="Valider le transfert">
+    <h3><svg><use href="#i-swap"/></svg>Valider ce transfert ?</h3>
+    <div class="exp">Transfert de <b>600 000 FCFA</b> — Banque BOA → Caisse générale, proposé par F. Sarr. En validant, vous êtes enregistré comme second validateur (S. Doucouré, Super Admin) et la mailing list sensible est notifiée.</div>
+    <div class="acts"><button class="btn ghost" data-close>Annuler</button><button class="btn pri" data-val-confirm>Valider le transfert</button></div>
+  </div>
+</div>
+
 <!-- modal A -->
 <div class="mback" data-modal>
   <div class="modal" role="dialog" aria-modal="true" aria-label="Déclaration en aveugle — Caisse générale">
@@ -2459,6 +2612,142 @@ document.addEventListener('keydown',function(e){
   if(e.key==='Escape')document.querySelectorAll('[data-modal].on').forEach(function(m){m.classList.remove('on');});
 });
 
+
+/* ---------- enrichissements Proposition A ---------- */
+var A=document.getElementById('tplA');
+if(A){
+  A.querySelectorAll('[data-open]').forEach(function(b){b.addEventListener('click',function(e){
+    e.stopPropagation();
+    var ov=A.querySelector('[data-ov="'+b.getAttribute('data-open')+'"]');
+    if(!ov)return;
+    ov.classList.add('on');
+    var i=ov.querySelector('input');if(i)setTimeout(function(){i.focus();},60);
+  });});
+  A.querySelectorAll('.mback[data-ov]').forEach(function(m){
+    m.addEventListener('click',function(e){if(e.target===m)m.classList.remove('on');});
+    m.querySelectorAll('[data-close]').forEach(function(b){b.addEventListener('click',function(){m.classList.remove('on');});});
+  });
+
+  /* notifications */
+  var bell=A.querySelector('[data-notif]'),pop=A.querySelector('.notifpop');
+  if(bell&&pop){
+    bell.addEventListener('click',function(e){e.stopPropagation();
+      var r=bell.getBoundingClientRect();
+      pop.style.top=(r.bottom+8)+'px';
+      pop.style.left=Math.max(8,Math.min(r.right-330,window.innerWidth-338))+'px';
+      pop.classList.toggle('on');
+    });
+    document.addEventListener('click',function(e){if(!e.target.closest('.notifpop'))pop.classList.remove('on');});
+    pop.querySelectorAll('.ni2').forEach(function(b){b.addEventListener('click',function(){pop.classList.remove('on');});});
+  }
+
+  /* accordéon 12 déclarations MaaS */
+  A.querySelectorAll('[data-acc-toggle]').forEach(function(t){t.addEventListener('click',function(){
+    var acc=t.parentElement.querySelector('[data-acc]');
+    if(!acc)return;
+    acc.hidden=!acc.hidden;
+    t.classList.toggle('open',!acc.hidden);
+  });});
+
+  /* fiche compte (drawer) */
+  var dr=A.querySelector('[data-drawer]'),db=A.querySelector('[data-dback]');
+  var MV={
+    'Caisse générale':[['p','Crédit collecte MaaS — Réconciliation A','Automatique · 27/08 02:04','+4 725 000'],['m','Réappro auto — compte Carburant','« Dépense 450 000 27/08 » · 06:30','−450 000'],['m','Dépôt en banque → Dépôt en cours','A. Ndiaye (collecteur) · 07:45','−2 500 000']],
+    'Banque BOA':[['p','Import relevé — réf. BOA-88123','Idempotent · 27/08 08:00','+2 500 000'],['p','Encaissement client — Le Baobab','Qualifié encaissement client · 26/08','+320 000'],['m','Paiement fournisseur','MATA VOLAILLE CHAIR · 25/08','−1 200 000']],
+    'AGNEAUX':[['m','Dépense — lot BV-260827-04','API Achat · idempotent · 15:22','+850 000'],['p','Paiement FIFO — échéance 10/09','S. Doucouré · 24/08','−2 000 000'],['m','Dépense — lot BV-260824-01','API Achat · 24/08','+1 400 000']]
+  };
+  var STLBL={ok:'Actif',warn:'À réconcilier',bad:'Écart'};
+  function closeDrA(){if(dr)dr.classList.remove('on');if(db)db.classList.remove('on');}
+  A.querySelectorAll('tr.rowlink').forEach(function(r){r.addEventListener('click',function(e){
+    if(e.target.closest('button'))return;
+    var nm=r.getAttribute('data-acc-nm');
+    dr.querySelector('[data-d-title]').textContent=nm;
+    var amt=parseInt(r.getAttribute('data-acc-amt'),10);
+    dr.querySelector('[data-d-amt]').textContent=(amt<0?'−':'')+nf.format(Math.abs(amt));
+    dr.querySelector('[data-d-type]').textContent=r.getAttribute('data-acc-ty');
+    var st=r.getAttribute('data-acc-st');
+    var stEl=dr.querySelector('[data-d-status]');
+    stEl.className='st '+st;stEl.textContent=STLBL[st]||'Actif';
+    var mv=MV[nm]||[['p','Mouvement récent','Aperçu de démonstration','+ …'],['m','Mouvement récent','Aperçu de démonstration','− …']];
+    var host=dr.querySelector('[data-d-mvts]');host.innerHTML='';
+    mv.forEach(function(m){
+      var d=document.createElement('div');d.className='mvt';
+      d.innerHTML='<span class="sign '+m[0]+'">'+(m[0]==='p'?'+':'−')+'</span><div class="tx"><b></b><small></small></div><span class="amt'+(m[0]==='m'?' m':'')+'"></span>';
+      d.querySelector('b').textContent=m[1];d.querySelector('small').textContent=m[2];d.querySelector('.amt').textContent=m[3];
+      host.appendChild(d);
+    });
+    dr.classList.add('on');db.classList.add('on');
+  });});
+  if(db)db.addEventListener('click',closeDrA);
+  var dcl=A.querySelector('[data-d-close]');if(dcl)dcl.addEventListener('click',closeDrA);
+  var dad=A.querySelector('[data-d-adjust]');if(dad)dad.addEventListener('click',function(){toast('Ajustement de solde = double validation — proposé par vous, à valider par un second (jamais de modification directe)');});
+  var ddi=A.querySelector('[data-d-disable]');if(ddi)ddi.addEventListener('click',function(){toast('Désactivation proposée — validation par un second parmi Admin, Super Admin, Directeur Opérations');});
+
+  /* radios paiement cash */
+  A.querySelectorAll('.rline input[type=radio]').forEach(function(rb){rb.addEventListener('change',function(){
+    A.querySelectorAll('.rline').forEach(function(l){var inp=l.querySelector('input');l.classList.toggle('sel',inp&&inp.checked);});
+    if(rb.value==='passur'&&rb.checked)toast('« Pas sûr » bloquera la réconciliation du périmètre du compte imputé jusqu’à résolution');
+  });});
+
+  /* nouvelle dépense → ajout en tableau */
+  var depBtn=A.querySelector('[data-dep-submit]');
+  if(depBtn)depBtn.addEventListener('click',function(){
+    var des=A.querySelector('#a-d-des'),fou=A.querySelector('#a-d-fou'),cat=A.querySelector('#a-d-cat'),mt=A.querySelector('#a-d-mt');
+    var v=mt&&mt.value?parseInt(mt.value.replace(/\D/g,''),10):NaN;
+    if(!des.value.trim()||isNaN(v)){toast('Désignation et montant sont requis');return;}
+    var cash=A.querySelector('.rline input[type=radio]:checked');
+    var cashCell=cash&&cash.value==='zero'?'Zéro':(cash&&cash.value==='passur'?'<span class="st warn">Pas sûr</span>':'Précis · <span class="amt">'+nf.format(v)+'</span>');
+    var stat=cash&&cash.value==='passur'?'<span class="st bad"><svg style="width:11px;height:11px"><use href="#i-alert"/></svg>Bloque périmètre</span>':'<span class="st mut">À réconcilier</span>';
+    var tb=A.querySelector('.scr[data-scr="depenses"] tbody');
+    if(tb){
+      var tr=document.createElement('tr');
+      tr.innerHTML='<td><b></b></td><td></td><td></td><td><span class="amt">'+nf.format(v)+'</span></td><td>'+cashCell+'</td><td>Manuel</td><td>'+stat+'</td>';
+      tr.querySelector('b').textContent=des.value.trim();
+      tr.children[1].textContent=fou.value==='— Aucun —'?'—':fou.value;
+      tr.children[2].textContent=cat.value;
+      tb.insertBefore(tr,tb.firstElementChild);
+    }
+    A.querySelector('[data-ov="m-dep"]').classList.remove('on');
+    des.value='';mt.value='';
+    toast('Dépense enregistrée — created_at automatique · réconciliation du périmètre requise avant clôture');
+  });
+
+  /* paiement FIFO en direct */
+  var fin=A.querySelector('[data-fifo-input]');
+  if(fin){
+    var frows=A.querySelectorAll('[data-ov="m-fifo"] .fifo-row');
+    fin.addEventListener('input',function(){
+      var rest=parseInt(fin.value.replace(/\D/g,''),10)||0;
+      frows.forEach(function(row){
+        var due=parseInt(row.getAttribute('data-due'),10);
+        var take=Math.min(rest,due);rest-=take;
+        row.querySelector('.fbar i').style.width=(take/due*100)+'%';
+        row.querySelector('.fa').innerHTML='<b>'+nf.format(take)+'</b> / '+nf.format(due);
+      });
+    });
+    var fsub=A.querySelector('[data-fifo-submit]');
+    if(fsub)fsub.addEventListener('click',function(){
+      var v=parseInt(fin.value.replace(/\D/g,''),10)||0;
+      if(v<=0){toast('Saisissez un montant à payer');return;}
+      A.querySelector('[data-ov="m-fifo"]').classList.remove('on');
+      toast('Paiement de '+nf.format(v)+' FCFA affecté en FIFO par échéance — encours AGNEAUX recalculé');
+    });
+  }
+
+  /* validation de transfert */
+  A.querySelectorAll('[data-val-self]').forEach(function(b){b.addEventListener('click',function(){
+    toast('Impossible : vous êtes l’auteur de ce transfert — un second parmi DG, Admin ou Super Admin doit valider');
+  });});
+  var vc=A.querySelector('[data-val-confirm]');
+  if(vc)vc.addEventListener('click',function(){
+    A.querySelector('[data-ov="m-val"]').classList.remove('on');
+    var tgt=A.querySelector('[data-val-target]'),stc=A.querySelector('[data-val-status]');
+    if(tgt)tgt.textContent='S. Doucouré';
+    if(stc)stc.innerHTML='<span class="st ok"><svg style="width:11px;height:11px"><use href="#i-check"/></svg>Validé</span>';
+    toast('Transfert validé — vous êtes enregistré comme second validateur · mailing list notifiée');
+  });
+}
+
 /* ---------- infobulles de formule ---------- */
 var tip=document.querySelector('.ftip'),tipCode=tip.querySelector('code'),tipFor=null;
 function showTip(btn){
@@ -2549,7 +2838,65 @@ function drawChart(box){
   box.addEventListener('touchmove',move,{passive:true});
   box.addEventListener('touchend',leave);
 }
-function drawCharts(){document.querySelectorAll('.tpl.on .linechart').forEach(drawChart);}
+var DUAL={enc:[0.42,0.51,0.38,0.55,0.61,0.44,0.58,0.66,0.49,0.52,0.60,0.71,0.57,0.63,0.55,0.68,0.59,0.51,0.66,0.73,0.62,0.54,0.67,0.75,0.63,0.70,0.61,0.72,0.69,0.78],burn:[0.31,0.28,0.35,0.30,0.27,0.33,0.29,0.31,0.36,0.28,0.30,0.27,0.34,0.29,0.31,0.26,0.33,0.35,0.28,0.30,0.32,0.36,0.29,0.27,0.31,0.28,0.33,0.29,0.32,0.30]};
+function drawDual(box){
+  var tpl=box.closest('.tpl');if(!tpl||!tpl.classList.contains('on'))return;
+  var cs=getComputedStyle(tpl);
+  var c1=cs.getPropertyValue('--d1').trim()||'#C22A21';
+  var c2=cs.getPropertyValue('--d2').trim()||'#3564D9';
+  var grid=cs.getPropertyValue('--grid').trim()||'rgba(0,0,0,.08)';
+  var mut=cs.getPropertyValue('--mut').trim()||'#888';
+  var W=box.clientWidth,H=box.clientHeight;if(W<40||H<40)return;
+  box.innerHTML='';
+  var P={t:12,r:14,b:24,l:38};
+  var a=DUAL.enc,b=DUAL.burn,n=a.length;
+  var min=0,max=0.9;
+  function X(i){return P.l+(W-P.l-P.r)*i/(n-1);}
+  function Y(v){return P.t+(H-P.t-P.b)*(1-(v-min)/(max-min));}
+  var svg=E('svg',{viewBox:'0 0 '+W+' '+H,width:W,height:H,role:'img','aria-label':'Encaissements clients et cash burn quotidiens sur 30 jours, en millions FCFA'});
+  for(var g=0;g<=3;g++){
+    var gv=min+(max-min)*g/3,gy=Y(gv);
+    svg.appendChild(E('line',{x1:P.l,x2:W-P.r,y1:gy,y2:gy,stroke:grid,'stroke-width':1}));
+    var t=E('text',{x:P.l-7,y:gy+3.5,'text-anchor':'end','font-size':10,fill:mut,'font-family':"'Fira Code',monospace"});
+    t.textContent=gv.toFixed(1).replace('.',',');svg.appendChild(t);
+  }
+  [0,Math.round((n-1)/2),n-1].forEach(function(i){
+    var t=E('text',{x:X(i),y:H-7,'text-anchor':i===0?'start':(i===n-1?'end':'middle'),'font-size':10,fill:mut,'font-family':"'Fira Code',monospace"});
+    t.textContent=lblDate(i,n);svg.appendChild(t);
+  });
+  function path(data){var d='';for(var i=0;i<n;i++){d+=(i?'L':'M')+X(i).toFixed(1)+' '+Y(data[i]).toFixed(1);}return d;}
+  svg.appendChild(E('path',{d:path(a),fill:'none',stroke:c2,'stroke-width':2,'stroke-linejoin':'round','stroke-linecap':'round'}));
+  svg.appendChild(E('path',{d:path(b),fill:'none',stroke:c1,'stroke-width':2,'stroke-linejoin':'round','stroke-linecap':'round'}));
+  svg.appendChild(E('circle',{cx:X(n-1),cy:Y(a[n-1]),r:3.2,fill:c2}));
+  svg.appendChild(E('circle',{cx:X(n-1),cy:Y(b[n-1]),r:3.2,fill:c1}));
+  var cross=E('line',{x1:0,x2:0,y1:P.t,y2:H-P.b,stroke:mut,'stroke-width':1,'stroke-dasharray':'3 3',opacity:0});
+  var d1p=E('circle',{r:4,fill:c2,stroke:'#fff','stroke-width':1.5,opacity:0});
+  var d2p=E('circle',{r:4,fill:c1,stroke:'#fff','stroke-width':1.5,opacity:0});
+  svg.appendChild(cross);svg.appendChild(d1p);svg.appendChild(d2p);
+  box.appendChild(svg);
+  var ct=document.createElement('div');ct.className='ctip';box.appendChild(ct);
+  function move(ev){
+    var r=box.getBoundingClientRect();
+    var cx=(ev.touches?ev.touches[0].clientX:ev.clientX)-r.left;
+    var i=Math.max(0,Math.min(n-1,Math.round((cx-P.l)/((W-P.l-P.r)/(n-1)))));
+    var px=X(i);
+    cross.setAttribute('x1',px);cross.setAttribute('x2',px);cross.setAttribute('opacity',.6);
+    d1p.setAttribute('cx',px);d1p.setAttribute('cy',Y(a[i]));d1p.setAttribute('opacity',1);
+    d2p.setAttribute('cx',px);d2p.setAttribute('cy',Y(b[i]));d2p.setAttribute('opacity',1);
+    ct.innerHTML='<span class="dt">'+lblDate(i,n)+'/2026</span><br>Encaiss. <b>'+String(a[i]).replace('.',',')+' M</b><br>Burn <b>'+String(b[i]).replace('.',',')+' M</b>';
+    ct.style.left=Math.max(56,Math.min(W-56,px))+'px';ct.style.top='4px';ct.style.opacity=1;
+  }
+  function leave(){cross.setAttribute('opacity',0);d1p.setAttribute('opacity',0);d2p.setAttribute('opacity',0);ct.style.opacity=0;}
+  box.addEventListener('mousemove',move);
+  box.addEventListener('mouseleave',leave);
+  box.addEventListener('touchstart',move,{passive:true});
+  box.addEventListener('touchmove',move,{passive:true});
+  box.addEventListener('touchend',leave);
+}
+function drawCharts(){
+  document.querySelectorAll('.tpl.on .linechart').forEach(drawChart);
+  document.querySelectorAll('.tpl.on .dualchart').forEach(drawDual);
+}
 var rT=null;
 window.addEventListener('resize',function(){clearTimeout(rT);rT=setTimeout(drawCharts,120);});
 if(window.matchMedia){window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change',function(){requestAnimationFrame(drawCharts);});}
