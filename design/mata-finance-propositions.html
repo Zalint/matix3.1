@@ -1146,7 +1146,7 @@ svg{display:block;flex:none}
     <section class="scr" data-scr="comptes" hidden>
       <div class="actionbar">
         <div class="chips">
-          <button class="chip on">Tous</button><button class="chip">Trésorerie</button><button class="chip">Dépense</button><button class="chip">Fournisseur</button><button class="chip">Créance</button>
+          <button class="chip on" data-cf="tous">Tous</button><button class="chip" data-cf="tres">Trésorerie</button><button class="chip" data-cf="dep">Dépense</button><button class="chip" data-cf="fourn">Fournisseur</button><button class="chip" data-cf="cre">Créance</button>
         </div>
         <div class="sp" style="flex:1"></div>
         <button class="btn ghost"><svg><use href="#i-dl"/></svg>Importer relevé CSV</button>
@@ -1174,15 +1174,16 @@ svg{display:block;flex:none}
         <div class="tbl-scroll"><table>
           <thead><tr><th>Compte</th><th>Type</th><th>Solde calculé</th><th>Statut</th><th>Dernier mouvement</th></tr></thead>
           <tbody>
-            <tr><td><b>Caisse générale</b></td><td>Trésorerie</td><td><span class="amt" data-amt="8450000" data-nocur></span></td><td><span class="st ok">Actif</span></td><td class="hint">Crédit collecte MaaS · 02:04</td></tr>
-            <tr><td><b>Banque BOA</b></td><td>Trésorerie</td><td><span class="amt" data-amt="45200000" data-nocur></span></td><td><span class="st ok">Actif</span></td><td class="hint">Import relevé · 08:00</td></tr>
-            <tr><td><b>Dépôt en cours</b></td><td>Trésorerie · relais</td><td><span class="amt" data-amt="2500000" data-nocur></span></td><td><span class="st ok">Actif</span></td><td class="hint">Dépôt du 27/08 · 07:45</td></tr>
-            <tr><td><b>Bictorys — solde</b> <span class="tag api"><svg><use href="#i-lock"/></svg>API</span></td><td>Trésorerie · API</td><td><span class="amt" data-amt="2890000" data-nocur></span></td><td><span class="st ok">Actif</span></td><td class="hint">Maj API · 08:12</td></tr>
-            <tr><td><b>Bictorys — transfert en cours</b></td><td>Trésorerie · relais</td><td><span class="amt" data-amt="350000" data-nocur></span></td><td><span class="st ok">Actif</span></td><td class="hint">Crédit manuel · 26/08</td></tr>
-            <tr><td><b>Sous-caisse Marché</b></td><td>Sous-caisse</td><td><span class="amt" data-amt="1275000" data-nocur></span></td><td><span class="st bad"><svg><use href="#i-alert"/></svg>Écart</span></td><td class="hint">Déclaration en aveugle · 21:12</td></tr>
-            <tr><td><b>Sous-caisse Livraisons</b></td><td>Sous-caisse</td><td><span class="amt" data-amt="640000" data-nocur></span></td><td><span class="st warn"><svg><use href="#i-clock"/></svg>À réconcilier</span></td><td class="hint">Gel 23:59 GMT si non résolue</td></tr>
-            <tr><td><b>Carburant</b></td><td>Dépense → SC Livraisons</td><td><span class="amt neg">−85 000</span></td><td><span class="st ok">Actif</span></td><td class="hint">Débit · 17:40 · réappro auto au prochain cycle</td></tr>
-            <tr><td><b>AGNEAUX</b></td><td>Fournisseur</td><td><span class="amt" data-amt="12400000" data-nocur></span></td><td><span class="st warn"><svg><use href="#i-alert"/></svg>Plafond dépassé</span></td><td class="hint">Dépense lot BV-260827-04 · 15:22</td></tr>
+            <tr data-type="tres"><td><b>Caisse générale</b></td><td>Trésorerie</td><td><span class="amt" data-amt="8450000" data-nocur></span></td><td><span class="st ok">Actif</span></td><td class="hint">Crédit collecte MaaS · 02:04</td></tr>
+            <tr data-type="tres"><td><b>Banque BOA</b></td><td>Trésorerie</td><td><span class="amt" data-amt="45200000" data-nocur></span></td><td><span class="st ok">Actif</span></td><td class="hint">Import relevé · 08:00</td></tr>
+            <tr data-type="tres"><td><b>Dépôt en cours</b></td><td>Trésorerie · relais</td><td><span class="amt" data-amt="2500000" data-nocur></span></td><td><span class="st ok">Actif</span></td><td class="hint">Dépôt du 27/08 · 07:45</td></tr>
+            <tr data-type="tres"><td><b>Bictorys — solde</b> <span class="tag api"><svg><use href="#i-lock"/></svg>API</span></td><td>Trésorerie · API</td><td><span class="amt" data-amt="2890000" data-nocur></span></td><td><span class="st ok">Actif</span></td><td class="hint">Maj API · 08:12</td></tr>
+            <tr data-type="tres"><td><b>Bictorys — transfert en cours</b></td><td>Trésorerie · relais</td><td><span class="amt" data-amt="350000" data-nocur></span></td><td><span class="st ok">Actif</span></td><td class="hint">Crédit manuel · 26/08</td></tr>
+            <tr data-type="tres"><td><b>Sous-caisse Marché</b></td><td>Sous-caisse</td><td><span class="amt" data-amt="1275000" data-nocur></span></td><td><span class="st bad"><svg><use href="#i-alert"/></svg>Écart</span></td><td class="hint">Déclaration en aveugle · 21:12</td></tr>
+            <tr data-type="tres"><td><b>Sous-caisse Livraisons</b></td><td>Sous-caisse</td><td><span class="amt" data-amt="640000" data-nocur></span></td><td><span class="st warn"><svg><use href="#i-clock"/></svg>À réconcilier</span></td><td class="hint">Gel 23:59 GMT si non résolue</td></tr>
+            <tr data-type="dep"><td><b>Carburant</b></td><td>Dépense → SC Livraisons</td><td><span class="amt neg">−85 000</span></td><td><span class="st ok">Actif</span></td><td class="hint">Débit · 17:40 · réappro auto au prochain cycle</td></tr>
+            <tr data-type="fourn"><td><b>AGNEAUX</b></td><td>Fournisseur</td><td><span class="amt" data-amt="12400000" data-nocur></span></td><td><span class="st warn"><svg><use href="#i-alert"/></svg>Plafond dépassé</span></td><td class="hint">Dépense lot BV-260827-04 · 15:22</td></tr>
+            <tr data-empty hidden><td colspan="5" style="text-align:center;padding:18px"><span class="hint" style="font-size:12px">Les comptes créance sont rattachés aux contreparties clientes — ils se gèrent dans l’écran Créances &amp; Remboursements.</span>&nbsp;&nbsp;<button class="btn ghost" data-goto="creances" style="min-height:30px;padding:5px 11px">Ouvrir Créances</button></td></tr>
           </tbody>
         </table></div>
       </div>
@@ -1890,7 +1891,7 @@ svg{display:block;flex:none}
     <section class="scr" data-scr="comptes" hidden>
       <div class="actionbar">
         <div class="chips">
-          <button class="chip on">Tous</button><button class="chip">Trésorerie</button><button class="chip">Dépense</button><button class="chip">Fournisseur</button><button class="chip">Créance</button>
+          <button class="chip on" data-cf="tous">Tous</button><button class="chip" data-cf="tres">Trésorerie</button><button class="chip" data-cf="dep">Dépense</button><button class="chip" data-cf="fourn">Fournisseur</button><button class="chip" data-cf="cre">Créance</button>
         </div>
         <div class="sp" style="flex:1"></div>
         <button class="btn ghost"><svg><use href="#i-dl"/></svg>Importer relevé CSV</button>
@@ -1918,15 +1919,16 @@ svg{display:block;flex:none}
         <div class="tbl-scroll"><table>
           <thead><tr><th>Compte</th><th>Type</th><th>Solde calculé</th><th>Statut</th><th>Dernier mouvement</th></tr></thead>
           <tbody>
-            <tr><td><b>Caisse générale</b></td><td>Trésorerie</td><td><span class="amt" data-amt="8450000" data-nocur></span></td><td><span class="st ok">Actif</span></td><td class="hint">Crédit collecte MaaS · 02:04</td></tr>
-            <tr><td><b>Banque BOA</b></td><td>Trésorerie</td><td><span class="amt" data-amt="45200000" data-nocur></span></td><td><span class="st ok">Actif</span></td><td class="hint">Import relevé · 08:00</td></tr>
-            <tr><td><b>Dépôt en cours</b></td><td>Trésorerie · relais</td><td><span class="amt" data-amt="2500000" data-nocur></span></td><td><span class="st ok">Actif</span></td><td class="hint">Dépôt du 27/08 · 07:45</td></tr>
-            <tr><td><b>Bictorys — solde</b> <span class="tag api"><svg><use href="#i-lock"/></svg>API</span></td><td>Trésorerie · API</td><td><span class="amt" data-amt="2890000" data-nocur></span></td><td><span class="st ok">Actif</span></td><td class="hint">Maj API · 08:12</td></tr>
-            <tr><td><b>Bictorys — transfert en cours</b></td><td>Trésorerie · relais</td><td><span class="amt" data-amt="350000" data-nocur></span></td><td><span class="st ok">Actif</span></td><td class="hint">Crédit manuel · 26/08</td></tr>
-            <tr><td><b>Sous-caisse Marché</b></td><td>Sous-caisse</td><td><span class="amt" data-amt="1275000" data-nocur></span></td><td><span class="st bad"><svg><use href="#i-alert"/></svg>Écart</span></td><td class="hint">Déclaration en aveugle · 21:12</td></tr>
-            <tr><td><b>Sous-caisse Livraisons</b></td><td>Sous-caisse</td><td><span class="amt" data-amt="640000" data-nocur></span></td><td><span class="st warn"><svg><use href="#i-clock"/></svg>À réconcilier</span></td><td class="hint">Gel 23:59 GMT si non résolue</td></tr>
-            <tr><td><b>Carburant</b></td><td>Dépense → SC Livraisons</td><td><span class="amt neg">−85 000</span></td><td><span class="st ok">Actif</span></td><td class="hint">Débit · 17:40 · réappro auto au prochain cycle</td></tr>
-            <tr><td><b>AGNEAUX</b></td><td>Fournisseur</td><td><span class="amt" data-amt="12400000" data-nocur></span></td><td><span class="st warn"><svg><use href="#i-alert"/></svg>Plafond dépassé</span></td><td class="hint">Dépense lot BV-260827-04 · 15:22</td></tr>
+            <tr data-type="tres"><td><b>Caisse générale</b></td><td>Trésorerie</td><td><span class="amt" data-amt="8450000" data-nocur></span></td><td><span class="st ok">Actif</span></td><td class="hint">Crédit collecte MaaS · 02:04</td></tr>
+            <tr data-type="tres"><td><b>Banque BOA</b></td><td>Trésorerie</td><td><span class="amt" data-amt="45200000" data-nocur></span></td><td><span class="st ok">Actif</span></td><td class="hint">Import relevé · 08:00</td></tr>
+            <tr data-type="tres"><td><b>Dépôt en cours</b></td><td>Trésorerie · relais</td><td><span class="amt" data-amt="2500000" data-nocur></span></td><td><span class="st ok">Actif</span></td><td class="hint">Dépôt du 27/08 · 07:45</td></tr>
+            <tr data-type="tres"><td><b>Bictorys — solde</b> <span class="tag api"><svg><use href="#i-lock"/></svg>API</span></td><td>Trésorerie · API</td><td><span class="amt" data-amt="2890000" data-nocur></span></td><td><span class="st ok">Actif</span></td><td class="hint">Maj API · 08:12</td></tr>
+            <tr data-type="tres"><td><b>Bictorys — transfert en cours</b></td><td>Trésorerie · relais</td><td><span class="amt" data-amt="350000" data-nocur></span></td><td><span class="st ok">Actif</span></td><td class="hint">Crédit manuel · 26/08</td></tr>
+            <tr data-type="tres"><td><b>Sous-caisse Marché</b></td><td>Sous-caisse</td><td><span class="amt" data-amt="1275000" data-nocur></span></td><td><span class="st bad"><svg><use href="#i-alert"/></svg>Écart</span></td><td class="hint">Déclaration en aveugle · 21:12</td></tr>
+            <tr data-type="tres"><td><b>Sous-caisse Livraisons</b></td><td>Sous-caisse</td><td><span class="amt" data-amt="640000" data-nocur></span></td><td><span class="st warn"><svg><use href="#i-clock"/></svg>À réconcilier</span></td><td class="hint">Gel 23:59 GMT si non résolue</td></tr>
+            <tr data-type="dep"><td><b>Carburant</b></td><td>Dépense → SC Livraisons</td><td><span class="amt neg">−85 000</span></td><td><span class="st ok">Actif</span></td><td class="hint">Débit · 17:40 · réappro auto au prochain cycle</td></tr>
+            <tr data-type="fourn"><td><b>AGNEAUX</b></td><td>Fournisseur</td><td><span class="amt" data-amt="12400000" data-nocur></span></td><td><span class="st warn"><svg><use href="#i-alert"/></svg>Plafond dépassé</span></td><td class="hint">Dépense lot BV-260827-04 · 15:22</td></tr>
+            <tr data-empty hidden><td colspan="5" style="text-align:center;padding:18px"><span class="hint" style="font-size:12px">Les comptes créance sont rattachés aux contreparties clientes — ils se gèrent dans l’écran Créances &amp; Remboursements.</span>&nbsp;&nbsp;<button class="btn ghost" data-goto="creances" style="min-height:30px;padding:5px 11px">Ouvrir Créances</button></td></tr>
           </tbody>
         </table></div>
       </div>
@@ -2430,6 +2432,20 @@ document.querySelectorAll('.tpl').forEach(function(tpl){
     }
     if(cBtn)cBtn.addEventListener('click',sendChat);
     if(cIn)cIn.addEventListener('keydown',function(e){if(e.key==='Enter')sendChat();});
+  }
+
+  /* filtre par type — écran Comptes */
+  var csec=tpl.querySelector('.scr[data-scr="comptes"]');
+  if(csec){
+    var cchips=csec.querySelectorAll('.chip[data-cf]');
+    var crows=csec.querySelectorAll('tbody tr[data-type]');
+    var cempty=csec.querySelector('tr[data-empty]');
+    cchips.forEach(function(ch){ch.addEventListener('click',function(){
+      cchips.forEach(function(x){x.classList.toggle('on',x===ch);});
+      var f=ch.getAttribute('data-cf'),n=0;
+      crows.forEach(function(r){var show=f==='tous'||r.getAttribute('data-type')===f;r.hidden=!show;if(show)n++;});
+      if(cempty)cempty.hidden=n>0;
+    });});
   }
 });
 document.addEventListener('keydown',function(e){
