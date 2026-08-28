@@ -2,6 +2,10 @@
 
 Maquettes interactives du module Mata Finance (ERP Mata), basées sur le Cahier des charges fonctionnel V13 du 27 août 2026.
 
+## Règles de travail
+
+[`REGLES_DEVELOPPEMENT.md`](REGLES_DEVELOPPEMENT.md) fixe le cadre de tout le développement : cadrage avant le code, modularité, tests, revues (code review et revue adversariale), UI et règles métier du cahier des charges. `CLAUDE.md` en est le résumé opérationnel appliqué à chaque session de code.
+
 ## Ouvrir la maquette
 
 Ouvrir [`design/maquette-mata-finance.html`](design/maquette-mata-finance.html) dans un navigateur. Le fichier est autonome : aucune dépendance, aucune connexion réseau (polices et icônes embarquées).
