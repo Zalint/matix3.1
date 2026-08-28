@@ -115,6 +115,7 @@ svg{display:block;flex:none}
 }
 
 #tplA .shell{display:grid;grid-template-columns:242px 1fr;min-height:100dvh}
+#tplA .main{min-width:0;display:flex;flex-direction:column}
 #tplA .amt .cur{color:var(--mut)}
 
 /* ---- Sidebar ---- */
@@ -162,7 +163,7 @@ svg{display:block;flex:none}
 #tplA .ib .n{position:absolute;top:3px;right:3px;min-width:13px;height:13px;border-radius:99px;background:var(--red);color:#fff;font-size:8.5px;font-weight:700;display:grid;place-items:center;font-family:'Fira Code',monospace;padding:0 3px}
 
 /* ---- Content / cards ---- */
-#tplA .ct{padding:20px 26px 60px;max-width:1460px;margin:0 auto}
+#tplA .ct{padding:20px 26px 60px;max-width:1460px;width:100%;min-width:0;margin:0 auto}
 #tplA .card{background:var(--card);border:1px solid var(--line);border-radius:13px;box-shadow:var(--sh)}
 #tplA .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
 #tplA .kpi{padding:15px 16px 13px;position:relative;overflow:hidden}
@@ -287,8 +288,17 @@ svg{display:block;flex:none}
 #tplA .modal .row-m .amt{letter-spacing:.24em;color:var(--ink-2)}
 #tplA .modal .acts{display:flex;gap:9px;justify-content:flex-end;margin-top:15px}
 
+#tplA .burger{display:none}
+#tplA .scrim{position:fixed;inset:0;background:rgba(10,10,14,.5);z-index:115;display:none}
+#tplA .scrim.on{display:block}
 @media (max-width:1180px){#tplA .kpis{grid-template-columns:repeat(2,1fr)}#tplA .rgrid{grid-template-columns:repeat(2,1fr)}}
-@media (max-width:960px){#tplA .shell{grid-template-columns:1fr}#tplA .sb{display:none}#tplA .grid2,#tplA .grid2b{grid-template-columns:1fr}}
+@media (max-width:960px){
+  #tplA .shell{grid-template-columns:1fr}
+  #tplA .burger{display:grid}
+  #tplA .sb{position:fixed;left:0;top:0;bottom:0;height:100dvh;width:266px;z-index:120;transform:translateX(-106%);transition:transform .25s ease;box-shadow:16px 0 44px rgba(0,0,0,.30)}
+  #tplA .sb.open{transform:none}
+  #tplA .grid2,#tplA .grid2b{grid-template-columns:1fr}
+}
 @media (max-width:640px){#tplA .kpis{grid-template-columns:1fr}#tplA .rgrid{grid-template-columns:1fr}#tplA .ct{padding:14px 14px 70px}#tplA .top{padding:10px 14px;flex-wrap:wrap}#tplA .chip-day{display:none}}
 
 /* ============================================================
@@ -693,8 +703,17 @@ svg{display:block;flex:none}
 #tplC .modal .row-m .amt{letter-spacing:.24em;color:var(--ink-2)}
 #tplC .modal .acts{display:flex;gap:9px;justify-content:flex-end;margin-top:16px}
 
+#tplC .burger{display:none}
+#tplC .scrim{position:fixed;inset:0;background:rgba(10,10,14,.5);z-index:115;display:none}
+#tplC .scrim.on{display:block}
 @media (max-width:1180px){#tplC .kpis{grid-template-columns:repeat(2,1fr)}#tplC .rgrid{grid-template-columns:repeat(2,1fr)}}
-@media (max-width:960px){#tplC .shell{grid-template-columns:1fr;padding:10px}#tplC .sb{display:none}#tplC .grid2,#tplC .grid2b{grid-template-columns:1fr}}
+@media (max-width:960px){
+  #tplC .shell{grid-template-columns:1fr;padding:10px}
+  #tplC .burger{display:grid}
+  #tplC .sb{position:fixed;left:0;top:0;bottom:0;height:100dvh;width:262px;margin:0;z-index:120;border-radius:0 20px 20px 0;transform:translateX(-106%);transition:transform .25s ease;box-shadow:16px 0 44px rgba(0,0,0,.30)}
+  #tplC .sb.open{transform:none}
+  #tplC .grid2,#tplC .grid2b{grid-template-columns:1fr}
+}
 @media (max-width:640px){#tplC .kpis{grid-template-columns:1fr}#tplC .rgrid{grid-template-columns:1fr}#tplC .pill{display:none}}
 
 /* ============================================================
@@ -849,6 +868,14 @@ svg{display:block;flex:none}
 #tplA .tbl-scroll table,#tplC .tbl-scroll table{min-width:760px}
 #tplA .hint,#tplC .hint{font-size:11px;color:var(--mut);font-weight:500}
 #tplC .hint{font-weight:600}
+/* mobile : aucun défilement horizontal de page */
+#tplA,#tplB,#tplC{overflow-x:clip}
+#tplA .mvt .tx,#tplC .mvt .tx{flex:1;min-width:0}
+#tplA .due>span:first-child,#tplC .due>span:first-child{min-width:0}
+@media (max-width:640px){
+  #tplA .mvt .amt,#tplC .mvt .amt{font-size:11px}
+  #tplA .actionbar .btn,#tplC .actionbar .btn{padding:8px 11px;font-size:11.5px}
+}
 
 /* ---------- écrans ERP Mata : chat agent IA ---------- */
 #tplA .chat{display:flex;flex-direction:column;gap:12px}
@@ -931,6 +958,7 @@ svg{display:block;flex:none}
 <symbol id="i-layers" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83Z"/><path d="m22 17.65-9.17 4.16a2 2 0 0 1-1.66 0L2 17.65"/><path d="m22 12.65-9.17 4.16a2 2 0 0 1-1.66 0L2 12.65"/></symbol>
 <symbol id="i-refresh" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 16H3v5"/></symbol>
 <symbol id="i-chevd" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></symbol>
+<symbol id="i-menu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="18" y2="18"/></symbol>
 <symbol id="i-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></symbol>
 <symbol id="i-dl" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></symbol>
 </defs></svg>
@@ -971,8 +999,10 @@ svg{display:block;flex:none}
     </div>
   </div>
 </aside>
+<div class="scrim" data-scrim></div>
 <div class="main">
   <header class="top">
+    <button class="ib burger" data-burger aria-label="Ouvrir le menu"><svg><use href="#i-menu"/></svg></button>
     <div class="crumb">
       <div class="p">Mata Finance · Mata Group</div>
       <h1 data-h1>Tableau de bord</h1>
@@ -1714,8 +1744,10 @@ svg{display:block;flex:none}
     </div>
   </div>
 </aside>
+<div class="scrim" data-scrim></div>
 <div class="main">
   <header class="top">
+    <button class="ib burger" data-burger aria-label="Ouvrir le menu"><svg><use href="#i-menu"/></svg></button>
     <div class="crumb">
       <div class="p">Mata Finance · Mata Group</div>
       <h1 data-h1>Tableau de bord</h1>
@@ -2332,8 +2364,15 @@ document.querySelectorAll('.tpl').forEach(function(tpl){
     if(h1&&active&&active.getAttribute('data-title'))h1.textContent=active.getAttribute('data-title').replace(/&amp;/g,'&');
     requestAnimationFrame(drawCharts);
   }
-  navs.forEach(function(n){n.addEventListener('click',function(){go(n.getAttribute('data-screen'),n);});});
+  navs.forEach(function(n){n.addEventListener('click',function(){go(n.getAttribute('data-screen'),n);closeDrawer();});});
   tpl.querySelectorAll('[data-goto]').forEach(function(b){b.addEventListener('click',function(){go(b.getAttribute('data-goto'),null);});});
+
+  /* tiroir mobile (hamburger) */
+  var sb=tpl.querySelector('.sb'),scrim=tpl.querySelector('[data-scrim]'),burger=tpl.querySelector('[data-burger]');
+  function closeDrawer(){if(sb)sb.classList.remove('open');if(scrim)scrim.classList.remove('on');}
+  function openDrawer(){if(sb)sb.classList.add('open');if(scrim)scrim.classList.add('on');}
+  if(burger)burger.addEventListener('click',function(){(sb&&sb.classList.contains('open'))?closeDrawer():openDrawer();});
+  if(scrim)scrim.addEventListener('click',closeDrawer);
 
   /* modal déclaration en aveugle */
   var mb=tpl.querySelector('[data-modal]');
