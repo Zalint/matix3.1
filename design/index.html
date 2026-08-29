@@ -877,6 +877,48 @@ svg{display:block;flex:none}
   #tplA .actionbar .btn,#tplC .actionbar .btn{padding:8px 11px;font-size:11.5px}
 }
 
+
+/* ---------- Écran Déclarations (A et C) ---------- */
+#tplA .roleswitch,#tplC .roleswitch{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:11px 14px;margin-bottom:14px;border-radius:12px}
+#tplA .roleswitch{background:var(--card-2);border:1px dashed var(--line-2)}
+#tplC .roleswitch{background:var(--card);border:1px solid var(--line);box-shadow:var(--sh)}
+#tplA .roleswitch .rl-lb,#tplC .roleswitch .rl-lb{display:flex;align-items:center;gap:7px;font-size:10.5px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;color:var(--mut)}
+#tplA .roleswitch .rl-lb svg,#tplC .roleswitch .rl-lb svg{width:14px;height:14px}
+#tplA .roleswitch .rbtns,#tplC .roleswitch .rbtns{display:flex;gap:6px;flex-wrap:wrap}
+#tplA .rb2{padding:7px 14px;border-radius:9px;border:1px solid var(--line-2);background:var(--card);font-size:12px;font-weight:700;color:var(--ink-2);min-height:34px;display:flex;align-items:center;gap:7px}
+#tplC .rb2{padding:7px 15px;border-radius:99px;border:1px solid var(--line-2);background:var(--card-2);font-size:12px;font-weight:800;color:var(--ink-2);min-height:34px;display:flex;align-items:center;gap:7px}
+#tplA .rb2 svg,#tplC .rb2 svg{width:14px;height:14px}
+#tplA .rb2:hover,#tplC .rb2:hover{border-color:var(--red-line);color:var(--red)}
+#tplA .rb2.on{background:var(--red);border-color:var(--red);color:var(--on-red);box-shadow:var(--sh-red)}
+#tplC .rb2.on{background:linear-gradient(140deg,var(--red),var(--red-2));border-color:transparent;color:#fff;box-shadow:var(--sh-red)}
+#tplA .roleswitch .rl-hint,#tplC .roleswitch .rl-hint{font-size:11px;color:var(--mut);margin-left:auto;max-width:340px;text-align:right}
+
+#tplA .declgrid,#tplC .declgrid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
+#tplA .declcard,#tplC .declcard{padding:16px 18px;display:flex;flex-direction:column;gap:11px}
+#tplA .declcard .dh2,#tplC .declcard .dh2{display:flex;align-items:center;gap:9px}
+#tplA .declcard .dh2 h4{font-family:var(--head);font-size:13.5px;font-weight:600;flex:1;min-width:0}
+#tplC .declcard .dh2 h4{font-size:13.5px;font-weight:800;flex:1;min-width:0;letter-spacing:-.01em}
+#tplA .maskbox,#tplC .maskbox{display:flex;align-items:center;gap:9px;padding:11px 13px;font-size:12px;color:var(--mut)}
+#tplA .maskbox{background:var(--card-2);border:1px dashed var(--line-2);border-radius:9px}
+#tplC .maskbox{background:var(--card-2);border-radius:12px;font-weight:600}
+#tplA .maskbox svg,#tplC .maskbox svg{width:14px;height:14px;flex:none}
+#tplA .maskbox .dots,#tplC .maskbox .dots{font-family:'Fira Code',monospace;letter-spacing:.24em;color:var(--ink-2);font-size:13px}
+#tplA .declform,#tplC .declform{display:flex;gap:9px;align-items:flex-end}
+#tplA .declform .fld,#tplC .declform .fld{flex:1;min-width:0}
+#tplA .declres,#tplC .declres{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+#tplA .declres>div,#tplC .declres>div{padding:9px 11px;border-radius:9px;background:var(--card-2);min-width:0}
+#tplC .declres>div{border-radius:12px}
+#tplA .declres .k,#tplC .declres .k{font-size:9.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--mut);white-space:nowrap}
+#tplA .declres .val,#tplC .declres .val{font-family:'Fira Code',monospace;font-size:13px;font-weight:600;margin-top:3px}
+#tplA .declres .val.bad,#tplC .declres .val.bad{color:var(--bad)}
+#tplA .declres .val.ok,#tplC .declres .val.ok{color:var(--ok)}
+@media (max-width:960px){#tplA .declgrid,#tplC .declgrid{grid-template-columns:1fr}}
+@media (max-width:640px){
+  #tplA .roleswitch .rl-hint,#tplC .roleswitch .rl-hint{margin-left:0;text-align:left;max-width:none}
+  #tplA .declform,#tplC .declform{flex-direction:column;align-items:stretch}
+  #tplA .declres,#tplC .declres{grid-template-columns:1fr}
+}
+
 /* ---------- Enrichissements Continuité (A) ---------- */
 #tplA .dback{position:fixed;inset:0;background:rgba(12,10,9,.45);z-index:125;display:none}
 #tplA .dback.on{display:block}
@@ -1006,6 +1048,8 @@ svg{display:block;flex:none}
 <symbol id="i-refresh" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 16H3v5"/></symbol>
 <symbol id="i-chevd" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></symbol>
 <symbol id="i-menu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="18" y2="18"/></symbol>
+<symbol id="i-clipboard" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="2" width="8" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M9 14l2 2 4-4"/></symbol>
+<symbol id="i-users" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></symbol>
 <symbol id="i-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></symbol>
 <symbol id="i-dl" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></symbol>
 </defs></svg>
@@ -1026,6 +1070,7 @@ svg{display:block;flex:none}
     <button class="ni" data-screen="pnl" data-title="P&amp;L &amp; KPI"><svg><use href="#i-chart"/></svg>P&amp;L &amp; KPI</button>
     <h2>Opérations</h2>
     <button class="ni" data-screen="recon" data-title="Réconciliation"><svg><use href="#i-scale"/></svg>Réconciliation<span class="bdg">3</span></button>
+    <button class="ni" data-screen="decl" data-title="Déclarations"><svg><use href="#i-clipboard"/></svg>Déclarations<span class="bdg">2</span></button>
     <button class="ni" data-screen="comptes" data-title="Comptes"><svg><use href="#i-wallet"/></svg>Comptes</button>
     <button class="ni" data-screen="depenses" data-title="Dépenses"><svg><use href="#i-receipt"/></svg>Dépenses</button>
     <button class="ni" data-screen="creances" data-title="Créances &amp; Remboursements"><svg><use href="#i-coins"/></svg>Créances &amp; Remb.</button>
@@ -1213,7 +1258,95 @@ svg{display:block;flex:none}
         </div>
       </div>
     </section>
-<!-- ÉCRAN : COMPTES (A) -->
+<!-- ÉCRAN : DÉCLARATIONS -->
+    <section class="scr" data-scr="decl" hidden>
+      <div class="roleswitch">
+        <span class="rl-lb"><svg><use href="#i-users"/></svg>Profil connecté</span>
+        <div class="rbtns">
+          <button class="rb2 on" data-role="sa"><svg><use href="#i-shield"/></svg>Super Admin — S. Doucouré</button>
+          <button class="rb2" data-role="gc"><svg><use href="#i-note"/></svg>Gestionnaire de compte — M. Diop</button>
+        </div>
+        <span class="rl-hint">Bascule de démonstration : en production, la vue dépend du rôle porté par le moteur central de permissions.</span>
+      </div>
+
+      <!-- VUE SUPER ADMIN -->
+      <div data-rv="sa">
+        <div class="statstrip">
+          <div class="card stat"><div class="lb">Déclarations attendues</div><div class="v">6</div><div class="sub2">Périmètres à déclarer aujourd'hui</div></div>
+          <div class="card stat"><div class="lb">Reçues</div><div class="v" data-sa-recues>4</div><div class="sub2">Gel des non déclarées à 23:59 GMT</div></div>
+          <div class="card stat"><div class="lb">Écarts à traiter<span class="st bad" style="margin-left:auto" data-sa-ecarts-badge>1</span></div><div class="v" data-sa-ecarts>1</div><div class="sub2">Email envoyé à Admin, DG et Collecteur</div></div>
+        </div>
+        <div class="actionbar">
+          <div class="chips">
+            <button class="chip on" data-df="tous">Toutes</button><button class="chip" data-df="rec">Reçues</button><button class="chip" data-df="att">En attente</button><button class="chip" data-df="ec">Écarts</button>
+          </div>
+          <div class="sp" style="flex:1"></div>
+          <button class="btn ghost"><svg><use href="#i-dl"/></svg>Exporter</button>
+        </div>
+        <div class="card">
+          <div class="ch"><h3>Déclarations — jeudi 27 août 2026</h3><span class="hint-r">Tous les déclarants, tous les comptes</span></div>
+          <div class="tbl-scroll"><table>
+            <thead><tr><th>Déclarant</th><th>Compte</th><th>Heure</th><th>Montant déclaré</th><th>Solde système</th><th>Écart</th><th>Statut</th></tr></thead>
+            <tbody data-sa-tbody>
+              <tr data-ds="rec"><td><b>A. Ndiaye</b> <span class="hint">Collecteur</span></td><td>Collecte MaaS</td><td class="hint">02:04</td><td><span class="amt" data-amt="4725000" data-nocur></span></td><td><span class="amt" data-amt="4725000" data-nocur></span></td><td><span class="amt">0</span></td><td><span class="st ok"><svg><use href="#i-check"/></svg>Auto-validée</span></td></tr>
+              <tr data-ds="ec"><td><b>M. Diop</b> <span class="hint">Gestionnaire</span></td><td>Sous-caisse Marché</td><td class="hint">21:12</td><td><span class="amt" data-amt="1250000" data-nocur></span></td><td><span class="amt" data-amt="1275000" data-nocur></span></td><td><span class="amt" style="color:var(--bad)">−25 000</span></td><td><span class="st bad"><svg><use href="#i-alert"/></svg>Écart</span> <button class="btn ghost" data-goto="recon" style="min-height:28px;padding:4px 11px;font-size:11px">Investiguer</button></td></tr>
+              <tr data-ds="rec"><td><b>F. Sarr</b> <span class="hint">Gestionnaire</span></td><td>Sous-caisse Livraisons</td><td class="hint">20:48</td><td><span class="amt" data-amt="640000" data-nocur></span></td><td><span class="amt" data-amt="640000" data-nocur></span></td><td><span class="amt">0</span></td><td><span class="st ok"><svg><use href="#i-check"/></svg>Validée</span></td></tr>
+              <tr data-ds="rec"><td><b>AGNEAUX</b> <span class="hint">Fournisseur</span></td><td>Compte fournisseur</td><td class="hint">18:30</td><td><span class="amt" data-amt="12400000" data-nocur></span></td><td><span class="amt" data-amt="12400000" data-nocur></span></td><td><span class="amt">0</span></td><td><span class="st ok"><svg><use href="#i-check"/></svg>Validée</span></td></tr>
+              <tr data-ds="att" data-sa-caisse><td><b>M. Diop</b> <span class="hint">Gestionnaire</span></td><td>Caisse générale</td><td class="hint" data-sa-c-heure>—</td><td class="hint" data-sa-c-decl>En attente</td><td><span class="amt" data-amt="8450000" data-nocur></span></td><td class="hint" data-sa-c-ecart>—</td><td data-sa-c-statut><span class="st mut"><svg><use href="#i-eyeoff"/></svg>À déclarer</span></td></tr>
+              <tr data-ds="att"><td><b>Bétail Thiès</b> <span class="hint">Fournisseur</span></td><td>Compte fournisseur</td><td class="hint">—</td><td class="hint">En attente</td><td><span class="amt" data-amt="4600000" data-nocur></span></td><td class="hint">—</td><td><span class="st mut"><svg><use href="#i-eyeoff"/></svg>À déclarer</span></td></tr>
+            </tbody>
+          </table></div>
+        </div>
+        <div class="note-strip"><svg><use href="#i-shield"/></svg>Le Super Admin voit le solde système car il ne déclare pas : la règle en aveugle ne s'applique qu'au déclarant. Toute déclaration porte created_at et updated_by automatiques ; une déclaration validée verrouille son périmètre (clôture événementielle).</div>
+      </div>
+
+      <!-- VUE GESTIONNAIRE -->
+      <div data-rv="gc" hidden>
+        <div class="note-strip" style="margin:0 0 14px"><svg><use href="#i-eyeoff"/></svg><span><b>Réconciliation en aveugle.</b> Vous déclarez le solde compté physiquement sans voir le solde calculé par le système. La comparaison n'est révélée qu'après votre déclaration : sans cela, la vérification ne vérifie rien.</span></div>
+        <div class="declgrid">
+          <div class="card declcard" data-dc="caisse">
+            <div class="dh2"><h4>Caisse générale</h4><span class="st mut" data-dc-st><svg><use href="#i-eyeoff"/></svg>À déclarer</span></div>
+            <div class="maskbox" data-dc-mask><svg><use href="#i-lock"/></svg>Solde système <span class="dots">••••••••</span> masqué jusqu'à votre déclaration</div>
+            <div class="declres" data-dc-res hidden>
+              <div><div class="k">Déclaré</div><div class="val" data-dc-decl>0</div></div>
+              <div><div class="k">Système</div><div class="val" data-dc-sys>0</div></div>
+              <div><div class="k">Écart</div><div class="val" data-dc-ec>0</div></div>
+            </div>
+            <div class="declform" data-dc-form>
+              <div class="fld"><label for="a-dc-caisse">Montant compté (FCFA)</label><input id="a-dc-caisse" class="inp mono" data-dc-input inputmode="numeric" placeholder="0"></div>
+              <button class="btn pri" data-dc-submit>Déclarer</button>
+            </div>
+            <div class="hint" style="font-size:10.5px">Comptage physique de fin de journée · gel automatique à 23:59 GMT si non déclaré</div>
+          </div>
+          <div class="card declcard">
+            <div class="dh2"><h4>Sous-caisse Marché</h4><span class="st bad"><svg><use href="#i-alert"/></svg>Écart</span></div>
+            <div class="declres">
+              <div><div class="k">Déclaré</div><div class="val">1 250 000</div></div>
+              <div><div class="k">Système</div><div class="val">1 275 000</div></div>
+              <div><div class="k">Écart</div><div class="val bad">−25 000</div></div>
+            </div>
+            <div class="hint" style="font-size:11px">Déclaré à 21:12. Un email est parti vers Admin, DG et Collecteur : la validation revient à l'un des trois, pas à vous.</div>
+            <div style="margin-top:auto"><button class="btn ghost" data-goto="recon">Voir la réconciliation</button></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="ch"><h3>Mes déclarations</h3><span class="hint-r">M. Diop · 2 comptes gérés</span></div>
+          <div class="tbl-scroll"><table>
+            <thead><tr><th>Date</th><th>Compte</th><th>Déclaré</th><th>Système</th><th>Écart</th><th>Statut</th></tr></thead>
+            <tbody data-gc-tbody>
+              <tr><td class="hint">27/08 · 21:12</td><td><b>Sous-caisse Marché</b></td><td><span class="amt" data-amt="1250000" data-nocur></span></td><td><span class="amt" data-amt="1275000" data-nocur></span></td><td><span class="amt" style="color:var(--bad)">−25 000</span></td><td><span class="st bad"><svg><use href="#i-alert"/></svg>Écart</span></td></tr>
+              <tr><td class="hint">26/08 · 21:40</td><td><b>Caisse générale</b></td><td><span class="amt" data-amt="7980000" data-nocur></span></td><td><span class="amt" data-amt="7980000" data-nocur></span></td><td><span class="amt">0</span></td><td><span class="st ok"><svg><use href="#i-check"/></svg>Validée</span></td></tr>
+              <tr><td class="hint">26/08 · 21:35</td><td><b>Sous-caisse Marché</b></td><td><span class="amt" data-amt="1120000" data-nocur></span></td><td><span class="amt" data-amt="1120000" data-nocur></span></td><td><span class="amt">0</span></td><td><span class="st ok"><svg><use href="#i-check"/></svg>Validée</span></td></tr>
+              <tr><td class="hint">25/08 · 22:05</td><td><b>Caisse générale</b></td><td><span class="amt" data-amt="8310000" data-nocur></span></td><td><span class="amt" data-amt="8295000" data-nocur></span></td><td><span class="amt" style="color:var(--ok)">+15 000</span></td><td><span class="st ok"><svg><use href="#i-check"/></svg>Écart validé</span></td></tr>
+              <tr><td class="hint">25/08 · 21:50</td><td><b>Sous-caisse Marché</b></td><td><span class="amt" data-amt="1340000" data-nocur></span></td><td><span class="amt" data-amt="1340000" data-nocur></span></td><td><span class="amt">0</span></td><td><span class="st ok"><svg><use href="#i-check"/></svg>Validée</span></td></tr>
+            </tbody>
+          </table></div>
+        </div>
+        <div class="note-strip"><svg><use href="#i-info"/></svg>Vous ne voyez que les comptes dont vous êtes gestionnaire (refus par défaut ailleurs) et vous ne validez jamais votre propre écart : la validation revient à Admin, DG ou Collecteur.</div>
+      </div>
+    </section>
+
+    <!-- ÉCRAN : COMPTES (A) -->
     <section class="scr" data-scr="comptes" hidden>
       <div class="actionbar">
         <div class="chips">
@@ -1878,6 +2011,7 @@ svg{display:block;flex:none}
     <button class="ni" data-screen="pnl" data-title="P&amp;L &amp; KPI"><svg><use href="#i-chart"/></svg>P&amp;L &amp; KPI</button>
     <h2>Opérations</h2>
     <button class="ni" data-screen="recon" data-title="Réconciliation"><svg><use href="#i-scale"/></svg>Réconciliation<span class="bdg">3</span></button>
+    <button class="ni" data-screen="decl" data-title="Déclarations"><svg><use href="#i-clipboard"/></svg>Déclarations<span class="bdg">2</span></button>
     <button class="ni" data-screen="comptes" data-title="Comptes"><svg><use href="#i-wallet"/></svg>Comptes</button>
     <button class="ni" data-screen="depenses" data-title="Dépenses"><svg><use href="#i-receipt"/></svg>Dépenses</button>
     <button class="ni" data-screen="creances" data-title="Créances &amp; Remboursements"><svg><use href="#i-coins"/></svg>Créances &amp; Remb.</button>
@@ -2047,7 +2181,95 @@ svg{display:block;flex:none}
         </div>
       </div>
     </section>
-<!-- ÉCRAN : COMPTES (C) -->
+<!-- ÉCRAN : DÉCLARATIONS -->
+    <section class="scr" data-scr="decl" hidden>
+      <div class="roleswitch">
+        <span class="rl-lb"><svg><use href="#i-users"/></svg>Profil connecté</span>
+        <div class="rbtns">
+          <button class="rb2 on" data-role="sa"><svg><use href="#i-shield"/></svg>Super Admin — S. Doucouré</button>
+          <button class="rb2" data-role="gc"><svg><use href="#i-note"/></svg>Gestionnaire de compte — M. Diop</button>
+        </div>
+        <span class="rl-hint">Bascule de démonstration : en production, la vue dépend du rôle porté par le moteur central de permissions.</span>
+      </div>
+
+      <!-- VUE SUPER ADMIN -->
+      <div data-rv="sa">
+        <div class="statstrip">
+          <div class="card stat"><div class="lb">Déclarations attendues</div><div class="v">6</div><div class="sub2">Périmètres à déclarer aujourd'hui</div></div>
+          <div class="card stat"><div class="lb">Reçues</div><div class="v" data-sa-recues>4</div><div class="sub2">Gel des non déclarées à 23:59 GMT</div></div>
+          <div class="card stat"><div class="lb">Écarts à traiter<span class="st bad" style="margin-left:auto" data-sa-ecarts-badge>1</span></div><div class="v" data-sa-ecarts>1</div><div class="sub2">Email envoyé à Admin, DG et Collecteur</div></div>
+        </div>
+        <div class="actionbar">
+          <div class="chips">
+            <button class="chip on" data-df="tous">Toutes</button><button class="chip" data-df="rec">Reçues</button><button class="chip" data-df="att">En attente</button><button class="chip" data-df="ec">Écarts</button>
+          </div>
+          <div class="sp" style="flex:1"></div>
+          <button class="btn ghost"><svg><use href="#i-dl"/></svg>Exporter</button>
+        </div>
+        <div class="card">
+          <div class="chd"><h3>Déclarations — jeudi 27 août 2026</h3><span class="hint-r">Tous les déclarants, tous les comptes</span></div>
+          <div class="tbl-scroll"><table>
+            <thead><tr><th>Déclarant</th><th>Compte</th><th>Heure</th><th>Montant déclaré</th><th>Solde système</th><th>Écart</th><th>Statut</th></tr></thead>
+            <tbody data-sa-tbody>
+              <tr data-ds="rec"><td><b>A. Ndiaye</b> <span class="hint">Collecteur</span></td><td>Collecte MaaS</td><td class="hint">02:04</td><td><span class="amt" data-amt="4725000" data-nocur></span></td><td><span class="amt" data-amt="4725000" data-nocur></span></td><td><span class="amt">0</span></td><td><span class="st ok"><svg><use href="#i-check"/></svg>Auto-validée</span></td></tr>
+              <tr data-ds="ec"><td><b>M. Diop</b> <span class="hint">Gestionnaire</span></td><td>Sous-caisse Marché</td><td class="hint">21:12</td><td><span class="amt" data-amt="1250000" data-nocur></span></td><td><span class="amt" data-amt="1275000" data-nocur></span></td><td><span class="amt" style="color:var(--bad)">−25 000</span></td><td><span class="st bad"><svg><use href="#i-alert"/></svg>Écart</span> <button class="btn ghost" data-goto="recon" style="min-height:28px;padding:4px 11px;font-size:11px">Investiguer</button></td></tr>
+              <tr data-ds="rec"><td><b>F. Sarr</b> <span class="hint">Gestionnaire</span></td><td>Sous-caisse Livraisons</td><td class="hint">20:48</td><td><span class="amt" data-amt="640000" data-nocur></span></td><td><span class="amt" data-amt="640000" data-nocur></span></td><td><span class="amt">0</span></td><td><span class="st ok"><svg><use href="#i-check"/></svg>Validée</span></td></tr>
+              <tr data-ds="rec"><td><b>AGNEAUX</b> <span class="hint">Fournisseur</span></td><td>Compte fournisseur</td><td class="hint">18:30</td><td><span class="amt" data-amt="12400000" data-nocur></span></td><td><span class="amt" data-amt="12400000" data-nocur></span></td><td><span class="amt">0</span></td><td><span class="st ok"><svg><use href="#i-check"/></svg>Validée</span></td></tr>
+              <tr data-ds="att" data-sa-caisse><td><b>M. Diop</b> <span class="hint">Gestionnaire</span></td><td>Caisse générale</td><td class="hint" data-sa-c-heure>—</td><td class="hint" data-sa-c-decl>En attente</td><td><span class="amt" data-amt="8450000" data-nocur></span></td><td class="hint" data-sa-c-ecart>—</td><td data-sa-c-statut><span class="st mut"><svg><use href="#i-eyeoff"/></svg>À déclarer</span></td></tr>
+              <tr data-ds="att"><td><b>Bétail Thiès</b> <span class="hint">Fournisseur</span></td><td>Compte fournisseur</td><td class="hint">—</td><td class="hint">En attente</td><td><span class="amt" data-amt="4600000" data-nocur></span></td><td class="hint">—</td><td><span class="st mut"><svg><use href="#i-eyeoff"/></svg>À déclarer</span></td></tr>
+            </tbody>
+          </table></div>
+        </div>
+        <div class="note-strip"><svg><use href="#i-shield"/></svg>Le Super Admin voit le solde système car il ne déclare pas : la règle en aveugle ne s'applique qu'au déclarant. Toute déclaration porte created_at et updated_by automatiques ; une déclaration validée verrouille son périmètre (clôture événementielle).</div>
+      </div>
+
+      <!-- VUE GESTIONNAIRE -->
+      <div data-rv="gc" hidden>
+        <div class="note-strip" style="margin:0 0 14px"><svg><use href="#i-eyeoff"/></svg><span><b>Réconciliation en aveugle.</b> Vous déclarez le solde compté physiquement sans voir le solde calculé par le système. La comparaison n'est révélée qu'après votre déclaration : sans cela, la vérification ne vérifie rien.</span></div>
+        <div class="declgrid">
+          <div class="card declcard" data-dc="caisse">
+            <div class="dh2"><h4>Caisse générale</h4><span class="st mut" data-dc-st><svg><use href="#i-eyeoff"/></svg>À déclarer</span></div>
+            <div class="maskbox" data-dc-mask><svg><use href="#i-lock"/></svg>Solde système <span class="dots">••••••••</span> masqué jusqu'à votre déclaration</div>
+            <div class="declres" data-dc-res hidden>
+              <div><div class="k">Déclaré</div><div class="val" data-dc-decl>0</div></div>
+              <div><div class="k">Système</div><div class="val" data-dc-sys>0</div></div>
+              <div><div class="k">Écart</div><div class="val" data-dc-ec>0</div></div>
+            </div>
+            <div class="declform" data-dc-form>
+              <div class="fld"><label for="c-dc-caisse">Montant compté (FCFA)</label><input id="c-dc-caisse" class="inp mono" data-dc-input inputmode="numeric" placeholder="0"></div>
+              <button class="btn pri" data-dc-submit>Déclarer</button>
+            </div>
+            <div class="hint" style="font-size:10.5px">Comptage physique de fin de journée · gel automatique à 23:59 GMT si non déclaré</div>
+          </div>
+          <div class="card declcard">
+            <div class="dh2"><h4>Sous-caisse Marché</h4><span class="st bad"><svg><use href="#i-alert"/></svg>Écart</span></div>
+            <div class="declres">
+              <div><div class="k">Déclaré</div><div class="val">1 250 000</div></div>
+              <div><div class="k">Système</div><div class="val">1 275 000</div></div>
+              <div><div class="k">Écart</div><div class="val bad">−25 000</div></div>
+            </div>
+            <div class="hint" style="font-size:11px">Déclaré à 21:12. Un email est parti vers Admin, DG et Collecteur : la validation revient à l'un des trois, pas à vous.</div>
+            <div style="margin-top:auto"><button class="btn ghost" data-goto="recon">Voir la réconciliation</button></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="chd"><h3>Mes déclarations</h3><span class="hint-r">M. Diop · 2 comptes gérés</span></div>
+          <div class="tbl-scroll"><table>
+            <thead><tr><th>Date</th><th>Compte</th><th>Déclaré</th><th>Système</th><th>Écart</th><th>Statut</th></tr></thead>
+            <tbody data-gc-tbody>
+              <tr><td class="hint">27/08 · 21:12</td><td><b>Sous-caisse Marché</b></td><td><span class="amt" data-amt="1250000" data-nocur></span></td><td><span class="amt" data-amt="1275000" data-nocur></span></td><td><span class="amt" style="color:var(--bad)">−25 000</span></td><td><span class="st bad"><svg><use href="#i-alert"/></svg>Écart</span></td></tr>
+              <tr><td class="hint">26/08 · 21:40</td><td><b>Caisse générale</b></td><td><span class="amt" data-amt="7980000" data-nocur></span></td><td><span class="amt" data-amt="7980000" data-nocur></span></td><td><span class="amt">0</span></td><td><span class="st ok"><svg><use href="#i-check"/></svg>Validée</span></td></tr>
+              <tr><td class="hint">26/08 · 21:35</td><td><b>Sous-caisse Marché</b></td><td><span class="amt" data-amt="1120000" data-nocur></span></td><td><span class="amt" data-amt="1120000" data-nocur></span></td><td><span class="amt">0</span></td><td><span class="st ok"><svg><use href="#i-check"/></svg>Validée</span></td></tr>
+              <tr><td class="hint">25/08 · 22:05</td><td><b>Caisse générale</b></td><td><span class="amt" data-amt="8310000" data-nocur></span></td><td><span class="amt" data-amt="8295000" data-nocur></span></td><td><span class="amt" style="color:var(--ok)">+15 000</span></td><td><span class="st ok"><svg><use href="#i-check"/></svg>Écart validé</span></td></tr>
+              <tr><td class="hint">25/08 · 21:50</td><td><b>Sous-caisse Marché</b></td><td><span class="amt" data-amt="1340000" data-nocur></span></td><td><span class="amt" data-amt="1340000" data-nocur></span></td><td><span class="amt">0</span></td><td><span class="st ok"><svg><use href="#i-check"/></svg>Validée</span></td></tr>
+            </tbody>
+          </table></div>
+        </div>
+        <div class="note-strip"><svg><use href="#i-info"/></svg>Vous ne voyez que les comptes dont vous êtes gestionnaire (refus par défaut ailleurs) et vous ne validez jamais votre propre écart : la validation revient à Admin, DG ou Collecteur.</div>
+      </div>
+    </section>
+
+    <!-- ÉCRAN : COMPTES (C) -->
     <section class="scr" data-scr="comptes" hidden>
       <div class="actionbar">
         <div class="chips">
@@ -2592,6 +2814,99 @@ document.querySelectorAll('.tpl').forEach(function(tpl){
     }
     if(cBtn)cBtn.addEventListener('click',sendChat);
     if(cIn)cIn.addEventListener('keydown',function(e){if(e.key==='Enter')sendChat();});
+  }
+
+
+  /* ---------- écran Déclarations : profils, filtres, déclaration en aveugle ---------- */
+  var dsec=tpl.querySelector('.scr[data-scr="decl"]');
+  if(dsec){
+    /* bascule de profil */
+    var rbs=dsec.querySelectorAll('[data-role]');
+    rbs.forEach(function(rb){rb.addEventListener('click',function(){
+      var r=rb.getAttribute('data-role');
+      rbs.forEach(function(x){x.classList.toggle('on',x===rb);});
+      dsec.querySelectorAll('[data-rv]').forEach(function(v){v.hidden=v.getAttribute('data-rv')!==r;});
+      toast(r==='sa'
+        ? 'Profil Super Admin — vous voyez les déclarations de tous les gestionnaires et de tous les comptes'
+        : 'Profil Gestionnaire de compte (M. Diop) — vous ne voyez que vos comptes, et le solde système reste masqué avant déclaration');
+    });});
+
+    /* filtres du journal */
+    var dchips=dsec.querySelectorAll('.chip[data-df]');
+    dchips.forEach(function(ch){ch.addEventListener('click',function(){
+      dchips.forEach(function(x){x.classList.toggle('on',x===ch);});
+      var fl=ch.getAttribute('data-df');
+      dsec.querySelectorAll('[data-sa-tbody] tr[data-ds]').forEach(function(r){
+        r.hidden=!(fl==='tous'||r.getAttribute('data-ds')===fl);
+      });
+    });});
+
+    /* déclaration en aveugle — Caisse générale */
+    var SYS=8450000;
+    var card=dsec.querySelector('[data-dc="caisse"]');
+    if(card){
+      var inp=card.querySelector('[data-dc-input]');
+      var btn=card.querySelector('[data-dc-submit]');
+      function declare(){
+        var v=inp&&inp.value?parseInt(inp.value.replace(/\D/g,''),10):NaN;
+        if(isNaN(v)||v<=0){toast('Saisissez le montant compté pour déclarer');if(inp)inp.focus();return;}
+        var ec=v-SYS;
+        var okNow=ec===0;
+        card.querySelector('[data-dc-mask]').hidden=true;
+        card.querySelector('[data-dc-form]').hidden=true;
+        var res=card.querySelector('[data-dc-res]');
+        res.hidden=false;
+        card.querySelector('[data-dc-decl]').textContent=nf.format(v);
+        card.querySelector('[data-dc-sys]').textContent=nf.format(SYS);
+        var ecEl=card.querySelector('[data-dc-ec]');
+        ecEl.textContent=(ec>0?'+':ec<0?'−':'')+nf.format(Math.abs(ec));
+        ecEl.className='val '+(okNow?'ok':'bad');
+        var st=card.querySelector('[data-dc-st]');
+        st.className='st '+(okNow?'ok':'bad');
+        st.innerHTML='<svg style="width:11px;height:11px"><use href="#i-'+(okNow?'check':'alert')+'"/></svg>'+(okNow?'Validée':'Écart');
+        var hh=new Date().toTimeString().slice(0,5);
+        var ecCell=okNow?'<span class="amt">0</span>':'<span class="amt" style="color:var(--'+(ec>0?'ok':'bad')+')">'+(ec>0?'+':'−')+nf.format(Math.abs(ec))+'</span>';
+        var stCellHist=okNow
+          ? '<span class="st ok"><svg style="width:11px;height:11px"><use href="#i-check"/></svg>Validée</span>'
+          : '<span class="st bad"><svg style="width:11px;height:11px"><use href="#i-alert"/></svg>Écart</span>';
+        var stCellSA=okNow
+          ? stCellHist
+          : stCellHist+' <button class="btn ghost" data-goto="recon" style="min-height:28px;padding:4px 11px;font-size:11px">Investiguer</button>';
+        /* journal du gestionnaire */
+        var gtb=dsec.querySelector('[data-gc-tbody]');
+        if(gtb){
+          var tr=document.createElement('tr');
+          tr.innerHTML='<td class="hint">27/08 · '+hh+'</td><td><b>Caisse générale</b></td>'+
+            '<td><span class="amt">'+nf.format(v)+'</span></td><td><span class="amt">'+nf.format(SYS)+'</span></td>'+
+            '<td>'+ecCell+'</td><td>'+stCellHist+'</td>';
+          gtb.insertBefore(tr,gtb.firstElementChild);
+        }
+        /* ligne correspondante côté Super Admin — sélecteurs explicites, pas d'index positionnel */
+        var sar=dsec.querySelector('[data-sa-caisse]');
+        if(sar){
+          sar.setAttribute('data-ds',okNow?'rec':'ec');
+          var cHeure=sar.querySelector('[data-sa-c-heure]');if(cHeure)cHeure.textContent=hh;
+          var cDecl=sar.querySelector('[data-sa-c-decl]');if(cDecl){cDecl.innerHTML='<span class="amt">'+nf.format(v)+'</span>';cDecl.className='';}
+          var cEc=sar.querySelector('[data-sa-c-ecart]');if(cEc){cEc.innerHTML=ecCell;cEc.className='';}
+          var cSt=sar.querySelector('[data-sa-c-statut]');if(cSt)cSt.innerHTML=stCellSA;
+          dsec.querySelectorAll('[data-goto]').forEach(function(b){
+            if(!b.dataset.wired){b.dataset.wired='1';b.addEventListener('click',function(){go(b.getAttribute('data-goto'),null);});}
+          });
+        }
+        var rec=dsec.querySelector('[data-sa-recues]');
+        if(rec)rec.textContent=String(parseInt(rec.textContent,10)+1);
+        if(!okNow){
+          var ecv=dsec.querySelector('[data-sa-ecarts]'),ecb=dsec.querySelector('[data-sa-ecarts-badge]');
+          if(ecv)ecv.textContent=String(parseInt(ecv.textContent,10)+1);
+          if(ecb)ecb.textContent=String(parseInt(ecb.textContent,10)+1);
+        }
+        toast(okNow
+          ? 'Déclaration enregistrée — égalité avec le solde système : validation automatique, périmètre verrouillé'
+          : 'Déclaration enregistrée — écart de '+nf.format(Math.abs(ec))+' FCFA : email envoyé à Admin, DG et Collecteur pour validation');
+      }
+      if(btn)btn.addEventListener('click',declare);
+      if(inp)inp.addEventListener('keydown',function(e){if(e.key==='Enter')declare();});
+    }
   }
 
   /* filtre par type — écran Comptes */
