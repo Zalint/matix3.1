@@ -21,6 +21,7 @@
       <p class="scr-sub">Sélectionner un utilisateur et un profil, puis expliquer l'origine de chaque autorisation ou interdiction (§3.5) · chaîne de résolution à 7 niveaux, le premier niveau décisif l'emporte · un seul profil actif à la fois, droits jamais additionnés implicitement entre profils (§3.3)</p>
     </div>
     <div class="scr-meta">
+      <button class="linkish" data-open="help-core-droits"><svg><use href="#i-info"/></svg>Comment ça marche ?</button>
       <span class="sens s"><svg><use href="#i-shield"/></svg>Sensible</span>
       <span class="hint">Sensible : modifications auditées, export contrôlé (§5.3) · consultation sans validation · exception enregistrée sous le profil actif et auditée (§3.5, §5.4) · permission temporaire via Demandes (§4.1)</span>
     </div>
@@ -156,6 +157,21 @@
     <label for="core-droits-x-end">Date de fin (facultative, ISO 8601)</label><input id="core-droits-x-end" type="date" class="inp" data-x="end" min="2026-08-28">
     <label for="core-droits-x-why">Motif (obligatoire, audité)</label><input id="core-droits-x-why" class="inp" data-x="why" placeholder="ex. mission d'audit externe, clôture du mois">
     <div class="acts"><button class="btn ghost" data-close>Annuler</button><button class="btn pri" data-x="save" data-perm="core.droits.override"><svg><use href="#i-check"/></svg>Enregistrer l'exception</button></div>
+  </div></div>
+
+  <div class="mback" data-ov="help-core-droits"><div class="modal wide" role="dialog" aria-modal="true" aria-label="Comment ça marche : Droits effectifs">
+    <h3><svg><use href="#i-info"/></svg>Comment ça marche : Droits effectifs</h3>
+    <div class="exp">Cet écran retrouve pourquoi un utilisateur peut ou ne peut pas faire une action précise, en descendant une chaîne de règles jusqu'à la première qui tranche. Super Admin, DG et administrateurs l'utilisent pour vérifier ou justifier un droit avant d'agir ou lors d'un contrôle.</div>
+    <ul class="help-list">
+      <li><b>Chaîne de résolution</b> — le droit se calcule en descendant les <b>7</b> niveaux, toujours dans le même ordre : Interdiction explicite → Override utilisateur → Override contexte → Permission rôle → Règle catégorie → Règle globale → Refus par défaut ; le premier niveau qui tranche l'emporte, les suivants ne sont plus regardés (§3.5).</li>
+      <li><b>Comptes désactivés, jamais supprimés</b> — le sélecteur Utilisateur liste les 9 comptes existants, dont 8 actifs ; le compte de Mamadou Gueye, désactivé, reste dans la liste avec ses droits gelés au lieu d'être effacé (§10.2).</li>
+      <li><b>Exceptions et interdictions</b> — le tableau du bas recense les 5 exceptions ou interdictions qui dérogent au rôle : chacune autorise ou interdit une action précise pour un utilisateur ou un périmètre, parfois avec une date de fin (§3.5).</li>
+      <li><b>Séparation initiateur / validateur</b> — la ligne de S. Doucouré sur VAL-114 illustre la règle : l'initiateur du transfert de <span class="amt" data-amt="1500000" data-nocur></span> ne peut jamais valider sa propre opération, même sous le profil Super Admin (§10.2).</li>
+      <li><b>Aucune valeur en cache</b> — contrairement au reste de l'application, cet écran relit la chaîne complète à chaque calcul plutôt que le cache de session habituel ; le dernier recalcul affiché, 27/08 · 21:30, vient d'une lecture directe, jamais d'une valeur mémorisée (Technique §7).</li>
+    </ul>
+    <div class="note-strip"><svg><use href="#i-shield"/></svg>Refus par défaut : une action non explicitement autorisée reste visible mais désactivée, avec son motif — jamais masquée sans explication (§10.2).</div>
+    <div class="hint">Sources : Cahier Mata Core §3.5, §10.2 · Technique Mata Core §7</div>
+    <div class="acts"><button class="btn ghost" data-close>Fermer</button></div>
   </div></div>
 </section>
 <script data-screen="core-droits">

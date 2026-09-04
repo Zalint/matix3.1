@@ -171,7 +171,7 @@
     <div class="exp">Le référentiel central des entités de l'ERP (Mata Group, filiales, MaaS) : consultation ouverte à tout profil standard, activation et création réservées aux profils autorisés (permission core.entites.activer).</div>
     <ul class="help-list">
       <li><b>Le référentiel n'est jamais vidé, seulement mis à jour</b> — 16 entités sont recensées et aucune n'est supprimée physiquement : une entité déjà utilisée passe au statut Désactivée pour conserver son historique (§2).</li>
-      <li><b>Mata Group est le premier périmètre activé</b> — sur 16 entités référencées, 1 seule (Mata Group) est active ; les autres pourront l'être plus tard, chacune sans fork applicatif (§2.3).</li>
+      <li><b>Mata Group est le premier périmètre activé</b> — sur 16 entités référencées, 1 seule (Mata Group) est active ; les autres pourront l'être plus tard, chacune sans fork applicatif (Finance §2.3).</li>
       <li><b>Activer une entité ne crée aucune infrastructure dédiée</b> — les 13 entités « À activer » (Keur Bally et les 12 MaaS) peuvent l'être par simple configuration, sans nouvelle base, schéma ni déploiement (Technique §3).</li>
       <li><b>Chaque accès doit porter un contexte d'entité</b> — le bloc « Contexte d'entité du profil actif » affiche l'entité imposée au profil connecté ; sans ce contexte, l'accès aux données est refusé par défaut (Technique §3).</li>
       <li><b>Les modules métier référencent l'entité par son identifiant</b> — le compte Créance client C1 de MaaS Keur Massar (<span class="amt" data-amt="3250000" data-nocur></span> FCFA) est relié à MAAS-KM par son entity_id : Mata Finance ne crée pas de référentiel parallèle (§2).</li>

@@ -5191,7 +5191,7 @@ ERP.register('fin-stock', function (root, ctx) {
     <h3><svg><use href="#i-info"/></svg>Comment ça marche : Import relevé bancaire</h3>
     <div class="exp">Cet écran ajoute la position de la Banque BOA à partir d’un relevé CSV, sans jamais la saisir à la main. Il sert aux profils autorisés à importer (permission « finance.import.executer »), en pratique le Super Admin ou un Admin Finance.</div>
     <ul class="help-list">
-      <li><b>La position vient du fichier, jamais d’une saisie</b> — le solde affiché, <span class="amt" data-amt="45200000" data-nocur></span>, est la valeur inscrite en en-tête du relevé CSV. Une correction manuelle comme <span class="amt" data-amt="-45000" data-nocur></span> (VAL-116, en attente) reste à part et n’écrase jamais cette valeur source (§4.9).</li>
+      <li><b>La position vient du fichier, jamais d’une saisie</b> — le solde affiché, <span class="amt" data-amt="45200000" data-nocur></span>, est la valeur inscrite en ligne d’en-tête du relevé CSV. Une correction manuelle comme <span class="amt" data-amt="-45000" data-nocur></span> (VAL-116, en attente) reste à part et n’écrase jamais cette valeur source (§4.9).</li>
       <li><b>Identifier chaque ligne sans doublon</b> — la référence bancaire sert d’identifiant quand elle existe ; sinon le système fabrique une empreinte à partir du compte, de la date, du montant, du sens et du libellé. C’est ce qui distingue les 2 lignes sans référence, <span class="amt" data-amt="3000000" data-nocur></span> (versement) et <span class="amt" data-amt="800000" data-nocur></span> (retrait) (§4.9).</li>
       <li><b>Réimporter ne double jamais l’effet</b> — les 14 lignes du fichier sont déjà connues de la position ; relancer l’import donne 0 doublon et 0 effet supplémentaire, la position reste à <span class="amt" data-amt="45200000" data-nocur></span> (§9).</li>
       <li><b>Aucun rapprochement automatique avec une dépense</b> — même si un libellé évoque un client ou un transfert, comme le crédit <span class="amt" data-amt="150000" data-nocur></span> « VIR RECU TOUBA VIANDES », la ligne bancaire n’est reliée à rien : ce rapprochement ligne à ligne arrive dans une version ultérieure (§11.1).</li>
@@ -5458,7 +5458,7 @@ ERP.register('fin-import', function (root, ctx) {
     <div class="exp">Le référentiel central des entités de l'ERP (Mata Group, filiales, MaaS) : consultation ouverte à tout profil standard, activation et création réservées aux profils autorisés (permission core.entites.activer).</div>
     <ul class="help-list">
       <li><b>Le référentiel n'est jamais vidé, seulement mis à jour</b> — 16 entités sont recensées et aucune n'est supprimée physiquement : une entité déjà utilisée passe au statut Désactivée pour conserver son historique (§2).</li>
-      <li><b>Mata Group est le premier périmètre activé</b> — sur 16 entités référencées, 1 seule (Mata Group) est active ; les autres pourront l'être plus tard, chacune sans fork applicatif (§2.3).</li>
+      <li><b>Mata Group est le premier périmètre activé</b> — sur 16 entités référencées, 1 seule (Mata Group) est active ; les autres pourront l'être plus tard, chacune sans fork applicatif (Finance §2.3).</li>
       <li><b>Activer une entité ne crée aucune infrastructure dédiée</b> — les 13 entités « À activer » (Keur Bally et les 12 MaaS) peuvent l'être par simple configuration, sans nouvelle base, schéma ni déploiement (Technique §3).</li>
       <li><b>Chaque accès doit porter un contexte d'entité</b> — le bloc « Contexte d'entité du profil actif » affiche l'entité imposée au profil connecté ; sans ce contexte, l'accès aux données est refusé par défaut (Technique §3).</li>
       <li><b>Les modules métier référencent l'entité par son identifiant</b> — le compte Créance client C1 de MaaS Keur Massar (<span class="amt" data-amt="3250000" data-nocur></span> FCFA) est relié à MAAS-KM par son entity_id : Mata Finance ne crée pas de référentiel parallèle (§2).</li>
@@ -5726,10 +5726,10 @@ ERP.register('core-entites', function (root, ctx) {
 
   <div class="mback" data-ov="help-core-utilisateurs"><div class="modal wide" role="dialog" aria-modal="true" aria-label="Comment ça marche : Utilisateurs">
     <h3><svg><use href="#i-info"/></svg>Comment ça marche : Utilisateurs</h3>
-    <div class="exp">Le référentiel des comptes ERP : Super Admin et DG Mata (lecture) y créent, consultent et désactivent les comptes de toute l'entreprise, tous modules confondus.</div>
+    <div class="exp">Le référentiel des comptes ERP, commun à tous les modules : le Super Admin y crée, consulte et désactive les comptes de toute l'entreprise ; le DG Mata y a uniquement un accès en lecture.</div>
     <ul class="help-list">
       <li><b>Compte unique, jamais supprimé</b> — chaque personne a un seul compte ERP : sur 9 comptes, 8 sont actifs et 1 désactivé (M. Gueye, 30/06/2026) — jamais supprimé, seulement désactivé (§3.1).</li>
-      <li><b>Authentification V1</b> — email et mot de passe, réinitialisation par email ou forcée par le Super Admin, blocage après plusieurs tentatives échouées, MFA/2FA prévu plus tard (§3.1).</li>
+      <li><b>Authentification verrouillée par sécurité</b> — le mot de passe se réinitialise par email, ou peut être forcé par le Super Admin depuis la fiche du compte (bouton « Forcer la réinitialisation du mot de passe ») ; plusieurs tentatives de connexion échouées bloquent le compte, en attendant le MFA/2FA prévu plus tard (§3.1).</li>
       <li><b>Catégories cumulables</b> — un utilisateur peut appartenir à plusieurs catégories à la fois : le référentiel compte 6 internes et 3 externes distincts (§3.2).</li>
       <li><b>Accès temporaire qui expire seul</b> — une catégorie Accès temporaire porte une date de début et de fin : C. Mbaye va du 01/09/2026 au 30/09/2026, soit 34 jours restants, sans action manuelle à la fin (§3.2).</li>
       <li><b>Un seul profil actif à la fois</b> — un utilisateur cumulant plusieurs profils (comme S. Doucouré : Super Admin Mata Group et Directeur financier MLC) en choisit un seul à la connexion ; les droits des deux ne s'additionnent jamais (§3.3).</li>
@@ -6014,9 +6014,9 @@ ERP.register('core-utilisateurs', function (root, ctx) {
       <li><b>Profil actif unique</b> — un seul profil est actif à la fois ; la carte « Profil actif connecté » affiche Super Admin — S. Doucouré et la colonne correspondante est surlignée dans la matrice. Changer de profil recalcule aussitôt le menu et les permissions (§3.3).</li>
       <li><b>Consulter ≠ Exporter</b> — ce sont deux permissions distinctes : le Directeur des Opérations (F. Sarr) consulte les Dépenses mais son Export reste « Non (refusé : permission Exporter distincte) » dans le tableau des profils (§3.4).</li>
       <li><b>Pas d'héritage automatique</b> — un droit peut être limité à un périmètre précis : le Gérant MaaS Keur Massar (B. Fall) ne voit, sur finance.creances.view, que sa position MaaS Keur Massar, comme le montre son override dans les exceptions (§3.4).</li>
-      <li><b>Une matrice construite par action</b> — 10 actions possibles (consulter, créer, modifier…) sur 27 domaines d'écran donnent les 61 permissions distinctes affichées dans la carte « Permissions granulaires » (§3.4).</li>
+      <li><b>Une matrice construite par action</b> — la matrice croise 10 actions possibles (consulter, créer, modifier…) avec 27 domaines d'écran ; seules les cases pertinentes sont renseignées, les autres affichant « sans objet dans ce domaine », ce qui donne les 61 permissions distinctes de la carte « Permissions granulaires » (§3.4).</li>
       <li><b>Chaîne de résolution des exceptions</b> — les 2 exceptions enregistrées (override contexte pour B. Fall, accès temporaire pour C. Mbaye) s'appliquent avant la permission de rôle, dans l'ordre Interdiction explicite → Override utilisateur → Override contexte → Permission rôle → Règle catégorie → Règle globale → Refus par défaut (§3.5).</li>
-      <li><b>Accès temporaire qui expire seul</b> — l'accès de C. Mbaye (Comptable externe) court du 01/09/2026 au 30/09/2026 ; non commencé au 27/08, il s'arrêtera automatiquement à l'échéance, sans action manuelle (§3.5).</li>
+      <li><b>Une limite peut porter sur une fonctionnalité, pas seulement un périmètre</b> — le Comptable externe (C. Mbaye) lit Comptes, Dépenses et Fournisseurs, mais Transferts, Validations et Audit lui restent interdits : un droit peut être limité à un module ou une fonctionnalité précise, pas seulement à une entité ou un MaaS (§3.4).</li>
     </ul>
     <div class="note-strip"><svg><use href="#i-lock"/></svg>Refus par défaut : ce qui n'est pas explicitement autorisé est refusé — la demande DEM-028 de F. Sarr pour exporter les dépenses, refusée le 24/08, en est un exemple sur cet écran.</div>
     <div class="hint">Sources : Cahier Mata Core §3.3 à §3.5</div>
@@ -6167,6 +6167,7 @@ ERP.register('core-profils', function (root, ctx) {
       <p class="scr-sub">Sélectionner un utilisateur et un profil, puis expliquer l'origine de chaque autorisation ou interdiction (§3.5) · chaîne de résolution à 7 niveaux, le premier niveau décisif l'emporte · un seul profil actif à la fois, droits jamais additionnés implicitement entre profils (§3.3)</p>
     </div>
     <div class="scr-meta">
+      <button class="linkish" data-open="help-core-droits"><svg><use href="#i-info"/></svg>Comment ça marche ?</button>
       <span class="sens s"><svg><use href="#i-shield"/></svg>Sensible</span>
       <span class="hint">Sensible : modifications auditées, export contrôlé (§5.3) · consultation sans validation · exception enregistrée sous le profil actif et auditée (§3.5, §5.4) · permission temporaire via Demandes (§4.1)</span>
     </div>
@@ -6302,6 +6303,21 @@ ERP.register('core-profils', function (root, ctx) {
     <label for="core-droits-x-end">Date de fin (facultative, ISO 8601)</label><input id="core-droits-x-end" type="date" class="inp" data-x="end" min="2026-08-28">
     <label for="core-droits-x-why">Motif (obligatoire, audité)</label><input id="core-droits-x-why" class="inp" data-x="why" placeholder="ex. mission d'audit externe, clôture du mois">
     <div class="acts"><button class="btn ghost" data-close>Annuler</button><button class="btn pri" data-x="save" data-perm="core.droits.override"><svg><use href="#i-check"/></svg>Enregistrer l'exception</button></div>
+  </div></div>
+
+  <div class="mback" data-ov="help-core-droits"><div class="modal wide" role="dialog" aria-modal="true" aria-label="Comment ça marche : Droits effectifs">
+    <h3><svg><use href="#i-info"/></svg>Comment ça marche : Droits effectifs</h3>
+    <div class="exp">Cet écran retrouve pourquoi un utilisateur peut ou ne peut pas faire une action précise, en descendant une chaîne de règles jusqu'à la première qui tranche. Super Admin, DG et administrateurs l'utilisent pour vérifier ou justifier un droit avant d'agir ou lors d'un contrôle.</div>
+    <ul class="help-list">
+      <li><b>Chaîne de résolution</b> — le droit se calcule en descendant les <b>7</b> niveaux, toujours dans le même ordre : Interdiction explicite → Override utilisateur → Override contexte → Permission rôle → Règle catégorie → Règle globale → Refus par défaut ; le premier niveau qui tranche l'emporte, les suivants ne sont plus regardés (§3.5).</li>
+      <li><b>Comptes désactivés, jamais supprimés</b> — le sélecteur Utilisateur liste les 9 comptes existants, dont 8 actifs ; le compte de Mamadou Gueye, désactivé, reste dans la liste avec ses droits gelés au lieu d'être effacé (§10.2).</li>
+      <li><b>Exceptions et interdictions</b> — le tableau du bas recense les 5 exceptions ou interdictions qui dérogent au rôle : chacune autorise ou interdit une action précise pour un utilisateur ou un périmètre, parfois avec une date de fin (§3.5).</li>
+      <li><b>Séparation initiateur / validateur</b> — la ligne de S. Doucouré sur VAL-114 illustre la règle : l'initiateur du transfert de <span class="amt" data-amt="1500000" data-nocur></span> ne peut jamais valider sa propre opération, même sous le profil Super Admin (§10.2).</li>
+      <li><b>Aucune valeur en cache</b> — contrairement au reste de l'application, cet écran relit la chaîne complète à chaque calcul plutôt que le cache de session habituel ; le dernier recalcul affiché, 27/08 · 21:30, vient d'une lecture directe, jamais d'une valeur mémorisée (Technique §7).</li>
+    </ul>
+    <div class="note-strip"><svg><use href="#i-shield"/></svg>Refus par défaut : une action non explicitement autorisée reste visible mais désactivée, avec son motif — jamais masquée sans explication (§10.2).</div>
+    <div class="hint">Sources : Cahier Mata Core §3.5, §10.2 · Technique Mata Core §7</div>
+    <div class="acts"><button class="btn ghost" data-close>Fermer</button></div>
   </div></div>
 </section>
 <script data-screen="core-droits">
@@ -6781,6 +6797,7 @@ ERP.register('core-demandes', function (root, ctx) {
       <p class="scr-sub">Journal central de l'ERP : utilisateur ou agent, profil, entité, module, action, objet, ancienne/nouvelle valeur, date et heure, motif, chaîne de validation, source interface/import/IA/automatisation (§5.4) · l'écran Validations sert au travail opérationnel, l'Audit conserve la preuve historique (Finance §7.3)</p>
     </div>
     <div class="scr-meta">
+      <button class="linkish" data-open="help-core-audit"><svg><use href="#i-info"/></svg>Comment ça marche ?</button>
       <span class="sens hs"><svg><use href="#i-shield"/></svg>Hautement sensible</span>
       <span class="hint">Consultation elle-même auditée (§5.3) · aucune validation : journal en lecture, jamais modifié ni supprimé physiquement (Finance §10.2) · Exporter distinct de Consulter (§3.4)</span>
     </div>
@@ -6998,6 +7015,24 @@ ERP.register('core-demandes', function (root, ctx) {
     <label for="core-audit-arc-motif" style="margin-top:10px">Motif de l'investigation</label>
     <input id="core-audit-arc-motif" data-a="motif" placeholder="Motif obligatoire, conservé avec la demande">
     <div class="acts"><button class="btn ghost" data-close>Annuler</button><button class="btn pri" data-a="confirm"><svg><use href="#i-box"/></svg>Demander la restauration</button></div>
+  </div></div>
+
+  <!-- Modale : aide contextuelle -->
+  <div class="mback" data-ov="help-core-audit"><div class="modal wide" role="dialog" aria-modal="true" aria-label="Comment ça marche : Audit central">
+    <h3><svg><use href="#i-info"/></svg>Comment ça marche : Audit central</h3>
+    <div class="exp">Journal central de l'ERP : DG et Super Admin s'en servent pour retracer une opération, exporter un extrait filtré ou demander la restauration d'une archive. Les autres profils, dont le Directeur des Opérations, n'accèdent pas à cet écran hautement sensible.</div>
+    <ul class="help-list">
+      <li><b>Une ligne par événement</b> — acteur ou agent, profil, module, action, objet, ancienne et nouvelle valeur, motif et chaîne de validation : l'extrait du 27/08 réunit 13 événements, 10 pour Mata Finance et 3 pour Mata Core (§5.4).</li>
+      <li><b>Trois niveaux de sensibilité</b> — Standard, Sensible ou Hautement sensible commandent l'accès, l'audit de la modification et le contrôle d'export ; cet extrait compte 8 événements Hautement sensible, 4 Sensible et 1 Standard (§5.3).</li>
+      <li><b>Votre consultation est elle-même journalisée</b> — comme celle d'O. Seck, DG Mata, à 14:05 sur l'Historique Caisse générale ; le détail reste actif 90 jours puis se résume en compteur (§5.3).</li>
+      <li><b>Exporter n'est pas Consulter</b> — le bouton Exporter reste visible mais désactivé sans la permission core.audit.exporter, ici réservée au Super Admin : pour une donnée hautement sensible, l'export peut être interdit (§5.3).</li>
+      <li><b>Conservation en deux temps</b> — les modifications restent 24 mois en base active puis partent en archive froide jusqu'à 10 ans (12 modifications dans l'extrait) ; les consultations restent détaillées 90 jours puis se résument en compteurs agrégés (1 ici) (Technique §11).</li>
+      <li><b>Demander une archive</b> — une restauration demandée par un utilisateur autorisé n'est pas conservée en permanence dans la base active, mais aboutit sous un jour ouvré (Technique §11).</li>
+      <li><b>Rien n'est supprimé</b> — une opération comptabilisée reste tracée avec ses valeurs sources : l'auto-réconciliation de 02:04 conserve <span class="amt" data-amt="4725000" data-nocur></span> déclaré côté 12 collectes MaaS et <span class="amt" data-amt="4725000" data-nocur></span> côté collecteur A. Ndiaye (Finance §10.2).</li>
+    </ul>
+    <div class="note-strip"><svg><use href="#i-shield"/></svg>Refus par défaut : cet écran hautement sensible reste ouvert au DG et au Super Admin ; Directeur des Opérations, Gestionnaire de caisse, Collecteur, Gérant MaaS, Investisseur et Comptable externe en sont exclus (§5.3).</div>
+    <div class="hint">Sources : Cahier Mata Core §5.3, §5.4 · Technique §11 · Finance §10.2</div>
+    <div class="acts"><button class="btn ghost" data-close>Fermer</button></div>
   </div></div>
 </section>
 <script data-screen="core-audit">

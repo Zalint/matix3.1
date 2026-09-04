@@ -22,6 +22,7 @@
       <p class="scr-sub">Journal central de l'ERP : utilisateur ou agent, profil, entité, module, action, objet, ancienne/nouvelle valeur, date et heure, motif, chaîne de validation, source interface/import/IA/automatisation (§5.4) · l'écran Validations sert au travail opérationnel, l'Audit conserve la preuve historique (Finance §7.3)</p>
     </div>
     <div class="scr-meta">
+      <button class="linkish" data-open="help-core-audit"><svg><use href="#i-info"/></svg>Comment ça marche ?</button>
       <span class="sens hs"><svg><use href="#i-shield"/></svg>Hautement sensible</span>
       <span class="hint">Consultation elle-même auditée (§5.3) · aucune validation : journal en lecture, jamais modifié ni supprimé physiquement (Finance §10.2) · Exporter distinct de Consulter (§3.4)</span>
     </div>
@@ -239,6 +240,24 @@
     <label for="core-audit-arc-motif" style="margin-top:10px">Motif de l'investigation</label>
     <input id="core-audit-arc-motif" data-a="motif" placeholder="Motif obligatoire, conservé avec la demande">
     <div class="acts"><button class="btn ghost" data-close>Annuler</button><button class="btn pri" data-a="confirm"><svg><use href="#i-box"/></svg>Demander la restauration</button></div>
+  </div></div>
+
+  <!-- Modale : aide contextuelle -->
+  <div class="mback" data-ov="help-core-audit"><div class="modal wide" role="dialog" aria-modal="true" aria-label="Comment ça marche : Audit central">
+    <h3><svg><use href="#i-info"/></svg>Comment ça marche : Audit central</h3>
+    <div class="exp">Journal central de l'ERP : DG et Super Admin s'en servent pour retracer une opération, exporter un extrait filtré ou demander la restauration d'une archive. Les autres profils, dont le Directeur des Opérations, n'accèdent pas à cet écran hautement sensible.</div>
+    <ul class="help-list">
+      <li><b>Une ligne par événement</b> — acteur ou agent, profil, module, action, objet, ancienne et nouvelle valeur, motif et chaîne de validation : l'extrait du 27/08 réunit 13 événements, 10 pour Mata Finance et 3 pour Mata Core (§5.4).</li>
+      <li><b>Trois niveaux de sensibilité</b> — Standard, Sensible ou Hautement sensible commandent l'accès, l'audit de la modification et le contrôle d'export ; cet extrait compte 8 événements Hautement sensible, 4 Sensible et 1 Standard (§5.3).</li>
+      <li><b>Votre consultation est elle-même journalisée</b> — comme celle d'O. Seck, DG Mata, à 14:05 sur l'Historique Caisse générale ; le détail reste actif 90 jours puis se résume en compteur (§5.3).</li>
+      <li><b>Exporter n'est pas Consulter</b> — le bouton Exporter reste visible mais désactivé sans la permission core.audit.exporter, ici réservée au Super Admin : pour une donnée hautement sensible, l'export peut être interdit (§5.3).</li>
+      <li><b>Conservation en deux temps</b> — les modifications restent 24 mois en base active puis partent en archive froide jusqu'à 10 ans (12 modifications dans l'extrait) ; les consultations restent détaillées 90 jours puis se résument en compteurs agrégés (1 ici) (Technique §11).</li>
+      <li><b>Demander une archive</b> — une restauration demandée par un utilisateur autorisé n'est pas conservée en permanence dans la base active, mais aboutit sous un jour ouvré (Technique §11).</li>
+      <li><b>Rien n'est supprimé</b> — une opération comptabilisée reste tracée avec ses valeurs sources : l'auto-réconciliation de 02:04 conserve <span class="amt" data-amt="4725000" data-nocur></span> déclaré côté 12 collectes MaaS et <span class="amt" data-amt="4725000" data-nocur></span> côté collecteur A. Ndiaye (Finance §10.2).</li>
+    </ul>
+    <div class="note-strip"><svg><use href="#i-shield"/></svg>Refus par défaut : cet écran hautement sensible reste ouvert au DG et au Super Admin ; Directeur des Opérations, Gestionnaire de caisse, Collecteur, Gérant MaaS, Investisseur et Comptable externe en sont exclus (§5.3).</div>
+    <div class="hint">Sources : Cahier Mata Core §5.3, §5.4 · Technique §11 · Finance §10.2</div>
+    <div class="acts"><button class="btn ghost" data-close>Fermer</button></div>
   </div></div>
 </section>
 <script data-screen="core-audit">
