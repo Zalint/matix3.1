@@ -28,9 +28,11 @@ def lint(sid):
     # 3. .fx sans data-f ; data-f vide
     for fx in re.findall(r'<button class="fx"[^>]*>', html):
         if "data-f=" not in fx: out.append(".fx sans data-f : " + fx[:80])
-    # 4. Montants en dur dans le texte visible (hors attributs, .fcode/.eq, script)
+    # 4. Montants en dur dans le texte visible (hors attributs, .fcode/.eq, script, <option>)
     # Les blocs .eq / .fcode entiers sont retirés d'abord (CONTRACT §2 : exception prévue), y compris leurs balises imbriquées (<b>, <span data-t>)
-    body = re.sub(r"<(div|span|p)\b[^>]*\bclass=\"(?:eq|fcode)\b[^\"]*\"[^>]*>.*?</\1>", "", html, flags=re.S)
+    # <option> ne peut pas contenir de markup (un <span data-amt> ne s'y rendrait jamais) : exception structurelle, pas une infraction.
+    body = re.sub(r"<option\b[^>]*>.*?</option>", "", html, flags=re.S)
+    body = re.sub(r"<(div|span|p)\b[^>]*\bclass=\"(?:eq|fcode)\b[^\"]*\"[^>]*>.*?</\1>", "", body, flags=re.S)
     body = re.sub(r"<[^>]+>", lambda t: "<>" if not re.match(r"<(div|span|p|small|b|td|th|li|h\d)\b[^>]*class=\"[^\"]*(fcode|eq)\b", t.group(0)) else "<FX>", body)
     body = re.sub(r"<FX>.*?<>", "", body, flags=re.S)
     hard = re.findall(r"(?<![\d/:])\b\d{1,3}(?: \d{3}){2,}\b", body)

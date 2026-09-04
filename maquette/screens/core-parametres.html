@@ -157,7 +157,7 @@
           <div class="ev on"><b>Les configurations sensibles sont historisées et, lorsque nécessaire, datées dans le temps.</b><small>§6.4 · date d’effet obligatoire ; une date future planifie la version</small></div>
           <div class="ev"><b>Une donnée sensible ou validée ne doit pas être écrasée silencieusement. L’original reste accessible.</b><small>§5.5 · nouvelle version, l’ancienne reste dans l’historique</small></div>
           <div class="ev"><b>Si la donnée a été modifiée depuis sa lecture, la nouvelle écriture est rejetée explicitement.</b><small>arch. §12 · conflit signalé, état à recharger, jamais d’écrasement silencieux</small></div>
-          <div class="ev"><b>Après clôture, toute correction requiert par défaut l’approbation du Super Admin.</b><small>§5.5 · une date d’effet antérieure au 27/08/2026 est refusée sur cet écran</small></div>
+          <div class="ev"><b>Une date d’effet ne réécrit jamais une version déjà appliquée dans le passé.</b><small>Une date d’effet antérieure au 27/08/2026 est refusée sur cet écran</small></div>
         </div></div>
       </div>
 
@@ -220,16 +220,16 @@ ERP.register('core-parametres', function (root, ctx) {
   var esc = function (s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); };
   var fr = function (iso) { return iso ? iso.slice(8, 10) + '/' + iso.slice(5, 7) + '/' + iso.slice(0, 4) : '—'; };
   var J = function (s, d) { try { return s ? JSON.parse(s) : d; } catch (e) { return d; } };
-  function P(tr) { var d = tr.dataset; return { tr: tr, id: d.id, lbl: d.lbl, portee: d.portee, sens: d.sens === 'oui', ver: +d.ver, eff: d.eff, by: d.by, motif: d.motif, ref: d.ref, use: d.use, fmt: d.fmt, fields: J(d.fields, []), ovr: J(d.ovr, null), next: J(d.next, null) }; }
-  function save(p) { var d = p.tr.dataset; d.ver = p.ver; d.eff = p.eff; d.by = p.by; d.motif = p.motif; d.fields = JSON.stringify(p.fields); d.ovr = p.ovr ? JSON.stringify(p.ovr) : ''; d.next = p.next ? JSON.stringify(p.next) : ''; }
+  function P(tr) { var d = tr.dataset; return { tr: tr, id: d.id, lbl: d.lbl, portee: d.portee, sens: d.sens === 'oui', ver: +d.ver, eff: d.eff, by: d.by, motif: d.motif, ref: d.ref, use: d.use, fmt: d.fmt, fields: J(d.fields, []), ovr: J(d.ovr, null), next: J(d.next, null), ovrNext: J(d.ovrnext, null) }; }
+  function save(p) { var d = p.tr.dataset; d.ver = p.ver; d.eff = p.eff; d.by = p.by; d.motif = p.motif; d.fields = JSON.stringify(p.fields); d.ovr = p.ovr ? JSON.stringify(p.ovr) : ''; d.next = p.next ? JSON.stringify(p.next) : ''; d.ovrnext = p.ovrNext ? JSON.stringify(p.ovrNext) : ''; }
   /* Valeur affichée : gabarit data-fmt + champs typés ; un champ montant devient un data-amt formaté par le moteur (plain = texte pour les toasts) */
   function disp(p, vals, plain) { return p.fmt.replace(/\{(\w+)\}/g, function (_, k) { var f = p.fields.filter(function (x) { return x.k === k; })[0], v = vals && vals[k] !== undefined ? vals[k] : f.v; return f.t === 'amount' ? (plain ? ctx.fmt(+v) + ' FCFA' : '<span class="amt" data-amt="' + (+v) + '"></span>') : esc(v); }); }
   var FC = { 'audit-modif': function (p) { return 'Modifications : base active ' + p.fields[0].v + ' mois → archive froide compressée → ' + p.fields[1].v + ' ans'; }, 'audit-consult': function (p) { return 'Consultations : détail ' + p.fields[0].v + ' jours → archive à froid + compteurs agrégés'; } };
   function cells(p) {
-    var val = disp(p) + (p.ovr ? '<span class="hint">Override Mata Group (v' + p.ovr.ver + ') : ' + disp(p, p.ovr.vals) + ' · date d’effet ' + fr(p.ovr.eff) + ' · valeur globale conservée pour les autres entités</span>' : '') + (p.next ? '<span class="hint">Version ' + p.next.ver + ' planifiée : ' + disp(p, p.next.vals) + ' à compter du ' + fr(p.next.eff) + ' · motif « ' + esc(p.next.motif) + ' »</span>' : '');
+    var val = disp(p) + (p.ovr ? '<span class="hint">Override Mata Group (v' + p.ovr.ver + ') : ' + disp(p, p.ovr.vals) + ' · date d’effet ' + fr(p.ovr.eff) + ' · valeur globale conservée pour les autres entités</span>' : '') + (p.next ? '<span class="hint">Version ' + p.next.ver + ' planifiée : ' + disp(p, p.next.vals) + ' à compter du ' + fr(p.next.eff) + ' · motif « ' + esc(p.next.motif) + ' »</span>' : '') + (p.ovrNext ? '<span class="hint">Override Mata Group v' + p.ovrNext.ver + ' planifié : ' + disp(p, p.ovrNext.vals) + ' à compter du ' + fr(p.ovrNext.eff) + ' · motif « ' + esc(p.ovrNext.motif) + ' » · valeur en vigueur conservée jusque-là</span>' : '');
     var por = { global: 'Toutes les entités · aucun override possible', override: p.ovr ? 'Override actif · Mata Group' : 'Aucun override · valeur globale appliquée à Mata Group', local: 'Valeur propre à Mata Group · autres entités : non définie avant activation' }[p.portee];
     q('[data-cell="val"]', p.tr).innerHTML = val; q('[data-cell="portee"]', p.tr).innerHTML = PORTEE[p.portee] + '<span class="hint">' + por + '</span>';
-    q('[data-cell="ver"]', p.tr).innerHTML = '<span class="mono">v' + p.ver + '</span>' + (p.next ? '<span class="hint">v' + p.next.ver + ' planifiée</span>' : '');
+    q('[data-cell="ver"]', p.tr).innerHTML = '<span class="mono">v' + p.ver + '</span>' + (p.next ? '<span class="hint">v' + p.next.ver + ' planifiée</span>' : '') + (p.ovrNext ? '<span class="hint">v' + p.ovrNext.ver + ' override planifiée</span>' : '');
     q('[data-cell="mod"]', p.tr).innerHTML = '<span class="mono">' + fr(p.eff) + '</span><span class="hint">' + esc(p.by) + ' · ' + esc(p.motif) + '</span>';
     if (FC[p.id]) q('[data-fc="' + p.id + '"]').textContent = FC[p.id](p);
     ctx.formatAmounts(p.tr);
@@ -237,7 +237,7 @@ ERP.register('core-parametres', function (root, ctx) {
   /* Historique : version en vigueur + version 1 (valeur de référence du cahier) ; les versions ajoutées s'empilent, l'original reste accessible (§5.5) */
   function hist(p) { if (!HIST[p.id]) HIST[p.id] = [{ ver: p.ver, val: disp(p), eff: p.eff, by: p.by, motif: p.motif, st: 'en vigueur' }, { ver: 1, val: esc(p.ref), eff: '', by: 'Cadrage V13 · v0.8.0', motif: 'Valeur de référence du cahier des charges, avant configuration de l’entité', st: 'remplacée le ' + fr(p.eff) }]; return HIST[p.id]; }
   function drawer(p) {
-    S.cur = p.id; q('[data-d-title]', D).textContent = 'Historique — ' + p.lbl; q('[data-d-val]', D).innerHTML = disp(p) + (p.ovr ? '<span class="hint">Override Mata Group : ' + disp(p, p.ovr.vals) + '</span>' : '');
+    S.cur = p.id; q('[data-d-title]', D).textContent = 'Historique — ' + p.lbl; q('[data-d-val]', D).innerHTML = disp(p) + (p.ovr ? '<span class="hint">Override Mata Group : ' + disp(p, p.ovr.vals) + '</span>' : '') + (p.ovrNext ? '<span class="hint">Override Mata Group v' + p.ovrNext.ver + ' planifié : ' + disp(p, p.ovrNext.vals) + ' à compter du ' + fr(p.ovrNext.eff) + '</span>' : '');
     q('[data-d-meta]', D).innerHTML = '<span class="tag lock"><svg><use href="#i-layers"/></svg>' + PORTEE[p.portee] + '</span>' + (p.sens ? '<span class="sens s"><svg><use href="#i-shield"/></svg>Sensible</span>' : '<span class="sens std">Standard</span>') + '<span class="tag lock"><svg><use href="#i-key"/></svg>v' + p.ver + ' en vigueur</span>';
     q('[data-d-use]', D).textContent = 'Utilisé par : ' + p.use;
     q('[data-d-tl]', D).innerHTML = hist(p).map(function (h) { return '<div class="ev' + (h.st === 'en vigueur' ? ' on' : '') + '"><b>Version ' + h.ver + ' — ' + esc(h.st) + ' · ' + h.val + '</b><small>' + (h.eff ? 'Date d’effet ' + fr(h.eff) + ' · ' : '') + esc(h.by) + ' · ' + esc(h.motif) + '</small></div>'; }).join('');
@@ -261,17 +261,17 @@ ERP.register('core-parametres', function (root, ctx) {
   }
   ctx.on(q('[data-submit]', M), 'click', function () {
     var p = P(q('tr[data-id="' + S.cur + '"]')), H = hist(p), vals = {}, err = '', eff = q('[data-field="eff"]', M).value, motif = q('[data-field="motif"]', M).value.trim(), scope = q('input[name="core-parametres-scope"]:checked', M).value;
-    p.fields.forEach(function (f) { var v = q('[data-fk="' + f.k + '"]', M).value.trim().replace(/[\s  ]/g, ''); err = err || check(f, v); vals[f.k] = f.t === 'select' || f.t === 'time' ? v : +v; });
+    p.fields.forEach(function (f) { var raw = q('[data-fk="' + f.k + '"]', M).value.trim(), v = (f.t === 'select' || f.t === 'time') ? raw : raw.replace(/[\s  ]/g, ''); err = err || check(f, v); vals[f.k] = f.t === 'select' || f.t === 'time' ? v : +v; });
     if (err) { ctx.toast(err); return; }
     if (p.sens && !eff) { ctx.toast('Date d’effet obligatoire : les configurations sensibles sont historisées et datées dans le temps (§6.4)'); q('[data-field="eff"]', M).focus(); return; }
-    if (eff && eff < TODAY) { ctx.toast('Date d’effet ' + fr(eff) + ' antérieure au 27/08/2026 : une modification rétroactive suit le workflow de correction post-clôture, approbation Super Admin (§5.5)'); return; }
+    if (eff && eff < TODAY) { ctx.toast('Date d’effet ' + fr(eff) + ' antérieure au 27/08/2026 : une date d’effet passée réécrirait une version déjà appliquée, elle n’est pas autorisée sur cet écran'); return; }
     if (p.sens && !motif) { ctx.toast('Motif obligatoire : conservé dans l’Audit central avec l’ancienne et la nouvelle valeur (§5.4)'); q('[data-field="motif"]', M).focus(); return; }
     eff = eff || TODAY; motif = motif || 'Sans motif (paramètre standard)';
-    var oldP = disp(p, null, 1), neuP = disp(p, vals, 1), by = ctx.profile.short + ' · ' + ctx.profile.profile, nv = Math.max(p.ver, p.next ? p.next.ver : 0, p.ovr ? p.ovr.ver : 0) + 1, st;
-    if (scope === 'local') { if (!p.ovr) S.ovr++; p.ovr = { ver: nv, vals: vals, eff: eff, by: by, motif: motif }; st = 'override Mata Group'; }
-    else if (eff > TODAY) { p.next = { ver: nv, vals: vals, eff: eff, by: by, motif: motif }; st = 'planifiée'; }
+    var oldP = disp(p, null, 1), neuP = disp(p, vals, 1), by = ctx.profile.short + ' · ' + ctx.profile.profile, nv = p.sens ? Math.max(p.ver, p.next ? p.next.ver : 0, p.ovr ? p.ovr.ver : 0, p.ovrNext ? p.ovrNext.ver : 0) + 1 : p.ver, st;
+    if (eff > TODAY) { if (scope === 'local') { p.ovrNext = { ver: nv, vals: vals, eff: eff, by: by, motif: motif }; st = 'override planifiée'; } else { p.next = { ver: nv, vals: vals, eff: eff, by: by, motif: motif }; st = 'planifiée'; } }
+    else if (scope === 'local') { if (!p.ovr) S.ovr++; p.ovr = { ver: nv, vals: vals, eff: eff, by: by, motif: motif }; st = 'override Mata Group'; }
     else { p.fields.forEach(function (f) { f.v = vals[f.k]; }); p.ver = nv; p.eff = eff; p.by = by; p.motif = motif; p.next = null; st = 'en vigueur'; H.forEach(function (h) { if (h.st === 'en vigueur') h.st = 'remplacée le ' + fr(eff); }); }
-    H.unshift({ ver: nv, val: disp(p, vals) + (scope === 'local' ? ' (override Mata Group)' : ''), eff: eff, by: by, motif: motif, st: st }); save(p); cells(p); drawer(p);
+    if (p.sens) H.unshift({ ver: nv, val: disp(p, vals) + (scope === 'local' ? ' (override Mata Group)' : ''), eff: eff, by: by, motif: motif, st: st }); save(p); cells(p); drawer(p);
     S.n++; q('[data-session-empty]').hidden = true;
     q('[data-session]').insertAdjacentHTML('afterbegin', '<div class="ev on"><b>' + esc(p.lbl) + ' · v' + nv + ' ' + st + ' · ' + esc(oldP) + ' → ' + esc(neuP) + '</b><small>' + esc(by) + ' · 27/08/2026 · date d’effet ' + fr(eff) + ' · motif « ' + esc(motif) + ' » · Audit central : ancienne / nouvelle valeur, profil actif</small></div>');
     q('[data-k="last"]').textContent = '27/08/2026'; q('[data-k="last-sub"]').textContent = S.n + ' modification' + (S.n > 1 ? 's' : '') + ' aujourd’hui · ' + by + ' · auditée (§5.4)';

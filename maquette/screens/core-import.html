@@ -211,7 +211,7 @@
     </table></div>
     <div class="cb">
       <div class="actionbar" style="margin-top:0"><button class="btn pri" data-open="core-import-nouvel-export" data-perm="core.export"><svg><use href="#i-plus"/></svg>Nouvel export</button><span class="hint">Formats selon le besoin : CSV, Excel, PDF (§6.3) · Excel lorsque pertinent, selon les permissions gérées par Mata Core (Finance §9.2) · DEM-028 : permission temporaire « Exporter dépenses » refusée à F. Sarr par O. Seck le 24/08</span></div>
-      <div class="note-strip"><svg><use href="#i-info"/></svg><span>Les fichiers générés par le service d’export commun sont considérés comme des artefacts temporaires lorsqu’ils peuvent être reproduits à partir des données sources : ils sont supprimés automatiquement après une durée courte configurable (Technique §8 · paramètre « Conservation des exports : 7 jours »). Les documents sources (justificatifs, contrats, photos) ne suivent jamais cette politique — ils suivent leur propre cycle de conservation et ne sont jamais supprimés avec les exports (Finance §5.7). Le droit d’export reste distinct du droit de consultation (§6.3).</span></div>
+      <div class="note-strip"><svg><use href="#i-info"/></svg><span>Les fichiers générés par le service d’export commun sont considérés comme des artefacts temporaires lorsqu’ils peuvent être reproduits à partir des données sources : ils sont supprimés automatiquement après une durée courte configurable (Technique §8 · paramètre « Conservation des exports : 7 jours »). Les documents sources (justificatifs, contrats, photos) ne suivent jamais cette politique — ils suivent leur propre cycle de conservation et ne sont jamais supprimés avec les exports (Finance §5.7). Le droit d’export reste distinct du droit de consultation (§6.3). Règle de permission : depuis ce hub, le téléchargement et la régénération d’un export sont toujours gouvernés par la permission commune « core.export », y compris pour un export dont le module d’origine porte sa propre permission d’export (ex. Dépenses août, généré sous finance.export côté Mata Finance) — sauf pour les objets dont la sensibilité impose une permission dédiée, comme le Journal d’audit (core.audit.exporter).</span></div>
     </div>
   </div>
 
@@ -279,7 +279,7 @@ ERP.register('core-import', function (root, ctx) {
       '<td><span class="expire"><svg><use href="#i-clock"/></svg>supprimé le 03/09/2026</span><span class="hint" data-exp>dans 7 jours · régénérable</span></td><td><button class="btn ghost sm" data-dl data-perm="' + esc(p) + '"><svg><use href="#i-dl"/></svg>Télécharger</button><button class="btn ghost sm" data-regen data-perm="' + esc(p) + '"><svg><use href="#i-refresh"/></svg>Régénérer</button></td>';
     exps.insertBefore(tr, exps.firstChild); nexp++; q('[data-stat="nexp"]').textContent = String(nexp);
     var f = qa('.chip[data-ffmt].on')[0]; if (f) ctx.filterRows(exps, 'fmt', f.getAttribute('data-ffmt'));
-    ctx.formatAmounts(tr); ctx.applyPerms();
+    ctx.applyPerms();
   }
   ctx.on(exps, 'click', function (e) {
     var b = e.target.closest('button'); if (!b || b.disabled) return; var tr = b.closest('tr'), nm = q('b', tr).textContent, p = b.getAttribute('data-perm');
@@ -291,6 +291,14 @@ ERP.register('core-import', function (root, ctx) {
   });
   qa('.chip[data-ffmt]').forEach(function (c) { ctx.on(c, 'click', function () { qa('.chip[data-ffmt]').forEach(function (x) { x.classList.toggle('on', x === c); }); ctx.filterRows(exps, 'fmt', c.getAttribute('data-ffmt')); }); });
   qa('input[name="core-import-fmt"]').forEach(function (r) { ctx.on(r, 'change', function () { qa('input[name="core-import-fmt"]').forEach(function (x) { x.closest('.rline').classList.toggle('sel', x.checked); }); }); });
+  /* ---- Excel pertinent selon l'objet exporté : formats gérés par Mata Core (Finance §9.2) ---- */
+  var objSel = q('[data-obj]'), fmtExcel = q('input[name="core-import-fmt"][value="Excel"]');
+  function syncFmt() {
+    var core = /Mata Core/.test(objSel.options[objSel.selectedIndex].textContent), lbl = fmtExcel.closest('.rline');
+    fmtExcel.disabled = core; lbl.title = core ? 'Excel non pertinent pour un objet Mata Core (Finance §9.2)' : '';
+    if (core && fmtExcel.checked) { q('input[name="core-import-fmt"][value="CSV"]').checked = true; qa('input[name="core-import-fmt"]').forEach(function (x) { x.closest('.rline').classList.toggle('sel', x.checked); }); }
+  }
+  ctx.on(objSel, 'change', syncFmt);
   ctx.on(q('[data-generate]'), 'click', function () {
     var o = q('[data-obj]'), i = o.selectedIndex, lab = o.options[i].textContent, fmt = (qa('input[name="core-import-fmt"]').filter(function (x) { return x.checked; })[0] || { value: 'CSV' }).value, p = i === 7 ? 'core.audit.exporter' : 'core.export';
     if (!ctx.hasPerm(p)) { ctx.toast('Refus par défaut : la permission ' + p + ' n’est pas accordée au profil ' + ctx.profile.profile + ' (§5.3)'); return; }
@@ -313,7 +321,7 @@ ERP.register('core-import', function (root, ctx) {
     ctx.formatAmounts(root); ctx.applyPerms(); show(5);
     ctx.toast('Import exécuté par ' + me + ' : 5 mises à jour, 0 création, 2 rejetées, 1 doublon ignoré · aucun mouvement financier · événement audité (§5.4)');
   });
-  ctx.on(q('[data-report]'), 'click', function () { addExport('Rapport d’import Fournisseurs', 'CSV', '8 lignes · résultat des 5 contrôles · 2 rejets détaillés · fournisseurs_2026-08-27.xlsx'); ctx.toast('Rapport d’import (CSV) généré · ajouté aux exports générés · conservé 7 jours puis supprimé, régénérable'); });
+  ctx.on(q('[data-report]'), 'click', function () { if (!imported) { ctx.toast('Rapport d’import disponible après l’étape Import : importez d’abord (§6.3)'); return; } addExport('Rapport d’import Fournisseurs', 'CSV', '8 lignes · résultat des 5 contrôles · 2 rejets détaillés · fournisseurs_2026-08-27.xlsx'); ctx.toast('Rapport d’import (CSV) généré · ajouté aux exports générés · conservé 7 jours puis supprimé, régénérable'); });
   /* ---- Profil : exécutant, refus expliqués, permissions réappliquées ---- */
   function prof() {
     qa('[data-me]').forEach(function (el) { el.textContent = ctx.profile.short + ' · ' + ctx.profile.profile; });
@@ -324,6 +332,6 @@ ERP.register('core-import', function (root, ctx) {
     q('[data-view="ro"]').hidden = !miss.length; q('[data-ro-prof]').textContent = ctx.profile.profile; q('[data-ro-why]').textContent = miss.join(' · ');
   }
   document.addEventListener('erp:profile', function () { prof(); ctx.applyPerms(); gate(); });
-  prof(); filter('tous'); show(1); ctx.formatAmounts(root); ctx.applyPerms();
+  prof(); filter('tous'); show(1); ctx.formatAmounts(root); ctx.applyPerms(); syncFmt();
 });
 </script>

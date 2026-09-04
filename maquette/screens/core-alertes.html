@@ -1,15 +1,7 @@
 <section class="scr" data-scr="core-alertes" data-module="core" data-perm="core.alertes.view" data-sens="std" hidden>
   <style data-screen="core-alertes">
-    #app [data-scr="core-alertes"] .sw{position:relative;display:inline-flex;align-items:center;gap:8px;cursor:pointer;font-size:12px;font-weight:600;white-space:nowrap}
-    #app [data-scr="core-alertes"] .sw[title]{cursor:not-allowed}
-    #app [data-scr="core-alertes"] .sw input{position:absolute;opacity:0;width:0;height:0}
-    #app [data-scr="core-alertes"] .sw i{width:34px;height:20px;border-radius:999px;background:var(--line-2);position:relative;flex:none;transition:background .15s}
-    #app [data-scr="core-alertes"] .sw i::after{content:"";position:absolute;top:3px;left:3px;width:14px;height:14px;border-radius:50%;background:#fff;transition:left .15s}
-    #app [data-scr="core-alertes"] .sw input:checked+i{background:var(--red)}
-    #app [data-scr="core-alertes"] .sw input:checked+i::after{left:17px}
-    #app [data-scr="core-alertes"] .sw input:disabled+i{opacity:.5}
-    #app [data-scr="core-alertes"] .sw input:focus-visible+i{outline:2px solid var(--red);outline-offset:2px}
     #app [data-scr="core-alertes"] tr.off td{color:var(--mut)}
+    #app [data-scr="core-alertes"] td>.btn.sm[data-toggle]{min-width:46px;justify-content:center}
     #app [data-scr="core-alertes"] td>.linkish{font-weight:700;font-size:12.5px;color:var(--ink);padding:0;text-align:left}
     #app [data-scr="core-alertes"] .kv{display:flex;justify-content:space-between;gap:12px;font-size:12px;padding:6px 0;border-bottom:1px dashed var(--line)}
     #app [data-scr="core-alertes"] .kv span{color:var(--mut);flex:none;max-width:42%}
@@ -36,7 +28,7 @@
 
   <div class="statstrip four">
     <div class="card stat">
-      <div class="lb">Règles actives<button class="fx" data-fx="on" data-f="Les notifications respectent le profil et les droits ; peuvent être critiques ou configurables (Core §6.1) · Règles actives = nombre de règles dont l'interrupteur « Actif » est à Oui" data-c="Écart de réconciliation · Dépense « Pas sûr » à 23:00 · Échéance fournisseur dépassée · Plafond d'encours dépassé · Relais ouvert au-delà du seuil (2 j) · Ajustement inhabituel · Source non à jour · Budget agent IA > 80 % · Correction post-clôture · Sauvegarde échouée" data-src="Mata Core · Alertes · règles en vigueur au 27/08/2026 · 21:30" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></div>
+      <div class="lb">Règles actives<button class="fx" data-fx="on" data-f="Les notifications respectent le profil et les droits ; peuvent être critiques ou configurables (Core §6.1) · Règles actives = nombre de règles dont le bouton « Actif » est à Oui" data-c="Écart de réconciliation · Dépense « Pas sûr » à 23:00 · Échéance fournisseur dépassée · Plafond d'encours dépassé · Relais ouvert au-delà du seuil (2 j) · Ajustement inhabituel · Source non à jour · Budget agent IA > 80 % · Correction post-clôture · Sauvegarde échouée" data-src="Mata Core · Alertes · règles en vigueur au 27/08/2026 · 21:30" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></div>
       <div class="v" data-stat="on">10</div>
       <div class="sub2" data-stat="on-sub">sur 10 règles · 8 Mata Finance · 2 Mata Core</div>
     </div>
@@ -79,70 +71,70 @@
               <td>Mata Finance<div class="hint">Réconciliation · §4.8 · §6.3 · §6.4</div></td>
               <td><span class="tag lock"><svg><use href="#i-mail"/></svg>Email + centre</span></td>
               <td>Admin, DG, Collecteur<div class="hint">destinataires imposés par le cahier</div></td>
-              <td><span class="st bad"><svg><use href="#i-alert"/></svg>Critique</span><div class="hint">non désactivable</div></td><td><label class="sw"><input type="checkbox" checked data-toggle data-perm="core.alertes.modifier" aria-label="Règle active : Écart de réconciliation"><i></i><span data-on-lbl>Oui</span></label><div class="hint" data-off-note hidden></div></td>
+              <td><span class="st bad"><svg><use href="#i-alert"/></svg>Critique</span><div class="hint">non désactivable</div></td><td><button class="btn sm pri" data-toggle data-perm="core.alertes.modifier" aria-label="Règle active : Écart de réconciliation">Oui</button><div class="hint" data-off-note hidden></div></td>
             </tr>
             <tr data-rule="R2" data-mod="finance" data-crit="critique" data-on="1" data-name="Dépense « Pas sûr » à 23:00" data-ch="Email + centre" data-dest="Directeur des Opérations, Admins, Super Admin" data-orig="Dépenses Pas sûr · Dépenses · §5.2 · §10.4" data-seuil="Heure de notification « Pas sûr » : 23:00 (Paramètres §17) · une absence d'information ne vaut jamais zéro (§5.2)" data-n27="0">
               <td><button class="linkish" data-open="core-alertes-fiche">Dépense « Pas sûr » à 23:00</button><div class="hint" data-last>Dernier : 26/08 · 23:00 — 1 dépense « Pas sûr » non résolue · aujourd'hui : Carburant véhicule livraison <span class="amt" data-amt="85000" data-nocur></span> (Sous-caisse Livraisons) en attente, envoi à 23:00 si non résolue</div></td>
               <td>Mata Finance<div class="hint">Dépenses · §5.2</div></td>
               <td><span class="tag lock"><svg><use href="#i-mail"/></svg>Email + centre</span></td>
               <td>Directeur des Opérations, Admins, Super Admin<div class="hint">avec accès à la liste à résoudre (§5.2)</div></td>
-              <td><span class="st bad"><svg><use href="#i-alert"/></svg>Critique</span><div class="hint">désactivable avec motif, audité</div></td><td><label class="sw"><input type="checkbox" checked data-toggle data-perm="core.alertes.modifier" aria-label="Règle active : Dépense Pas sûr à 23:00"><i></i><span data-on-lbl>Oui</span></label><div class="hint" data-off-note hidden></div></td>
+              <td><span class="st bad"><svg><use href="#i-alert"/></svg>Critique</span><div class="hint">désactivable avec motif, audité</div></td><td><button class="btn sm pri" data-toggle data-perm="core.alertes.modifier" aria-label="Règle active : Dépense Pas sûr à 23:00">Oui</button><div class="hint" data-off-note hidden></div></td>
             </tr>
             <tr data-rule="R3" data-mod="finance" data-crit="haute" data-on="1" data-name="Échéance fournisseur dépassée" data-ch="Centre" data-dest="Directeur des Opérations" data-orig="Échéances fournisseurs dépassées · Fournisseurs · §5.3 · §5.6 · §10.4" data-seuil="Date de paiement souhaitée au plus tard dépassée, par dépense ou lot impayé (§5.3) · priorité aux dépassées (§5.6)" data-n27="1">
               <td><button class="linkish" data-open="core-alertes-fiche">Échéance fournisseur dépassée</button><div class="hint" data-last>Dernier : 27/08 · 17:30 — MATA VOLAILLE ŒUFS <span class="amt" data-amt="1150000" data-nocur></span> (25/08, 2 j) · Aliments Sénégal <span class="amt" data-amt="800000" data-nocur></span> (20/08, 7 j) · total dépassé <span class="amt" data-amt="1950000" data-nocur></span></div></td>
               <td>Mata Finance<div class="hint">Fournisseurs · §5.3 · §5.6</div></td>
               <td><span class="tag lock"><svg><use href="#i-bell"/></svg>Centre</span></td>
               <td>Directeur des Opérations<div class="hint">Fournisseurs (payer) · paiement FIFO</div></td>
-              <td><span class="st warn"><svg><use href="#i-flag"/></svg>Haute</span><div class="hint">désactivable avec motif, audité</div></td><td><label class="sw"><input type="checkbox" checked data-toggle data-perm="core.alertes.modifier" aria-label="Règle active : Échéance fournisseur dépassée"><i></i><span data-on-lbl>Oui</span></label><div class="hint" data-off-note hidden></div></td>
+              <td><span class="st warn"><svg><use href="#i-flag"/></svg>Haute</span><div class="hint">désactivable avec motif, audité</div></td><td><button class="btn sm pri" data-toggle data-perm="core.alertes.modifier" aria-label="Règle active : Échéance fournisseur dépassée">Oui</button><div class="hint" data-off-note hidden></div></td>
             </tr>
             <tr data-rule="R4" data-mod="finance" data-crit="info" data-on="1" data-name="Plafond d'encours dépassé" data-ch="Centre" data-dest="Directeur des Opérations, DG" data-orig="Plafond d'encours · Fournisseurs · §5.4" data-seuil="Plafond par fournisseur · dette contrôlée = max(0 ; − Position fournisseur) · alerte informative, ne bloque pas la saisie en V1 (§5.4)" data-n27="1">
               <td><button class="linkish" data-open="core-alertes-fiche">Plafond d'encours dépassé</button><div class="hint" data-last>Dernier : 27/08 · 15:24 — AGNEAUX : dette <span class="amt" data-amt="12400000" data-nocur></span> / plafond <span class="amt" data-amt="10000000" data-nocur></span> · aucun blocage de saisie (§5.4)</div></td>
               <td>Mata Finance<div class="hint">Fournisseurs · §5.4</div></td>
               <td><span class="tag lock"><svg><use href="#i-bell"/></svg>Centre</span></td>
               <td>Directeur des Opérations, DG<div class="hint">notification sans blocage</div></td>
-              <td><span class="st info"><svg><use href="#i-info"/></svg>Informative</span><div class="hint">désactivable avec motif, audité</div></td><td><label class="sw"><input type="checkbox" checked data-toggle data-perm="core.alertes.modifier" aria-label="Règle active : Plafond d'encours dépassé"><i></i><span data-on-lbl>Oui</span></label><div class="hint" data-off-note hidden></div></td>
+              <td><span class="st info"><svg><use href="#i-info"/></svg>Informative</span><div class="hint">désactivable avec motif, audité</div></td><td><button class="btn sm pri" data-toggle data-perm="core.alertes.modifier" aria-label="Règle active : Plafond d'encours dépassé">Oui</button><div class="hint" data-off-note hidden></div></td>
             </tr>
             <tr data-rule="R5" data-mod="finance" data-crit="haute" data-on="1" data-name="Relais ouvert au-delà du seuil (2 j)" data-ch="Centre" data-dest="Admin" data-orig="Solde relais ancien · Comptes Relais · §4.6" data-seuil="Seuil relais ancien : 2 jours (Paramètres §17) · un solde relais ancien au-delà d'un seuil configurable génère une alerte (§4.6)" data-n27="1">
               <td><button class="linkish" data-open="core-alertes-fiche">Relais ouvert au-delà du seuil (2 j)</button><div class="hint" data-last>Dernier : 27/08 · 12:00 — « Bictorys → Banque en cours » <span class="amt" data-amt="350000" data-nocur></span>, créé 24/08, âge 3 j &gt; seuil 2 j · « Dépôt en cours » <span class="amt" data-amt="2500000" data-nocur></span> âge 0 j, hors seuil</div></td>
               <td>Mata Finance<div class="hint">Comptes · §4.6</div></td>
               <td><span class="tag lock"><svg><use href="#i-bell"/></svg>Centre</span></td>
               <td>Admin<div class="hint">seuil : 2 jours (Paramètres §17)</div></td>
-              <td><span class="st warn"><svg><use href="#i-flag"/></svg>Haute</span><div class="hint">désactivable avec motif, audité</div></td><td><label class="sw"><input type="checkbox" checked data-toggle data-perm="core.alertes.modifier" aria-label="Règle active : Relais ouvert au-delà du seuil"><i></i><span data-on-lbl>Oui</span></label><div class="hint" data-off-note hidden></div></td>
+              <td><span class="st warn"><svg><use href="#i-flag"/></svg>Haute</span><div class="hint">désactivable avec motif, audité</div></td><td><button class="btn sm pri" data-toggle data-perm="core.alertes.modifier" aria-label="Règle active : Relais ouvert au-delà du seuil">Oui</button><div class="hint" data-off-note hidden></div></td>
             </tr>
             <tr data-rule="R6" data-mod="finance" data-crit="critique" data-on="1" data-lock data-name="Ajustement inhabituel (> 500 000 ou > 3 par jour)" data-ch="Email + centre" data-dest="DG, Super Admin" data-orig="Ajustements inhabituels · Ajustements · §4.7 · §10.4" data-seuil="Montant unitaire > 500 000 ou fréquence > 3 par jour (Paramètres §17) · §10.4 prévoit aussi la fréquence anormale par compte ou par utilisateur et le cumul sur une période" data-n27="0">
-              <td><button class="linkish" data-open="core-alertes-fiche">Ajustement inhabituel (&gt; 500 000 ou &gt; 3 par jour)</button><div class="hint" data-last>Aucun le 27/08 — VAL-117 : <span class="amt" data-amt="180000" data-nocur></span> sur Caisse générale, sous le seuil de <span class="amt" data-amt="500000" data-nocur></span> · 1 ajustement du jour (seuil 3) · double validation en cours (1re : O. Seck 19:02)</div></td>
+              <td><button class="linkish" data-open="core-alertes-fiche">Ajustement inhabituel (&gt; <span class="amt" data-amt="500000" data-nocur></span> ou &gt; 3 par jour)</button><div class="hint" data-last>Aucun le 27/08 — VAL-117 : <span class="amt" data-amt="180000" data-nocur></span> sur Caisse générale, sous le seuil de <span class="amt" data-amt="500000" data-nocur></span> · 1 ajustement du jour (seuil 3) · double validation en cours (1re : O. Seck 19:02)</div></td>
               <td>Mata Finance<div class="hint">Ajustements · §4.7</div></td>
               <td><span class="tag lock"><svg><use href="#i-mail"/></svg>Email + centre</span></td>
               <td>DG, Super Admin<div class="hint">deux validateurs distincts de l'initiateur et distincts entre eux (§4.7)</div></td>
-              <td><span class="st bad"><svg><use href="#i-alert"/></svg>Critique</span><div class="hint">non désactivable</div></td><td><label class="sw"><input type="checkbox" checked data-toggle data-perm="core.alertes.modifier" aria-label="Règle active : Ajustement inhabituel"><i></i><span data-on-lbl>Oui</span></label><div class="hint" data-off-note hidden></div></td>
+              <td><span class="st bad"><svg><use href="#i-alert"/></svg>Critique</span><div class="hint">non désactivable</div></td><td><button class="btn sm pri" data-toggle data-perm="core.alertes.modifier" aria-label="Règle active : Ajustement inhabituel">Oui</button><div class="hint" data-off-note hidden></div></td>
             </tr>
             <tr data-rule="R7" data-mod="finance" data-crit="haute" data-on="1" data-name="Source non à jour" data-ch="Centre" data-dest="Admin" data-orig="Sources non à jour · Source et fraîcheur · §3 (Fraîcheur) · §6.5 · §10.4" data-seuil="États minimaux de fraîcheur : OK, Manquante, Erreur, Non à jour (§3) · une source Manquante, En erreur ou Non à jour bloque l'auto-validation mais peut rester visible avec son horodatage (§6.5)" data-n27="0">
               <td><button class="linkish" data-open="core-alertes-fiche">Source non à jour</button><div class="hint" data-last>Dernier : 21/08 — Synchronisation Bictorys en erreur pendant 2 h (INC-012, clos) · 27/08 : Ventes Mata OK 20:30 · Bictorys OK 08:12 · Banque BOA OK 08:00 · Stock OK 06:00 · Achat OK 17:00</div></td>
               <td>Mata Finance<div class="hint">Sources · §6.5</div></td>
               <td><span class="tag lock"><svg><use href="#i-bell"/></svg>Centre</span></td>
               <td>Admin<div class="hint">supervision fonctionnelle : sources périmées (Core §8.2)</div></td>
-              <td><span class="st warn"><svg><use href="#i-flag"/></svg>Haute</span><div class="hint">désactivable avec motif, audité</div></td><td><label class="sw"><input type="checkbox" checked data-toggle data-perm="core.alertes.modifier" aria-label="Règle active : Source non à jour"><i></i><span data-on-lbl>Oui</span></label><div class="hint" data-off-note hidden></div></td>
+              <td><span class="st warn"><svg><use href="#i-flag"/></svg>Haute</span><div class="hint">désactivable avec motif, audité</div></td><td><button class="btn sm pri" data-toggle data-perm="core.alertes.modifier" aria-label="Règle active : Source non à jour">Oui</button><div class="hint" data-off-note hidden></div></td>
             </tr>
             <tr data-rule="R8" data-mod="core" data-crit="info" data-on="1" data-name="Budget agent IA > 80 %" data-ch="Centre" data-dest="Super Admin" data-orig="Budget mensuel plafond · Agents IA · Core §7.2 · Finance §9.3" data-seuil="80 % du budget mensuel plafond de l'agent · au-delà du plafond, l'agent cesse de répondre jusqu'au mois suivant ou jusqu'à relèvement explicite par un utilisateur autorisé (Core §7.2)" data-n27="0">
               <td><button class="linkish" data-open="core-alertes-fiche">Budget agent IA &gt; 80 %</button><div class="hint" data-last>Aucun le 27/08 — AG-01 <span class="amt" data-amt="93000" data-nocur></span> / <span class="amt" data-amt="150000" data-nocur></span> (62 %) · AG-02 16 % · AG-03 0 % · aucun agent au-dessus du seuil</div></td>
               <td>Mata Core<div class="hint">Agents IA · §7.2</div></td>
               <td><span class="tag lock"><svg><use href="#i-bell"/></svg>Centre</span></td>
               <td>Super Admin<div class="hint">relèvement explicite du plafond (core.agents.budget)</div></td>
-              <td><span class="st info"><svg><use href="#i-info"/></svg>Informative</span><div class="hint">désactivable avec motif, audité</div></td><td><label class="sw"><input type="checkbox" checked data-toggle data-perm="core.alertes.modifier" aria-label="Règle active : Budget agent IA > 80 %"><i></i><span data-on-lbl>Oui</span></label><div class="hint" data-off-note hidden></div></td>
+              <td><span class="st info"><svg><use href="#i-info"/></svg>Informative</span><div class="hint">désactivable avec motif, audité</div></td><td><button class="btn sm pri" data-toggle data-perm="core.alertes.modifier" aria-label="Règle active : Budget agent IA > 80 %">Oui</button><div class="hint" data-off-note hidden></div></td>
             </tr>
             <tr data-rule="R9" data-mod="finance" data-crit="critique" data-on="1" data-lock data-name="Correction post-clôture" data-ch="Email" data-dest="Super Admin" data-orig="Corrections post-clôture · Clôture · Finance §3.1 · Core §5.5 · §10.4" data-seuil="Toute correction après clôture : approbation du Super Admin obligatoire, contrepassation ou ajustement tracé, aucun bypass global (§3.1, Core §5.5)" data-n27="0">
               <td><button class="linkish" data-open="core-alertes-fiche">Correction post-clôture</button><div class="hint" data-last>Dernier : 26/08 — VAL-109 contrepassation de la dépense du 25/08 (double saisie), validée par O. Seck · aucune le 27/08</div></td>
               <td>Mata Finance<div class="hint">Clôture · §3.1 · Core §5.5</div></td>
               <td><span class="tag lock"><svg><use href="#i-mail"/></svg>Email</span></td>
               <td>Super Admin<div class="hint">approbation obligatoire, intégrée au workflow plus fort s'il existe (§10.1)</div></td>
-              <td><span class="st bad"><svg><use href="#i-alert"/></svg>Critique</span><div class="hint">non désactivable</div></td><td><label class="sw"><input type="checkbox" checked data-toggle data-perm="core.alertes.modifier" aria-label="Règle active : Correction post-clôture"><i></i><span data-on-lbl>Oui</span></label><div class="hint" data-off-note hidden></div></td>
+              <td><span class="st bad"><svg><use href="#i-alert"/></svg>Critique</span><div class="hint">non désactivable</div></td><td><button class="btn sm pri" data-toggle data-perm="core.alertes.modifier" aria-label="Règle active : Correction post-clôture">Oui</button><div class="hint" data-off-note hidden></div></td>
             </tr>
             <tr data-rule="R10" data-mod="core" data-crit="critique" data-on="1" data-name="Sauvegarde échouée" data-ch="Email" data-dest="Super Admin" data-orig="Sauvegardes · Exploitation · Core §8.1 · supervision technique §8.2" data-seuil="Sauvegarde au minimum tous les 3 jours, rétention glissante 30 jours (Core §8.1, Paramètres §17) · tests périodiques de restauration" data-n27="0">
               <td><button class="linkish" data-open="core-alertes-fiche">Sauvegarde échouée</button><div class="hint" data-last>Aucun le 27/08 — supervision technique des sauvegardes (Core §8.2) · sauvegarde tous les 3 jours, rétention 30 jours (§17)</div></td>
               <td>Mata Core<div class="hint">Exploitation · §8.1 · §8.2</div></td>
               <td><span class="tag lock"><svg><use href="#i-mail"/></svg>Email</span></td>
               <td>Super Admin<div class="hint">incident Critique à ouvrir si récurrent (§8.3)</div></td>
-              <td><span class="st bad"><svg><use href="#i-alert"/></svg>Critique</span><div class="hint">désactivable avec motif, audité</div></td><td><label class="sw"><input type="checkbox" checked data-toggle data-perm="core.alertes.modifier" aria-label="Règle active : Sauvegarde échouée"><i></i><span data-on-lbl>Oui</span></label><div class="hint" data-off-note hidden></div></td>
+              <td><span class="st bad"><svg><use href="#i-alert"/></svg>Critique</span><div class="hint">désactivable avec motif, audité</div></td><td><button class="btn sm pri" data-toggle data-perm="core.alertes.modifier" aria-label="Règle active : Sauvegarde échouée">Oui</button><div class="hint" data-off-note hidden></div></td>
             </tr>
             <tr data-empty hidden><td colspan="6" class="hint">Aucune règle pour ce module et cette criticité.</td></tr>
           </tbody>
@@ -158,7 +150,7 @@
           <div class="kv"><span>Écarts de collecte/ventes</span><b>Écart de réconciliation · Email + centre · Critique</b></div>
           <div class="kv"><span>Dépenses Pas sûr</span><b>Dépense « Pas sûr » à 23:00 · Email + centre · Critique</b></div>
           <div class="kv"><span>Sources non à jour</span><b>Source non à jour · Centre · Haute</b></div>
-          <div class="kv"><span>Ajustements inhabituels</span><b>Ajustement inhabituel (&gt; 500 000 ou &gt; 3 par jour) · Email + centre · Critique · la fréquence par compte ou par utilisateur et le cumul sur une période (§10.4) restent à paramétrer</b></div>
+          <div class="kv"><span>Ajustements inhabituels</span><b>Ajustement inhabituel (&gt; <span class="amt" data-amt="500000" data-nocur></span> ou &gt; 3 par jour) · Email + centre · Critique · la fréquence par compte ou par utilisateur et le cumul sur une période (§10.4) restent à paramétrer</b></div>
           <div class="kv"><span>Échéances fournisseurs dépassées</span><b>Échéance fournisseur dépassée · Centre · Haute</b></div>
           <div class="kv"><span>Corrections post-clôture</span><b>Correction post-clôture · Email · Critique</b></div>
           <div class="kv"><span>Autres signaux du cahier</span><b>Relais ancien (§4.6) → Relais ouvert au-delà du seuil (2 j) · Plafond d'encours (§5.4) → Plafond d'encours dépassé, informative, aucun blocage en V1 · Supervision (Core §8.1, §8.2) → Sauvegarde échouée · Budget (Core §7.2) → Budget agent IA &gt; 80 %</b></div>
@@ -235,14 +227,14 @@ ERP.register('core-alertes', function (root, ctx) {
   function crit(k) { var c = CRIT[k]; return '<span class="st ' + c[0] + '"><svg><use href="#i-' + c[1] + '"/></svg>' + c[2] + '</span>'; }
   function chan(c) { return '<span class="tag lock"><svg><use href="#i-' + (c === 'Centre' ? 'bell' : 'mail') + '"/></svg>' + esc(c) + '</span>'; }
   function log(id, x, on) { (H[id] = H[id] || []).push({ t: now(), a: who(), x: x, on: !!on }); }
-  /* Après le moteur de permissions : les règles critiques à destinataires imposés restent verrouillées ; le motif (verrou ou refus) est porté par le label, seul élément visible */
+  /* Après le moteur de permissions : les règles critiques à destinataires imposés restent verrouillées ; le motif (verrou ou refus) est porté par le bouton, seul élément visible */
   function perms() {
     ctx.applyPerms();
-    qa('[data-toggle]', tb).forEach(function (i) { var lb = i.closest('label'); if (i.closest('tr').hasAttribute('data-lock')) { i.disabled = true; i.title = LOCK; } if (i.disabled) lb.title = i.title; else lb.removeAttribute('title'); });
+    qa('[data-toggle]', tb).forEach(function (b) { if (b.closest('tr').hasAttribute('data-lock')) { b.disabled = true; b.classList.add('denied'); b.title = LOCK; } });
   }
   function paint(tr) {
-    var on = tr.getAttribute('data-on') === '1', n = q('[data-off-note]', tr);
-    q('[data-toggle]', tr).checked = on; q('[data-on-lbl]', tr).textContent = on ? 'Oui' : 'Non'; tr.classList.toggle('off', !on);
+    var on = tr.getAttribute('data-on') === '1', n = q('[data-off-note]', tr), b = q('[data-toggle]', tr);
+    b.textContent = on ? 'Oui' : 'Non'; b.classList.toggle('pri', on); b.classList.toggle('ghost', !on); tr.classList.toggle('off', !on);
     n.hidden = on; if (!on) n.textContent = 'Désactivée ' + tr.getAttribute('data-off-at') + ' par ' + tr.getAttribute('data-off-by') + ' · motif « ' + tr.getAttribute('data-off-motif') + ' »';
   }
   function stats() {
@@ -287,30 +279,25 @@ ERP.register('core-alertes', function (root, ctx) {
     if (!name) { ctx.toast('Le libellé de la règle est obligatoire'); return; }
     if (!dest.length) { ctx.toast('Au moins un destinataire est requis : une règle sans destinataire ne notifie personne'); return; }
     var id = 'R' + seq++, mod = o.getAttribute('data-mod'), orig = o.getAttribute('data-orig'), t = now(), dl = dest.join(', ');
-    tb.insertAdjacentHTML('beforeend', '<tr data-rule="' + id + '" data-new data-mod="' + mod + '" data-crit="' + cr + '" data-on="1" data-name="' + esc(name) + '" data-ch="' + esc(ch) + '" data-dest="' + esc(dl) + '" data-orig="' + esc(o.value + ' · ' + orig) + '" data-seuil="Paramètres transverses (Core §6.4, §17) · aucun seuil propre à la règle" data-n27="0"><td><button class="linkish" data-open="core-alertes-fiche">' + esc(name) + '</button><div class="hint" data-last>Aucun déclenchement · règle créée ' + t + ' par ' + esc(who()) + '</div></td><td>' + (mod === 'core' ? 'Mata Core' : 'Mata Finance') + '<div class="hint">' + esc(orig) + '</div></td><td>' + chan(ch) + '</td><td>' + esc(dl) + '<div class="hint">signal : ' + esc(o.value) + '</div></td><td>' + crit(cr) + '<div class="hint">désactivable avec motif, audité</div></td><td><label class="sw"><input type="checkbox" checked data-toggle data-perm="core.alertes.modifier" aria-label="Règle active : ' + esc(name) + '"><i></i><span data-on-lbl>Oui</span></label><div class="hint" data-off-note hidden></div></td></tr>');
+    tb.insertAdjacentHTML('beforeend', '<tr data-rule="' + id + '" data-new data-mod="' + mod + '" data-crit="' + cr + '" data-on="1" data-name="' + esc(name) + '" data-ch="' + esc(ch) + '" data-dest="' + esc(dl) + '" data-orig="' + esc(o.value + ' · ' + orig) + '" data-seuil="Paramètres transverses (Core §6.4, §17) · aucun seuil propre à la règle" data-n27="0"><td><button class="linkish" data-open="core-alertes-fiche">' + esc(name) + '</button><div class="hint" data-last>Aucun déclenchement · règle créée ' + t + ' par ' + esc(who()) + '</div></td><td>' + (mod === 'core' ? 'Mata Core' : 'Mata Finance') + '<div class="hint">' + esc(orig) + '</div></td><td>' + chan(ch) + '</td><td>' + esc(dl) + '<div class="hint">signal : ' + esc(o.value) + '</div></td><td>' + crit(cr) + '<div class="hint">désactivable avec motif, audité</div></td><td><button class="btn sm pri" data-toggle data-perm="core.alertes.modifier" aria-label="Règle active : ' + esc(name) + '">Oui</button><div class="hint" data-off-note hidden></div></td></tr>');
     log(id, 'Règle créée · signal « ' + o.value + ' » · ' + ch + ' · ' + dl + ' · ' + CRIT[cr][2], true);
     q('[data-n="name"]', N).value = ''; ctx.close('core-alertes-nouvelle'); ctx.formatAmounts(tb); perms(); stats(); filter();
     ctx.toast('« ' + name + ' » créée · active · ' + ch + ' → ' + dl + ' · ' + CRIT[cr][2] + ' · tracée dans l\'Audit central');
   }
   ctx.on(root, 'click', function (e) {
-    var t = e.target, ch = t.closest('.chip[data-filter]'), op = t.closest('[data-open="core-alertes-fiche"]'), pre = t.closest('[data-preset]'), sw = t.closest('label.sw'), act = t.closest('[data-act]');
+    var t = e.target, ch = t.closest('.chip[data-filter]'), op = t.closest('[data-open="core-alertes-fiche"]'), pre = t.closest('[data-preset]'), tog = t.closest('[data-toggle]'), act = t.closest('[data-act]');
     if (ch) { var g = ch.closest('[data-fg]'); qa('.chip', g).forEach(function (x) { x.classList.toggle('on', x === ch); }); if (g.getAttribute('data-fg') === 'mod') fm = ch.getAttribute('data-filter'); else fc = ch.getAttribute('data-filter'); filter(); return; }
     if (op) { var tr = op.closest('tr[data-rule]'); fill(tr ? tr.getAttribute('data-rule') : cur); return; }
     if (pre && !pre.disabled && !pre.classList.contains('denied')) { q('[data-n="sig"]', N).value = pre.getAttribute('data-preset'); q('[data-n="name"]', N).value = pre.getAttribute('data-preset-name') || ''; modHint(); return; }
-    if (sw) { var i = q('input', sw); if (i.disabled && t.tagName !== 'INPUT') ctx.toast(i.title); return; }
+    /* Bouton actif/inactif : réactivation immédiate ; désactivation via motif obligatoire (le bouton reste sur « Oui » jusqu'à confirmation) */
+    if (tog) { if (tog.disabled || tog.classList.contains('denied')) { ctx.toast(tog.title); return; } var id = tog.closest('tr[data-rule]').getAttribute('data-rule'); if (row(id).getAttribute('data-on') === '1') askOff(id); else setOn(id, true); return; }
     if (!act || act.disabled || act.classList.contains('denied')) return;
     var k = act.getAttribute('data-act');
     if (k === 'off-confirm') confirmOff();
     else if (k === 'new-save') addRule();
     else if (k === 'drawer-toggle') { if (row(cur).getAttribute('data-on') === '1') { ctx.close('core-alertes-fiche'); askOff(cur); } else setOn(cur, true); }
   });
-  /* Interrupteur : réactivation immédiate ; désactivation via motif obligatoire (la bascule visuelle est rétablie jusqu'à confirmation) */
-  ctx.on(root, 'change', function (e) {
-    if (e.target === q('[data-n="sig"]', N)) { modHint(); return; }
-    var i = e.target.closest('[data-toggle]'); if (!i || i.disabled || i.classList.contains('denied')) return;
-    var id = i.closest('tr[data-rule]').getAttribute('data-rule');
-    if (i.checked) setOn(id, true); else { i.checked = true; askOff(id); }
-  });
+  ctx.on(root, 'change', function (e) { if (e.target === q('[data-n="sig"]', N)) modHint(); });
   document.addEventListener('erp:profile', function () { setTimeout(function () { perms(); if (D.classList.contains('on')) fill(cur); }, 0); });
   qa('tr[data-rule]', tb).forEach(paint); stats(); filter(); modHint(); ctx.formatAmounts(root); perms();
 });
