@@ -96,6 +96,8 @@ Le moteur affiche une infobulle à trois niveaux au survol (desktop) ou au tap (
 
 Les permissions de consultation (`*.view`) peuvent aussi être portées par un bouton de navigation `data-goto` pour afficher le refus expliqué à l'avance.
 
+- Bouton compact : `.btn.sm` (cellules de tableau, listes denses) — s'ajoute à `.btn.ghost` / `.btn.pri`.
+
 ## 5. Interactions communes fournies par le moteur
 
 - **Modale** : `<div class="mback" data-ov="fin-depenses-nouvelle"><div class="modal" role="dialog" aria-modal="true" aria-label="…"><h3>…</h3>…<div class="acts"><button class="btn ghost" data-close>Annuler</button><button class="btn pri">Enregistrer</button></div></div></div>`. Ouverture par `data-open="fin-depenses-nouvelle"` sur n'importe quel élément. Fermeture : `data-close`, clic sur le fond, Échap. `modal wide` pour 500 px.

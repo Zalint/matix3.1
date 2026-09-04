@@ -141,3 +141,6 @@
 /* Tablette : fil d Ariane sur une ligne, pastille de date compacte (le lieu disparait), selecteurs compacts */
 @media (max-width:960px){#app .crumb .p{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:200px}#app .chip-day{white-space:nowrap}#app .chip-day .g{display:none}}
 @media (max-width:760px){#app .chip-day{display:none}}
+
+/* Bouton compact (cellules de tableau, listes denses) — catalogue CONTRACT §4 */
+#app .btn.sm{min-height:28px;padding:4px 10px;font-size:11px;white-space:nowrap}

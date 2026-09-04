@@ -1,6 +1,5 @@
 <section class="scr" data-scr="fin-transferts" data-module="finance" data-perm="finance.transferts.view" data-sens="hs" hidden>
   <style data-screen="fin-transferts">
-    #app [data-scr="fin-transferts"] .btn.sm{min-height:28px;padding:4px 10px;font-size:11px}
     #app [data-scr="fin-transferts"] .acts-cell{display:flex;gap:6px;flex-wrap:wrap}
     #app [data-scr="fin-transferts"] td .hint{display:block;margin-top:2px}
     #app [data-scr="fin-transferts"] .rline{margin:12px 0 0}
@@ -36,7 +35,7 @@
     <div class="card stat">
       <div class="lb">Trésorerie en transit<button class="fx" data-f="Trésorerie en transit = Somme des comptes Relais actifs (§8.1) · Un compte Relais matérialise une somme qui a quitté son origine sans être encore confirmée à destination (§4.6)" data-c="Dépôt en cours (Caisse → Banque) 2 500 000 · Bictorys → Banque en cours 350 000" data-src="Moteur financier · comptes Relais CALCULÉ · seuil relais ancien 2 jours (Paramètres) · Bictorys → Banque en cours : âge 3 j, alerte" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></div>
       <div class="v amt" data-amt="2850000" data-stat="transit"></div>
-      <div class="sub2" data-stat="transitRatio">0,6 % du CA de référence (452 000 000)</div>
+      <div class="sub2" data-stat="transitRatio">0,6 % du CA de référence (<span class="amt" data-amt="452000000" data-nocur></span>)</div>
     </div>
     <div class="card stat">
       <div class="lb">Trésorerie totale contrôlée<button class="fx" data-f="Trésorerie totale contrôlée = Trésorerie disponible + Trésorerie en transit (§8.1) · Le montant en Relais n'est compté qu'une seule fois dans la trésorerie totale contrôlée (§4.6)" data-c="Disponible 58 455 000 (Caisse générale 8 450 000 · Sous-caisse Marché 1 275 000 · Sous-caisse Livraisons 640 000 · Banque BOA 45 200 000 · Bictorys 2 890 000) + Transit 2 850 000" data-src="Moteur financier unique · comptes CALCULÉ, IMPORT CSV (Banque BOA 27/08 08:00), SYNCHRONISÉ (Bictorys 27/08 08:12)" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></div>
@@ -231,7 +230,7 @@ ERP.register('fin-transferts', function (root, ctx) {
   var tbody = q('[data-rows]'), cur = 'tous', target = null;
   function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
   function num(el) { return parseInt(String(el.value).replace(/\D/g, ''), 10) || 0; }
-  function setAmt(el, v, nocur) { el.textContent = ctx.fmt(v); if (!nocur) { var c = document.createElement('span'); c.className = 'cur'; c.textContent = 'FCFA'; el.appendChild(c); } }
+  function setAmt(el, v, nocur) { el.setAttribute('data-amt', v); if (nocur) el.setAttribute('data-nocur', ''); else el.removeAttribute('data-nocur'); delete el.dataset.done; el.classList.remove('neg'); ctx.formatAmounts(el.parentNode); }
   function me() { return ctx.profile.short; }
   function now() { var d = new Date(); return '27/08 · ' + ('0' + d.getHours()).slice(-2) + ':' + ('0' + d.getMinutes()).slice(-2); }
   function relayFor(de, vers) { if (de === 'BIC' && vers === 'BOA') return 'Bictorys → Banque en cours'; if (/^(CG|SCM|SCL)$/.test(de) && vers === 'BOA') return 'Dépôt en cours (Caisse → Banque)'; return ''; }

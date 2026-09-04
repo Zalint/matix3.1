@@ -2,7 +2,6 @@
 <section class="scr" data-scr="fin-comptes" data-module="finance" data-perm="finance.comptes.view" data-sens="hs" hidden>
   <style data-screen="fin-comptes">
     #app [data-scr="fin-comptes"] [hidden]{display:none!important}
-    #app [data-scr="fin-comptes"] .btn.sm{min-height:28px;padding:4px 10px;font-size:11px;white-space:nowrap}
     #app [data-scr="fin-comptes"] .acts-cell{display:flex;gap:6px;flex-wrap:wrap}
     #app [data-scr="fin-comptes"] td .hint{display:block;margin-top:2px;max-width:320px}
     #app [data-scr="fin-comptes"] td .st{white-space:nowrap}
@@ -36,7 +35,7 @@
     <div class="card stat">
       <div class="lb">Trésorerie disponible<button class="fx" data-fxc="dispo" data-f="Trésorerie disponible = Somme des comptes Trésorerie et Positions externes configurés comme immédiatement disponibles. Le solde du compte Ajustement est exclu de ces agrégats. (§8.1)" data-c="Caisse générale 8 450 000 · Sous-caisse Marché 1 275 000 · Sous-caisse Livraisons 640 000 · Banque BOA 45 200 000 · Bictorys 2 890 000 · compte Ajustement exclu" data-src="Moteur financier unique (§3) · Caisses CALCULÉ · Banque BOA IMPORT CSV 27/08 08:00 · Bictorys SYNCHRONISÉ 27/08 08:12" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></div>
       <div class="v amt" data-amt="58455000" data-kpi="dispo"></div>
-      <div class="sub2"><span data-ratio="dispo">12,9 %</span> du CA de référence (CA Mata août au 27 : 452 000 000) · relais et Ajustement exclus</div>
+      <div class="sub2"><span data-ratio="dispo">12,9 %</span> du CA de référence (CA Mata août au 27 : <span class="amt" data-amt="452000000" data-nocur></span>) · relais et Ajustement exclus</div>
     </div>
     <div class="card stat">
       <div class="lb">Trésorerie en transit<button class="fx" data-fxc="transit" data-f="Trésorerie en transit = Somme des comptes Relais actifs. (§8.1) · Le montant n'est compté qu'une seule fois dans la trésorerie totale contrôlée. (§4.6)" data-c="Dépôt en cours (Caisse → Banque) 2 500 000 · Bictorys → Banque en cours 350 000" data-src="Moteur financier unique · comptes Relais CALCULÉ · seuil relais ancien 2 jours (Paramètres transverses)" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></div>

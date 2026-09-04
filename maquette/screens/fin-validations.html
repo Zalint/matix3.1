@@ -1,6 +1,5 @@
 <section class="scr" data-scr="fin-validations" data-module="finance" data-perm="finance.validations.view" data-sens="hs" hidden>
   <style data-screen="fin-validations">
-    #app [data-scr="fin-validations"] .btn.sm{min-height:28px;padding:4px 10px;font-size:11px}
     #app [data-scr="fin-validations"] td .acts-c{display:flex;gap:6px;flex-wrap:wrap}
     #app [data-scr="fin-validations"] td .prog{margin-top:5px;max-width:120px}
     #app [data-scr="fin-validations"] .pnl-tabs{margin-bottom:14px}
@@ -272,7 +271,7 @@ ERP.register('fin-validations', function (root, ctx) {
   function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
   function now() { var m = clock++; return '27/08 · ' + ('0' + Math.floor(m / 60)).slice(-2) + ':' + ('0' + m % 60).slice(-2); }
   function me() { return ctx.profile.short; }
-  function setAmt(el, v) { el.textContent = ctx.fmt(v); var c = document.createElement('span'); c.className = 'cur'; c.textContent = 'FCFA'; el.appendChild(c); }
+  function setAmt(el, v) { el.setAttribute('data-amt', v); el.removeAttribute('data-nocur'); delete el.dataset.done; el.classList.remove('neg'); ctx.formatAmounts(el.parentNode); }
   function can(v) {
     if (!ctx.hasPerm('finance.validations.agir')) return 'Refus par défaut : la permission finance.validations.agir n’est pas accordée au profil ' + ctx.profile.profile;
     if (v.init === me()) return 'l’initiateur ne valide jamais sa propre opération (Core §4.2)';

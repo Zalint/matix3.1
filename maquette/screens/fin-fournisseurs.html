@@ -291,8 +291,7 @@ ERP.register('fin-fournisseurs', function (root, ctx) {
     var isDecl = ctx.profile.id === 'dirops';
     ['F4', 'F5'].forEach(function (id) {
       var c = card(id), p = q('[data-pos]', c), m = q('[data-mask]', c);
-      if (isDecl && !m) p.insertAdjacentHTML('afterend', '<span class="maskbox" data-mask><svg><use href="#i-lock"/></svg>Position <span class="dots">••••••••</span> masquée jusqu\'à votre déclaration (§5.5)</span>');
-      if (!isDecl && m) m.remove();
+      if (isDecl && !m) p.insertAdjacentHTML('afterend', '<span class="maskbox" data-mask><svg><use href="#i-lock"/></svg>Position <span class="dots">••••••••</span> masquée jusqu\'à votre déclaration (§5.5)</span>'); else if (!isDecl && m) m.remove();
       p.hidden = isDecl; qa('.fx', c).forEach(function (b) { b.hidden = isDecl; });
     });
   }
