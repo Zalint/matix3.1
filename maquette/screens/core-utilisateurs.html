@@ -1,0 +1,264 @@
+<section class="scr" data-scr="core-utilisateurs" data-module="core" data-perm="core.utilisateurs.view" data-sens="s" hidden>
+  <style data-screen="core-utilisateurs">
+    #app [data-scr="core-utilisateurs"] .who{display:flex;align-items:center;gap:10px;min-width:190px}
+    #app [data-scr="core-utilisateurs"] .who .av,#app [data-scr="core-utilisateurs"] .drawer .dh .av{flex:none}
+    #app [data-scr="core-utilisateurs"] td .tag{margin:1px 3px 1px 0;white-space:nowrap}
+    #app [data-scr="core-utilisateurs"] tr.off td{color:var(--mut)}
+    #app [data-scr="core-utilisateurs"] .kv{display:flex;justify-content:space-between;gap:12px;font-size:12px;padding:6px 0;border-bottom:1px dashed var(--line)}
+    #app [data-scr="core-utilisateurs"] .kv:last-of-type{border-bottom:none}
+    #app [data-scr="core-utilisateurs"] .kv b{text-align:right;font-weight:600;max-width:62%}
+    #app [data-scr="core-utilisateurs"] .kv small{display:block;color:var(--mut);font-size:10.5px}
+    #app [data-scr="core-utilisateurs"] .rule{display:flex;gap:12px;font-size:12px;line-height:1.5;padding:7px 0;border-bottom:1px dashed var(--line)}
+    #app [data-scr="core-utilisateurs"] .rule:last-of-type{border-bottom:none}
+    #app [data-scr="core-utilisateurs"] .rule .ref{font-family:'Fira Code',monospace;font-size:10.5px;color:var(--mut);white-space:nowrap;margin-left:auto}
+    #app [data-scr="core-utilisateurs"] h4{font-family:var(--head);font-size:11.5px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-2);margin:14px 0 6px}
+    #app [data-scr="core-utilisateurs"] .drawer .df{flex-wrap:wrap}
+    #app [data-scr="core-utilisateurs"] .modal .rline{display:flex;text-transform:none;font-size:12.5px;font-weight:600;letter-spacing:0;color:var(--ink);margin-bottom:8px}
+    #app [data-scr="core-utilisateurs"] .modal .rline .rh{font-weight:500;color:var(--mut);font-size:11px;margin-left:auto;text-align:right}
+    #app [data-scr="core-utilisateurs"] .modal input[type=checkbox]{width:16px;height:16px;min-height:0;padding:0;accent-color:var(--red);flex:none}
+    #app [data-scr="core-utilisateurs"] .modal select.inp,#app [data-scr="core-utilisateurs"] .modal input.inp{font-family:var(--body);font-size:13px;margin-bottom:12px;width:100%}
+    #app [data-scr="core-utilisateurs"] .modal .formgrid{grid-template-columns:1fr 1fr;margin-bottom:12px}
+    #app [data-scr="core-utilisateurs"] .modal .formgrid .inp{margin-bottom:0}
+    @media (max-width:640px){#app [data-scr="core-utilisateurs"] .modal .formgrid{grid-template-columns:1fr}}
+  </style>
+  <div class="scr-head">
+    <div>
+      <h2>Utilisateurs</h2>
+      <p class="scr-sub">Référentiel des comptes ERP, propriété de Mata Core (§5.1) · une personne = un seul compte, quel que soit le nombre de profils (§3.1) · catégories multiples (§3.2) · un seul profil actif à la fois (§3.3) · désactivation, jamais suppression</p>
+    </div>
+    <div class="scr-meta">
+      <span class="sens s"><svg><use href="#i-shield"/></svg>Sensible</span>
+      <span class="hint">Sensible : modifications auditées, export contrôlé (§5.3) · création et désactivation : aucune validation, écriture immédiate sous le profil actif, motif conservé dans l'audit (§5.4) · demandes des MaaS via Demandes (§4.1)</span>
+    </div>
+  </div>
+
+  <div class="statstrip four">
+    <div class="card stat">
+      <div class="lb">Comptes ERP<button class="fx" data-fx="comptes" data-f="Les comptes utilisés ne sont pas supprimés : ils deviennent Actifs ou Désactivés." data-c="Actifs 8 · Désactivés 1 (M. Gueye, 30/06/2026)" data-src="Mata Core · référentiel Utilisateurs, propriétaire unique (§5.1) · lu à l'instant, 27/08/2026" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></div>
+      <div class="v" data-stat="total">9</div>
+      <div class="sub2" data-stat="sub">8 actifs · 1 désactivé (M. Gueye, 30/06/2026) · jamais supprimé</div>
+    </div>
+    <div class="card stat">
+      <div class="lb">Internes · Externes<button class="fx" data-f="Un utilisateur peut appartenir simultanément à plusieurs catégories : Interne — Employé. Externe — Comptable, Investisseur, Accès temporaire." data-c="Interne — Employé 6 (dont 1 désactivé) · Externe — Investisseur 1 · Externe — Comptable 1 (aussi Accès temporaire) · Externe — MaaS 1" data-src="Mata Core · catégories utilisateurs (§3.2) · lu à l'instant" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></div>
+      <div class="v" data-stat="int">6 · 3</div>
+      <div class="sub2">catégories utilisables dans les règles d'accès : Investisseur limité à la lecture, Comptable externe borné au périmètre financier autorisé (§3.2)</div>
+    </div>
+    <div class="card stat">
+      <div class="lb">Accès temporaire<button class="fx" data-f="Un accès temporaire possède une date de début et de fin et expire automatiquement." data-c="C. Mbaye : début 01/09/2026 · fin 30/09/2026 · jours restants = 30/09/2026 − 27/08/2026 = 34" data-src="Mata Core · catégorie Externe — Accès temporaire (§3.2) · date de référence 27/08/2026" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></div>
+      <div class="v" data-stat="temp">1</div>
+      <div class="sub2" data-stat="tempsub">C. Mbaye · 01/09/2026 → 30/09/2026 · dans 34 jours · expire automatiquement (§3.2)</div>
+    </div>
+    <div class="card stat">
+      <div class="lb">Authentification V1</div>
+      <div class="v">Email + mot de passe</div>
+      <div class="sub2">réinitialisation par email ou forcée par le Super Admin · blocage après plusieurs tentatives échouées · MFA/2FA prévu ultérieurement (§3.1, §10.1)</div>
+    </div>
+  </div>
+
+  <div class="deny-note" data-view="ro" hidden><svg><use href="#i-lock"/></svg><span><b>Lecture seule</b> pour le profil <span data-ro-prof>DG Mata</span> : Utilisateurs (lecture). La création et la désactivation exigent core.utilisateurs.creer / core.utilisateurs.modifier, non accordées à ce profil · les boutons restent visibles et désactivés avec leur motif (refus par défaut, §10.2) · un besoin de compte ou d'accès passe par une Demande (§4.1).</span></div>
+
+  <div class="card">
+    <div class="ch"><h3>Comptes ERP</h3><span class="hint-r"><span data-count>9 comptes · 8 actifs · 1 désactivé</span> <span data-fcount></span></span></div>
+    <div class="cb">
+      <div class="actionbar">
+        <div class="chips">
+          <button class="chip on" data-filter="tous">Tous</button><button class="chip" data-filter="interne">Internes</button><button class="chip" data-filter="externe">Externes</button><button class="chip" data-filter="desactive">Désactivés</button><button class="chip" data-filter="temporaire">Accès temporaire</button>
+        </div>
+        <div class="sp"></div>
+        <span class="hint">Connecté : <b data-me>S. Doucouré · Super Admin</b></span>
+        <button class="btn pri" data-open="core-utilisateurs-nouveau" data-perm="core.utilisateurs.creer"><svg><use href="#i-plus"/></svg>Nouvel utilisateur</button>
+      </div>
+      <div class="tbl-scroll"><table>
+        <thead><tr><th>Utilisateur</th><th>Catégories</th><th>Profil(s)</th><th>Entité</th><th>Statut</th><th>Accès temporaire</th><th>Action</th></tr></thead>
+        <tbody data-rows><tr data-empty hidden><td colspan="7" class="hint">Aucun compte ne correspond à ce filtre · les comptes désactivés restent listés, jamais supprimés (§3.1)</td></tr></tbody>
+      </table></div>
+      <div class="hint" style="margin-top:8px">Cliquer une ligne : fiche et droits effectifs réels du profil · Désactiver : modification auditée, motif obligatoire · les profils externes (Investisseur, Comptable) n'atteignent pas cet écran : refus par défaut (§10.2)</div>
+    </div>
+  </div>
+
+  <div class="grid2">
+    <div class="card">
+      <div class="ch"><h3>Règles du référentiel</h3><span class="hint-r">Mata Core §2, §3.1 à §3.3, §5.1</span></div>
+      <div class="cb">
+        <div class="rule"><span><b>Compte unique</b> · Chaque personne possède un seul compte ERP, même lorsqu'elle intervient dans plusieurs entités, modules ou catégories.</span><span class="ref">§3.1</span></div>
+        <div class="rule"><span><b>Authentification V1</b> · Email. Mot de passe. Réinitialisation par email ou forcée par le Super Admin. Blocage après plusieurs tentatives échouées. MFA/2FA prévu ultérieurement.</span><span class="ref">§3.1 · §10.1</span></div>
+        <div class="rule"><span><b>Jamais supprimé</b> · Les comptes utilisés ne sont pas supprimés : ils deviennent Actifs ou Désactivés.</span><span class="ref">§3.1</span></div>
+        <div class="rule"><span><b>Catégories</b> · Un utilisateur peut appartenir simultanément à plusieurs catégories. Un accès temporaire possède une date de début et de fin et expire automatiquement.</span><span class="ref">§3.2</span></div>
+        <div class="rule"><span><b>Profil actif unique</b> · Lorsqu'un utilisateur possède plusieurs profils, il choisit son profil lors de la connexion. Un seul profil est actif à la fois. Les droits de plusieurs profils ne sont jamais additionnés implicitement.</span><span class="ref">§3.3</span></div>
+        <div class="rule"><span><b>Propriétaire unique</b> · Les modules métier référencent les objets Mata Core par leur identifiant et ne créent pas de référentiels parallèles.</span><span class="ref">§2 · §5.1</span></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="ch"><h3>Demandes liées aux comptes</h3><span class="hint-r">§4.1 · En attente → Retournée / Validée / Refusée / Annulée</span></div>
+      <div class="cb">
+        <div class="rl">
+          <div class="row"><div class="nm">DEM-031 · Création utilisateur « Khady Sow »<small>commerciale MaaS Ouakam · B. Fall (Gérant MaaS) · soumise 27/08 · 09:15</small></div><span class="st warn"><svg><use href="#i-clock"/></svg>En attente</span></div>
+          <div class="row"><div class="nm">DEM-030 · Prolongation Comptable externe C. Mbaye jusqu'au 31/12/2026<small>F. Sarr · 26/08 · retour S. Doucouré : « préciser la date de fin et le périmètre demandé »</small></div><span class="st info"><svg><use href="#i-refresh"/></svg>Retournée</span></div>
+        </div>
+        <div class="note-strip"><svg><use href="#i-info"/></svg><span>Une demande validée crée ou attribue l'objet correspondant (§4.1) : le compte « Khady Sow » n'existe pas dans ce référentiel tant que DEM-031 n'est pas validée · un Gérant MaaS ne crée jamais un compte directement (refus par défaut).</span></div>
+        <div class="actionbar" style="margin:12px 0 0"><div class="sp"></div><button class="btn ghost" data-goto="core-demandes" data-perm="core.demandes.view"><svg><use href="#i-inbox"/></svg>Traiter dans Demandes</button></div>
+      </div>
+    </div>
+  </div>
+
+  <aside class="drawer" data-ov="core-utilisateurs-fiche" aria-label="Fiche utilisateur et droits effectifs réels">
+    <div class="dh"><span class="av" data-d="av">SD</span><h3 data-d="n">Utilisateur</h3><button class="ib" data-close aria-label="Fermer"><svg><use href="#i-x"/></svg></button></div>
+    <div class="db">
+      <div class="hint" data-d="e">email</div>
+      <div class="meta-l" data-d="meta"></div>
+      <h4>Profil(s) · un seul actif à la fois (§3.3)</h4>
+      <div data-d="profs"></div>
+      <h4>Droits effectifs réels · profil « <span data-d="pa"></span> »</h4>
+      <div class="kv"><span>Mata Core</span><b data-d="core"></b></div>
+      <div class="kv"><span>Mata Finance</span><b data-d="fin"></b></div>
+      <div class="kv"><span>Export (distinct de Consulter, §3.4)</span><b data-d="exp"></b></div>
+      <div class="kv"><span>Sensibilité max consultable</span><b data-d="sens"></b></div>
+      <div class="note-strip" data-d="temp" hidden><svg><use href="#i-clock"/></svg><span></span></div>
+      <h4>Qui a donné quel droit à qui, quand et sous quel profil ? (§5.4)</h4>
+      <div class="fcode" data-d="audit"></div>
+      <h4>Authentification V1 (§3.1)</h4>
+      <div class="hint">Email · mot de passe · réinitialisation par email ou forcée par le Super Admin · blocage après plusieurs tentatives échouées · MFA/2FA prévu ultérieurement (§10.1)</div>
+      <button class="linkish" data-reset data-perm="core.utilisateurs.modifier" style="margin-top:6px"><svg><use href="#i-key"/></svg>Forcer la réinitialisation du mot de passe</button>
+    </div>
+    <div class="df">
+      <button class="btn ghost" data-deact data-open="core-utilisateurs-desactiver" data-perm="core.utilisateurs.modifier"><svg><use href="#i-eyeoff"/></svg>Désactiver</button>
+      <button class="btn ghost" data-react data-perm="core.utilisateurs.modifier" hidden><svg><use href="#i-refresh"/></svg>Réactiver</button>
+      <div class="sp"></div>
+      <button class="btn pri" data-goto="core-droits" data-perm="core.droits.view"><svg><use href="#i-shield"/></svg>Analyser dans Droits effectifs</button>
+    </div>
+  </aside>
+  <div class="dback" data-ov-back="core-utilisateurs-fiche"></div>
+
+  <div class="mback" data-ov="core-utilisateurs-nouveau"><div class="modal wide" role="dialog" aria-modal="true" aria-label="Nouvel utilisateur">
+    <h3><svg><use href="#i-user"/></svg>Nouvel utilisateur</h3>
+    <div class="exp">Compte unique (§3.1) : une personne = un seul compte ERP, quel que soit le nombre de profils · l'email est l'identifiant de connexion, un email de réinitialisation fixe le mot de passe · le compte est créé Actif, immédiatement, sous le profil actif du créateur et audité (§5.4) · les droits de plusieurs profils ne sont jamais additionnés (§3.3).</div>
+    <div class="formgrid">
+      <div class="fld"><label for="core-utilisateurs-nom">Nom complet</label><input id="core-utilisateurs-nom" class="inp" data-field="nom" placeholder="Prénom Nom"></div>
+      <div class="fld"><label for="core-utilisateurs-email">Email (identifiant)</label><input id="core-utilisateurs-email" class="inp" type="email" data-field="email" placeholder="prenom.nom@mata.sn"></div>
+    </div>
+    <label>Catégories · plusieurs possibles (§3.2)</label>
+    <label class="rline"><input type="checkbox" data-cat="int" value="Interne — Employé">Interne — Employé<span class="rh">fonctionnalités réservées aux Internes</span></label>
+    <label class="rline"><input type="checkbox" data-cat="cpt" value="Externe — Comptable">Externe — Comptable<span class="rh">périmètre financier autorisé</span></label>
+    <label class="rline"><input type="checkbox" data-cat="inv" value="Externe — Investisseur">Externe — Investisseur<span class="rh">limité à la lecture</span></label>
+    <label class="rline"><input type="checkbox" data-cat="temp" value="Externe — Accès temporaire">Externe — Accès temporaire<span class="rh">date de début et de fin · expire automatiquement</span></label>
+    <div class="formgrid" data-temp-wrap hidden>
+      <div class="fld"><label for="core-utilisateurs-deb">Début d'accès</label><input id="core-utilisateurs-deb" class="inp mono" type="date" data-field="deb"></div>
+      <div class="fld"><label for="core-utilisateurs-fin">Fin d'accès</label><input id="core-utilisateurs-fin" class="inp mono" type="date" data-field="fin"></div>
+    </div>
+    <div class="formgrid">
+      <div class="fld"><label for="core-utilisateurs-prof">Profil(s) · Ctrl + clic pour plusieurs · un seul actif à la fois, choisi à la connexion (§3.3)</label>
+        <select id="core-utilisateurs-prof" class="inp" data-field="prof" multiple size="5"><option>Super Admin Mata Group</option><option>DG Mata</option><option>Directeur des Opérations</option><option>Gestionnaire de caisse</option><option>Collecteur</option><option>Investisseur</option><option>Comptable externe</option><option>Gérant MaaS Keur Massar</option><option>Administrateur Mata Finance</option></select></div>
+      <div class="fld"><label for="core-utilisateurs-ent">Entité du profil · pas d'héritage automatique vers les sous-entités (§3.4)</label>
+        <select id="core-utilisateurs-ent" class="inp" data-field="ent"><option value="MG">Mata Group · Active</option><option value="MLC" disabled>MLC · à migrer</option><option value="MV" disabled>Mata Volaille · à migrer</option><option value="KB" disabled>Keur Bally · à activer</option><option value="MAAS-KM" disabled>MaaS Keur Massar · à activer</option></select></div>
+    </div>
+    <div class="acts"><button class="btn ghost" data-close>Annuler</button><button class="btn pri" data-submit data-perm="core.utilisateurs.creer"><svg><use href="#i-plus"/></svg>Créer le compte</button></div>
+  </div></div>
+
+  <div class="mback" data-ov="core-utilisateurs-desactiver"><div class="modal" role="dialog" aria-modal="true" aria-label="Désactiver un compte">
+    <h3><svg><use href="#i-eyeoff"/></svg>Désactiver le compte de <span data-x="n">l'utilisateur</span></h3>
+    <div class="exp">Les comptes utilisés ne sont pas supprimés : ils deviennent Actifs ou Désactivés (§3.1). Connexion impossible, profils gelés, historique et audit conservés · aucune validation préalable, modification auditée sous le profil actif avec son motif (§5.3, §5.4) · réactivation possible par un utilisateur habilité.</div>
+    <div class="fld"><label for="core-utilisateurs-motif">Motif · obligatoire, conservé dans l'audit</label><input id="core-utilisateurs-motif" class="inp" data-field="motif" placeholder="ex. fin de mission"></div>
+    <div class="acts"><button class="btn ghost" data-close>Annuler</button><button class="btn pri" data-confirm-deact data-perm="core.utilisateurs.modifier"><svg><use href="#i-eyeoff"/></svg>Confirmer la désactivation</button></div>
+  </div></div>
+</section>
+<script data-screen="core-utilisateurs">
+ERP.register('core-utilisateurs', function (root, ctx) {
+  var q = function (s, r) { return (r || root).querySelector(s); }, qa = function (s, r) { return Array.prototype.slice.call((r || root).querySelectorAll(s)); };
+  var tbody = q('[data-rows]'), DR = q('[data-ov="core-utilisateurs-fiche"]'), MN = q('[data-ov="core-utilisateurs-nouveau"]'), MD = q('[data-ov="core-utilisateurs-desactiver"]'), F = function (k) { return q('[data-field="' + k + '"]', MN); };
+  var cur = null, flt = 'tous', clock = 21 * 60 + 32, seq = 9, TODAY = new Date('2026-08-27');
+  /* Périmètres de démonstration par profil : Mata Core · Mata Finance · Export · Sensibilité max consultable (FIXTURES §2, mot pour mot) */
+  var P = {
+    'Super Admin Mata Group': ['Tout', 'Tout ; valide transferts, ajustements, corrections, désactivations ; jamais sa propre demande', 'Oui', 'Hautement sensible'],
+    'DG Mata': ['Entités, Utilisateurs (lecture), Demandes (valider), Audit (lecture), Agents IA (lecture), Notifications, Alertes (lecture)', 'Tout en lecture ; initie et valide transferts ; Validations', 'Oui', 'Hautement sensible'],
+    'Directeur des Opérations': ['Demandes (initier), Notifications, Incidents', 'Dashboard, Comptes (lecture), Dépenses (créer, modifier), Fournisseurs (payer), Créances (accorder), Réconciliation (fournisseurs), Transferts (initier), Validations (mes demandes), P&L, Historique', 'Non (refusé : permission Exporter distincte)', 'Hautement sensible'],
+    'Gestionnaire de caisse': ['Notifications, Incidents', 'Déclarations (ses caisses), Comptes (ses caisses, lecture), Dépenses (créer sur ses caisses), Réconciliation (Caisses, lecture)', 'Non', 'Sensible'],
+    'Collecteur': ['Notifications, Incidents', 'Déclarations (collecte), Réconciliation (Encaissements collectés, lecture)', 'Non', 'Sensible'],
+    'Investisseur': ['Notifications', 'Dashboard (blocs P&L et Trésorerie agrégée), P&L, Historique — lecture seule', 'Non', 'Standard + agrégats'],
+    'Comptable externe': ['Notifications', 'Comptes (lecture), Dépenses (lecture), Fournisseurs (lecture), P&L, Historique — lecture seule ; Transferts, Validations, Audit interdits', 'Non', 'Sensible'],
+    'Gérant MaaS Keur Massar': ['Demandes (initier : utilisateur, client), Notifications', 'Créances (sa position MaaS Keur Massar uniquement), Déclarations (versements de son MaaS)', 'Non', 'Sensible (son périmètre)'],
+    'Administrateur Mata Finance': ['Périmètre non décrit dans les périmètres de démonstration (FIXTURES §2) · à préciser au cadrage', 'Non décrit · à préciser au cadrage', 'À préciser', 'À préciser'],
+    'Directeur financier MLC': ['Profil non activable : entité MLC à migrer', 'Profil non activable : entité MLC à migrer', 'Non évaluable', 'Non évaluable']
+  };
+  var U = {
+    u1: { n: 'Saliou Doucouré', s: 'S. Doucouré', e: 'saliou.doucoure@mata.sn', av: 'SD', cats: ['Interne — Employé'], prof: [{ p: 'Super Admin Mata Group', ent: 'MG' }, { p: 'Directeur financier MLC', ent: 'MLC', off: 'entité à migrer, profil non activable' }], st: 'actif' },
+    u2: { n: 'Ousmane Seck', s: 'O. Seck', e: 'ousmane.seck@mata.sn', av: 'OS', cats: ['Interne — Employé'], prof: [{ p: 'DG Mata', ent: 'MG' }], st: 'actif' },
+    u3: { n: 'Fatou Sarr', s: 'F. Sarr', e: 'fatou.sarr@mata.sn', av: 'FS', cats: ['Interne — Employé'], prof: [{ p: 'Directeur des Opérations', ent: 'MG' }], st: 'actif' },
+    u4: { n: 'Moussa Diop', s: 'M. Diop', e: 'moussa.diop@mata.sn', av: 'MD', cats: ['Interne — Employé'], prof: [{ p: 'Gestionnaire de caisse', ent: 'MG', sc: 'Caisse générale, Sous-caisse Marché' }], st: 'actif' },
+    u5: { n: 'Abdou Ndiaye', s: 'A. Ndiaye', e: 'abdou.ndiaye@mata.sn', av: 'AN', cats: ['Interne — Employé'], prof: [{ p: 'Collecteur', ent: 'MG' }], st: 'actif' },
+    u6: { n: 'Ibrahima Kane', s: 'I. Kane', e: 'ibrahima.kane@mata.sn', av: 'IK', cats: ['Externe — Investisseur'], prof: [{ p: 'Investisseur', ent: 'MG' }], st: 'actif' },
+    u7: { n: 'Coumba Mbaye', s: 'C. Mbaye', e: 'coumba.mbaye@mata.sn', av: 'CM', cats: ['Externe — Comptable', 'Externe — Accès temporaire'], prof: [{ p: 'Comptable externe', ent: 'MG' }], st: 'actif', temp: { deb: '01/09/2026', fin: '30/09/2026', days: 34, dem: 'DEM-030 (prolongation jusqu’au 31/12/2026) retournée par S. Doucouré le 26/08 : « préciser la date de fin et le périmètre demandé »' }, audit: 'S. Doucouré, sous le profil Super Admin, a attribué le profil Comptable externe à C. Mbaye le 27/08 à 11:20 (accès temporaire 01/09 → 30/09).' },
+    u8: { n: 'Babacar Fall', s: 'B. Fall', e: 'babacar.fall@mata.sn', av: 'BF', cats: ['Externe — MaaS'], prof: [{ p: 'Gérant MaaS Keur Massar', ent: 'MAAS-KM' }], st: 'actif' },
+    u9: { n: 'Mamadou Gueye', s: 'M. Gueye', e: 'mamadou.gueye@mata.sn', av: 'MG', cats: ['Interne — Employé'], prof: [{ p: 'Administrateur Mata Finance', ent: 'MG' }], st: 'desactive', since: '30/06/2026', audit: 'Compte désactivé le 30/06/2026, jamais supprimé (§3.1) · profil Administrateur Mata Finance gelé · détail de la désactivation dans l’Audit central (§5.4).' }
+  };
+  var EN = { MG: 'Mata Group', MLC: 'MLC', 'MAAS-KM': 'MaaS Keur Massar' }, IC = { 'Interne — Employé': 'user', 'Externe — Comptable': 'file', 'Externe — Investisseur': 'chart', 'Externe — Accès temporaire': 'clock', 'Externe — MaaS': 'building' };
+  function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+  function now() { var m = clock++; return '27/08 à ' + ('0' + Math.floor(m / 60)).slice(-2) + ':' + ('0' + m % 60).slice(-2); }
+  function fr(iso) { return iso ? iso.split('-').reverse().join('/') : ''; }
+  function has(u, k) { return u.cats.some(function (c) { return c.indexOf(k) === 0; }); }
+  function audit(u) { return u.audit || 'Aucune attribution de droit enregistrée le 27/08 pour ' + u.s + ' · profil en vigueur avant la journée · historique complet dans l’Audit central (§5.4).'; }
+  function tagsHtml(u) { return u.cats.map(function (c) { return '<span class="tag lock"><svg><use href="#i-' + (IC[c] || 'user') + '"/></svg>' + esc(c) + '</span>'; }).join(''); }
+  function expHtml(u) { return u.temp ? '<span class="expire"><svg><use href="#i-clock"/></svg>expire le ' + u.temp.fin + ' · dans ' + u.temp.days + ' jour' + (u.temp.days > 1 ? 's' : '') + '</span>' : '<span class="hint">—</span>'; }
+  function stHtml(u) { return u.st === 'actif' ? '<span class="st ok"><svg><use href="#i-check"/></svg>Actif</span>' : '<span class="st bad"><svg><use href="#i-eyeoff"/></svg>Désactivé</span><div class="hint">le ' + u.since + ' · jamais supprimé</div>'; }
+  function profHtml(p) { return esc(p.p) + (p.sc ? ' (' + esc(p.sc) + ')' : '') + (p.off ? ' <span class="hint">(' + esc(p.off) + ')</span>' : ''); }
+  function rowHtml(id) {
+    var u = U[id], act = u.st === 'actif', tags = (has(u, 'Interne') ? 'interne ' : '') + (has(u, 'Externe') ? 'externe ' : '') + u.st + (u.temp ? ' temporaire' : '');
+    return '<tr class="rowlink' + (act ? '' : ' off') + '" data-u="' + id + '" data-open="core-utilisateurs-fiche" data-tags="' + tags + '"><td><div class="who"><span class="av">' + esc(u.av) + '</span><div><b>' + esc(u.n) + '</b><div class="hint">' + esc(u.e) + '</div></div></div></td><td>' + tagsHtml(u) + '</td><td>' + u.prof.map(profHtml).join('<br>') + '</td><td>' + esc(EN[u.prof[0].ent]) + '</td><td>' + stHtml(u) + '</td><td>' + expHtml(u) + '</td><td>' + (act ? '<button class="btn ghost sm" data-deact data-u="' + id + '" data-open="core-utilisateurs-desactiver" data-perm="core.utilisateurs.modifier"><svg><use href="#i-eyeoff"/></svg>Désactiver</button>' : '<span class="hint">jamais supprimé (§3.1)</span>') + '</td></tr>';
+  }
+  function counts() {
+    var ids = Object.keys(U), act = ids.filter(function (i) { return U[i].st === 'actif'; }), des = ids.filter(function (i) { return U[i].st !== 'actif'; }), tmp = ids.filter(function (i) { return U[i].temp; });
+    var int = ids.filter(function (i) { return has(U[i], 'Interne'); }).length, ext = ids.filter(function (i) { return has(U[i], 'Externe'); }).length, dl = des.length + ' désactivé' + (des.length > 1 ? 's' : '');
+    q('[data-stat="total"]').textContent = ids.length; q('[data-stat="int"]').textContent = int + ' · ' + ext; q('[data-stat="temp"]').textContent = tmp.length; q('[data-count]').textContent = ids.length + ' comptes · ' + act.length + ' actifs · ' + dl;
+    q('[data-stat="sub"]').textContent = act.length + ' actifs · ' + dl + (des.length ? ' (' + des.map(function (i) { return U[i].s + ', ' + U[i].since; }).join(' · ') + ')' : '') + ' · jamais supprimé';
+    q('[data-fx="comptes"]').setAttribute('data-c', 'Actifs ' + act.length + ' · Désactivés ' + des.length + (des.length ? ' (' + des.map(function (i) { return U[i].s + ', ' + U[i].since; }).join(' · ') + ')' : ''));
+    q('[data-stat="tempsub"]').textContent = tmp.length ? tmp.map(function (i) { return U[i].s + ' · ' + U[i].temp.deb + ' → ' + U[i].temp.fin + ' · dans ' + U[i].temp.days + ' jours'; }).join(' · ') + ' · expire automatiquement (§3.2)' : 'Aucun accès temporaire en cours · un accès temporaire expire automatiquement (§3.2)';
+  }
+  function applyFilter(f) {
+    flt = f; var vis = 0;
+    qa('tr[data-u]', tbody).forEach(function (tr) { var ok = f === 'tous' || (' ' + tr.getAttribute('data-tags') + ' ').indexOf(' ' + f + ' ') >= 0; tr.hidden = !ok; if (ok) vis++; });
+    q('[data-empty]', tbody).hidden = vis > 0; qa('.chip[data-filter]').forEach(function (c) { c.classList.toggle('on', c.getAttribute('data-filter') === f); });
+    q('[data-fcount]').textContent = f === 'tous' ? '' : '· filtre « ' + q('.chip[data-filter="' + f + '"]').textContent + ' » : ' + vis + ' compte' + (vis > 1 ? 's' : '');
+  }
+  function fill(id) {
+    var u = U[id], pa = u.prof[0], per = P[pa.p], act = u.st === 'actif'; cur = id;
+    q('[data-d="av"]', DR).textContent = u.av; q('[data-d="n"]', DR).textContent = u.n; q('[data-d="e"]', DR).textContent = u.e + ' · identifiant de connexion (§3.1)'; q('[data-d="pa"]', DR).textContent = pa.p;
+    q('[data-d="meta"]', DR).innerHTML = stHtml(u) + tagsHtml(u) + (u.temp ? expHtml(u) : '');
+    q('[data-d="profs"]', DR).innerHTML = u.prof.map(function (p, i) { return '<div class="kv"><span>' + esc(p.p) + (p.sc ? ' (' + esc(p.sc) + ')' : '') + '<small>' + esc(EN[p.ent]) + '</small></span><b>' + (p.off ? 'Non activable · ' + esc(p.off) : !act ? 'Gelé depuis la désactivation' : i === 0 ? 'Activable · évalué ci-dessous' : 'Activable') + '</b></div>'; }).join('');
+    ['core', 'fin', 'exp', 'sens'].forEach(function (k, i) { q('[data-d="' + k + '"]', DR).textContent = act ? per[i] : 'Gelé · compte désactivé le ' + u.since + ' · aucune connexion possible'; });
+    var t = q('[data-d="temp"]', DR); t.hidden = !u.temp; if (u.temp) q('span', t).textContent = 'Accès temporaire du ' + u.temp.deb + ' au ' + u.temp.fin + ' · expire automatiquement (§3.2) · dans ' + u.temp.days + ' jours' + (u.temp.dem ? ' · ' + u.temp.dem : '');
+    q('[data-d="audit"]', DR).textContent = audit(u); q('[data-deact]', DR).hidden = !act; q('[data-react]', DR).hidden = act; q('[data-reset]', DR).hidden = !act;
+  }
+  function redraw(id) { q('tr[data-u="' + id + '"]', tbody).outerHTML = rowHtml(id); counts(); applyFilter(flt); ctx.applyPerms(); if (cur === id && DR.classList.contains('on')) fill(id); }
+  function applyView() { var p = ctx.profile, ro = !ctx.hasPerm('core.utilisateurs.creer') && !ctx.hasPerm('core.utilisateurs.modifier'); q('[data-view="ro"]').hidden = !ro; q('[data-ro-prof]').textContent = p.profile; q('[data-me]').textContent = p.short + ' · ' + p.profile; }
+  function stamp(verb) { return ctx.profile.short + ', sous le profil ' + ctx.profile.profile + ', ' + verb + ' le ' + now(); }
+  ctx.on(root, 'click', function (e) {
+    var b = e.target.closest('[data-deact]'), tr = e.target.closest('tr[data-u]');
+    if (b) { var id = b.getAttribute('data-u') || cur, u = U[id]; if (u.n === ctx.profile.user) { e.stopPropagation(); ctx.toast('Refus : la désactivation de son propre compte n’est pas autorisée · un autre acteur habilité doit agir (séparation des responsabilités, §4.2)'); return; } MD.dataset.u = id; q('[data-x="n"]', MD).textContent = u.n; q('[data-field="motif"]', MD).value = ''; return; }
+    if (tr) fill(tr.getAttribute('data-u'));
+  });
+  qa('.chip[data-filter]').forEach(function (c) { ctx.on(c, 'click', function () { applyFilter(c.getAttribute('data-filter')); }); });
+  ctx.on(q('[data-confirm-deact]', MD), 'click', function () {
+    var id = MD.dataset.u, u = U[id], motif = q('[data-field="motif"]', MD).value.trim();
+    if (!motif) { ctx.toast('Motif obligatoire : la désactivation est une modification auditée, avec son motif (§5.4)'); return; }
+    u.st = 'desactive'; u.since = '27/08/2026'; u.audit = stamp('a désactivé le compte de ' + u.s) + ', motif « ' + motif + ' » · ' + audit(u); redraw(id); ctx.close('core-utilisateurs-desactiver');
+    ctx.toast('Compte ' + u.s + ' désactivé, jamais supprimé (§3.1) · profils gelés, connexion impossible · notification aux administrateurs · audité');
+  });
+  ctx.on(q('[data-react]', DR), 'click', function () { var u = U[cur]; u.st = 'actif'; u.audit = stamp('a réactivé le compte de ' + u.s) + ' · ' + audit(u); delete u.since; redraw(cur); ctx.toast('Compte ' + u.s + ' réactivé · profils de nouveau activables à la prochaine connexion · audité'); });
+  ctx.on(q('[data-reset]', DR), 'click', function () { ctx.toast('Réinitialisation forcée pour ' + U[cur].s + ' : email envoyé à ' + U[cur].e + ' (§3.1) · auditée sous le profil ' + ctx.profile.profile); });
+  ctx.on(MN, 'change', function (e) { if (e.target.hasAttribute('data-cat')) q('[data-temp-wrap]', MN).hidden = !q('[data-cat="temp"]', MN).checked; });
+  ctx.on(q('[data-submit]', MN), 'click', function () {
+    var nom = F('nom').value.trim(), email = F('email').value.trim().toLowerCase(), cats = qa('[data-cat]:checked', MN).map(function (c) { return c.value; }), profs = qa('option:checked', F('prof')).map(function (o) { return o.value; }), tmp = q('[data-cat="temp"]', MN).checked, deb = F('deb').value, fin = F('fin').value;
+    if (!nom || !/^[^@\s]+@[^@\s]+\.[a-z]{2,}$/.test(email)) { ctx.toast('Nom et email valide obligatoires : l’email est l’identifiant de connexion (§3.1)'); return; }
+    if (Object.keys(U).some(function (i) { return U[i].e === email; })) { ctx.toast('Compte unique (§3.1) : un compte existe déjà pour ' + email + ' · ajouter un profil à ce compte plutôt que d’en créer un second'); return; }
+    if (!cats.length || !profs.length) { ctx.toast('Au moins une catégorie (§3.2) et un profil (§3.3) sont obligatoires : sans autorité explicite, refus par défaut'); return; }
+    if (tmp && (!deb || !fin || fin <= deb)) { ctx.toast('Accès temporaire : date de début et date de fin obligatoires, fin postérieure au début (§3.2)'); return; }
+    var w = nom.split(/\s+/), id = 'u' + (++seq), days = tmp ? Math.round((new Date(fin) - TODAY) / 864e5) : 0, ent = F('ent').value;
+    U[id] = { n: nom, s: w.length > 1 ? w[0][0] + '. ' + w.slice(1).join(' ') : nom, e: email, av: w.map(function (x) { return x[0]; }).slice(0, 2).join('').toUpperCase(), cats: cats, prof: profs.map(function (p) { return { p: p, ent: ent }; }), st: 'actif', temp: tmp ? { deb: fr(deb), fin: fr(fin), days: days } : null };
+    U[id].audit = stamp('a créé le compte et attribué le profil ' + profs.join(', ') + ' à ' + U[id].s) + (tmp ? ' (accès temporaire ' + fr(deb) + ' → ' + fr(fin) + ')' : '') + '.';
+    tbody.insertAdjacentHTML('afterbegin', rowHtml(id)); counts(); applyFilter(flt); ctx.formatAmounts(tbody); ctx.applyPerms(); ctx.close('core-utilisateurs-nouveau');
+    F('nom').value = F('email').value = F('deb').value = F('fin').value = ''; qa('[data-cat]', MN).forEach(function (c) { c.checked = false; }); qa('option', F('prof')).forEach(function (o) { o.selected = false; }); q('[data-temp-wrap]', MN).hidden = true;
+    ctx.toast('Compte ' + U[id].s + ' créé Actif · email de réinitialisation envoyé pour fixer le mot de passe (§3.1) · audité sous le profil ' + ctx.profile.profile + (tmp ? ' · expire automatiquement le ' + fr(fin) : ''));
+  });
+  tbody.insertAdjacentHTML('afterbegin', Object.keys(U).map(rowHtml).join('')); counts(); applyFilter('tous'); applyView(); fill('u1'); ctx.formatAmounts(root); ctx.applyPerms();
+  document.addEventListener('erp:profile', applyView);
+});
+</script>

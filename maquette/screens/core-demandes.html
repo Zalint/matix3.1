@@ -1,0 +1,320 @@
+<section class="scr" data-scr="core-demandes" data-module="core" data-perm="core.demandes.view" data-sens="s" hidden>
+  <style data-screen="core-demandes">
+    #app [data-scr="core-demandes"] .kv{display:flex;justify-content:space-between;gap:12px;font-size:12px;padding:6px 0;border-bottom:1px dashed var(--line)}
+    #app [data-scr="core-demandes"] .kv:last-of-type{border-bottom:none}
+    #app [data-scr="core-demandes"] .kv b{text-align:right;font-weight:600;max-width:64%}
+    #app [data-scr="core-demandes"] .kv .linkish{margin-left:4px}
+    #app [data-scr="core-demandes"] h4{font-family:var(--head);font-size:11.5px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-2);margin:16px 0 8px}
+    #app [data-scr="core-demandes"] .modal textarea.inp{min-height:76px;resize:vertical;font-family:var(--body)}
+    #app [data-scr="core-demandes"] .drawer .df{flex-wrap:wrap}
+    #app [data-scr="core-demandes"] .fcode{margin-top:0}
+  </style>
+  <div class="scr-head">
+    <div>
+      <h2>Demandes</h2>
+      <p class="scr-sub">Demandes administratives (Core §4.1) : création d'un utilisateur, création d'un client, création d'un fournisseur, nouvel accès, profil, permission temporaire · accessibles aux Admin/Super Admin habilités · une demande peut être retournée à l'initiateur avec un motif ou commentaire, celui-ci la corrige et la soumet à nouveau · l'intégralité des retours, commentaires, versions et décisions est conservée</p>
+    </div>
+    <div class="scr-meta">
+      <span class="sens s"><svg><use href="#i-shield"/></svg>Sensible</span>
+      <span class="hint">Validation simple par un Admin/Super Admin habilité, sous un profil actif déterminé et intégralement auditée (§4.2) · l'initiateur ne valide jamais sa propre demande, le Super Admin ne contourne pas cette règle · modifications auditées, export contrôlé (§5.3)</span>
+    </div>
+  </div>
+
+  <div class="statstrip four">
+    <div class="card stat">
+      <div class="lb">En attente<button class="fx" data-fx="attente" data-f="Nombre de demandes au statut « En attente » · cycle §4.1 : En attente → Retournée / Validée / Refusée / Annulée" data-c="DEM-031" data-src="Mata Core · Demandes · périmètre du profil actif · 27/08 · 21:15" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></div>
+      <div class="v" data-stat="attente">1</div>
+      <div class="sub2">décision attendue d'un Admin/Super Admin habilité (§4.1)</div>
+    </div>
+    <div class="card stat">
+      <div class="lb">Retournées<button class="fx" data-fx="retournee" data-f="Nombre de demandes au statut « Retournée » : retournée à l'initiateur avec un motif ou commentaire, celui-ci la corrige et la soumet à nouveau (§4.1)" data-c="DEM-030" data-src="Mata Core · Demandes · périmètre du profil actif · 27/08 · 21:15" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></div>
+      <div class="v" data-stat="retournee">1</div>
+      <div class="sub2">correction attendue de l'initiateur, puis nouvelle soumission (nouvelle version)</div>
+    </div>
+    <div class="card stat">
+      <div class="lb">Validées<button class="fx" data-fx="validee" data-f="Nombre de demandes au statut « Validée » : une demande validée crée ou attribue l'objet correspondant (§4.1)" data-c="DEM-029 → compte Fournisseur « Ferme Ndiaye » créé" data-src="Mata Core · Demandes · référentiels propriétaires Mata Core (§5.1)" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></div>
+      <div class="v" data-stat="validee">1</div>
+      <div class="sub2">chaque validation crée ou attribue l'objet correspondant (§4.1)</div>
+    </div>
+    <div class="card stat">
+      <div class="lb">Refusées / Annulées<button class="fx" data-fx="close" data-f="Nombre de demandes au statut « Refusée » + nombre au statut « Annulée » · décisions et motifs conservés (§4.1)" data-c="DEM-028 · DEM-027" data-src="Mata Core · Demandes · conservation alignée sur le journal central (§5.4)" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></div>
+      <div class="v" data-stat="close">2</div>
+      <div class="sub2"><span data-stat="refusee">1</span> Refusée · <span data-stat="annulee">1</span> Annulée · motifs et décisions conservés</div>
+    </div>
+  </div>
+
+  <div class="actionbar">
+    <div class="chips">
+      <button class="chip on" data-filter="tous">Tous</button>
+      <button class="chip" data-filter="attente">En attente</button>
+      <button class="chip" data-filter="retournee">Retournée</button>
+      <button class="chip" data-filter="validee">Validée</button>
+      <button class="chip" data-filter="refusee">Refusée</button>
+      <button class="chip" data-filter="annulee">Annulée</button>
+    </div>
+    <div class="sp"></div>
+    <button class="btn ghost" data-goto="fin-validations" data-perm="finance.validations.view"><svg><use href="#i-check"/></svg>Validations financières</button>
+    <button class="btn pri" data-open="core-demandes-nouvelle" data-perm="core.demandes.initier"><svg><use href="#i-plus"/></svg>Nouvelle demande</button>
+  </div>
+
+  <div class="grid2">
+    <div>
+      <div class="card">
+        <div class="ch"><h3>Demandes du périmètre</h3><span class="hint-r" data-scope-hint>5 demandes · tous initiateurs · profil Super Admin</span></div>
+        <div class="tbl-scroll"><table>
+          <thead><tr><th>Réf.</th><th>Objet</th><th>Type</th><th>Initiateur</th><th>Date</th><th>Statut</th></tr></thead>
+          <tbody data-rows>
+            <tr class="rowlink" data-open="core-demandes-fiche" data-dem="DEM-031" data-st="attente" data-type="utilisateur" data-init="B. Fall" data-initp="Gérant MaaS Keur Massar" data-ent="MaaS Keur Massar" data-date="27/08 · 09:15">
+              <td><b>DEM-031</b><div class="hint">version 1</div></td>
+              <td data-c="objet"><b>Création utilisateur « Khady Sow », commerciale MaaS Ouakam</b><div class="hint">objet à créer dans Mata Core : utilisateur, un seul compte par personne (§3.1)</div></td>
+              <td>Création d'un utilisateur</td>
+              <td>B. Fall<div class="hint">Gérant MaaS Keur Massar · Externe — MaaS</div></td>
+              <td>27/08<div class="hint">09:15</div></td>
+              <td data-c="st"><span class="st warn"><svg><use href="#i-clock"/></svg>En attente</span><div class="hint">Soumise 27/08 09:15</div></td>
+            </tr>
+            <tr class="rowlink" data-open="core-demandes-fiche" data-dem="DEM-030" data-st="retournee" data-type="acces" data-init="F. Sarr" data-initp="Directeur des Opérations" data-ent="Mata Group" data-date="26/08">
+              <td><b>DEM-030</b><div class="hint">version 1</div></td>
+              <td data-c="objet"><b>Nouvel accès : prolongation Comptable externe C. Mbaye jusqu'au 31/12/2026</b><div class="hint">accès temporaire actuel : 01/09/2026 → 30/09/2026 (Externe — Accès temporaire, expiration automatique §3.2)</div></td>
+              <td>Nouvel accès</td>
+              <td>F. Sarr<div class="hint">Directeur des Opérations · Interne — Employé</div></td>
+              <td>26/08</td>
+              <td data-c="st"><span class="st info"><svg><use href="#i-refresh"/></svg>Retournée</span><div class="hint">Retour S. Doucouré 26/08 : « préciser la date de fin et le périmètre demandé » · correction attendue de l'initiateur</div></td>
+            </tr>
+            <tr class="rowlink" data-open="core-demandes-fiche" data-dem="DEM-029" data-st="validee" data-type="fournisseur" data-init="F. Sarr" data-initp="Directeur des Opérations" data-ent="Mata Group" data-date="25/08">
+              <td><b>DEM-029</b><div class="hint">version 1</div></td>
+              <td data-c="objet"><b>Création fournisseur « Ferme Ndiaye »</b><div class="hint">référentiel Fournisseurs de Mata Core (§2), référencé par Mata Finance par son identifiant</div></td>
+              <td>Création d'un fournisseur</td>
+              <td>F. Sarr<div class="hint">Directeur des Opérations · Interne — Employé</div></td>
+              <td>25/08</td>
+              <td data-c="st"><span class="st ok"><svg><use href="#i-check"/></svg>Validée</span><div class="hint">Validée par S. Doucouré 25/08 17:40 → compte Fournisseur créé, compte de paiement de référence : Caisse générale</div></td>
+            </tr>
+            <tr class="rowlink" data-open="core-demandes-fiche" data-dem="DEM-028" data-st="refusee" data-type="permission" data-init="F. Sarr" data-initp="Directeur des Opérations" data-ent="Mata Group" data-date="24/08">
+              <td><b>DEM-028</b><div class="hint">version 1</div></td>
+              <td data-c="objet"><b>Permission temporaire « Exporter dépenses » 1 semaine</b><div class="hint">Consulter et Exporter sont deux permissions différentes (§3.4) · exception limitée dans le temps (§3.5)</div></td>
+              <td>Permission temporaire</td>
+              <td>F. Sarr<div class="hint">Directeur des Opérations · Interne — Employé</div></td>
+              <td>24/08</td>
+              <td data-c="st"><span class="st bad"><svg><use href="#i-x"/></svg>Refusée</span><div class="hint">Refusée par O. Seck 24/08 : « export réservé aux Admins, passer par un relevé fournisseur »</div></td>
+            </tr>
+            <tr class="rowlink" data-open="core-demandes-fiche" data-dem="DEM-027" data-st="annulee" data-type="client" data-init="B. Fall" data-initp="Gérant MaaS Keur Massar" data-ent="MaaS Keur Massar" data-date="23/08">
+              <td><b>DEM-027</b><div class="hint">version 1</div></td>
+              <td data-c="objet"><b>Création client « Restaurant Teranga »</b><div class="hint">référentiel Clients et contreparties communes de Mata Core (§2)</div></td>
+              <td>Création d'un client</td>
+              <td>B. Fall<div class="hint">Gérant MaaS Keur Massar · Externe — MaaS</div></td>
+              <td>23/08</td>
+              <td data-c="st"><span class="st mut"><svg><use href="#i-x"/></svg>Annulée</span><div class="hint">Annulée par l'initiateur 23/08</div></td>
+            </tr>
+            <tr data-empty hidden><td colspan="6" class="hint">Aucune demande à ce statut dans votre périmètre.</td></tr>
+          </tbody>
+        </table></div>
+      </div>
+      <div class="note-strip" data-scope-note hidden><svg><use href="#i-user"/></svg><span data-scope-txt></span></div>
+      <div class="deny-note"><svg><use href="#i-lock"/></svg><b>Refus par défaut</b> : Consulter (core.demandes.view), Initier (core.demandes.initier) et Valider (core.demandes.valider) sont trois permissions distinctes. Le Gérant MaaS initie (utilisateur, client) et suit ses demandes ; le Directeur des Opérations initie et corrige les siennes ; le DG et le Super Admin décident, jamais sur leur propre demande (§4.2). Une action refusée reste visible, désactivée avec son motif.</div>
+    </div>
+    <div>
+      <div class="card">
+        <div class="ch"><h3>Cycle d'une demande</h3><span class="hint-r">Core §4.1</span></div>
+        <div class="cb">
+          <div class="fcode">En attente → Retournée / Validée / Refusée / Annulée</div>
+          <div class="hint" style="margin-top:8px">Retournée : l'initiateur corrige et soumet à nouveau (nouvelle version, retour En attente). L'intégralité des retours, commentaires, versions et décisions est conservée.</div>
+          <h4>Qui fait quoi</h4>
+          <div class="kv"><span>Initier</span><b>MaaS et utilisateurs autorisés · core.demandes.initier</b></div>
+          <div class="kv"><span>Valider · Refuser · Retourner</span><b>Admin / Super Admin habilités · core.demandes.valider · jamais sur sa propre demande (§4.2)</b></div>
+          <div class="kv"><span>Corriger et resoumettre</span><b>initiateur d'une demande Retournée · motif du retour conservé</b></div>
+          <div class="kv"><span>Annuler</span><b>initiateur d'une demande En attente</b></div>
+        </div>
+      </div>
+      <div class="card" style="margin-top:14px">
+        <div class="ch"><h3>Effets et conservation</h3><span class="hint-r">§4.1 · §5.4</span></div>
+        <div class="cb">
+          <div class="kv"><span>Demande validée</span><b>crée ou attribue l'objet correspondant : DEM-029 → compte Fournisseur « Ferme Ndiaye », référencé par Mata Finance<button class="linkish" data-goto="fin-fournisseurs">Fournisseurs</button></b></div>
+          <div class="kv"><span>Conservation</span><b>même politique de conservation et d'archivage que le journal central (§5.4) : stockage actif puis archive froide, sans mécanisme de rétention séparé<button class="linkish" data-goto="core-audit">Audit central</button></b></div>
+          <div class="kv"><span>Validations financières</span><b>transferts, ajustements, corrections, désactivations : moteur transverse de validation (§4.2), cycle distinct sans état « Retournée »<button class="linkish" data-goto="fin-validations">Validations</button></b></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tiroir : détail, versions, historique complet des échanges, actions -->
+  <aside class="drawer" data-ov="core-demandes-fiche" aria-label="Détail de la demande">
+    <div class="dh"><h3 data-d="title">Demande</h3><button class="ib" data-close aria-label="Fermer"><svg><use href="#i-x"/></svg></button></div>
+    <div class="db">
+      <div class="hint" data-d="sub"></div>
+      <b data-d="objet"></b>
+      <div class="meta-l" data-d="meta"></div>
+      <h4>Détail</h4>
+      <div data-d="kv"></div>
+      <h4>Versions</h4>
+      <div data-d="versions"></div>
+      <h4>Historique complet des échanges</h4>
+      <div class="tl" data-d="tl"></div>
+      <h4>Séparation des responsabilités</h4>
+      <ol class="chain" data-d="sep"></ol>
+      <div class="hint" style="margin-top:12px">Chaque décision est réalisée sous un profil actif déterminé et intégralement auditée (§4.2) · retours, commentaires, versions et décisions conservés (§4.1) · conservation alignée sur le journal central (§5.4).</div>
+    </div>
+    <div class="df">
+      <button class="btn ghost" data-close>Fermer</button><div class="sp"></div>
+      <button class="btn ghost" data-act="annuler" data-perm="core.demandes.initier"><svg><use href="#i-x"/></svg>Annuler</button>
+      <button class="btn pri" data-act="corriger" data-perm="core.demandes.initier"><svg><use href="#i-refresh"/></svg>Corriger et resoumettre</button>
+      <button class="btn ghost" data-act="retourner" data-perm="core.demandes.valider"><svg><use href="#i-arr"/></svg>Retourner</button>
+      <button class="btn ghost" data-act="refuser" data-perm="core.demandes.valider"><svg><use href="#i-x"/></svg>Refuser</button>
+      <button class="btn pri" data-act="valider" data-perm="core.demandes.valider"><svg><use href="#i-check"/></svg>Valider</button>
+    </div>
+  </aside>
+  <div class="dback" data-ov-back="core-demandes-fiche"></div>
+
+  <!-- Modale : nouvelle demande -->
+  <div class="mback" data-ov="core-demandes-nouvelle"><div class="modal wide" role="dialog" aria-modal="true" aria-label="Nouvelle demande">
+    <h3><svg><use href="#i-inbox"/></svg>Nouvelle demande</h3>
+    <div class="exp">Soumise sous le profil actif <b data-n="prof">Super Admin — S. Doucouré</b> · statut initial <b>En attente</b> · journalisée dans l'Audit central (Core · Demande) · un Admin/Super Admin habilité, distinct de vous, valide, refuse ou retourne la demande (§4.1, §4.2).</div>
+    <div class="fld"><label for="core-demandes-type">Type de demande</label><select id="core-demandes-type" class="inp" data-n="type">
+      <option value="utilisateur">Création d'un utilisateur</option>
+      <option value="client">Création d'un client</option>
+      <option value="fournisseur">Création d'un fournisseur</option>
+      <option value="acces">Nouvel accès</option>
+      <option value="profil">Profil</option>
+      <option value="permission">Permission temporaire</option>
+    </select><span class="hint">Types prévus au §4.1 · le Gérant MaaS ne demande que la création d'un utilisateur ou d'un client (périmètre FIXTURES §2)</span></div>
+    <div class="fld"><label for="core-demandes-objet">Objet</label><input id="core-demandes-objet" class="inp" data-n="objet" placeholder="Objet demandé : personne, client, fournisseur, accès ou permission, et entité"></div>
+    <div class="fld"><label for="core-demandes-just">Justification</label><textarea id="core-demandes-just" class="inp" data-n="just" rows="3" placeholder="Pourquoi cet objet ou cet accès est nécessaire, pour quelle entité et quelle durée"></textarea></div>
+    <div class="acts"><button class="btn ghost" data-close>Annuler</button><button class="btn pri" data-n="submit" data-perm="core.demandes.initier"><svg><use href="#i-check"/></svg>Soumettre la demande</button></div>
+  </div></div>
+
+  <!-- Modale : décision (valider / refuser / retourner / annuler) -->
+  <div class="mback" data-ov="core-demandes-decision"><div class="modal" role="dialog" aria-modal="true" aria-label="Décision sur une demande">
+    <h3><svg><use href="#i-shield"/></svg><span data-m="title">Décision</span></h3>
+    <div class="exp" data-m="exp"></div>
+    <div class="row-m"><span>Demande</span><b data-m="obj"></b></div>
+    <div class="fld"><label for="core-demandes-motif" data-m="motif-lbl">Motif</label><textarea id="core-demandes-motif" class="inp" data-m="motif" rows="3" placeholder="Saisir le motif ou commentaire"></textarea><span class="hint">Conservé avec la décision, l'acteur, le profil actif et l'horodatage (§4.1, §5.4)</span></div>
+    <div class="acts"><button class="btn ghost" data-close>Annuler</button><button class="btn pri" data-m="confirm" data-perm="core.demandes.valider"><svg><use href="#i-check"/></svg><span data-m="confirm-lbl">Confirmer</span></button></div>
+  </div></div>
+
+  <!-- Modale : correction et nouvelle soumission par l'initiateur -->
+  <div class="mback" data-ov="core-demandes-corriger"><div class="modal wide" role="dialog" aria-modal="true" aria-label="Corriger et resoumettre">
+    <h3><svg><use href="#i-refresh"/></svg>Corriger et resoumettre</h3>
+    <div class="exp">Motif du retour : <b data-k="motif"></b> · la correction crée une <b>nouvelle version</b> ; la version précédente, le retour et son motif restent conservés (§4.1) · la demande repasse <b>En attente</b>.</div>
+    <div class="fld"><label for="core-demandes-cobj">Objet corrigé</label><input id="core-demandes-cobj" class="inp" data-k="objet"></div>
+    <div class="fld"><label for="core-demandes-cprec">Précisions apportées (obligatoire)</label><textarea id="core-demandes-cprec" class="inp" data-k="prec" rows="3"></textarea><span class="hint">Réponse au motif du retour, conservée dans l'historique des échanges</span></div>
+    <div class="acts"><button class="btn ghost" data-close>Annuler</button><button class="btn pri" data-k="submit" data-perm="core.demandes.initier"><svg><use href="#i-check"/></svg>Soumettre la version corrigée</button></div>
+  </div></div>
+</section>
+<script data-screen="core-demandes">
+ERP.register('core-demandes', function (root, ctx) {
+  var q = function (s, r) { return (r || root).querySelector(s); };
+  var qa = function (s, r) { return Array.prototype.slice.call((r || root).querySelectorAll(s)); };
+  var clock = 21 * 60 + 30, seq = 32, filter = 'tous', mode = '', cur = '';
+  var ST = { attente: ['warn', 'clock', 'En attente'], retournee: ['info', 'refresh', 'Retournée'], validee: ['ok', 'check', 'Validée'], refusee: ['bad', 'x', 'Refusée'], annulee: ['mut', 'x', 'Annulée'] };
+  /* Types §4.1 : libellé et objet créé ou attribué à la validation */
+  var TYPE = { utilisateur: ['Création d’un utilisateur', 'compte utilisateur créé dans Mata Core, un seul compte par personne (§3.1)'], client: ['Création d’un client', 'client créé dans le référentiel Mata Core, référencé par Mata Finance (§5.1)'], fournisseur: ['Création d’un fournisseur', 'compte Fournisseur créé dans Mata Core, référencé par Mata Finance (§5.1)'], acces: ['Nouvel accès', 'accès attribué, daté de début et de fin, expiration automatique (§3.2)'], profil: ['Profil', 'profil attribué à l’utilisateur, sélectionnable à la connexion (§3.3)'], permission: ['Permission temporaire', 'exception accordée pour une durée limitée, visible dans Droits effectifs (§3.5)'] };
+  /* Historique : [horodatage, événement, acteur, profil, commentaire] · versions : [horodatage, objet, précisions] (FIXTURES §10) */
+  var H = {
+    'DEM-031': { v: [['27/08 · 09:15', 'Création utilisateur « Khady Sow », commerciale MaaS Ouakam', '']], ev: [['27/08 · 09:15', 'Soumise · version 1', 'B. Fall', 'Gérant MaaS Keur Massar', '']] },
+    'DEM-030': { v: [['26/08', 'Nouvel accès : prolongation Comptable externe C. Mbaye jusqu’au 31/12/2026', '']], ev: [['26/08', 'Soumise · version 1', 'F. Sarr', 'Directeur des Opérations', ''], ['26/08', 'Retournée', 'S. Doucouré', 'Super Admin', 'préciser la date de fin et le périmètre demandé']], motif: 'préciser la date de fin et le périmètre demandé' },
+    'DEM-029': { v: [['25/08', 'Création fournisseur « Ferme Ndiaye »', '']], ev: [['25/08', 'Soumise · version 1', 'F. Sarr', 'Directeur des Opérations', ''], ['25/08 · 17:40', 'Validée', 'S. Doucouré', 'Super Admin', 'compte Fournisseur créé, compte de paiement de référence : Caisse générale']], obj: 'compte Fournisseur « Ferme Ndiaye » créé · compte de paiement de référence : Caisse générale' },
+    'DEM-028': { v: [['24/08', 'Permission temporaire « Exporter dépenses » 1 semaine', '']], ev: [['24/08', 'Soumise · version 1', 'F. Sarr', 'Directeur des Opérations', ''], ['24/08', 'Refusée', 'O. Seck', 'DG Mata', 'export réservé aux Admins, passer par un relevé fournisseur']] },
+    'DEM-027': { v: [['23/08', 'Création client « Restaurant Teranga »', '']], ev: [['23/08', 'Soumise · version 1', 'B. Fall', 'Gérant MaaS Keur Massar', ''], ['23/08', 'Annulée par l’initiateur', 'B. Fall', 'Gérant MaaS Keur Massar', '']] }
+  };
+  var D = q('[data-ov="core-demandes-fiche"]'), M = q('[data-ov="core-demandes-decision"]'), N = q('[data-ov="core-demandes-nouvelle"]'), C = q('[data-ov="core-demandes-corriger"]'), tb = q('[data-rows]');
+  function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+  function now() { var m = clock++; return '27/08 · ' + ('0' + Math.floor(m / 60)).slice(-2) + ':' + ('0' + m % 60).slice(-2); }
+  function me() { return ctx.profile.short; }
+  function row(id) { return q('tr[data-dem="' + id + '"]', tb); }
+  function canV() { return ctx.hasPerm('core.demandes.valider'); }
+  function inScope(tr) { return canV() || tr.getAttribute('data-init') === me(); }
+  function badge(k, hint) { var s = ST[k]; return '<span class="st ' + s[0] + '"><svg><use href="#i-' + s[1] + '"/></svg>' + s[2] + '</span>' + (hint ? '<div class="hint">' + hint + '</div>' : ''); }
+  /* Périmètre (sans core.demandes.valider : ses propres demandes), filtre par statut, compteurs et composantes des .fx */
+  function refresh() {
+    var cnt = { attente: [], retournee: [], validee: [], refusee: [], annulee: [] }, vis = 0, total = 0;
+    qa('tr[data-dem]', tb).forEach(function (tr) {
+      var k = tr.getAttribute('data-st'), ok = inScope(tr);
+      if (ok) { cnt[k].push(tr.getAttribute('data-dem')); total++; }
+      tr.hidden = !(ok && (filter === 'tous' || k === filter)); if (!tr.hidden) vis++;
+    });
+    q('tr[data-empty]', tb).hidden = vis > 0;
+    Object.keys(cnt).forEach(function (k) { q('[data-stat="' + k + '"]').textContent = cnt[k].length; var fx = q('[data-fx="' + k + '"]'); if (fx) fx.setAttribute('data-c', cnt[k].join(' · ') || 'aucune'); });
+    q('[data-stat="close"]').textContent = cnt.refusee.length + cnt.annulee.length; q('[data-fx="close"]').setAttribute('data-c', cnt.refusee.concat(cnt.annulee).join(' · ') || 'aucune');
+    q('[data-scope-hint]').textContent = total + ' demande' + (total > 1 ? 's' : '') + ' · ' + (canV() ? 'tous initiateurs' : 'vos propres demandes') + ' · profil ' + ctx.profile.profile;
+    q('[data-scope-note]').hidden = canV(); q('[data-scope-txt]').innerHTML = 'Connecté en tant que <b>' + esc(me()) + '</b> (' + esc(ctx.profile.profile) + ') : sans la permission core.demandes.valider, la liste se limite à vos propres demandes ; celles des autres initiateurs sont hors de votre périmètre (refus par défaut).';
+  }
+  function deny(b, why) { b.disabled = true; b.classList.add('denied'); b.title = 'Refus : ' + why; }
+  /* Après le moteur de permissions : actions visibles selon le statut, correction et annulation réservées à l'initiateur */
+  function guard() {
+    ctx.applyPerms(); if (!cur) return;
+    var tr = row(cur), st = tr.getAttribute('data-st'), init = tr.getAttribute('data-init');
+    qa('.df [data-act]', D).forEach(function (b) {
+      var a = b.getAttribute('data-act'), show = a === 'corriger' ? st === 'retournee' : st === 'attente'; b.hidden = !show;
+      if (show && !b.disabled && (a === 'corriger' || a === 'annuler') && init !== me()) deny(b, 'seul l’initiateur (' + init + ') peut ' + (a === 'annuler' ? 'annuler' : 'corriger et resoumettre') + ' sa demande (§4.1)');
+    });
+  }
+  function fill(id) {
+    var tr = row(id), h = H[id], st = tr.getAttribute('data-st'), init = tr.getAttribute('data-init'), t = TYPE[tr.getAttribute('data-type')], last = h.v[h.v.length - 1]; cur = id;
+    q('[data-d="title"]', D).textContent = id + ' · ' + t[0];
+    q('[data-d="sub"]', D).textContent = 'Demande administrative (§4.1) · initiée le ' + tr.getAttribute('data-date') + ' par ' + init + ' (' + tr.getAttribute('data-initp') + ') · version ' + h.v.length;
+    q('[data-d="objet"]', D).textContent = last[1];
+    q('[data-d="meta"]', D).innerHTML = badge(st, '') + '<span class="sens s"><svg><use href="#i-shield"/></svg>Sensible</span><span class="tag lock"><svg><use href="#i-layers"/></svg>Version ' + h.v.length + '</span>';
+    var kv = [['Type', t[0]], ['Initiateur', init + ' · ' + tr.getAttribute('data-initp')], ['Entité', tr.getAttribute('data-ent')], ['Statut', ST[st][2]], ['Objet créé ou attribué', st === 'validee' ? (h.obj || t[1]) : 'aucun avant validation · à la validation : ' + t[1]], ['Conservation', 'alignée sur le journal central (§5.4)']];
+    q('[data-d="kv"]', D).innerHTML = kv.map(function (x) { return '<div class="kv"><span>' + x[0] + '</span><b>' + esc(x[1]) + '</b></div>'; }).join('');
+    q('[data-d="versions"]', D).innerHTML = h.v.map(function (v, i) { return '<div class="kv"><span>Version ' + (i + 1) + ' · ' + v[0] + (i === h.v.length - 1 ? ' · courante' : ' · conservée') + '</span><b>' + esc(v[1]) + (v[2] ? ' — ' + esc(v[2]) : '') + '</b></div>'; }).join('');
+    var ev = h.ev.map(function (e) { return '<div class="ev"><b>' + esc(e[1]) + '</b>' + (e[4] ? ' · « ' + esc(e[4]) + ' »' : '') + '<small>' + esc(e[2]) + ' · ' + esc(e[3]) + ' · ' + e[0] + '</small></div>'; });
+    if (st === 'attente') ev.push('<div class="ev on"><b>Décision attendue</b> · Valider, Refuser ou Retourner par un Admin/Super Admin habilité, distinct de l’initiateur<small>en cours</small></div>');
+    if (st === 'retournee') ev.push('<div class="ev on"><b>Correction attendue de l’initiateur</b> · ' + esc(init) + ' corrige et soumet à nouveau (version ' + (h.v.length + 1) + ')<small>en cours</small></div>');
+    q('[data-d="tl"]', D).innerHTML = ev.join('');
+    var why = st !== 'attente' ? 'demande ' + ST[st][2].toLowerCase() + ' : plus aucune décision à prendre' : (!canV() ? 'la permission core.demandes.valider n’est pas accordée au profil ' + ctx.profile.profile : (init === me() ? 'l’initiateur ne valide jamais sa propre demande (§4.2)' : ''));
+    q('[data-d="sep"]', D).innerHTML = '<li class="' + (init === me() ? 'hit deny' : 'skip') + '">Initiateur · ' + esc(init) + ' <small>ne valide jamais sa propre demande ; seul lui la corrige ou l’annule (§4.1, §4.2)</small></li><li class="hit ' + (why ? 'deny' : 'allow') + '">Vous · ' + esc(me()) + ' <small>' + esc(ctx.profile.profile) + '</small><span class="res">' + (why ? esc(why) : 'peut décider') + '</span></li>';
+    qa('.df [data-perm="core.demandes.valider"]', D).forEach(function (b) { b.setAttribute('data-initiator', init); });
+    guard();
+  }
+  /* Décision : Valider / Refuser (motif) / Retourner (motif obligatoire) / Annuler ; Corriger ouvre la modale de nouvelle version */
+  function ask(m) {
+    var tr = row(cur), h = H[cur], init = tr.getAttribute('data-init'), o = h.v[h.v.length - 1][1]; mode = m; ctx.close('core-demandes-fiche');
+    if (m === 'corriger') { q('[data-k="motif"]', C).textContent = '« ' + h.motif + ' »'; q('[data-k="objet"]', C).value = o; var p = q('[data-k="prec"]', C); p.value = ''; p.placeholder = 'Réponse au retour : ' + h.motif; ctx.open('core-demandes-corriger'); ctx.applyPerms(); return; }
+    var T = { valider: ['Valider ' + cur, 'Validation sous le profil <b>' + esc(ctx.profile.profile) + '</b> (' + esc(me()) + ') · effet : ' + esc(TYPE[tr.getAttribute('data-type')][1]) + ' · décision auditée (§4.2, §5.4).', 'Commentaire (facultatif)', 'Confirmer la validation'],
+      refuser: ['Refuser ' + cur, 'Refus motivé, conservé avec la décision (§4.1) · aucun objet créé ni attribué · l’initiateur ' + esc(init) + ' est notifié.', 'Motif du refus (obligatoire)', 'Confirmer le refus'],
+      retourner: ['Retourner ' + cur, 'Retour à l’initiateur ' + esc(init) + ' avec un motif ou commentaire (§4.1) · il corrige et soumet à nouveau une version ' + (h.v.length + 1) + ' · le retour est conservé.', 'Motif du retour (obligatoire)', 'Confirmer le retour'],
+      annuler: ['Annuler ' + cur, 'Annulation par l’initiateur d’une demande En attente · aucun objet créé ni attribué · l’annulation est conservée et auditée (§4.1).', 'Commentaire (facultatif)', 'Confirmer l’annulation'] }[m];
+    q('[data-m="title"]', M).textContent = T[0]; q('[data-m="exp"]', M).innerHTML = T[1]; q('[data-m="motif-lbl"]', M).textContent = T[2]; q('[data-m="confirm-lbl"]', M).textContent = T[3];
+    q('[data-m="obj"]', M).textContent = o; var mot = q('[data-m="motif"]', M); mot.value = '';
+    var cb = q('[data-m="confirm"]', M); cb.setAttribute('data-perm', m === 'annuler' ? 'core.demandes.initier' : 'core.demandes.valider'); if (m === 'annuler') cb.removeAttribute('data-initiator'); else cb.setAttribute('data-initiator', init);
+    ctx.open('core-demandes-decision'); ctx.applyPerms(); mot.focus();
+  }
+  function decide() {
+    var tr = row(cur), h = H[cur], mot = q('[data-m="motif"]', M).value.trim(), t = now(), init = tr.getAttribute('data-init'), who = me(), prof = ctx.profile.profile, eff = TYPE[tr.getAttribute('data-type')][1];
+    if ((mode === 'refuser' || mode === 'retourner') && !mot) { ctx.toast('Le motif est obligatoire pour ' + (mode === 'refuser' ? 'un refus' : 'un retour à l’initiateur') + ' (§4.1)'); return; }
+    if (mode !== 'annuler' && init === who) { ctx.toast('Refus : l’initiateur ne valide jamais sa propre demande (§4.2)'); return; }
+    var K = { valider: ['validee', 'Validée', 'Validée par ' + who + ' ' + t + ' → ' + eff], refuser: ['refusee', 'Refusée', 'Refusée par ' + who + ' ' + t + ' : « ' + esc(mot) + ' »'], retourner: ['retournee', 'Retournée', 'Retour ' + who + ' ' + t + ' : « ' + esc(mot) + ' » · correction attendue de l’initiateur'], annuler: ['annulee', 'Annulée par l’initiateur', 'Annulée par l’initiateur ' + t] }[mode];
+    h.ev.push([t, K[1], who, prof, mode === 'valider' ? eff : mot]); if (mode === 'retourner') h.motif = mot; if (mode === 'valider') h.obj = eff;
+    tr.setAttribute('data-st', K[0]); q('[data-c="st"]', tr).innerHTML = badge(K[0], K[2]);
+    ctx.close('core-demandes-decision'); refresh(); ctx.toast(cur + ' ' + K[1].toLowerCase() + ' sous le profil ' + prof + (mode === 'valider' ? ' · ' + eff : '') + ' · conservé et audité');
+  }
+  function correct() {
+    var tr = row(cur), h = H[cur], o = q('[data-k="objet"]', C).value.trim(), p = q('[data-k="prec"]', C).value.trim(), t = now();
+    if (!o || !p) { ctx.toast('Objet corrigé et précisions sont obligatoires pour soumettre à nouveau'); return; }
+    h.v.push([t, o, p]); h.ev.push([t, 'Corrigée et soumise à nouveau · version ' + h.v.length, me(), ctx.profile.profile, p]);
+    tr.setAttribute('data-st', 'attente'); q('[data-c="st"]', tr).innerHTML = badge('attente', 'Soumise à nouveau ' + t + ' · version ' + h.v.length + ' · retour précédent conservé');
+    q('td:first-child .hint', tr).textContent = 'version ' + h.v.length; q('[data-c="objet"] b', tr).textContent = o; ctx.close('core-demandes-corriger'); refresh(); ctx.toast(cur + ' corrigée et soumise à nouveau (version ' + h.v.length + ') · En attente · retour et version précédente conservés');
+  }
+  function submitNew() {
+    var ty = q('[data-n="type"]', N).value, o = q('[data-n="objet"]', N).value.trim(), j = q('[data-n="just"]', N).value.trim(), t = now(), id = 'DEM-0' + (seq++), ent = ctx.entity === 'MAAS-KM' ? 'MaaS Keur Massar' : 'Mata Group';
+    if (!o || !j) { ctx.toast('Objet et justification sont obligatoires'); return; }
+    H[id] = { v: [[t, o, j]], ev: [[t, 'Soumise · version 1', me(), ctx.profile.profile, j]] };
+    tb.insertAdjacentHTML('afterbegin', '<tr class="rowlink" data-open="core-demandes-fiche" data-dem="' + id + '" data-st="attente" data-type="' + ty + '" data-init="' + esc(me()) + '" data-initp="' + esc(ctx.profile.profile) + '" data-ent="' + ent + '" data-date="' + t + '"><td><b>' + id + '</b><div class="hint">version 1</div></td><td data-c="objet"><b>' + esc(o) + '</b><div class="hint">' + esc(j) + '</div></td><td>' + TYPE[ty][0] + '</td><td>' + esc(me()) + '<div class="hint">' + esc(ctx.profile.profile) + ' · ' + esc(ctx.profile.cat) + '</div></td><td>27/08<div class="hint">' + t.slice(8) + '</div></td><td data-c="st">' + badge('attente', 'Soumise ' + t) + '</td></tr>');
+    q('[data-n="objet"]', N).value = ''; q('[data-n="just"]', N).value = ''; ctx.close('core-demandes-nouvelle'); refresh(); ctx.toast(id + ' soumise · En attente · journalisée dans l’Audit central (Core · Demande) · à traiter par un Admin/Super Admin habilité, distinct de l’initiateur');
+  }
+  /* Gérant MaaS : initie uniquement la création d'un utilisateur ou d'un client (FIXTURES §2) */
+  function typeScope() {
+    var maas = ctx.profile.id === 'maas', s = q('[data-n="type"]', N);
+    qa('option', s).forEach(function (o) { o.disabled = maas && o.value !== 'utilisateur' && o.value !== 'client'; });
+    if (maas && s.value !== 'utilisateur' && s.value !== 'client') s.value = 'utilisateur';
+    q('[data-n="prof"]', N).textContent = ctx.profile.profile + ' — ' + me();
+  }
+  ctx.on(root, 'click', function (e) {
+    var tr = e.target.closest('tr[data-dem]'), b = e.target.closest('[data-act],[data-m="confirm"],[data-n="submit"],[data-k="submit"]');
+    if (tr && root.contains(tr)) { fill(tr.getAttribute('data-dem')); return; }
+    if (!b || !root.contains(b) || b.disabled || b.classList.contains('denied')) return;
+    if (b.hasAttribute('data-act')) ask(b.getAttribute('data-act')); else if (b.hasAttribute('data-m')) decide(); else if (b.hasAttribute('data-n')) submitNew(); else correct();
+  });
+  qa('.chip[data-filter]').forEach(function (c) { ctx.on(c, 'click', function () { filter = c.getAttribute('data-filter'); qa('.chip[data-filter]').forEach(function (x) { x.classList.toggle('on', x === c); }); refresh(); }); });
+  document.addEventListener('erp:profile', function () { setTimeout(function () { refresh(); typeScope(); if (cur && D.classList.contains('on')) fill(cur); else guard(); }, 0); });
+  refresh(); typeScope(); ctx.formatAmounts(root); ctx.applyPerms();
+});
+</script>

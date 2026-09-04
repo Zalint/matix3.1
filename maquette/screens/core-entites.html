@@ -1,0 +1,255 @@
+<section class="scr" data-scr="core-entites" data-module="core" data-perm="core.entites.view" data-sens="std" hidden>
+  <style data-screen="core-entites">
+    #app [data-scr="core-entites"] .kv{display:flex;justify-content:space-between;gap:12px;font-size:12px;padding:6px 0;border-bottom:1px dashed var(--line)}
+    #app [data-scr="core-entites"] .kv:last-of-type{border-bottom:none}
+    #app [data-scr="core-entites"] .kv b{text-align:right;font-weight:600;max-width:62%}
+    #app [data-scr="core-entites"] .code{font-family:'Fira Code',monospace;font-size:11.5px}
+    #app [data-scr="core-entites"] .btn[data-lock]{opacity:.48;cursor:not-allowed;filter:saturate(.4)}
+    #app [data-scr="core-entites"] td .hint{display:block;margin-top:2px;white-space:normal}
+    #app [data-scr="core-entites"] .ch{flex-wrap:wrap}
+    #app [data-scr="core-entites"] .tbl-scroll table{min-width:1040px}
+    #app [data-scr="core-entites"] h4{font-family:var(--head);font-size:11.5px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-2);margin:14px 0 6px}
+    #app [data-scr="core-entites"] .modal select.inp,#app [data-scr="core-entites"] .modal input.inp{font-family:var(--body);font-size:13px;margin-bottom:12px}
+    #app [data-scr="core-entites"] .modal .rl .row{padding:7px 0}
+    #app [data-scr="core-entites"] .modal .rl .nm{font-size:12px}
+    #app [data-scr="core-entites"] .drawer .txt{font-size:12px;color:var(--ink-2);line-height:1.55}
+    #app [data-scr="core-entites"] .drawer .df .sp{flex:1}
+  </style>
+  <div class="scr-head">
+    <div>
+      <h2>Entités</h2>
+      <p class="scr-sub">Mata Group, filiales et MaaS du référentiel transverse (§2) · créées par configuration, jamais supprimées physiquement · Mata Group est le premier périmètre activé et la seule entité sélectionnable (Finance §2.3)</p>
+    </div>
+    <div class="scr-meta">
+      <span class="sens std"><svg><use href="#i-shield"/></svg>Standard</span>
+      <span class="hint">Standard : permissions normales (§5.3) · consultation sans validation · activation, désactivation et création sous permission core.entites.activer, enregistrées sous le profil actif et auditées (§5.4)</span>
+    </div>
+  </div>
+
+  <div class="statstrip four">
+    <div class="card stat">
+      <div class="lb">Entités référencées<button class="fx" data-f="Σ entités du référentiel Mata Core = Entité mère + Filiales + MaaS (§2)" data-c="Entité mère 1 (Mata Group) · Filiales 3 (MLC, Mata Volaille, Keur Bally) · MaaS 12" data-src="Mata Core · référentiels transverses, propriétaire unique (§5.1) · lu à l'instant" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></div>
+      <div class="v" data-stat="total">16</div>
+      <div class="sub2" data-stat="total-sub">1 entité mère · 3 filiales · 12 MaaS · aucune supprimée</div>
+    </div>
+    <div class="card stat">
+      <div class="lb">Actives</div>
+      <div class="v" data-stat="active">1</div>
+      <div class="sub2" data-stat="active-sub">Mata Group · premier périmètre activé, seule sélectionnable (Finance §2.3) · 0 désactivée</div>
+    </div>
+    <div class="card stat">
+      <div class="lb">À migrer</div>
+      <div class="v" data-stat="migrer">2</div>
+      <div class="sub2">MLC, Mata Volaille · référentiels à migrer avant activation · visibles, non sélectionnables</div>
+    </div>
+    <div class="card stat">
+      <div class="lb">À activer</div>
+      <div class="v" data-stat="activer">13</div>
+      <div class="sub2">Keur Bally + 12 MaaS · par configuration, sans fork applicatif (§1)</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="ch"><h3>Référentiel des entités</h3><span class="hint-r">Affichées : <b data-count>16 / 16</b> · une ligne ouvre la fiche</span></div>
+    <div class="cb">
+      <div class="actionbar">
+        <div class="chips" data-fgroup="type"><button class="chip on" data-filter="tous">Tous types</button><button class="chip" data-filter="mere">Entité mère</button><button class="chip" data-filter="filiale">Filiales</button><button class="chip" data-filter="maas">MaaS</button></div>
+        <div class="chips" data-fgroup="statut"><button class="chip on" data-filter="tous">Tous statuts</button><button class="chip" data-filter="active">Active</button><button class="chip" data-filter="migrer">À migrer</button><button class="chip" data-filter="activer">À activer</button><button class="chip" data-filter="inactive">Désactivée</button></div>
+        <div class="sp"></div>
+        <button class="btn ghost" data-act="export" data-perm="core.export"><svg><use href="#i-dl"/></svg>Exporter (CSV)</button>
+        <button class="btn pri" data-open="core-entites-nouvelle" data-perm="core.entites.activer"><svg><use href="#i-plus"/></svg>Nouvelle entité</button>
+      </div>
+      <div class="tbl-scroll"><table>
+        <thead><tr><th>Identifiant</th><th>Entité</th><th>Type</th><th>Rattachement</th><th>Statut</th><th>Sélecteur d'entité</th><th>Utilisateurs liés</th><th>Action</th></tr></thead>
+        <tbody data-rows>
+          <tr class="rowlink" data-open="core-entites-fiche" data-code="MG" data-type="mere" data-statut="active"><td class="code">MG</td><td><b>Mata Group</b></td><td>Entité mère</td><td>—</td><td data-cell="st"><span class="st ok"><svg><use href="#i-check"/></svg>Active</span></td><td data-cell="sel">Sélectionnable · seule entité sélectionnable</td><td data-cell="u">7 actifs · 1 désactivé<span class="hint">S. Doucouré, O. Seck, F. Sarr, M. Diop, A. Ndiaye, I. Kane, C. Mbaye · M. Gueye désactivé le 30/06/2026</span></td><td data-cell="act"></td></tr>
+          <tr class="rowlink" data-open="core-entites-fiche" data-code="MLC" data-type="filiale" data-statut="migrer"><td class="code">MLC</td><td><b>MLC</b></td><td>Filiale</td><td>Mata Group</td><td data-cell="st"><span class="st mut">À migrer</span></td><td data-cell="sel">Non sélectionnable · visible</td><td data-cell="u">S. Doucouré<span class="hint">profil Directeur financier MLC, non activable tant que l'entité est à migrer</span></td><td data-cell="act"></td></tr>
+          <tr class="rowlink" data-open="core-entites-fiche" data-code="MV" data-type="filiale" data-statut="migrer"><td class="code">MV</td><td><b>Mata Volaille</b></td><td>Filiale</td><td>Mata Group</td><td data-cell="st"><span class="st mut">À migrer</span></td><td data-cell="sel">Non sélectionnable · visible</td><td data-cell="u">Aucun</td><td data-cell="act"></td></tr>
+          <tr class="rowlink" data-open="core-entites-fiche" data-code="KB" data-type="filiale" data-statut="activer"><td class="code">KB</td><td><b>Keur Bally</b></td><td>Filiale (franchise)</td><td>Mata Group</td><td data-cell="st"><span class="st mut">À activer</span></td><td data-cell="sel">Non sélectionnable · visible</td><td data-cell="u">Aucun</td><td data-cell="act"></td></tr>
+          <tr class="rowlink" data-open="core-entites-fiche" data-code="MAAS-KM" data-type="maas" data-statut="activer"><td class="code">MAAS-KM</td><td><b>MaaS Keur Massar</b></td><td>MaaS</td><td>Mata Group</td><td data-cell="st"><span class="st mut">À activer</span></td><td data-cell="sel">Non sélectionnable · contexte du Gérant MaaS connecté</td><td data-cell="u">B. Fall<span class="hint">Gérant MaaS Keur Massar · Externe — MaaS · son MaaS est son contexte</span></td><td data-cell="act"></td></tr>
+          <tr class="rowlink" data-open="core-entites-fiche" data-code="MAAS-OU" data-type="maas" data-statut="activer"><td class="code">MAAS-OU</td><td><b>MaaS Ouakam</b></td><td>MaaS</td><td>Mata Group</td><td data-cell="st"><span class="st mut">À activer</span></td><td data-cell="sel">Non sélectionnable · référencé</td><td data-cell="u">Aucun</td><td data-cell="act"></td></tr>
+          <tr class="rowlink" data-open="core-entites-fiche" data-code="MAAS-PK" data-type="maas" data-statut="activer"><td class="code">MAAS-PK</td><td><b>MaaS Pikine</b></td><td>MaaS</td><td>Mata Group</td><td data-cell="st"><span class="st mut">À activer</span></td><td data-cell="sel">Non sélectionnable · référencé</td><td data-cell="u">Aucun</td><td data-cell="act"></td></tr>
+          <tr class="rowlink" data-open="core-entites-fiche" data-code="MAAS-RU" data-type="maas" data-statut="activer"><td class="code">MAAS-RU</td><td><b>MaaS Rufisque</b></td><td>MaaS</td><td>Mata Group</td><td data-cell="st"><span class="st mut">À activer</span></td><td data-cell="sel">Non sélectionnable · référencé</td><td data-cell="u">Aucun</td><td data-cell="act"></td></tr>
+          <tr class="rowlink" data-open="core-entites-fiche" data-code="MAAS-GY" data-type="maas" data-statut="activer"><td class="code">MAAS-GY</td><td><b>MaaS Grand Yoff</b></td><td>MaaS</td><td>Mata Group</td><td data-cell="st"><span class="st mut">À activer</span></td><td data-cell="sel">Non sélectionnable · référencé</td><td data-cell="u">Aucun</td><td data-cell="act"></td></tr>
+          <tr class="rowlink" data-open="core-entites-fiche" data-code="MAAS-PA" data-type="maas" data-statut="activer"><td class="code">MAAS-PA</td><td><b>MaaS Parcelles</b></td><td>MaaS</td><td>Mata Group</td><td data-cell="st"><span class="st mut">À activer</span></td><td data-cell="sel">Non sélectionnable · référencé</td><td data-cell="u">Aucun</td><td data-cell="act"></td></tr>
+          <tr class="rowlink" data-open="core-entites-fiche" data-code="MAAS-ME" data-type="maas" data-statut="activer"><td class="code">MAAS-ME</td><td><b>MaaS Médina</b></td><td>MaaS</td><td>Mata Group</td><td data-cell="st"><span class="st mut">À activer</span></td><td data-cell="sel">Non sélectionnable · référencé</td><td data-cell="u">Aucun</td><td data-cell="act"></td></tr>
+          <tr class="rowlink" data-open="core-entites-fiche" data-code="MAAS-YO" data-type="maas" data-statut="activer"><td class="code">MAAS-YO</td><td><b>MaaS Yoff</b></td><td>MaaS</td><td>Mata Group</td><td data-cell="st"><span class="st mut">À activer</span></td><td data-cell="sel">Non sélectionnable · référencé</td><td data-cell="u">Aucun</td><td data-cell="act"></td></tr>
+          <tr class="rowlink" data-open="core-entites-fiche" data-code="MAAS-NG" data-type="maas" data-statut="activer"><td class="code">MAAS-NG</td><td><b>MaaS Ngor</b></td><td>MaaS</td><td>Mata Group</td><td data-cell="st"><span class="st mut">À activer</span></td><td data-cell="sel">Non sélectionnable · référencé</td><td data-cell="u">Aucun</td><td data-cell="act"></td></tr>
+          <tr class="rowlink" data-open="core-entites-fiche" data-code="MAAS-TH" data-type="maas" data-statut="activer"><td class="code">MAAS-TH</td><td><b>MaaS Thiaroye</b></td><td>MaaS</td><td>Mata Group</td><td data-cell="st"><span class="st mut">À activer</span></td><td data-cell="sel">Non sélectionnable · référencé</td><td data-cell="u">Aucun</td><td data-cell="act"></td></tr>
+          <tr class="rowlink" data-open="core-entites-fiche" data-code="MAAS-GU" data-type="maas" data-statut="activer"><td class="code">MAAS-GU</td><td><b>MaaS Guédiawaye</b></td><td>MaaS</td><td>Mata Group</td><td data-cell="st"><span class="st mut">À activer</span></td><td data-cell="sel">Non sélectionnable · référencé</td><td data-cell="u">Aucun</td><td data-cell="act"></td></tr>
+          <tr class="rowlink" data-open="core-entites-fiche" data-code="MAAS-HL" data-type="maas" data-statut="activer"><td class="code">MAAS-HL</td><td><b>MaaS HLM</b></td><td>MaaS</td><td>Mata Group</td><td data-cell="st"><span class="st mut">À activer</span></td><td data-cell="sel">Non sélectionnable · référencé</td><td data-cell="u">Aucun</td><td data-cell="act"></td></tr>
+          <tr data-empty hidden><td colspan="8" class="hint">Aucune entité ne correspond à ce filtre.</td></tr>
+        </tbody>
+      </table></div>
+      <div class="note-strip"><svg><use href="#i-lock"/></svg><span><b>Activer</b> est désactivé sur MLC et Mata Volaille avec le motif « référentiels à migrer » ; il est actif sur Keur Bally et les 12 MaaS : l'activation se fait par configuration, sans base, schéma ni déploiement dédié (Architecture technique §3). Une action refusée reste visible et explique son refus (refus par défaut, §1).</span></div>
+    </div>
+  </div>
+
+  <div class="grid2b">
+    <div class="card">
+      <div class="ch"><h3>Contexte d'entité du profil actif</h3><span class="hint-r">recalculé à chaque changement de profil (§3.3)</span></div>
+      <div class="cb">
+        <div class="kv"><span>Profil actif</span><b data-cx="prof">—</b></div>
+        <div class="kv"><span>Catégorie(s)</span><b data-cx="cat">—</b></div>
+        <div class="kv"><span>Entité de contexte</span><b data-cx="ent">—</b></div>
+        <div class="kv"><span>Sélecteur d'entité</span><b data-cx="sel">—</b></div>
+        <div class="kv"><span>Scoping des données</span><b>mécanisme central par entity_id · toute requête sans contexte d'entité est refusée par défaut (Technique §3)</b></div>
+        <div class="note-strip" data-view="std"><svg><use href="#i-info"/></svg><span>Les 12 MaaS sont référencés mais non sélectionnables. Seul le Gérant MaaS connecté a son MaaS pour contexte : le profil actif détermine entité, rôles, modules, périmètre, données visibles, permissions et validations disponibles ; les droits de plusieurs profils ne sont jamais additionnés (§3.3).</span></div>
+        <div class="note-strip" data-view="maas" hidden><svg><use href="#i-info"/></svg><span>Votre MaaS est votre contexte : aucune autre entité n'est sélectionnable. Vos droits sont limités à ce périmètre, sans héritage vers d'autres entités (§3.4).</span></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="ch"><h3>Ce qu'est une entité dans Mata Core</h3><span class="hint-r">§2 · Organisation et référentiels</span></div>
+      <div class="cb rl">
+        <div class="row"><div class="nm">Mata Group est l'entité mère<small>filiales et MaaS sont créés par configuration ; aucune nouvelle filiale, activité ou MaaS ne nécessite de fork applicatif (§1)</small></div><span class="st ok"><svg><use href="#i-check"/></svg>Config.</span></div>
+        <div class="row"><div class="nm">Un MaaS est une entité opérationnelle<small>pouvant être reliée à ses propriétaires, employés, commerciaux, bouchers, investisseurs ou autres utilisateurs</small></div><span class="st mut"><svg><use href="#i-users"/></svg>Liens</span></div>
+        <div class="row"><div class="nm">Jamais de suppression physique<small>un référentiel déjà utilisé est désactivé afin de conserver l'historique ; identifiant jamais réutilisé</small></div><span class="st warn"><svg><use href="#i-lock"/></svg>Désactivation</span></div>
+        <div class="row"><div class="nm">Référencement par identifiant<small>les modules métier référencent les objets Mata Core par leur identifiant et ne créent pas de référentiels parallèles (§2, §5.1)</small></div><span class="st mut"><svg><use href="#i-layers"/></svg>entity_id</span></div>
+        <div class="row"><div class="nm">Infrastructure mutualisée<small>ni base, ni schéma, ni serveur, ni déploiement dédié par entité ; dérogation uniquement pour contrainte réglementaire, de sécurité ou de charge démontrée (Technique §3)</small></div><span class="st mut"><svg><use href="#i-building"/></svg>Technique §3</span></div>
+      </div>
+    </div>
+  </div>
+
+  <aside class="drawer" data-ov="core-entites-fiche">
+    <div class="dh"><h3 data-d="title">Fiche entité</h3><button class="ib" data-close aria-label="Fermer"><svg><use href="#i-x"/></svg></button></div>
+    <div class="db">
+      <div class="meta-l" data-d="meta"></div>
+      <div class="kv"><span>Identifiant (entity_id)</span><b class="code" data-d="code">—</b></div>
+      <div class="kv"><span>Type</span><b data-d="type">—</b></div>
+      <div class="kv"><span>Rattachement</span><b data-d="rat">—</b></div>
+      <div class="kv"><span>Statut</span><b data-d="st">—</b></div>
+      <div class="kv"><span>Sélecteur d'entité</span><b data-d="sel">—</b></div>
+      <div class="kv"><span>Scoping</span><b>entity_id obligatoire · refus par défaut sans contexte (Technique §3)</b></div>
+      <h4>Utilisateurs liés (un compte par personne, §3.1)</h4>
+      <div class="txt" data-d="users">—</div>
+      <h4 data-d="roles-h">Peut être reliée à (§2)</h4>
+      <div class="txt" data-d="roles">Propriétaires · employés · commerciaux · bouchers · investisseurs · autres utilisateurs — chacun avec son compte unique et son profil (§3.1, §3.3)</div>
+      <h4>Références par identifiant dans les modules (§2, §5.1)</h4>
+      <div class="maas-list" data-d="refs"></div>
+      <h4>Modifications de la session (auditées, §5.4)</h4>
+      <div class="tl" data-d="tl"></div>
+      <div class="note-strip"><svg><use href="#i-lock"/></svg><span><b>Jamais de suppression physique</b> : un référentiel déjà utilisé est désactivé, l'historique est conservé (§2, §10.2). Les métadonnées techniques (création, dernière modification, auteur) sont enregistrées automatiquement (Technique §12).</span></div>
+    </div>
+    <div class="df"><button class="btn ghost" data-goto="core-droits"><svg><use href="#i-key"/></svg>Droits effectifs</button><div class="sp"></div><span data-d="acts"></span></div>
+  </aside>
+  <div class="dback" data-ov-back="core-entites-fiche"></div>
+
+  <div class="mback" data-ov="core-entites-activer"><div class="modal wide" role="dialog" aria-modal="true" aria-label="Activer une entité">
+    <h3><svg><use href="#i-building"/></svg>Activer <span data-m="name">l'entité</span></h3>
+    <div class="exp"><b>Activation par configuration</b> : ni base, ni schéma, ni serveur, ni déploiement dédié (Architecture technique §3). L'infrastructure reste mutualisée entre entités ; une infrastructure séparée ne peut être introduite que pour une contrainte réglementaire, de sécurité ou de charge démontrée. Aucun fork applicatif (§1).</div>
+    <div class="row-m"><span>Entité</span><b data-m="who">—</b></div>
+    <div class="rl">
+      <div class="row"><div class="nm">Contexte d'entité activé<small>scoping central par entity_id, refus par défaut sans contexte (Technique §3)</small></div><span class="st ok"><svg><use href="#i-check"/></svg>Config.</span></div>
+      <div class="row"><div class="nm">Référencement par identifiant<small>les modules référencent l'entité, aucun référentiel parallèle (§2)</small></div><span class="st ok"><svg><use href="#i-check"/></svg>Config.</span></div>
+      <div class="row"><div class="nm">Droits recalculés<small>cache de session des profils rattachés invalidé au prochain changement de contexte (Technique §7)</small></div><span class="st ok"><svg><use href="#i-refresh"/></svg>Auto</span></div>
+      <div class="row"><div class="nm">Audit<small>enregistrée sous le profil actif, motif conservé (§5.4)</small></div><span class="st ok"><svg><use href="#i-check"/></svg>Audité</span></div>
+    </div>
+    <label for="core-entites-motif">Motif (obligatoire, audité)</label><input id="core-entites-motif" class="inp" placeholder="ex. démarrage de l'activité dans l'ERP">
+    <div class="acts"><button class="btn ghost" data-close>Annuler</button><button class="btn pri" data-act="confirm" data-perm="core.entites.activer"><svg><use href="#i-check"/></svg>Activer par configuration</button></div>
+  </div></div>
+
+  <div class="mback" data-ov="core-entites-desactiver"><div class="modal" role="dialog" aria-modal="true" aria-label="Désactiver une entité">
+    <h3><svg><use href="#i-eyeoff"/></svg>Désactiver <span data-m2="name">l'entité</span></h3>
+    <div class="exp"><b>Désactivation, jamais suppression</b> : l'entité reste référencée, son identifiant et son historique sont conservés (§2, §10.2). Les modules qui la référencent continuent de lire son identifiant ; elle disparaît du sélecteur d'entité et ses profils rattachés ne sont plus activables.</div>
+    <div class="row-m"><span>Entité</span><b data-m2="who">—</b></div>
+    <label for="core-entites-motif2">Motif (obligatoire, audité)</label><input id="core-entites-motif2" class="inp" placeholder="ex. fin d'activité">
+    <div class="acts"><button class="btn ghost" data-close>Annuler</button><button class="btn pri" data-act="confirm2" data-perm="core.entites.activer"><svg><use href="#i-eyeoff"/></svg>Désactiver</button></div>
+  </div></div>
+
+  <div class="mback" data-ov="core-entites-nouvelle"><div class="modal wide" role="dialog" aria-modal="true" aria-label="Nouvelle entité">
+    <h3><svg><use href="#i-plus"/></svg>Nouvelle entité</h3>
+    <div class="exp">Filiales et MaaS sont créés par configuration dans Mata Core, propriétaire unique du référentiel (§2, §5.1). L'entité est créée « À activer », rattachée à Mata Group ; ni base, ni schéma, ni déploiement dédié (Technique §3). Création enregistrée sous le profil actif et auditée (§5.4).</div>
+    <label for="core-entites-n-nom">Nom</label><input id="core-entites-n-nom" class="inp" placeholder="Nom de la filiale ou du MaaS">
+    <label for="core-entites-n-type">Type</label><select id="core-entites-n-type" class="inp"><option value="filiale">Filiale</option><option value="maas" selected>MaaS</option></select>
+    <label for="core-entites-n-code">Identifiant (entity_id, stable, jamais réutilisé)</label><input id="core-entites-n-code" class="inp code" placeholder="MAAS-XX">
+    <div class="row-m"><span>Rattachement</span><b>Mata Group (entité mère)</b></div>
+    <div class="acts"><button class="btn ghost" data-close>Annuler</button><button class="btn pri" data-act="create" data-perm="core.entites.activer"><svg><use href="#i-plus"/></svg>Créer « À activer »</button></div>
+  </div></div>
+</section>
+<script data-screen="core-entites">
+ERP.register('core-entites', function (root, ctx) {
+  var q = function (s, r) { return (r || root).querySelector(s); }, qa = function (s, r) { return Array.prototype.slice.call((r || root).querySelectorAll(s)); };
+  var esc = function (s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); };
+  var MAAS = { KM: ['C1', 3250000, 420000], OU: ['C2', 2870000, 385000], PK: ['C3', 1985000, 512000], RU: ['C7', 980000, 298000], GY: ['C8', 1120000, 445000], PA: ['C9', 860000, 367000], ME: ['C10', 940000, 402000], YO: ['C11', 780000, 356000], NG: ['C12', 1050000, 489000], TH: ['C13', 690000, 315000], GU: ['C14', 810000, 378000], HL: ['C15', 610000, 358000] };
+  var USERS = { MG: 'S. Doucouré (Super Admin Mata Group) · O. Seck (DG Mata) · F. Sarr (Directeur des Opérations) · M. Diop (Gestionnaire de caisse) · A. Ndiaye (Collecteur) · I. Kane (Investisseur, Externe) · C. Mbaye (Comptable externe, accès temporaire 01/09/2026 → 30/09/2026) · M. Gueye (Administrateur Mata Finance, désactivé le 30/06/2026, jamais supprimé)', MLC: 'S. Doucouré · profil Directeur financier MLC, non activable tant que l’entité est à migrer (§3.3)', 'MAAS-KM': 'B. Fall · Gérant MaaS Keur Massar (Externe — MaaS) · son MaaS est son contexte' };
+  var REFS = { MG: [['Mata Finance · comptes, mouvements, dépenses, positions et calculs portent le contexte d’entité MG (Finance §2.3)']], MLC: [['Aucune référence active · référentiels à migrer']], MV: [['Aucune référence active · référentiels à migrer']], KB: [['Aucune référence · entité à activer par configuration']] };
+  var ST = { active: ['ok', 'check', 'Active'], migrer: ['mut', '', 'À migrer'], activer: ['mut', '', 'À activer'], inactive: ['warn', 'eyeoff', 'Désactivée'] };
+  var SEL = { active: 'Sélectionnable', migrer: 'Non sélectionnable · visible', activer: 'Non sélectionnable · référencé', inactive: 'Non sélectionnable · désactivée, historique conservé' };
+  var LOCK = { MG: 'Mata Group est l’entité mère et le seul périmètre activé : sa désactivation n’est pas proposée (Finance §2.3)', migrer: 'Activation impossible : référentiels à migrer avant toute activation par configuration (§2)' };
+  var cur = null, fromDrawer = false, log = {}, f = { type: 'tous', statut: 'tous' };
+  var row = function (c) { return q('tr[data-code="' + c + '"]'); }, name = function (c) { return q('td b', row(c)).textContent; }, typ = function (c) { return q('td:nth-child(3)', row(c)).textContent; };
+  var who = function () { return ctx.profile.short + ' · ' + ctx.profile.profile; }, clock = function () { var d = new Date(); return '27/08 · ' + ('0' + d.getHours()).slice(-2) + ':' + ('0' + d.getMinutes()).slice(-2); };
+  var stHtml = function (s) { var d = ST[s]; return '<span class="st ' + d[0] + '">' + (d[1] ? '<svg><use href="#i-' + d[1] + '"/></svg>' : '') + d[2] + '</span>'; };
+  function actHtml(c, s) {
+    var on = s === 'active', lk = c === 'MG' ? LOCK.MG : (s === 'migrer' ? LOCK.migrer : '');
+    var lbl = '<svg><use href="#i-' + (on ? 'eyeoff' : 'check') + '"/></svg>' + (on ? 'Désactiver' : 'Activer');
+    if (lk) return '<button class="btn ghost sm" data-act="lock" data-lock="' + esc(lk) + '" data-perm="core.entites.activer">' + lbl + '</button>';
+    return '<button class="btn ghost sm" data-act="' + (on ? 'desactiver' : 'activer') + '" ' + (on ? 'data-open="core-entites-desactiver"' : 'data-open="core-entites-activer"') + ' data-perm="core.entites.activer">' + lbl + '</button>';
+  }
+  function relock() { qa('[data-lock]').forEach(function (b) { if (!b.disabled) b.title = b.dataset.lock; }); }
+  function perms() { ctx.applyPerms(); relock(); }
+  function stats() {
+    var n = { active: 0, migrer: 0, activer: 0, inactive: 0, mere: 0, filiale: 0, maas: 0 }, all = qa('tr[data-code]'), act = [];
+    all.forEach(function (tr) { n[tr.dataset.statut]++; n[tr.dataset.type]++; if (tr.dataset.statut === 'active') act.push(name(tr.dataset.code)); });
+    Object.keys(n).forEach(function (k) { var el = q('[data-stat="' + k + '"]'); if (el) el.textContent = n[k]; });
+    q('[data-stat="total"]').textContent = all.length; q('[data-stat="total-sub"]').textContent = n.mere + ' entité mère · ' + n.filiale + ' filiales · ' + n.maas + ' MaaS · aucune supprimée';
+    q('.fx', q('[data-stat="total"]').parentNode).setAttribute('data-c', 'Entité mère ' + n.mere + ' (Mata Group) · Filiales ' + n.filiale + ' · MaaS ' + n.maas);
+    q('[data-stat="active-sub"]').textContent = act.join(', ') + (act.length === 1 ? ' · premier périmètre activé, seule sélectionnable (Finance §2.3)' : ' · sélectionnables au prochain recalcul de contexte (Technique §7)') + ' · ' + n.inactive + ' désactivée' + (n.inactive > 1 ? 's' : '');
+  }
+  function applyFilter() {
+    var n = 0, all = qa('tr[data-code]');
+    all.forEach(function (tr) { var ok = (f.type === 'tous' || tr.dataset.type === f.type) && (f.statut === 'tous' || tr.dataset.statut === f.statut); tr.hidden = !ok; if (ok) n++; });
+    q('[data-count]').textContent = n + ' / ' + all.length; q('[data-empty]').hidden = n > 0;
+  }
+  function setStatus(c, s) {
+    var tr = row(c); tr.dataset.statut = s;
+    q('[data-cell="st"]', tr).innerHTML = stHtml(s); q('[data-cell="sel"]', tr).textContent = SEL[s] + (c === 'MAAS-KM' ? ' · contexte du Gérant MaaS connecté' : '');
+    q('[data-cell="act"]', tr).innerHTML = actHtml(c, s); perms(); stats(); applyFilter();
+  }
+  function fill(c) {
+    cur = c; var tr = row(c), s = tr.dataset.statut, isMaas = tr.dataset.type === 'maas', m = isMaas ? MAAS[c.slice(5)] : null, can = ctx.hasPerm('finance.creances.view');
+    q('[data-d="title"]').textContent = name(c); q('[data-d="code"]').textContent = c; q('[data-d="type"]').textContent = typ(c); q('[data-d="rat"]').textContent = q('td:nth-child(4)', tr).textContent;
+    q('[data-d="st"]').textContent = ST[s][2]; q('[data-d="sel"]').textContent = q('[data-cell="sel"]', tr).textContent; q('[data-d="users"]').textContent = USERS[c] || 'Aucun utilisateur rattaché';
+    q('[data-d="meta"]').innerHTML = stHtml(s) + '<span class="tag lock"><svg><use href="#i-building"/></svg>' + esc(typ(c)) + '</span><span class="tag lock"><svg><use href="#i-key"/></svg>entity_id ' + esc(c) + '</span>';
+    q('[data-d="roles"]').hidden = q('[data-d="roles-h"]').hidden = !isMaas;
+    var refs = m ? [['Compte Créance client ' + m[0] + ' · Mata Finance, CALCULÉ, relié par entity_id (Finance §4.5)', m[1]], ['Versement déclaré le 26/08 · Encaissements collectés validés 02:04 (Finance §6.3)', m[2]]] : (REFS[c] || [['Aucune référence · entité créée dans cette session, à activer']]);
+    q('[data-d="refs"]').innerHTML = refs.map(function (r) { return '<div class="mrow"><span>' + esc(r[0]) + '</span>' + (r.length > 1 ? (can ? '<span class="amt" data-amt="' + r[1] + '"></span>' : '<span class="hint">masqué · finance.creances.view requise</span>') : '') + '</div>'; }).join('');
+    q('[data-d="tl"]').innerHTML = (log[c] || []).map(function (e) { return '<div class="ev on"><b>' + esc(e[0]) + '</b><small>' + esc(e[1]) + '</small></div>'; }).join('') || '<div class="ev"><b>Aucune modification dans cette session</b><small>historique complet dans l’Audit central (§5.4)</small></div>';
+    q('[data-d="acts"]').innerHTML = actHtml(c, s); ctx.formatAmounts(q('.drawer')); perms();
+  }
+  function context(p) {
+    var r = row(p.entity), en = r ? name(p.entity) : p.entity;
+    q('[data-cx="prof"]').textContent = p.short + ' · ' + p.profile; q('[data-cx="cat"]').textContent = p.cat; q('[data-cx="ent"]').textContent = en + ' (' + p.entity + ')';
+    q('[data-cx="sel"]').textContent = p.entity === 'MG' ? 'Mata Group, seule entité sélectionnable · les autres sont visibles, non sélectionnables' : 'Contexte imposé par le profil : ' + en + ' · aucun autre choix';
+    qa('[data-view]').forEach(function (el) { el.hidden = el.dataset.view !== (p.id === 'maas' ? 'maas' : 'std'); });
+  }
+  qa('[data-fgroup]').forEach(function (g) { ctx.on(g, 'click', function (e) { var b = e.target.closest('.chip'); if (!b) return; qa('.chip', g).forEach(function (x) { x.classList.toggle('on', x === b); }); f[g.dataset.fgroup] = b.dataset.filter; applyFilter(); }); });
+  ctx.on(root, 'click', function (e) {
+    var b = e.target.closest('[data-act]'), tr = e.target.closest('tr[data-code]');
+    if (!b) { if (tr && !e.target.closest('button')) fill(tr.dataset.code); return; }
+    var a = b.dataset.act, c = tr ? tr.dataset.code : cur;
+    if (a === 'lock') { e.stopPropagation(); ctx.toast(b.dataset.lock); return; }
+    if (a === 'export') { ctx.toast('Export CSV du référentiel généré (' + qa('tr[data-code]').length + ' entités) · artefact régénérable, supprimé après 7 jours (Technique §8) · audité'); return; }
+    if (a === 'activer' || a === 'desactiver') { var k = a === 'activer' ? 'm' : 'm2'; cur = c; fromDrawer = !tr; if (fromDrawer) ctx.close('core-entites-fiche'); q('[data-' + k + '="name"]').textContent = name(c); q('[data-' + k + '="who"]').textContent = name(c) + ' · ' + c + ' · ' + typ(c); return; }
+    if (a === 'confirm' || a === 'confirm2') {
+      var act = a === 'confirm', inp = q(act ? '#core-entites-motif' : '#core-entites-motif2'); if (!inp.value.trim()) { inp.focus(); ctx.toast('Motif obligatoire : il est conservé dans l’Audit central (§5.4).'); return; }
+      (log[cur] = log[cur] || []).unshift([(act ? 'Activée par configuration' : 'Désactivée, historique conservé') + ' · motif « ' + inp.value.trim() + ' »', who() + ' · ' + clock()]);
+      setStatus(cur, act ? 'active' : 'inactive'); inp.value = ''; ctx.close(act ? 'core-entites-activer' : 'core-entites-desactiver'); if (fromDrawer) { fill(cur); ctx.open('core-entites-fiche'); }
+      ctx.toast(esc(name(cur)) + (act ? ' activée par configuration : ni base, ni schéma, ni déploiement dédié · sélectionnable au prochain recalcul de contexte (Technique §7) · audité' : ' désactivée : identifiant et historique conservés, jamais supprimée · audité')); return;
+    }
+    if (a === 'create') {
+      var nm = q('#core-entites-n-nom').value.trim(), cd = q('#core-entites-n-code').value.trim().toUpperCase(), ty = q('#core-entites-n-type').value;
+      if (!nm || !cd) { ctx.toast('Nom et identifiant sont obligatoires.'); return; }
+      if (row(cd)) { ctx.toast('Identifiant « ' + esc(cd) + ' » déjà utilisé : un identifiant n’est jamais réutilisé, même après désactivation.'); return; }
+      var t2 = document.createElement('tr'); t2.className = 'rowlink'; t2.setAttribute('data-open', 'core-entites-fiche'); t2.dataset.code = cd; t2.dataset.type = ty; t2.dataset.statut = 'activer';
+      t2.innerHTML = '<td class="code">' + esc(cd) + '</td><td><b>' + esc(nm) + '</b></td><td>' + (ty === 'maas' ? 'MaaS' : 'Filiale') + '</td><td>Mata Group</td><td data-cell="st">' + stHtml('activer') + '</td><td data-cell="sel">' + SEL.activer + '</td><td data-cell="u">Aucun</td><td data-cell="act">' + actHtml(cd, 'activer') + '</td>';
+      q('[data-empty]').before(t2); log[cd] = [['Créée par configuration « À activer », rattachée à Mata Group', who() + ' · ' + clock()]];
+      q('#core-entites-n-nom').value = q('#core-entites-n-code').value = ''; ctx.close('core-entites-nouvelle'); perms(); stats(); applyFilter();
+      ctx.toast(esc(nm) + ' créée « À activer » par configuration · ni base, ni schéma, ni déploiement dédié · auditée');
+    }
+  });
+  document.addEventListener('erp:profile', function (e) { context(e.detail); relock(); });
+  qa('tr[data-code]').forEach(function (tr) { q('[data-cell="act"]', tr).innerHTML = actHtml(tr.dataset.code, tr.dataset.statut); });
+  perms(); stats(); applyFilter(); context(ctx.profile);
+});
+</script>
