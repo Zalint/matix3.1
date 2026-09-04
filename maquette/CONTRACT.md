@@ -37,6 +37,7 @@ ERP.register('fin-comptes', function (root, ctx) {
 ## 2. Montants, ratios, dates
 
 - Montant : `<span class="amt" data-amt="8450000"></span>` → le moteur affiche `8 450 000` suivi de `FCFA`. Ajouter `data-nocur` pour omettre la devise (tableaux). Un montant négatif s'écrit `data-amt="-12400000"` : le moteur affiche `−12 400 000` et ajoute la classe `neg`.
+- Jamais `data-amt` sur un conteneur (`tr`, `section`, `button`, `select`, `input`) : le moteur remplacerait son contenu par le montant formaté ; pour les données d'une ligne, utiliser `data-solde`, `data-montant`, etc. `python lint.py` détecte ce cas, l'`esc()` qui supprime au lieu d'échapper, les montants en dur et un `setAmt` qui n'écrit pas `data-amt`.
 - Ne jamais écrire un montant en dur dans le texte quand il peut être un `data-amt`. Exception : les formules et équations dans `.fcode` ou `.eq`.
 - KPI : la valeur en FCFA d'abord, le ratio ensuite en petit :
 ```html

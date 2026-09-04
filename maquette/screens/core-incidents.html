@@ -1,0 +1,296 @@
+<section class="scr" data-scr="core-incidents" data-module="core" data-perm="core.incidents.view" data-sens="std" hidden>
+  <style data-screen="core-incidents">
+    #app [data-scr="core-incidents"] .kv{display:flex;justify-content:space-between;gap:12px;font-size:12px;padding:6px 0;border-bottom:1px dashed var(--line)}
+    #app [data-scr="core-incidents"] .kv:last-of-type{border-bottom:none}
+    #app [data-scr="core-incidents"] .kv span{color:var(--mut);flex:none;max-width:42%}
+    #app [data-scr="core-incidents"] .kv b{text-align:right;font-weight:600;min-width:0;line-height:1.45}
+    #app [data-scr="core-incidents"] h4{font-family:var(--head);font-size:11.5px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-2);margin:14px 0 8px}
+    #app [data-scr="core-incidents"] .tag.maj{background:var(--warn-bg);color:var(--warn)}
+    #app [data-scr="core-incidents"] .tag.cri{background:var(--bad-bg);color:var(--bad)}
+    #app [data-scr="core-incidents"] .modal textarea.inp{min-height:72px;resize:vertical;font-family:var(--body)}
+    #app [data-scr="core-incidents"] .due>span:last-child{display:inline-flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:flex-end}
+    #app [data-scr="core-incidents"] .drawer .df{flex-wrap:wrap}
+    #app [data-scr="core-incidents"] .grid2b>.card{min-width:0}
+    #app [data-scr="core-incidents"] .tbl-scroll table{min-width:720px}
+  </style>
+  <div class="scr-head">
+    <div>
+      <h2>Incidents</h2>
+      <p class="scr-sub">Bouton transverse « Signaler un problème » : le système collecte automatiquement le contexte technique et fonctionnel disponible · Criticité : Mineur / Majeur / Critique · Ouvert → En cours → Résolu → Clos · supervision technique et fonctionnelle (Core §8.2, §8.3)</p>
+    </div>
+    <div class="scr-meta">
+      <span class="sens std"><svg><use href="#i-shield"/></svg>Standard</span>
+      <span class="hint">Aucune validation : changement de statut et maintenance par module sous la permission core.incidents.gerer, audités (§5.4) · un module peut être placé en maintenance sans rendre tout l'ERP indisponible (§8.3)</span>
+    </div>
+  </div>
+
+  <div class="hint" style="margin:0 0 8px"><b>Supervision fonctionnelle (§8.2)</b> : données manquantes, sources périmées, réconciliations ouvertes, processus ou validations anormalement bloqués · Mata Group · 27/08 · 21:30</div>
+  <div class="statstrip four">
+    <div class="card stat">
+      <div class="lb">Sources périmées<button class="fx" data-f="Supervision fonctionnelle (§8.2) : données manquantes, sources périmées · une source est périmée si son état est Manquante, Erreur ou Non à jour (§5.2 : les sources utilisent au minimum OK / Manquante / Erreur / Non à jour)" data-c="Ventes Mata OK 20:30 · Bictorys OK 08:12 · Banque BOA OK 08:00 · Stock OK 06:00 · Achat OK 17:00 → 0 périmée sur 5" data-src="Interfaces Mata Finance · états de fraîcheur · 27/08 · 21:30" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></div>
+      <div class="v">0</div>
+      <div class="sub2">5 sources OK · une source périmée peut rester visible mais ne doit pas permettre une décision ou auto-validation qui exige une donnée fraîche (§5.2)</div>
+    </div>
+    <div class="card stat">
+      <div class="lb">Réconciliations ouvertes<button class="fx" data-f="Supervision fonctionnelle (§8.2) : réconciliations ouvertes = circuits de réconciliation du jour non validés parmi Caisses, Encaissements collectés, Ventes du jour, Fournisseurs" data-c="Caisses : Sous-caisse Marché écart −25 000, Caisse générale à déclarer · Fournisseurs : Bétail Thiès et Abattoirs Dakar en attente · Encaissements collectés du 27/08 : réconciliation automatique vers 02:00 · Ventes du jour : Cohérente (fermée)" data-src="Mata Finance · Réconciliation · 27/08 · 21:30" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></div>
+      <div class="v">3</div>
+      <div class="sub2">sur 4 circuits · gel « À réconcilier » à 23:59 <button class="linkish" data-goto="fin-reconciliation" data-perm="finance.reconciliation.view">Réconciliation</button></div>
+    </div>
+    <div class="card stat">
+      <div class="lb">Validations bloquées<button class="fx" data-f="Supervision fonctionnelle (§8.2) : processus ou validations anormalement bloqués" data-c="4 validations en attente (VAL-115, VAL-116, VAL-117, VAL-118) · 0 anormalement bloquée · VAL-117 : 2e validation requise (1re O. Seck 19:02)" data-src="Mata Finance · Validations · 27/08 · 21:30" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></div>
+      <div class="v">0</div>
+      <div class="sub2">4 validations en attente, aucune anormalement bloquée <button class="linkish" data-goto="fin-validations" data-perm="finance.validations.view">Validations</button></div>
+    </div>
+    <div class="card stat">
+      <div class="lb">Dépenses « Pas sûr »<button class="fx" data-f="Supervision fonctionnelle (§8.2) : données manquantes = dépenses au statut « Pas sûr » non résolues · bloque uniquement le périmètre de la caisse concernée · notification à 23:00 si non résolue" data-c="Carburant véhicule livraison 85 000 · Sous-caisse Livraisons · saisie manuelle" data-src="Mata Finance · Dépenses du jour · 27/08 · 21:30" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></div>
+      <div class="v">1</div>
+      <div class="sub2">Carburant véhicule livraison <span class="amt" data-amt="85000" data-nocur></span> · bloque le périmètre Sous-caisse Livraisons · notification 23:00 au Directeur des Opérations, aux Admins et au Super Admin</div>
+    </div>
+  </div>
+
+  <div class="note-strip" data-maint-strip hidden style="margin:0 0 14px"><svg><use href="#i-alert"/></svg><span data-maint-txt></span></div>
+  <div class="actionbar">
+    <div class="chips">
+      <button class="chip on" data-filter="tous">Tous · <span data-cnt="tous">3</span></button>
+      <button class="chip" data-filter="ouvert">Ouvert · <span data-cnt="ouvert">0</span></button>
+      <button class="chip" data-filter="encours">En cours · <span data-cnt="encours">1</span></button>
+      <button class="chip" data-filter="resolu">Résolu · <span data-cnt="resolu">1</span></button>
+      <button class="chip" data-filter="clos">Clos · <span data-cnt="clos">1</span></button>
+    </div>
+    <div class="sp"></div>
+    <button class="btn ghost" data-open="ov-changelog"><svg><use href="#i-layers"/></svg>Versions et changelog</button>
+    <button class="btn pri" data-open="ov-signaler"><svg><use href="#i-flag"/></svg>Signaler un problème</button>
+  </div>
+
+      <div class="card">
+        <div class="ch"><h3>Incidents signalés</h3><span class="hint-r" data-scope-hint>3 incidents · 1 à traiter · 1 à clore · 1 clos · Mata Group</span></div>
+        <div class="tbl-scroll"><table>
+          <thead><tr><th>Réf.</th><th>Criticité</th><th>Statut</th><th>Objet</th><th>Ouvert par</th><th>Date</th><th>Module</th></tr></thead>
+          <tbody data-rows>
+            <tr class="rowlink" data-open="core-incidents-fiche" data-inc="INC-014" data-st="encours">
+              <td><b>INC-014</b></td>
+              <td data-c="crit"><span class="tag lock maj"><svg><use href="#i-alert"/></svg>Majeur</span></td>
+              <td data-c="st"><span class="st warn"><svg><use href="#i-refresh"/></svg>En cours</span></td>
+              <td><b>Import CSV BOA : référence dupliquée sur 2 lignes du 26/08</b><div class="hint">réf. bancaire = identifiant d'idempotence (§5.2) · lignes du 26/08 à qualifier avant toute correction</div></td>
+              <td>S. Doucouré<div class="hint">Super Admin</div></td>
+              <td>27/08<div class="hint">08:05</div></td>
+              <td>Mata Finance<div class="hint">Import relevé bancaire</div></td>
+            </tr>
+            <tr class="rowlink" data-open="core-incidents-fiche" data-inc="INC-013" data-st="resolu">
+              <td><b>INC-013</b></td>
+              <td data-c="crit"><span class="tag lock"><svg><use href="#i-alert"/></svg>Mineur</span></td>
+              <td data-c="st"><span class="st ok"><svg><use href="#i-check"/></svg>Résolu</span></td>
+              <td><b>Libellé tronqué écran Dépenses sur mobile</b><div class="hint">affichage mobile 375 · sans effet sur les écritures · clôture attendue après vérification</div></td>
+              <td>F. Sarr<div class="hint">Directeur des Opérations</div></td>
+              <td>25/08</td>
+              <td>Mata Finance<div class="hint">Dépenses</div></td>
+            </tr>
+            <tr class="rowlink" data-open="core-incidents-fiche" data-inc="INC-012" data-st="clos">
+              <td><b>INC-012</b></td>
+              <td data-c="crit"><span class="tag lock cri"><svg><use href="#i-alert"/></svg>Critique</span></td>
+              <td data-c="st"><span class="st mut"><svg><use href="#i-lock"/></svg>Clos</span></td>
+              <td><b>Synchronisation Bictorys en erreur pendant 2 h le 21/08</b><div class="hint">détection automatique : source Bictorys à l'état Erreur (§5.2) · rétablie après 2 h, aucune correction manuelle</div></td>
+              <td>Système<div class="hint">(automatisation)</div></td>
+              <td>21/08</td>
+              <td>Mata Finance<div class="hint">Interface Bictorys</div></td>
+            </tr>
+            <tr data-empty hidden><td colspan="7" class="hint">Aucun incident à ce statut.</td></tr>
+          </tbody>
+        </table></div>
+      </div>
+      <div class="deny-note" style="margin-top:14px"><svg><use href="#i-lock"/></svg><b>Refus par défaut</b> : Consulter (core.incidents.view) est accordé aux profils internes (Super Admin, DG Mata, Directeur des Opérations, Gestionnaire de caisse, Collecteur) ; Gérer (core.incidents.gerer : changement de statut, maintenance par module) est réservé au Super Admin. Les profils externes n'accèdent pas à cet écran. « Signaler un problème » reste un bouton transverse, disponible sur tous les écrans (§8.3). Une action refusée reste visible, désactivée avec son motif.</div>
+
+  <div class="grid2b">
+      <div class="card">
+        <div class="ch"><h3>Supervision technique</h3><span class="hint-r">§8.2 · 27/08 · 21:30</span></div>
+        <div class="cb">
+          <div class="due"><span><b>Disponibilité</b><span class="hint" style="display:block">Mata Core et Mata Finance · aucun module en maintenance</span></span><span><span class="st ok" data-mod-avail><svg><use href="#i-check"/></svg>OK</span></span></div>
+          <div class="due"><span><b>Erreurs critiques</b><span class="hint" style="display:block">dernière : INC-012, synchronisation Bictorys, close le 21/08</span></span><span><span class="st ok" data-crit-open><svg><use href="#i-check"/></svg>0 ouverte</span></span></div>
+          <div class="due"><span><b>Dernière sauvegarde</b><span class="hint" style="display:block">tous les 3 jours, rétention glissante 30 jours (§8.1, §17) · prochaine le 29/08</span></span><span><span class="st ok"><svg><use href="#i-check"/></svg>26/08 OK</span></span></div>
+          <div class="due"><span><b>Dernier test de restauration</b><span class="hint" style="display:block">tests périodiques de restauration (§8.1) · donnée absente ≠ zéro (§5.2)</span></span><span><span class="st mut"><svg><use href="#i-eyeoff"/></svg>Manquante</span></span></div>
+          <div class="due"><span><b>Services et interfaces</b><button class="fx" data-f="Supervision technique (§8.2) : services et interfaces = nombre de sources à l'état OK sur le nombre de sources configurées (§5.2 : OK / Manquante / Erreur / Non à jour)" data-c="Ventes Mata OK 20:30 · Bictorys OK 08:12 · Banque BOA OK 08:00 · Stock OK 06:00 · Achat OK 17:00 (5 achats intégrés, 0 doublon)" data-src="Interfaces Mata Finance · fraîcheur au 27/08 · 21:30" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button><span class="hint" style="display:block">chaque interface critique définit fraîcheur, idempotence et comportement en erreur (§5.2)</span></span><span><span class="st ok"><svg><use href="#i-check"/></svg>5 / 5 OK</span></span></div>
+          <button class="linkish" data-acc-toggle style="margin-top:8px"><span>Voir les 5 sources</span><svg><use href="#i-chevd"/></svg></button>
+          <div class="maas-list" hidden>
+            <div class="mrow"><span>Ventes Mata · Ventes du jour · 27/08 20:30</span><span class="st ok"><svg><use href="#i-check"/></svg>OK</span></div>
+            <div class="mrow"><span>Bictorys · SYNCHRONISÉ · 27/08 08:12</span><span class="st ok"><svg><use href="#i-check"/></svg>OK</span></div>
+            <div class="mrow"><span>Banque BOA · IMPORT CSV · 27/08 08:00 · 14 lignes</span><span class="st ok"><svg><use href="#i-check"/></svg>OK</span></div>
+            <div class="mrow"><span>Stock · valorisation · 27/08 06:00</span><span class="st ok"><svg><use href="#i-check"/></svg>OK</span></div>
+            <div class="mrow"><span>Achat · import idempotent · 27/08 17:00 · 5 achats, 0 doublon</span><span class="st ok"><svg><use href="#i-check"/></svg>OK</span></div>
+          </div>
+          <div class="hint" style="margin-top:10px">Une source non à jour déclenche la règle d'alerte « Source non à jour » (Admin, Haute) ; une sauvegarde échouée déclenche « Sauvegarde échouée » (Super Admin, Critique, email). <button class="linkish" data-goto="core-alertes" data-perm="core.alertes.view">Alertes</button></div>
+        </div>
+      </div>
+    <div class="card">
+      <div class="ch"><h3>Maintenance par module</h3><span class="hint-r">§8.3 · core.incidents.gerer</span></div>
+      <div class="cb">
+        <div class="hint" style="margin-bottom:8px">Un module peut être placé en maintenance sans rendre tout l'ERP indisponible (§8.3) : Mata Core (authentification, notifications, Incidents) reste disponible ; les écrans du module en maintenance affichent le message saisi ; l'action est auditée sous le profil actif (§5.4).</div>
+        <div class="due"><span><b>Mata Core</b><span class="hint" style="display:block">v0.9.0 · socle transverse : identité, droits, validation, audit, services communs</span></span><span><span class="st ok"><svg><use href="#i-check"/></svg>Disponible</span><span class="tag lock"><svg><use href="#i-lock"/></svg>Socle : non plaçable en maintenance</span></span></div>
+        <div class="due"><span><b>Mata Finance</b><span class="hint" style="display:block" data-mod-hint="finance">v0.9.0 · disponible · mouvements, positions, créances, P&amp;L</span></span><span><span class="st ok" data-mod-st="finance"><svg><use href="#i-check"/></svg>Disponible</span><button class="btn ghost sm" data-maint-btn data-perm="core.incidents.gerer"><svg><use href="#i-sliders"/></svg><span>Placer en maintenance</span></button></span></div>
+        <h4>Journal de maintenance</h4>
+        <div class="tl" data-maint-tl><div class="ev"><b>Aucune maintenance en cours ni planifiée</b><small>dernier événement d'exploitation : INC-012, source Bictorys en erreur pendant 2 h le 21/08, traité sans mise en maintenance</small></div></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="ch"><h3>Versions et changelog</h3><span class="hint-r">§8 · chaque module affiche sa version et un changelog simple</span></div>
+      <div class="cb">
+        <div class="due"><span><b>Mata Core</b></span><span><span class="tag lock"><svg><use href="#i-layers"/></svg>v0.9.0 · maquette</span></span></div>
+        <div class="due"><span><b>Mata Finance</b></span><span><span class="tag lock"><svg><use href="#i-layers"/></svg>v0.9.0 · maquette</span></span></div>
+        <div class="fcode">0.9.0 — maquette de validation panel<br>0.8.0 — cadrage V13</div>
+        <div class="hint" style="margin-top:8px">Chaque module affiche sa version et un changelog simple (§8) · la version fait partie du contexte collecté automatiquement au signalement d'un problème (§8.3) · le pied de page reprend le changelog.</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="ch"><h3>Environnements</h3><span class="hint-r">§8 · chaîne d'environnements</span></div>
+      <div class="cb">
+        <div class="fcode" style="margin-top:0">Développement → Test/Recette → Production</div>
+        <div class="due"><span><b>Test/Recette</b><span class="hint" style="display:block">AG-02 Assistant réconciliation · droits d'écriture → badge obligatoire · Test ne doit pas déclencher accidentellement des actions réelles (§8)</span></span><span><span class="st warn"><svg><use href="#i-bot"/></svg>1 agent en recette</span></span></div>
+        <div class="due"><span><b>Production</b><span class="hint" style="display:block">Mata Core et Mata Finance v0.9.0 · AG-01 Conseiller financier Mata en lecture seule, pas d'écriture</span></span><span><span class="st ok"><svg><use href="#i-check"/></svg>Disponible</span></span></div>
+        <div class="hint" style="margin-top:8px">Les évolutions importantes ou critiques passent obligatoirement en recette ; sont notamment testés lorsqu'applicables : fonctionnement nominal, permissions, profils, validations, séparation des responsabilités, interfaces, idempotence, audit, cas de refus (§8) <button class="linkish" data-goto="core-agents" data-perm="core.agents.view">Agents IA</button></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tiroir : contexte collecté automatiquement, chronologie, changement de statut -->
+  <aside class="drawer" data-ov="core-incidents-fiche" aria-label="Détail de l'incident">
+    <div class="dh"><h3 data-d="title">Incident</h3><button class="ib" data-close aria-label="Fermer"><svg><use href="#i-x"/></svg></button></div>
+    <div class="db">
+      <div class="hint" data-d="sub"></div>
+      <b data-d="objet"></b>
+      <div class="meta-l" data-d="meta"></div>
+      <ol class="steps" data-d="steps"></ol>
+      <h4>Contexte collecté automatiquement</h4>
+      <div data-d="ctx"></div>
+      <h4>Chronologie</h4>
+      <div class="tl" data-d="tl"></div>
+      <div class="hint" style="margin-top:12px">Le système collecte automatiquement le contexte technique et fonctionnel disponible (§8.3) · chaque changement de statut est journalisé dans l'Audit central avec acteur, profil actif et horodatage (§5.4) · un incident n'est jamais supprimé.</div>
+    </div>
+    <div class="df">
+      <button class="btn ghost" data-close>Fermer</button><div class="sp"></div>
+      <button class="btn pri" data-act="next" data-perm="core.incidents.gerer"><svg><use href="#i-arr"/></svg><span data-d="next-lbl">Prendre en charge</span></button>
+    </div>
+  </aside>
+  <div class="dback" data-ov-back="core-incidents-fiche"></div>
+
+  <!-- Modale : changement de statut (Ouvert → En cours → Résolu → Clos) -->
+  <div class="mback" data-ov="core-incidents-statut"><div class="modal" role="dialog" aria-modal="true" aria-label="Changement de statut">
+    <h3><svg><use href="#i-flag"/></svg><span data-m="title">Changer le statut</span></h3>
+    <div class="exp" data-m="exp"></div>
+    <div class="row-m"><span>Incident</span><b data-m="obj"></b></div>
+    <div class="fld"><label for="core-incidents-com" data-m="lbl">Commentaire</label><textarea id="core-incidents-com" class="inp" data-m="com" rows="3" placeholder="Analyse, cause, correctif appliqué"></textarea><span class="hint">Conservé dans la chronologie avec l'acteur, le profil actif et l'horodatage (§5.4)</span></div>
+    <div class="acts"><button class="btn ghost" data-close>Annuler</button><button class="btn pri" data-m="confirm" data-perm="core.incidents.gerer"><svg><use href="#i-check"/></svg><span data-m="confirm-lbl">Confirmer</span></button></div>
+  </div></div>
+
+  <!-- Modale : maintenance de Mata Finance (placer / lever) -->
+  <div class="mback" data-ov="core-incidents-maint"><div class="modal wide" role="dialog" aria-modal="true" aria-label="Maintenance de Mata Finance">
+    <h3><svg><use href="#i-sliders"/></svg><span data-k="title">Placer Mata Finance en maintenance</span></h3>
+    <div class="exp">Un module peut être placé en maintenance sans rendre tout l'ERP indisponible (§8.3) : Mata Core, l'authentification, les notifications et cet écran restent disponibles ; les écrans Mata Finance affichent le message ci-dessous. Les interfaces conservent leur idempotence : une même opération reçue plusieurs fois ne produit qu'un seul effet (§5.2). Action auditée sous le profil actif (§5.4).</div>
+    <div class="fld" style="margin-bottom:10px"><label for="core-incidents-mot" data-k="mlbl">Motif (obligatoire)</label><input id="core-incidents-mot" class="inp" data-k="motif" placeholder="Ex. correction de l'import BOA (INC-014)"></div>
+    <div class="fld" style="margin-bottom:10px" data-k-on><label for="core-incidents-inc">Incident lié</label><select id="core-incidents-inc" class="inp" data-k="inc"><option value="">Aucun</option><option value="INC-014">INC-014 · Import CSV BOA : référence dupliquée sur 2 lignes du 26/08</option></select></div>
+    <div class="fld" style="margin-bottom:10px" data-k-on><label for="core-incidents-msg">Message affiché aux utilisateurs de Mata Finance</label><input id="core-incidents-msg" class="inp" data-k="msg" value="Mata Finance est momentanément en maintenance. Mata Core reste disponible."></div>
+    <div class="fld" data-k-on><label for="core-incidents-dur">Fin prévue</label><select id="core-incidents-dur" class="inp" data-k="dur"><option value="30">dans 30 minutes</option><option value="60">dans 1 heure</option><option value="120">dans 2 heures</option><option value="0">à la levée manuelle</option></select></div>
+    <div class="acts"><button class="btn ghost" data-close>Annuler</button><button class="btn pri" data-k="confirm" data-perm="core.incidents.gerer"><svg><use href="#i-check"/></svg><span data-k="confirm-lbl">Placer en maintenance</span></button></div>
+  </div></div>
+</section>
+<script data-screen="core-incidents">
+ERP.register('core-incidents', function (root, ctx) {
+  var q = function (s, r) { return (r || root).querySelector(s); };
+  var qa = function (s, r) { return Array.prototype.slice.call((r || root).querySelectorAll(s)); };
+  var clock = 21 * 60 + 30, seq = 15, filter = 'tous', cur = '', maint = null;
+  var ORDER = ['ouvert', 'encours', 'resolu', 'clos'];
+  var ST = { ouvert: ['bad', 'flag', 'Ouvert'], encours: ['warn', 'refresh', 'En cours'], resolu: ['ok', 'check', 'Résolu'], clos: ['mut', 'lock', 'Clos'] };
+  /* Transition suivante (§8.3) : [statut cible, libellé du bouton, explication, libellé du commentaire] */
+  var NEXT = { ouvert: ['encours', 'Prendre en charge', 'Passage En cours : un profil habilité prend l’incident en charge ; l’auteur est notifié.', 'Commentaire (facultatif)'], encours: ['resolu', 'Marquer Résolu', 'Passage Résolu : cause et correctif décrits ; vérification avant clôture.', 'Résolution (obligatoire)'], resolu: ['clos', 'Clore', 'Clôture : plus aucune action ; l’incident reste consultable, jamais supprimé.', 'Commentaire (facultatif)'] };
+  var CR = { Mineur: '', Majeur: ' maj', Critique: ' cri' };
+  /* FIXTURES §16 · ctx = contexte collecté automatiquement [libellé, valeur] · ev = chronologie [horodatage, événement, acteur, profil] */
+  var I = {
+    'INC-014': { crit: 'Majeur', st: 'encours', obj: 'Import CSV BOA : référence dupliquée sur 2 lignes du 26/08', by: 'S. Doucouré', byp: 'Super Admin', date: '27/08 · 08:05', mod: 'Mata Finance', ctx: [['Module · écran', 'Mata Finance · Import relevé bancaire'], ['Profil actif · entité', 'Super Admin · Mata Group'], ['Version', 'Mata Finance v0.9.0'], ['Source / interface', 'Banque BOA · IMPORT CSV · import du 27/08 08:00 · 14 lignes'], ['Donnée fonctionnelle', 'réf. bancaire = identifiant : 2 lignes du 26/08 portent la même référence · une même opération reçue plusieurs fois ne doit produire qu’un seul effet (§5.2)']], ev: [['27/08 · 08:00', 'Import relevé BOA réussi : 14 lignes, 0 doublon', 'Import CSV', 'S. Doucouré'], ['27/08 · 08:05', 'Ouvert · Majeur', 'S. Doucouré', 'Super Admin'], ['27/08', 'En cours · lignes du 26/08 à qualifier avant toute correction', 'S. Doucouré', 'Super Admin']] },
+    'INC-013': { crit: 'Mineur', st: 'resolu', obj: 'Libellé tronqué écran Dépenses sur mobile', by: 'F. Sarr', byp: 'Directeur des Opérations', date: '25/08', mod: 'Mata Finance', ctx: [['Module · écran', 'Mata Finance · Dépenses'], ['Profil actif · entité', 'Directeur des Opérations · Mata Group'], ['Version', 'Mata Finance v0.9.0'], ['Affichage', 'mobile 375'], ['Donnée fonctionnelle', 'aucune : incident d’affichage, sans effet sur les écritures']], ev: [['25/08', 'Ouvert · Mineur', 'F. Sarr', 'Directeur des Opérations'], ['25/08', 'En cours', 'S. Doucouré', 'Super Admin'], ['26/08', 'Résolu · libellé complet sur mobile 375', 'S. Doucouré', 'Super Admin']] },
+    'INC-012': { crit: 'Critique', st: 'clos', obj: 'Synchronisation Bictorys en erreur pendant 2 h le 21/08', by: 'Système', byp: '(automatisation)', date: '21/08', mod: 'Mata Finance', ctx: [['Module · interface', 'Mata Finance · Bictorys (SYNCHRONISÉ)'], ['Détection', 'supervision technique : source Bictorys à l’état Erreur (§5.2, §8.2)'], ['Version', 'Mata Finance v0.9.0'], ['Donnée fonctionnelle', '« Solde disponible » en lecture API seule, jamais modifiable à la main · position restée visible avec son état de fraîcheur']], ev: [['21/08', 'Ouvert · Critique · détection automatique', 'Système', '(automatisation)'], ['21/08', 'En cours', 'S. Doucouré', 'Super Admin'], ['21/08', 'Résolu · synchronisation rétablie après 2 h, aucune correction manuelle', 'S. Doucouré', 'Super Admin'], ['21/08', 'Clos', 'S. Doucouré', 'Super Admin']] }
+  };
+  var D = q('[data-ov="core-incidents-fiche"]'), M = q('[data-ov="core-incidents-statut"]'), K = q('[data-ov="core-incidents-maint"]'), tb = q('[data-rows]');
+  function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+  function hm(m) { return ('0' + Math.floor(m / 60)).slice(-2) + ':' + ('0' + m % 60).slice(-2); }
+  function now() { return '27/08 · ' + hm(clock++); }
+  function me() { return ctx.profile.short; }
+  function row(id) { return q('tr[data-inc="' + id + '"]', tb); }
+  function badge(k) { var s = ST[k]; return '<span class="st ' + s[0] + '"><svg><use href="#i-' + s[1] + '"/></svg>' + s[2] + '</span>'; }
+  function crit(c) { return '<span class="tag lock' + CR[c] + '"><svg><use href="#i-alert"/></svg>' + c + '</span>'; }
+  function rowHtml(id) { var d = I[id]; return '<tr class="rowlink" data-open="core-incidents-fiche" data-inc="' + id + '" data-st="' + d.st + '"><td><b>' + id + '</b></td><td data-c="crit">' + crit(d.crit) + '</td><td data-c="st">' + badge(d.st) + '</td><td><b>' + esc(d.obj) + '</b><div class="hint">' + esc(d.hint) + '</div></td><td>' + esc(d.by) + '<div class="hint">' + esc(d.byp) + '</div></td><td>' + d.date.slice(0, 5) + '<div class="hint">' + d.date.slice(8) + '</div></td><td>' + esc(d.mod) + '<div class="hint">' + esc(d.scr) + '</div></td></tr>'; }
+  /* Filtre par statut, compteurs des puces, erreurs critiques non closes (supervision technique) */
+  function refresh() {
+    var cnt = { tous: 0, ouvert: 0, encours: 0, resolu: 0, clos: 0 }, vis = 0, co = 0;
+    qa('tr[data-inc]', tb).forEach(function (tr) { var k = tr.getAttribute('data-st'); cnt[k]++; cnt.tous++; tr.hidden = !(filter === 'tous' || k === filter); if (!tr.hidden) vis++; });
+    q('tr[data-empty]', tb).hidden = vis > 0;
+    Object.keys(cnt).forEach(function (k) { q('[data-cnt="' + k + '"]').textContent = cnt[k]; });
+    q('[data-scope-hint]').textContent = cnt.tous + ' incidents · ' + (cnt.ouvert + cnt.encours) + ' à traiter · ' + cnt.resolu + ' à clore · ' + cnt.clos + ' clos · Mata Group';
+    Object.keys(I).forEach(function (k) { if (I[k].crit === 'Critique' && I[k].st !== 'clos') co++; });
+    var ce = q('[data-crit-open]'); ce.className = 'st ' + (co ? 'bad' : 'ok'); ce.innerHTML = '<svg><use href="#i-' + (co ? 'alert' : 'check') + '"/></svg>' + co + ' ouverte' + (co > 1 ? 's' : '');
+  }
+  function fill(id) {
+    var d = I[id], idx = ORDER.indexOf(d.st), n = NEXT[d.st]; cur = id;
+    q('[data-d="title"]', D).textContent = id + ' · ' + d.crit;
+    q('[data-d="sub"]', D).textContent = 'Ouvert par ' + d.by + ' (' + d.byp + ') · ' + d.date + ' · ' + d.mod + ' · Standard (§5.3)';
+    q('[data-d="objet"]', D).textContent = d.obj;
+    q('[data-d="meta"]', D).innerHTML = badge(d.st) + crit(d.crit) + '<span class="tag lock"><svg><use href="#i-layers"/></svg>' + esc(d.mod) + '</span>';
+    q('[data-d="steps"]', D).innerHTML = ORDER.map(function (k, i) { return '<li class="' + (i < idx ? 'done' : (i === idx ? 'on' : '')) + '">' + ST[k][2] + '</li>'; }).join('');
+    q('[data-d="ctx"]', D).innerHTML = d.ctx.map(function (x) { return '<div class="kv"><span>' + x[0] + '</span><b>' + esc(x[1]) + '</b></div>'; }).join('');
+    var ev = d.ev.map(function (e) { return '<div class="ev"><b>' + esc(e[1]) + '</b><small>' + esc(e[2]) + ' · ' + esc(e[3]) + ' · ' + e[0] + '</small></div>'; });
+    ev.push(n ? '<div class="ev on"><b>' + (d.st === 'resolu' ? 'Clôture attendue après vérification' : 'Prochaine étape : ' + ST[n[0]][2]) + '</b><small>en cours · core.incidents.gerer</small></div>' : '<div class="ev on"><b>Clos</b><small>consultable, jamais supprimé</small></div>');
+    q('[data-d="tl"]', D).innerHTML = ev.join('');
+    var b = q('[data-act="next"]', D); b.hidden = !n; if (n) q('[data-d="next-lbl"]', D).textContent = n[1];
+    ctx.applyPerms();
+  }
+  function ask() {
+    var d = I[cur], n = NEXT[d.st]; if (!n) return; ctx.close('core-incidents-fiche');
+    q('[data-m="title"]', M).textContent = cur + ' → ' + ST[n[0]][2]; q('[data-m="exp"]', M).innerHTML = esc(n[2]) + ' Sous le profil <b>' + esc(ctx.profile.profile) + '</b> (' + esc(me()) + ') · journalisé dans l’Audit central (§5.4).';
+    q('[data-m="obj"]', M).textContent = d.obj; q('[data-m="lbl"]', M).textContent = n[3]; q('[data-m="confirm-lbl"]', M).textContent = n[1]; var c = q('[data-m="com"]', M); c.value = '';
+    ctx.open('core-incidents-statut'); ctx.applyPerms(); c.focus();
+  }
+  function confirmSt() {
+    var d = I[cur], n = NEXT[d.st], com = q('[data-m="com"]', M).value.trim(), t = now();
+    if (n[0] === 'resolu' && !com) { ctx.toast('La description de la résolution est obligatoire pour passer Résolu'); return; }
+    d.st = n[0]; d.ev.push([t, ST[d.st][2] + (com ? ' · ' + com : ''), me(), ctx.profile.profile]);
+    var tr = row(cur); tr.setAttribute('data-st', d.st); q('[data-c="st"]', tr).innerHTML = badge(d.st);
+    ctx.close('core-incidents-statut'); refresh(); ctx.toast(cur + ' → ' + ST[d.st][2] + ' · sous le profil ' + ctx.profile.profile + ' · journalisé dans l’Audit central (Core · Incident)');
+  }
+  /* Maintenance de Mata Finance (§8.3) : placer / lever, journal, incident lié, Mata Core reste disponible */
+  function openMaint() {
+    var on = !!maint; q('[data-k="title"]', K).textContent = on ? 'Lever la maintenance de Mata Finance' : 'Placer Mata Finance en maintenance';
+    q('[data-k="confirm-lbl"]', K).textContent = on ? 'Lever la maintenance' : 'Placer en maintenance'; q('[data-k="mlbl"]', K).textContent = on ? 'Commentaire de levée (obligatoire)' : 'Motif (obligatoire)';
+    qa('[data-k-on]', K).forEach(function (f) { f.hidden = on; }); q('[data-k="motif"]', K).value = '';
+    ctx.open('core-incidents-maint'); ctx.applyPerms();
+  }
+  function doMaint() {
+    var mot = q('[data-k="motif"]', K).value.trim(), t = now(), on = !maint, txt; if (!mot) { ctx.toast('Le motif est obligatoire : action auditée (§5.4)'); return; }
+    if (on) { var dur = parseInt(q('[data-k="dur"]', K).value, 10); maint = { t: t, inc: q('[data-k="inc"]', K).value, msg: q('[data-k="msg"]', K).value.trim(), fin: dur ? 'fin prévue 27/08 · ' + hm(clock + dur) : 'jusqu’à la levée manuelle' }; }
+    var st = q('[data-mod-st="finance"]'); st.className = 'st ' + (on ? 'warn' : 'ok'); st.innerHTML = '<svg><use href="#i-' + (on ? 'sliders' : 'check') + '"/></svg>' + (on ? 'En maintenance' : 'Disponible');
+    q('[data-mod-hint="finance"]').textContent = 'v0.9.0 · ' + (on ? 'en maintenance depuis ' + t + ' · ' + maint.fin : 'disponible · mouvements, positions, créances, P&L');
+    q('[data-maint-btn] span').textContent = on ? 'Lever la maintenance' : 'Placer en maintenance'; q('[data-mod-avail]').className = 'st ' + (on ? 'warn' : 'ok'); q('[data-mod-avail]').innerHTML = '<svg><use href="#i-' + (on ? 'alert' : 'check') + '"/></svg>' + (on ? 'Partielle' : 'OK');
+    txt = on ? 'Mata Finance placée en maintenance · « ' + mot + ' »' + (maint.inc ? ' · incident lié ' + maint.inc : '') + ' · ' + maint.fin + ' · message affiché : « ' + maint.msg + ' » · Mata Core reste disponible (authentification, notifications, Incidents) · maquette : les écrans Mata Finance restent navigables' : 'Maintenance de Mata Finance levée · « ' + mot + ' » · placée le ' + maint.t;
+    q('[data-maint-strip]').hidden = !on; q('[data-maint-txt]').textContent = txt;
+    q('[data-maint-tl]').insertAdjacentHTML('afterbegin', '<div class="ev on"><b>' + esc(txt) + '</b><small>' + esc(me()) + ' · ' + esc(ctx.profile.profile) + ' · ' + t + '</small></div>');
+    if (maint.inc && I[maint.inc]) I[maint.inc].ev.push([t, on ? 'Module Mata Finance placé en maintenance · « ' + mot + ' »' : 'Maintenance de Mata Finance levée · « ' + mot + ' »', me(), ctx.profile.profile]);
+    if (!on) maint = null; ctx.close('core-incidents-maint'); ctx.toast((on ? 'Mata Finance en maintenance' : 'Maintenance levée') + ' · Mata Core reste disponible · audité sous le profil ' + ctx.profile.profile);
+  }
+  /* Bouton transverse « Signaler un problème » (modale globale de la coquille) : l'incident créé apparaît ici avec son contexte collecté */
+  document.addEventListener('click', function (e) {
+    if (!e.target.closest || !e.target.closest('[data-sig-send]')) return;
+    var cs = document.getElementById('sig-crit'), tx = document.getElementById('sig-txt'), st = (window.ERP && ERP.state) || {}, id = 'INC-0' + (seq++), t = now(), c = cs ? cs.value : 'Mineur';
+    var scr = st.screen || 'hub', mod = st.module === 'finance' ? 'Mata Finance' : (st.module === 'core' ? 'Mata Core' : 'Accueil'), obj = tx && tx.value.trim() ? tx.value.trim() : 'Problème signalé depuis l’écran ' + scr + ' (sans description)';
+    I[id] = { crit: c, st: 'ouvert', obj: obj, by: me(), byp: ctx.profile.profile, date: t, mod: mod, hint: 'contexte collecté automatiquement au signalement', scr: scr, ctx: [['Module · écran', mod + ' · ' + scr], ['Profil actif · entité', ctx.profile.profile + ' · ' + (ctx.entity === 'MG' ? 'Mata Group' : ctx.entity)], ['Version', 'v0.9.0'], ['Horodatage', t], ['État fonctionnel au signalement', '5 sources OK · 3 réconciliations ouvertes · 0 validation bloquée · 1 dépense « Pas sûr »']], ev: [[t, 'Ouvert · ' + c + ' · signalé via le bouton transverse', me(), ctx.profile.profile]] };
+    tb.insertAdjacentHTML('afterbegin', rowHtml(id)); if (tx) tx.value = ''; ctx.formatAmounts(tb); ctx.applyPerms(); refresh();
+  }, true);
+  ctx.on(root, 'click', function (e) {
+    var tr = e.target.closest('tr[data-inc]'), b = e.target.closest('[data-act="next"],[data-m="confirm"],[data-k="confirm"],[data-maint-btn],[data-acc-toggle]');
+    if (tr && root.contains(tr)) { fill(tr.getAttribute('data-inc')); return; }
+    if (!b || !root.contains(b) || b.disabled || b.classList.contains('denied')) return;
+    if (b.hasAttribute('data-acc-toggle')) { var l = b.nextElementSibling; l.hidden = !l.hidden; b.classList.toggle('open', !l.hidden); q('span', b).textContent = l.hidden ? 'Voir les 5 sources' : 'Masquer les sources'; }
+    else if (b.hasAttribute('data-act')) ask(); else if (b.hasAttribute('data-m')) confirmSt(); else if (b.hasAttribute('data-maint-btn')) openMaint(); else doMaint();
+  });
+  qa('.chip[data-filter]').forEach(function (c) { ctx.on(c, 'click', function () { filter = c.getAttribute('data-filter'); qa('.chip[data-filter]').forEach(function (x) { x.classList.toggle('on', x === c); }); refresh(); }); });
+  /* « Signaler un problème » est transverse (§8.3) : jamais désactivé pour un profil qui consulte cet écran (les profils externes en lecture seule n'y accèdent pas) */
+  function sig() { var b = q('[data-open="ov-signaler"]'); if (!ctx.profile.readonly) { b.disabled = false; b.classList.remove('denied'); b.removeAttribute('title'); } }
+  document.addEventListener('erp:profile', function () { setTimeout(function () { if (cur && D.classList.contains('on')) fill(cur); else ctx.applyPerms(); sig(); }, 0); });
+  refresh(); ctx.formatAmounts(root); ctx.applyPerms(); sig();
+});
+</script>

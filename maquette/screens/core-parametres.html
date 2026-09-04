@@ -1,0 +1,300 @@
+<section class="scr" data-scr="core-parametres" data-module="core" data-perm="core.parametres.view" data-sens="s" hidden>
+  <style data-screen="core-parametres">
+    #app [data-scr="core-parametres"] td .hint{display:block;margin-top:2px;white-space:normal}
+    #app [data-scr="core-parametres"] .tbl-scroll table{min-width:1020px}
+    #app [data-scr="core-parametres"] td.act{white-space:nowrap}
+    #app [data-scr="core-parametres"] td.act .btn{margin-right:6px}
+    #app [data-scr="core-parametres"] .mono{font-family:'Fira Code',monospace;font-size:12px;white-space:nowrap}
+    #app [data-scr="core-parametres"] h4{font-family:var(--head);font-size:11.5px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-2);margin:14px 0 6px}
+    #app [data-scr="core-parametres"] .drawer .big-amt{font-size:18px;line-height:1.35}
+    #app [data-scr="core-parametres"] .drawer .big-amt .hint{display:block;font-family:var(--body);font-weight:500}
+    #app [data-scr="core-parametres"] .drawer .txt{font-size:12px;color:var(--ink-2);line-height:1.55}
+    #app [data-scr="core-parametres"] .modal .fld .hint{display:block}
+    #app [data-scr="core-parametres"] .modal .rline{margin-bottom:8px}
+    #app [data-scr="core-parametres"] .modal .note-strip{margin-top:12px}
+    #app [data-scr="core-parametres"] .fcode{margin-bottom:8px}
+    #app [data-scr="core-parametres"] .card .cb > .hint{display:block;line-height:1.5}
+    #app [data-scr="core-parametres"] .grid2{align-items:start}
+  </style>
+  <div class="scr-head">
+    <div>
+      <h2>Paramètres</h2>
+      <p class="scr-sub">Mata Core gère uniquement les paramètres transverses (§6.4) · un paramètre peut être global, global avec override local, ou local · les configurations sensibles sont historisées et, lorsque nécessaire, datées dans le temps · entité active : Mata Group · calcul au 27/08/2026</p>
+    </div>
+    <div class="scr-meta">
+      <span class="sens s"><svg><use href="#i-shield"/></svg>Sensible</span>
+      <span class="hint">Accès restreint, modifications auditées, export contrôlé (§5.3) · consultation sans validation · modification sous la permission core.parametres.modifier, sans second validateur (aucune validation renforcée prévue par le cahier pour un périmètre Sensible) · paramètre sensible : nouvelle version historisée, date d’effet obligatoire (§6.4), ancienne et nouvelle valeur dans l’Audit central (§5.4) · Exporter distinct de Consulter (§3.4)</span>
+    </div>
+  </div>
+
+  <div class="statstrip four">
+    <div class="card stat">
+      <div class="lb">Paramètres transverses<button class="fx" data-f="Mata Core gère uniquement les paramètres transverses. Les paramètres propres au métier restent dans leur module propriétaire (§6.4)" data-c="Global 5 · Global avec override local 3 · Local 2 · hors écran : charges fixes, plafonds d’encours, obligation de réconciliation (Mata Finance)" data-src="Mata Core · référentiel des paramètres transverses (FIXTURES §17) · lu à l’instant" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></div>
+      <div class="v">10</div>
+      <div class="sub2">5 globaux · 3 globaux avec override local · 2 locaux · Mata Group, seule entité active</div>
+    </div>
+    <div class="card stat">
+      <div class="lb">Sensibles<button class="fx" data-f="Les configurations sensibles sont historisées et, lorsque nécessaire, datées dans le temps (§6.4) · Sensible : modifications auditées, export contrôlé (§5.3)" data-c="Devise · Fuseau · Sauvegarde · Audit : modifications · Audit : consultations · Seuil ajustement inhabituel · Heure de gel = 7 · Standard : Conservation des exports, Seuil relais ancien, Heure notification « Pas sûr » = 3" data-src="Mata Core · classification de sensibilité par paramètre (§5.3) · proposition maquette, à valider par le panel" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></div>
+      <div class="v">7</div>
+      <div class="sub2">Version historisée, date d’effet et motif obligatoires · 3 paramètres standard audités sans historique de versions</div>
+    </div>
+    <div class="card stat">
+      <div class="lb">Overrides locaux actifs<button class="fx" data-f="Σ overrides locaux en vigueur sur les paramètres « global avec override local » (§6.4)" data-c="Fuseau 0 · Seuil relais ancien 0 · Seuil ajustement inhabituel 0" data-src="Mata Core · overrides par entité · MLC, Mata Volaille (à migrer), Keur Bally et 12 MaaS (à activer) sans valeur locale (§2)" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></div>
+      <div class="v" data-k="ovr">0</div>
+      <div class="sub2" data-k="ovr-sub">Mata Group applique les valeurs globales · aucune filiale ni MaaS activé</div>
+    </div>
+    <div class="card stat">
+      <div class="lb">Dernière modification<button class="fx" data-f="Date d’effet la plus récente parmi les versions en vigueur des paramètres transverses" data-c="10 paramètres · version 2 en vigueur depuis le 01/07/2026 · configuration Mata Group à l’activation de l’entité · S. Doucouré (Super Admin)" data-src="Audit central · journal des modifications : ancienne / nouvelle valeur, profil actif, motif (§5.4)" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></div>
+      <div class="v mono" data-k="last">01/07/2026</div>
+      <div class="sub2" data-k="last-sub">Configuration Mata Group à l’activation de l’entité · S. Doucouré · Super Admin · aucune modification aujourd’hui</div>
+    </div>
+  </div>
+
+  <div class="note-strip"><svg><use href="#i-info"/></svg><span>Les paramètres propres au métier restent dans leur module propriétaire (§6.4) : charges fixes, plafonds d’encours fournisseurs, obligation de réconciliation et compte de paiement de référence se configurent dans Mata Finance, jamais ici. <button class="btn ghost sm" data-goto="fin-charges" data-perm="finance.charges.view"><svg><use href="#i-arr"/></svg>Charges fixes (Mata Finance)</button></span></div>
+  <div class="deny-note" data-view="readonly" hidden><svg><use href="#i-lock"/></svg><span><b>Refus par défaut</b> : le profil <span data-k="prof">Super Admin</span> consulte les paramètres sans la permission core.parametres.modifier (§3.4). Les boutons « Modifier » restent visibles, désactivés avec le motif ; valeurs, portées et historiques restent consultables.</span></div>
+
+  <div class="grid2">
+    <div>
+      <div class="card">
+        <div class="cb">
+          <div class="actionbar">
+            <div class="chips" data-fgroup="sens"><button class="chip on" data-filter="tous">Tous</button><button class="chip" data-filter="oui">Sensibles</button><button class="chip" data-filter="non">Standard</button></div>
+            <div class="sp"></div>
+            <button class="btn ghost" data-export data-perm="core.export"><svg><use href="#i-dl"/></svg>Exporter (CSV)</button>
+          </div>
+          <span class="hint">Filtre appliqué aux trois portées · « Modifier » ouvre la saisie d’une nouvelle version, date d’effet obligatoire sur un paramètre sensible · « Historique » : versions d’un paramètre sensible, l’original reste accessible (§5.5)</span>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="ch"><h3>Global</h3><span class="hint-r">Valeur unique pour toutes les entités, sans override · affichés <b data-count="global">5 / 5</b></span></div>
+        <div class="cb"><div class="tbl-scroll"><table>
+          <thead><tr><th>Paramètre</th><th>Valeur en vigueur</th><th>Portée</th><th>Sensible</th><th>Version</th><th>Dernière modification</th><th>Actions</th></tr></thead>
+          <tbody>
+            <tr data-id="devise" data-lbl="Devise" data-portee="global" data-sens="oui" data-ver="2" data-eff="2026-07-01" data-by="S. Doucouré · Super Admin" data-motif="Configuration Mata Group à l’activation de l’entité" data-ref="FCFA, montants entiers sans décimales" data-use="Tous les montants de Mata Finance, des exports et des documents générés (§6.2, §6.3)" data-fmt="{d}" data-fields='[{"k":"d","l":"Devise","t":"select","o":["FCFA"],"v":"FCFA","h":"seule devise référencée · montants entiers, sans décimales"}]'>
+              <td><b>Devise</b><span class="hint">Montants entiers, sans décimales, dans tous les modules</span></td><td data-cell="val">FCFA</td><td data-cell="portee">Global</td>
+              <td><span class="st warn"><svg><use href="#i-shield"/></svg>Oui</span><span class="hint">Historisée, datée (§6.4)</span></td><td data-cell="ver"><span class="mono">v2</span></td><td data-cell="mod"><span class="mono">01/07/2026</span></td>
+              <td class="act"><button class="btn ghost sm" data-edit data-perm="core.parametres.modifier"><svg><use href="#i-sliders"/></svg>Modifier</button><button class="btn ghost sm" data-hist><svg><use href="#i-history"/></svg>Historique</button></td>
+            </tr>
+            <tr data-id="sauvegarde" data-lbl="Sauvegarde" data-portee="global" data-sens="oui" data-ver="2" data-eff="2026-07-01" data-by="S. Doucouré · Super Admin" data-motif="Configuration Mata Group à l’activation de l’entité" data-ref="Au minimum tous les 3 jours ; rétention glissante recommandée 30 jours (§8.1)" data-use="Supervision technique des sauvegardes (§8.2) · alerte « Sauvegarde échouée », critique, Super Admin (Alertes)" data-fmt="tous les {f} jours, rétention {r} jours" data-fields='[{"k":"f","l":"Fréquence (jours)","t":"int","v":3,"min":1,"max":3,"h":"au minimum tous les 3 jours (§8.1)"},{"k":"r","l":"Rétention glissante (jours)","t":"int","v":30,"min":1,"h":"30 jours recommandés (§8.1)"}]'>
+              <td><b>Sauvegarde</b><span class="hint">Sauvegarde mensuelle possible 12 mois · tests périodiques de restauration (§8.1)</span></td><td data-cell="val">tous les 3 jours, rétention 30 jours</td><td data-cell="portee">Global</td>
+              <td><span class="st warn"><svg><use href="#i-shield"/></svg>Oui</span><span class="hint">Historisée, datée (§6.4)</span></td><td data-cell="ver"><span class="mono">v2</span></td><td data-cell="mod"><span class="mono">01/07/2026</span></td>
+              <td class="act"><button class="btn ghost sm" data-edit data-perm="core.parametres.modifier"><svg><use href="#i-sliders"/></svg>Modifier</button><button class="btn ghost sm" data-hist><svg><use href="#i-history"/></svg>Historique</button></td>
+            </tr>
+            <tr data-id="audit-modif" data-lbl="Audit : modifications" data-portee="global" data-sens="oui" data-ver="2" data-eff="2026-07-01" data-by="S. Doucouré · Super Admin" data-motif="Configuration Mata Group à l’activation de l’entité" data-ref="Conservation cible 10 ans, séparation stockage actif / archive froide (§5.4)" data-use="Audit central · créations, corrections, validations, ajustements conservés en détail (§5.4, arch. §11)" data-fmt="{a} mois en base active puis archive froide {y} ans" data-fields='[{"k":"a","l":"Base active (mois)","t":"int","v":24,"min":1,"h":"écritures de modification détaillées (arch. §11)"},{"k":"y","l":"Conservation totale (ans)","t":"int","v":10,"min":10,"h":"conservation cible 10 ans, plancher (§5.4)"}]'>
+              <td><b>Audit : modifications</b><span class="hint">Événements financiers, permissions, validations et sécurité (§5.4)</span></td><td data-cell="val">24 mois en base active puis archive froide 10 ans</td><td data-cell="portee">Global</td>
+              <td><span class="st warn"><svg><use href="#i-shield"/></svg>Oui</span><span class="hint">Historisée, datée (§6.4)</span></td><td data-cell="ver"><span class="mono">v2</span></td><td data-cell="mod"><span class="mono">01/07/2026</span></td>
+              <td class="act"><button class="btn ghost sm" data-edit data-perm="core.parametres.modifier"><svg><use href="#i-sliders"/></svg>Modifier</button><button class="btn ghost sm" data-hist><svg><use href="#i-history"/></svg>Historique</button></td>
+            </tr>
+            <tr data-id="audit-consult" data-lbl="Audit : consultations" data-portee="global" data-sens="oui" data-ver="2" data-eff="2026-07-01" data-by="S. Doucouré · Super Admin" data-motif="Configuration Mata Group à l’activation de l’entité" data-ref="Consultations détaillées un délai court, puis résumées (§5.4) · 90 jours (arch. §11)" data-use="Audit de consultation des périmètres Hautement sensibles : Comptes, Transferts (§5.3) · compteurs agrégés au-delà (arch. §11)" data-fmt="{j} jours puis résumées" data-fields='[{"k":"j","l":"Détail en base active (jours)","t":"int","v":90,"min":1,"h":"puis archive à froid et compteurs agrégés : qui a consulté quoi, combien de fois (arch. §11)"}]'>
+              <td><b>Audit : consultations</b><span class="hint">Lectures des périmètres Hautement sensibles, fréquentes, résumées après un délai court</span></td><td data-cell="val">90 jours puis résumées</td><td data-cell="portee">Global</td>
+              <td><span class="st warn"><svg><use href="#i-shield"/></svg>Oui</span><span class="hint">Historisée, datée (§6.4)</span></td><td data-cell="ver"><span class="mono">v2</span></td><td data-cell="mod"><span class="mono">01/07/2026</span></td>
+              <td class="act"><button class="btn ghost sm" data-edit data-perm="core.parametres.modifier"><svg><use href="#i-sliders"/></svg>Modifier</button><button class="btn ghost sm" data-hist><svg><use href="#i-history"/></svg>Historique</button></td>
+            </tr>
+            <tr data-id="exports" data-lbl="Conservation des exports" data-portee="global" data-sens="non" data-ver="1" data-eff="2026-07-01" data-by="S. Doucouré · Super Admin" data-motif="Configuration Mata Group à l’activation de l’entité" data-ref="Artefacts temporaires reproductibles, supprimés automatiquement après une durée courte configurable (arch. §8)" data-use="Service commun Import / Export (§6.3) · les documents sources (justificatifs, contrats, photos) ne suivent jamais cette politique (arch. §8)" data-fmt="{j} jours" data-fields='[{"k":"j","l":"Conservation (jours)","t":"int","v":7,"min":1,"h":"durée courte configurable, fichiers reproductibles à partir des données sources (arch. §8)"}]'>
+              <td><b>Conservation des exports</b><span class="hint">Fichiers CSV, Excel, PDF du service commun d’export (§6.3)</span></td><td data-cell="val">7 jours</td><td data-cell="portee">Global</td>
+              <td><span class="st mut">Non</span><span class="hint">Auditée, non historisée</span></td><td data-cell="ver"><span class="mono">v1</span></td><td data-cell="mod"><span class="mono">01/07/2026</span></td>
+              <td class="act"><button class="btn ghost sm" data-edit data-perm="core.parametres.modifier"><svg><use href="#i-sliders"/></svg>Modifier</button></td>
+            </tr>
+            <tr data-empty="global" hidden><td colspan="7"><span class="hint">Aucun paramètre global pour ce filtre</span></td></tr>
+          </tbody>
+        </table></div></div>
+      </div>
+
+      <div class="card">
+        <div class="ch"><h3>Global avec override local</h3><span class="hint-r">Valeur groupe, surchargeable par entité active · affichés <b data-count="override">3 / 3</b></span></div>
+        <div class="cb"><div class="tbl-scroll"><table>
+          <thead><tr><th>Paramètre</th><th>Valeur en vigueur</th><th>Portée</th><th>Sensible</th><th>Version</th><th>Dernière modification</th><th>Actions</th></tr></thead>
+          <tbody>
+            <tr data-id="fuseau" data-lbl="Fuseau" data-portee="override" data-sens="oui" data-ver="2" data-eff="2026-07-01" data-by="S. Doucouré · Super Admin" data-motif="Configuration Mata Group à l’activation de l’entité" data-ref="Heure de Dakar (GMT), référence de tous les horodatages" data-use="Horodatage de l’Audit central (§5.4), heure de gel, dates d’effet et heure notification « Pas sûr »" data-fmt="{tz}" data-fields='[{"k":"tz","l":"Fuseau","t":"select","o":["Dakar / GMT"],"v":"Dakar / GMT","h":"seul fuseau référencé pour Mata Group"}]'>
+              <td><b>Fuseau</b><span class="hint">Référence des horodatages et des dates d’effet</span></td><td data-cell="val">Dakar / GMT</td><td data-cell="portee">Global avec override local</td>
+              <td><span class="st warn"><svg><use href="#i-shield"/></svg>Oui</span><span class="hint">Historisée, datée (§6.4)</span></td><td data-cell="ver"><span class="mono">v2</span></td><td data-cell="mod"><span class="mono">01/07/2026</span></td>
+              <td class="act"><button class="btn ghost sm" data-edit data-perm="core.parametres.modifier"><svg><use href="#i-sliders"/></svg>Modifier</button><button class="btn ghost sm" data-hist><svg><use href="#i-history"/></svg>Historique</button></td>
+            </tr>
+            <tr data-id="relais" data-lbl="Seuil relais ancien" data-portee="override" data-sens="non" data-ver="1" data-eff="2026-07-01" data-by="S. Doucouré · Super Admin" data-motif="Configuration Mata Group à l’activation de l’entité" data-ref="Seuil configurable d’âge d’un solde Relais (Finance §4.6), sans valeur dans le cahier" data-use="Alerte « Relais ouvert au-delà du seuil (2 j) », Haute, Admin (Alertes) · REL2 Bictorys → Banque en cours : âge 3 j, alerte du jour 12:00" data-fmt="{j} jours" data-fields='[{"k":"j","l":"Âge maximal d’un solde Relais (jours)","t":"int","v":2,"min":1,"h":"au-delà, alerte relais ancien (Finance §4.6)"}]'>
+              <td><b>Seuil relais ancien</b><span class="hint">Âge d’un compte Relais au-delà duquel une alerte est émise</span></td><td data-cell="val">2 jours</td><td data-cell="portee">Global avec override local</td>
+              <td><span class="st mut">Non</span><span class="hint">Auditée, non historisée</span></td><td data-cell="ver"><span class="mono">v1</span></td><td data-cell="mod"><span class="mono">01/07/2026</span></td>
+              <td class="act"><button class="btn ghost sm" data-edit data-perm="core.parametres.modifier"><svg><use href="#i-sliders"/></svg>Modifier</button></td>
+            </tr>
+            <tr data-id="ajust" data-lbl="Seuil ajustement inhabituel" data-portee="override" data-sens="oui" data-ver="2" data-eff="2026-07-01" data-by="S. Doucouré · Super Admin" data-motif="Configuration Mata Group à l’activation de l’entité" data-ref="Seuil d’ajustement inhabituel : montant unitaire et nombre par jour" data-use="Alerte « Ajustement inhabituel (> 500 000 ou > 3 par jour) », critique, non désactivable, DG et Super Admin (Alertes)" data-fmt="{m} et {n} par jour" data-fields='[{"k":"m","l":"Montant unitaire (FCFA)","t":"amount","v":500000,"min":1,"h":"entier en FCFA, sans décimales"},{"k":"n","l":"Nombre par jour","t":"int","v":3,"min":1,"h":"nombre d’ajustements validés dans la journée"}]'>
+              <td><b>Seuil ajustement inhabituel</b><span class="hint">Déclenche l’alerte critique non désactivable · double validation de l’ajustement inchangée (Finance §4.7)</span></td><td data-cell="val"><span class="amt" data-amt="500000"></span> et 3 par jour</td><td data-cell="portee">Global avec override local</td>
+              <td><span class="st warn"><svg><use href="#i-shield"/></svg>Oui</span><span class="hint">Historisée, datée (§6.4)</span></td><td data-cell="ver"><span class="mono">v2</span></td><td data-cell="mod"><span class="mono">01/07/2026</span></td>
+              <td class="act"><button class="btn ghost sm" data-edit data-perm="core.parametres.modifier"><svg><use href="#i-sliders"/></svg>Modifier</button><button class="btn ghost sm" data-hist><svg><use href="#i-history"/></svg>Historique</button></td>
+            </tr>
+            <tr data-empty="override" hidden><td colspan="7"><span class="hint">Aucun paramètre avec override local pour ce filtre</span></td></tr>
+          </tbody>
+        </table></div></div>
+      </div>
+
+      <div class="card">
+        <div class="ch"><h3>Local</h3><span class="hint-r">Valeur propre à chaque entité, sans valeur groupe · affichés <b data-count="local">2 / 2</b></span></div>
+        <div class="cb"><div class="tbl-scroll"><table>
+          <thead><tr><th>Paramètre</th><th>Valeur en vigueur · Mata Group</th><th>Portée</th><th>Sensible</th><th>Version</th><th>Dernière modification</th><th>Actions</th></tr></thead>
+          <tbody>
+            <tr data-id="gel" data-lbl="Heure de gel" data-portee="local" data-sens="oui" data-ver="2" data-eff="2026-07-01" data-by="S. Doucouré · Super Admin" data-motif="Configuration Mata Group à l’activation de l’entité" data-ref="Heure limite servant de filet de sécurité à la clôture événementielle (§5.5)" data-use="Gel « À réconcilier » des opérations non réconciliées à 23:59 GMT · snapshot auto filet 23:59 (Finance §8.6) · réconciliation automatique vers 02:00" data-fmt="{h}" data-fields='[{"k":"h","l":"Heure de gel (heure de Dakar, GMT)","t":"time","v":"23:59","h":"filet de sécurité de la clôture événementielle (§5.5)"}]'>
+              <td><b>Heure de gel</b><span class="hint">Clôture événementielle dès que le contrôle est terminé ; l’heure limite sert de filet de sécurité (§5.5)</span></td><td data-cell="val">23:59</td><td data-cell="portee">Local</td>
+              <td><span class="st warn"><svg><use href="#i-shield"/></svg>Oui</span><span class="hint">Historisée, datée (§6.4)</span></td><td data-cell="ver"><span class="mono">v2</span></td><td data-cell="mod"><span class="mono">01/07/2026</span></td>
+              <td class="act"><button class="btn ghost sm" data-edit data-perm="core.parametres.modifier"><svg><use href="#i-sliders"/></svg>Modifier</button><button class="btn ghost sm" data-hist><svg><use href="#i-history"/></svg>Historique</button></td>
+            </tr>
+            <tr data-id="passur" data-lbl="Heure notification « Pas sûr »" data-portee="local" data-sens="non" data-ver="1" data-eff="2026-07-01" data-by="S. Doucouré · Super Admin" data-motif="Configuration Mata Group à l’activation de l’entité" data-ref="Notification des dépenses « Pas sûr » non résolues, avant le gel (Finance §5.2)" data-use="Alerte « Dépense « Pas sûr » à 23:00 », critique, Directeur des Opérations, Admins et Super Admin (Alertes) · 1 dépense non résolue notifiée le 26/08 à 23:00" data-fmt="{h}" data-fields='[{"k":"h","l":"Heure de notification (heure de Dakar, GMT)","t":"time","v":"23:00","h":"précède l’heure de gel"}]'>
+              <td><b>Heure notification « Pas sûr »</b><span class="hint">Dépense « Pas sûr » non résolue : notification au Directeur des Opérations, aux Admins et au Super Admin</span></td><td data-cell="val">23:00</td><td data-cell="portee">Local</td>
+              <td><span class="st mut">Non</span><span class="hint">Auditée, non historisée</span></td><td data-cell="ver"><span class="mono">v1</span></td><td data-cell="mod"><span class="mono">01/07/2026</span></td>
+              <td class="act"><button class="btn ghost sm" data-edit data-perm="core.parametres.modifier"><svg><use href="#i-sliders"/></svg>Modifier</button></td>
+            </tr>
+            <tr data-empty="local" hidden><td colspan="7"><span class="hint">Aucun paramètre local pour ce filtre</span></td></tr>
+            <tr><td colspan="7"><span class="hint">Autres entités — MLC, Mata Volaille (à migrer), Keur Bally et les 12 MaaS (à activer) : aucune valeur locale tant que l’entité n’est pas activée ; une valeur absente n’est jamais présentée comme une valeur par défaut (arch. §9).</span></td></tr>
+          </tbody>
+        </table></div></div>
+      </div>
+    </div>
+
+    <div>
+      <div class="card">
+        <div class="ch"><h3>Règles du cahier</h3><span class="hint-r">§6.4 · §5.5 · arch. §12</span></div>
+        <div class="cb"><div class="tl">
+          <div class="ev on"><b>Mata Core gère uniquement les paramètres transverses. Les paramètres propres au métier restent dans leur module propriétaire.</b><small>§6.4 · charges fixes, plafonds, obligation de réconciliation : Mata Finance</small></div>
+          <div class="ev on"><b>Un paramètre peut être global, global avec override local, ou local.</b><small>§6.4 · trois portées, trois tableaux ci-contre</small></div>
+          <div class="ev on"><b>Les configurations sensibles sont historisées et, lorsque nécessaire, datées dans le temps.</b><small>§6.4 · date d’effet obligatoire ; une date future planifie la version</small></div>
+          <div class="ev"><b>Une donnée sensible ou validée ne doit pas être écrasée silencieusement. L’original reste accessible.</b><small>§5.5 · nouvelle version, l’ancienne reste dans l’historique</small></div>
+          <div class="ev"><b>Si la donnée a été modifiée depuis sa lecture, la nouvelle écriture est rejetée explicitement.</b><small>arch. §12 · conflit signalé, état à recharger, jamais d’écrasement silencieux</small></div>
+          <div class="ev"><b>Après clôture, toute correction requiert par défaut l’approbation du Super Admin.</b><small>§5.5 · une date d’effet antérieure au 27/08/2026 est refusée sur cet écran</small></div>
+        </div></div>
+      </div>
+
+      <div class="card">
+        <div class="ch"><h3>Conservation de l’audit</h3><span class="hint-r">arch. §11 · §5.4</span></div>
+        <div class="cb">
+          <div class="fcode" data-fc="audit-modif">Modifications : base active 24 mois → archive froide compressée → 10 ans</div>
+          <div class="fcode" data-fc="audit-consult">Consultations : détail 90 jours → archive à froid + compteurs agrégés</div>
+          <span class="hint">Les données récentes restent immédiatement consultables ; toute archive demandée par un utilisateur autorisé est restaurable sous un jour ouvré (arch. §11). Sur les périmètres Hautement sensibles (Comptes, Transferts), la consultation elle-même est auditée (§5.3).</span>
+          <h4>Consulter</h4>
+          <button class="btn ghost sm" data-goto="core-audit" data-perm="core.audit.view"><svg><use href="#i-history"/></svg>Audit central</button>
+          <button class="btn ghost sm" data-goto="core-alertes" data-perm="core.alertes.view"><svg><use href="#i-bell"/></svg>Règles d’alerte</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="ch"><h3>Modifications de la session</h3><span class="hint-r">Audit central §5.4</span></div>
+        <div class="cb">
+          <div class="tl" data-session><div class="ev" data-session-empty><b>Aucune modification depuis l’ouverture</b><small>Dernière modification enregistrée : 01/07/2026 · S. Doucouré · Super Admin · configuration Mata Group à l’activation de l’entité</small></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="mback" data-ov="core-parametres-modifier"><div class="modal wide" role="dialog" aria-modal="true" aria-label="Modifier un paramètre">
+    <h3 data-m-title>Modifier un paramètre</h3>
+    <div class="exp" data-m-exp>Sélectionnez un paramètre.</div>
+    <div class="formgrid" data-m-fields></div>
+    <div data-m-scope hidden>
+      <h4>Portée de la nouvelle valeur</h4>
+      <label class="rline"><input type="radio" name="core-parametres-scope" value="global" checked>Valeur globale<span class="rh">toutes les entités, Mata Group inclus</span></label>
+      <label class="rline"><input type="radio" name="core-parametres-scope" value="local">Override local · Mata Group<span class="rh">entité active uniquement ; les entités à migrer ou à activer n’acceptent pas d’override</span></label>
+    </div>
+    <div class="formgrid">
+      <div class="fld"><label for="core-parametres-eff">Date d’effet <span data-m-effreq>(obligatoire)</span></label><input id="core-parametres-eff" class="inp" type="date" min="2026-08-27" data-field="eff"><span class="hint">ISO 8601 · 27/08/2026 ou ultérieure ; une date future planifie la version, la valeur en vigueur reste appliquée jusque-là</span></div>
+      <div class="fld"><label for="core-parametres-motif">Motif</label><input id="core-parametres-motif" class="inp" data-field="motif" placeholder="Conservé dans l’Audit central (§5.4)"><span class="hint">Obligatoire pour un paramètre sensible</span></div>
+    </div>
+    <div class="note-strip" data-m-note><svg><use href="#i-info"/></svg>La version précédente reste consultable (§5.5).</div>
+    <div class="acts"><button class="btn ghost" data-close>Annuler</button><button class="btn pri" data-submit data-perm="core.parametres.modifier"><svg><use href="#i-check"/></svg>Enregistrer la version</button></div>
+  </div></div>
+
+  <aside class="drawer" data-ov="core-parametres-historique">
+    <div class="dh"><h3 data-d-title>Historique</h3><button class="ib" data-close aria-label="Fermer"><svg><use href="#i-x"/></svg></button></div>
+    <div class="db">
+      <div class="big-amt" data-d-val></div>
+      <div class="meta-l" data-d-meta></div>
+      <div class="txt" data-d-use></div>
+      <h4>Versions</h4>
+      <div class="tl" data-d-tl></div>
+      <div class="note-strip"><svg><use href="#i-info"/></svg>Chaque version conserve l’ancienne et la nouvelle valeur, la date d’effet, le motif et le profil actif (§5.4) ; l’original reste accessible (§5.5). Version 1 = valeur de référence du cahier V13 (cadrage v0.8.0).</div>
+    </div>
+    <div class="df"><button class="btn ghost" data-goto="core-audit" data-perm="core.audit.view"><svg><use href="#i-history"/></svg>Audit central</button><div class="sp"></div><button class="btn pri" data-d-edit data-perm="core.parametres.modifier"><svg><use href="#i-sliders"/></svg>Modifier</button></div>
+  </aside><div class="dback" data-ov-back="core-parametres-historique"></div>
+</section>
+<script data-screen="core-parametres">
+ERP.register('core-parametres', function (root, ctx) {
+  var q = function (s, r) { return (r || root).querySelector(s); }, qa = function (s, r) { return Array.prototype.slice.call((r || root).querySelectorAll(s)); };
+  var TODAY = '2026-08-27', PORTEE = { global: 'Global', override: 'Global avec override local', local: 'Local' }, HIST = {}, S = { cur: null, ovr: 0, n: 0 };
+  var M = q('[data-ov="core-parametres-modifier"]'), D = q('[data-ov="core-parametres-historique"]');
+  var esc = function (s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); };
+  var fr = function (iso) { return iso ? iso.slice(8, 10) + '/' + iso.slice(5, 7) + '/' + iso.slice(0, 4) : '—'; };
+  var J = function (s, d) { try { return s ? JSON.parse(s) : d; } catch (e) { return d; } };
+  function P(tr) { var d = tr.dataset; return { tr: tr, id: d.id, lbl: d.lbl, portee: d.portee, sens: d.sens === 'oui', ver: +d.ver, eff: d.eff, by: d.by, motif: d.motif, ref: d.ref, use: d.use, fmt: d.fmt, fields: J(d.fields, []), ovr: J(d.ovr, null), next: J(d.next, null) }; }
+  function save(p) { var d = p.tr.dataset; d.ver = p.ver; d.eff = p.eff; d.by = p.by; d.motif = p.motif; d.fields = JSON.stringify(p.fields); d.ovr = p.ovr ? JSON.stringify(p.ovr) : ''; d.next = p.next ? JSON.stringify(p.next) : ''; }
+  /* Valeur affichée : gabarit data-fmt + champs typés ; un champ montant devient un data-amt formaté par le moteur (plain = texte pour les toasts) */
+  function disp(p, vals, plain) { return p.fmt.replace(/\{(\w+)\}/g, function (_, k) { var f = p.fields.filter(function (x) { return x.k === k; })[0], v = vals && vals[k] !== undefined ? vals[k] : f.v; return f.t === 'amount' ? (plain ? ctx.fmt(+v) + ' FCFA' : '<span class="amt" data-amt="' + (+v) + '"></span>') : esc(v); }); }
+  var FC = { 'audit-modif': function (p) { return 'Modifications : base active ' + p.fields[0].v + ' mois → archive froide compressée → ' + p.fields[1].v + ' ans'; }, 'audit-consult': function (p) { return 'Consultations : détail ' + p.fields[0].v + ' jours → archive à froid + compteurs agrégés'; } };
+  function cells(p) {
+    var val = disp(p) + (p.ovr ? '<span class="hint">Override Mata Group (v' + p.ovr.ver + ') : ' + disp(p, p.ovr.vals) + ' · date d’effet ' + fr(p.ovr.eff) + ' · valeur globale conservée pour les autres entités</span>' : '') + (p.next ? '<span class="hint">Version ' + p.next.ver + ' planifiée : ' + disp(p, p.next.vals) + ' à compter du ' + fr(p.next.eff) + ' · motif « ' + esc(p.next.motif) + ' »</span>' : '');
+    var por = { global: 'Toutes les entités · aucun override possible', override: p.ovr ? 'Override actif · Mata Group' : 'Aucun override · valeur globale appliquée à Mata Group', local: 'Valeur propre à Mata Group · autres entités : non définie avant activation' }[p.portee];
+    q('[data-cell="val"]', p.tr).innerHTML = val; q('[data-cell="portee"]', p.tr).innerHTML = PORTEE[p.portee] + '<span class="hint">' + por + '</span>';
+    q('[data-cell="ver"]', p.tr).innerHTML = '<span class="mono">v' + p.ver + '</span>' + (p.next ? '<span class="hint">v' + p.next.ver + ' planifiée</span>' : '');
+    q('[data-cell="mod"]', p.tr).innerHTML = '<span class="mono">' + fr(p.eff) + '</span><span class="hint">' + esc(p.by) + ' · ' + esc(p.motif) + '</span>';
+    if (FC[p.id]) q('[data-fc="' + p.id + '"]').textContent = FC[p.id](p);
+    ctx.formatAmounts(p.tr);
+  }
+  /* Historique : version en vigueur + version 1 (valeur de référence du cahier) ; les versions ajoutées s'empilent, l'original reste accessible (§5.5) */
+  function hist(p) { if (!HIST[p.id]) HIST[p.id] = [{ ver: p.ver, val: disp(p), eff: p.eff, by: p.by, motif: p.motif, st: 'en vigueur' }, { ver: 1, val: esc(p.ref), eff: '', by: 'Cadrage V13 · v0.8.0', motif: 'Valeur de référence du cahier des charges, avant configuration de l’entité', st: 'remplacée le ' + fr(p.eff) }]; return HIST[p.id]; }
+  function drawer(p) {
+    S.cur = p.id; q('[data-d-title]', D).textContent = 'Historique — ' + p.lbl; q('[data-d-val]', D).innerHTML = disp(p) + (p.ovr ? '<span class="hint">Override Mata Group : ' + disp(p, p.ovr.vals) + '</span>' : '');
+    q('[data-d-meta]', D).innerHTML = '<span class="tag lock"><svg><use href="#i-layers"/></svg>' + PORTEE[p.portee] + '</span>' + (p.sens ? '<span class="sens s"><svg><use href="#i-shield"/></svg>Sensible</span>' : '<span class="sens std">Standard</span>') + '<span class="tag lock"><svg><use href="#i-key"/></svg>v' + p.ver + ' en vigueur</span>';
+    q('[data-d-use]', D).textContent = 'Utilisé par : ' + p.use;
+    q('[data-d-tl]', D).innerHTML = hist(p).map(function (h) { return '<div class="ev' + (h.st === 'en vigueur' ? ' on' : '') + '"><b>Version ' + h.ver + ' — ' + esc(h.st) + ' · ' + h.val + '</b><small>' + (h.eff ? 'Date d’effet ' + fr(h.eff) + ' · ' : '') + esc(h.by) + ' · ' + esc(h.motif) + '</small></div>'; }).join('');
+    ctx.formatAmounts(D);
+  }
+  function fill(p) {
+    S.cur = p.id; q('[data-m-title]', M).textContent = 'Modifier — ' + p.lbl;
+    q('[data-m-exp]', M).innerHTML = '<b>' + PORTEE[p.portee] + '</b> · ' + (p.sens ? 'Sensible : nouvelle version historisée et datée (§6.4)' : 'Standard : modification auditée, sans historique de versions') + ' · version lue v' + p.ver + ' du ' + fr(p.eff) + ' · valeur en vigueur : ' + disp(p) + '<br>Une écriture concurrente sur cette version serait rejetée explicitement — conflit signalé, état à recharger (arch. §12).';
+    q('[data-m-fields]', M).innerHTML = p.fields.map(function (f) { var sel = f.t === 'select', id = 'core-parametres-f-' + f.k, h = f.h ? '<span class="hint">' + esc(f.h) + '</span>' : ''; var ctl = (sel ? '<select' : '<input type="' + (f.t === 'time' ? 'time' : 'text') + '" inputmode="numeric" value="' + esc(f.v) + '"') + ' id="' + id + '" class="inp' + (sel || f.t === 'time' ? '' : ' mono') + '" data-fk="' + f.k + '"' + (sel ? '>' + f.o.map(function (o) { return '<option' + (o === f.v ? ' selected' : '') + '>' + esc(o) + '</option>'; }).join('') + '</select>' : '>'); return '<div class="fld"><label for="' + id + '">' + esc(f.l) + '</label>' + ctl + h + '</div>'; }).join('');
+    q('[data-m-scope]', M).hidden = p.portee !== 'override'; qa('input[name="core-parametres-scope"]', M)[0].checked = true;
+    q('[data-m-effreq]', M).textContent = p.sens ? '(obligatoire — paramètre sensible)' : '(facultative — immédiate si vide)'; q('[data-field="eff"]', M).value = ''; q('[data-field="motif"]', M).value = '';
+    q('[data-m-note]', M).innerHTML = '<svg><use href="#i-info"/></svg>' + (p.sens ? 'La version précédente reste consultable dans l’historique (§5.5) ; ancienne et nouvelle valeur, motif et profil actif sont écrits dans l’Audit central (§5.4). ' : 'Modification auditée : ancienne et nouvelle valeur, profil actif (§5.4). ') + 'Utilisé par : ' + esc(p.use);
+    ctx.formatAmounts(M);
+  }
+  function check(f, v) {
+    if (f.t === 'select') return f.o.indexOf(v) < 0 ? f.l + ' : valeur hors référentiel' : '';
+    if (f.t === 'time') return /^\d{2}:\d{2}$/.test(v) ? '' : f.l + ' : heure obligatoire au format HH:MM, jamais de texte libre';
+    if (!/^\d+$/.test(v)) return f.l + ' : entier obligatoire, sans décimales ni texte libre';
+    if (f.min !== undefined && +v < f.min) return f.l + ' : minimum ' + f.min + (f.h ? ' — ' + f.h : '');
+    return f.max !== undefined && +v > f.max ? f.l + ' : maximum ' + f.max + (f.h ? ' — ' + f.h : '') : '';
+  }
+  ctx.on(q('[data-submit]', M), 'click', function () {
+    var p = P(q('tr[data-id="' + S.cur + '"]')), H = hist(p), vals = {}, err = '', eff = q('[data-field="eff"]', M).value, motif = q('[data-field="motif"]', M).value.trim(), scope = q('input[name="core-parametres-scope"]:checked', M).value;
+    p.fields.forEach(function (f) { var v = q('[data-fk="' + f.k + '"]', M).value.trim().replace(/[\s  ]/g, ''); err = err || check(f, v); vals[f.k] = f.t === 'select' || f.t === 'time' ? v : +v; });
+    if (err) { ctx.toast(err); return; }
+    if (p.sens && !eff) { ctx.toast('Date d’effet obligatoire : les configurations sensibles sont historisées et datées dans le temps (§6.4)'); q('[data-field="eff"]', M).focus(); return; }
+    if (eff && eff < TODAY) { ctx.toast('Date d’effet ' + fr(eff) + ' antérieure au 27/08/2026 : une modification rétroactive suit le workflow de correction post-clôture, approbation Super Admin (§5.5)'); return; }
+    if (p.sens && !motif) { ctx.toast('Motif obligatoire : conservé dans l’Audit central avec l’ancienne et la nouvelle valeur (§5.4)'); q('[data-field="motif"]', M).focus(); return; }
+    eff = eff || TODAY; motif = motif || 'Sans motif (paramètre standard)';
+    var oldP = disp(p, null, 1), neuP = disp(p, vals, 1), by = ctx.profile.short + ' · ' + ctx.profile.profile, nv = Math.max(p.ver, p.next ? p.next.ver : 0, p.ovr ? p.ovr.ver : 0) + 1, st;
+    if (scope === 'local') { if (!p.ovr) S.ovr++; p.ovr = { ver: nv, vals: vals, eff: eff, by: by, motif: motif }; st = 'override Mata Group'; }
+    else if (eff > TODAY) { p.next = { ver: nv, vals: vals, eff: eff, by: by, motif: motif }; st = 'planifiée'; }
+    else { p.fields.forEach(function (f) { f.v = vals[f.k]; }); p.ver = nv; p.eff = eff; p.by = by; p.motif = motif; p.next = null; st = 'en vigueur'; H.forEach(function (h) { if (h.st === 'en vigueur') h.st = 'remplacée le ' + fr(eff); }); }
+    H.unshift({ ver: nv, val: disp(p, vals) + (scope === 'local' ? ' (override Mata Group)' : ''), eff: eff, by: by, motif: motif, st: st }); save(p); cells(p); drawer(p);
+    S.n++; q('[data-session-empty]').hidden = true;
+    q('[data-session]').insertAdjacentHTML('afterbegin', '<div class="ev on"><b>' + esc(p.lbl) + ' · v' + nv + ' ' + st + ' · ' + esc(oldP) + ' → ' + esc(neuP) + '</b><small>' + esc(by) + ' · 27/08/2026 · date d’effet ' + fr(eff) + ' · motif « ' + esc(motif) + ' » · Audit central : ancienne / nouvelle valeur, profil actif</small></div>');
+    q('[data-k="last"]').textContent = '27/08/2026'; q('[data-k="last-sub"]').textContent = S.n + ' modification' + (S.n > 1 ? 's' : '') + ' aujourd’hui · ' + by + ' · auditée (§5.4)';
+    q('[data-k="ovr"]').textContent = S.ovr; q('[data-k="ovr-sub"]').textContent = S.ovr ? S.ovr + ' override' + (S.ovr > 1 ? 's' : '') + ' Mata Group · valeur globale conservée pour les entités à activer' : 'Mata Group applique les valeurs globales · aucune filiale ni MaaS activé';
+    ctx.close('core-parametres-modifier'); ctx.applyPerms();
+    ctx.toast('Version ' + nv + ' ' + st + ' · ' + p.lbl + ' : ' + oldP + ' → ' + neuP + ' · date d’effet ' + fr(eff) + ' · audit : ancienne / nouvelle valeur, motif, profil actif (§5.4)' + (p.sens ? ' · version précédente conservée (§5.5)' : ''));
+  });
+  /* Modifier / Historique depuis une ligne ou depuis le tiroir ; un bouton refusé (denied) est laissé au moteur pour l'explication */
+  ctx.on(root, 'click', function (e) {
+    var b = e.target.closest('[data-edit],[data-hist],[data-d-edit]'); if (!b || b.classList.contains('denied')) return;
+    var p = P(b.hasAttribute('data-d-edit') ? q('tr[data-id="' + S.cur + '"]') : b.closest('tr'));
+    if (b.hasAttribute('data-hist')) { drawer(p); ctx.open('core-parametres-historique'); return; }
+    if (b.hasAttribute('data-d-edit')) ctx.close('core-parametres-historique');
+    fill(p); ctx.open('core-parametres-modifier');
+  });
+  /* Filtre Sensible / Standard sur les trois portées, compteurs par carte */
+  function filt(v) { qa('.chip[data-filter]').forEach(function (c) { c.classList.toggle('on', c.getAttribute('data-filter') === v); }); ['global', 'override', 'local'].forEach(function (g) { var rows = qa('tr[data-id][data-portee="' + g + '"]'), n = 0; rows.forEach(function (tr) { tr.hidden = !(v === 'tous' || tr.dataset.sens === v); if (!tr.hidden) n++; }); q('[data-count="' + g + '"]').textContent = n + ' / ' + rows.length; q('[data-empty="' + g + '"]').hidden = n > 0; }); }
+  qa('.chip[data-filter]').forEach(function (c) { ctx.on(c, 'click', function () { filt(c.getAttribute('data-filter')); }); });
+  ctx.on(q('[data-export]'), 'click', function () { if (!q('[data-export]').classList.contains('denied')) ctx.toast('Export CSV des paramètres et de leurs versions (service commun, §6.3) · conservé ' + P(q('tr[data-id="exports"]')).fields[0].v + ' jours (arch. §8) · droit d’export distinct du droit de consultation (§3.4)'); });
+  /* Vue par profil : refus expliqué quand core.parametres.modifier manque (refus par défaut) */
+  function view(p) { q('[data-view="readonly"]').hidden = ctx.hasPerm('core.parametres.modifier'); q('[data-k="prof"]').textContent = p.profile + ' (' + p.short + ')'; }
+  view(ctx.profile); document.addEventListener('erp:profile', function (e) { view(e.detail); });
+  qa('tr[data-id]').forEach(function (tr) { cells(P(tr)); });
+  filt('tous'); ctx.formatAmounts(root); ctx.applyPerms();
+});
+</script>

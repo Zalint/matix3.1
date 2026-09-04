@@ -1,0 +1,266 @@
+<!-- ÉCRAN : NOTIFICATIONS (Mata Core §6.1, §10.1 ; Mata Finance §10.4) — boîte de réception, préférences et canaux, contenu filtré par profil (data-view) -->
+<section class="scr" data-scr="core-notifications" data-module="core" data-perm="core.notifications.view" data-sens="std" hidden>
+  <style data-screen="core-notifications">
+    #app [data-scr="core-notifications"] .nd{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--red);margin-right:7px;vertical-align:middle}
+    #app [data-scr="core-notifications"] tr[data-read="1"] .nd{background:var(--line-2)}
+    #app [data-scr="core-notifications"] tr[data-read="1"] td b{font-weight:500;color:var(--ink-2)}
+    #app [data-scr="core-notifications"] tr[data-crit="1"] td:first-child{box-shadow:inset 3px 0 0 var(--bad)}
+    #app [data-scr="core-notifications"] td .st{margin-top:4px}
+    #app [data-scr="core-notifications"] .rl{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px dashed var(--line);font-size:12px}
+    #app [data-scr="core-notifications"] .rl:last-of-type{border-bottom:none}
+    #app [data-scr="core-notifications"] .rl>div{flex:1;min-width:0}
+    #app [data-scr="core-notifications"] .rl b{font-weight:700;display:block}
+    #app [data-scr="core-notifications"] .rl small{display:block;color:var(--mut);font-size:10.5px;margin-top:2px}
+    #app [data-scr="core-notifications"] .rl small.lk{color:var(--bad);font-weight:600}
+    #app [data-scr="core-notifications"] .rl .st{margin-left:0;flex:none}
+    #app [data-scr="core-notifications"] .swt{position:relative;width:36px;height:20px;flex:none}
+    #app [data-scr="core-notifications"] .swt input{position:absolute;inset:0;opacity:0;margin:0;cursor:pointer;z-index:1}
+    #app [data-scr="core-notifications"] .swt input:disabled{cursor:not-allowed}
+    #app [data-scr="core-notifications"] .swt i{position:absolute;inset:0;border-radius:99px;background:var(--line-2);transition:background .14s}
+    #app [data-scr="core-notifications"] .swt i::after{content:"";position:absolute;top:3px;left:3px;width:14px;height:14px;border-radius:50%;background:#fff;transition:transform .14s}
+    #app [data-scr="core-notifications"] .swt input:checked+i{background:var(--red)}
+    #app [data-scr="core-notifications"] .swt input:checked+i::after{transform:translateX(16px)}
+    #app [data-scr="core-notifications"] .swt input:disabled+i,#app [data-scr="core-notifications"] .swt input.denied+i{opacity:.45}
+    #app [data-scr="core-notifications"] .swt input:focus-visible+i{outline:2px solid var(--red);outline-offset:2px}
+    #app [data-scr="core-notifications"] .kv{display:flex;justify-content:space-between;gap:12px;font-size:12px;padding:6px 0;border-bottom:1px dashed var(--line)}
+    #app [data-scr="core-notifications"] .kv span{color:var(--mut);flex:none;max-width:40%}
+    #app [data-scr="core-notifications"] .kv b{text-align:right;font-weight:600;min-width:0;line-height:1.45}
+    #app [data-scr="core-notifications"] .msg{font-size:12.5px;background:var(--red-tint);border:1px solid var(--red-line);border-radius:9px;padding:10px 12px;margin:13px 0;line-height:1.5}
+    #app [data-scr="core-notifications"] .drawer .df{flex-wrap:wrap}
+  </style>
+  <div class="scr-head">
+    <div>
+      <h2>Notifications</h2>
+      <p class="scr-sub">Centre commun de notifications (Core §6.1) : les notifications respectent le profil et les droits ; elles peuvent être critiques ou configurables · Email en V1 ; canaux additionnels prévus ultérieurement (§10.1) · signaux de qualité financière rendus visibles (Finance §10.4)</p>
+    </div>
+    <div class="scr-meta">
+      <span class="sens std"><svg><use href="#i-shield"/></svg>Standard</span>
+      <span class="hint">Standard : permissions normales (§5.3) · aucune validation : le marquage « lu » et les préférences sont personnels, enregistrés sous le profil actif · les critiques ne sont pas désactivables · l'accès à chaque écran cible reste soumis à sa propre permission de consultation</span>
+    </div>
+  </div>
+
+  <div class="statstrip four">
+    <div class="card stat">
+      <div class="lb">Non lues<button class="fx" data-f="Les notifications respectent le profil et les droits (Core §6.1) · Non lues = notifications adressées au profil actif, dans son périmètre, non encore marquées lues" data-c="aucune" data-fx="nonlues" data-src="Centre commun de notifications (Core §6.1) · état de lecture personnel · heure de Dakar (GMT)" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></div>
+      <div class="v" data-stat="nonlues">0</div>
+      <div class="sub2">à traiter dans votre boîte</div>
+    </div>
+    <div class="card stat">
+      <div class="lb">Critiques<button class="fx" data-f="Les notifications peuvent être critiques ou configurables (Core §6.1) · Critiques = notifications non désactivables adressées au profil actif" data-c="aucune" data-fx="critiques" data-src="Règles d'alerte critiques (Core §6.1, Finance §10.4) · toujours envoyées, quelles que soient les préférences" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></div>
+      <div class="v" data-stat="critiques">0</div>
+      <div class="sub2">non désactivables · mises en évidence</div>
+    </div>
+    <div class="card stat">
+      <div class="lb">Reçues le 27/08<button class="fx" data-f="Notifications horodatées 27/08/2026 dans le périmètre du profil actif" data-c="aucune" data-fx="today" data-src="Centre commun de notifications · journée en cours · gel « À réconcilier » à 23:59 (Finance §3.1)" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></div>
+      <div class="v" data-stat="today">0</div>
+      <div class="sub2">journée en cours</div>
+    </div>
+    <div class="card stat">
+      <div class="lb">Canal V1</div>
+      <div class="v">Email + centre</div>
+      <div class="sub2">WhatsApp / SMS prévus ultérieurement (§10.1)</div>
+    </div>
+  </div>
+
+  <div class="actionbar">
+    <div class="chips"><button class="chip on" data-filter="toutes">Toutes</button><button class="chip" data-filter="critiques">Critiques</button><button class="chip" data-filter="nonlues">Non lues</button></div>
+    <span class="hint" data-scope-hint>Périmètre du profil actif</span>
+    <div class="sp"></div>
+    <button class="btn ghost" data-act="all" data-perm="core.notifications.view"><svg><use href="#i-check"/></svg>Tout marquer comme lu</button>
+    <button class="btn pri" data-goto="core-alertes" data-perm="core.alertes.view"><svg><use href="#i-sliders"/></svg>Règles d'alerte</button>
+  </div>
+
+  <div class="grid2">
+    <div class="card">
+      <div class="ch"><h3>Boîte de réception</h3><span class="hint-r">Heure de Dakar (GMT) · clic sur une ligne : détail et marquage lu</span></div>
+      <div class="cb"><div class="tbl-scroll"><table>
+        <thead><tr><th>Heure</th><th>Type</th><th>Message</th><th>Accès</th></tr></thead>
+        <tbody data-rows>
+          <tr class="rowlink" data-n="1" data-d="27/08" data-t="21:15" data-type="Réconciliation" data-crit="1" data-read="0" data-view="sa dg collecteur caisse" data-rule="Écart de réconciliation" data-dest="Admin, DG, Collecteur · déclarant M. Diop informé de l'écart sur sa caisse" data-canal="Email + centre" data-go="fin-reconciliation" data-go-perm="finance.reconciliation.view" data-go-lbl="Réconciliation">
+            <td><i class="nd"></i><span class="mono">21:15</span><div class="hint">27/08</div></td>
+            <td>Réconciliation<div><span class="st bad"><svg><use href="#i-alert"/></svg>Critique</span></div></td>
+            <td data-c="msg"><b>Écart <span class="amt" data-amt="-25000" data-nocur></span> sur Sous-caisse Marché (déclaré par M. Diop)</b><div class="hint" data-c="hint"></div></td>
+            <td><button class="btn ghost sm" data-goto="fin-reconciliation" data-perm="finance.reconciliation.view"><svg><use href="#i-arr"/></svg>Réconciliation</button></td>
+          </tr>
+          <tr class="rowlink" data-n="2" data-d="27/08" data-t="19:02" data-type="Validation" data-crit="1" data-read="0" data-view="sa dg caisse" data-rule="Ajustement : deux validateurs distincts de l'initiateur et l'un de l'autre (Finance §10.1)" data-dest="Validateurs habilités · initiateur M. Diop informé du suivi" data-canal="Email + centre" data-go="fin-validations" data-go-perm="finance.validations.view" data-go-lbl="Validations">
+            <td><i class="nd"></i><span class="mono">19:02</span><div class="hint">27/08</div></td>
+            <td>Validation<div><span class="st bad"><svg><use href="#i-alert"/></svg>Critique</span></div></td>
+            <td data-c="msg"><b>Ajustement +<span class="amt" data-amt="180000" data-nocur></span> Caisse générale : 2e validation requise (1re : O. Seck)</b><div class="hint" data-c="hint"></div></td>
+            <td><button class="btn ghost sm" data-goto="fin-validations" data-perm="finance.validations.view"><svg><use href="#i-arr"/></svg>Validations</button></td>
+          </tr>
+          <tr class="rowlink" data-n="3" data-d="27/08" data-t="18:05" data-type="Validation" data-crit="1" data-read="0" data-view="sa dg dirops" data-rule="Transfert manuel : un validateur distinct de l'initiateur (Finance §10.1)" data-dest="Validateurs habilités · initiateur F. Sarr informé du suivi" data-canal="Email + centre" data-go="fin-validations" data-go-perm="finance.validations.view" data-go-lbl="Validations">
+            <td><i class="nd"></i><span class="mono">18:05</span><div class="hint">27/08</div></td>
+            <td>Validation<div><span class="st bad"><svg><use href="#i-alert"/></svg>Critique</span></div></td>
+            <td data-c="msg"><b>Transfert <span class="amt" data-amt="600000" data-nocur></span> BOA → CG proposé par F. Sarr</b><div class="hint" data-c="hint"></div></td>
+            <td><button class="btn ghost sm" data-goto="fin-validations" data-perm="finance.validations.view"><svg><use href="#i-arr"/></svg>Validations</button></td>
+          </tr>
+          <tr class="rowlink" data-n="4" data-d="27/08" data-t="17:30" data-type="Fournisseurs" data-crit="1" data-read="0" data-view="sa dirops" data-rule="Échéance fournisseur dépassée" data-dest="Directeur des Opérations" data-canal="Centre" data-go="fin-fournisseurs" data-go-perm="finance.fournisseurs.view" data-go-lbl="Fournisseurs">
+            <td><i class="nd"></i><span class="mono">17:30</span><div class="hint">27/08</div></td>
+            <td>Fournisseurs<div><span class="st bad"><svg><use href="#i-alert"/></svg>Critique</span></div></td>
+            <td data-c="msg"><b>Échéance dépassée : ŒUFS <span class="amt" data-amt="1150000" data-nocur></span> (25/08)</b><div class="hint" data-c="hint"></div></td>
+            <td><button class="btn ghost sm" data-goto="fin-fournisseurs" data-perm="finance.fournisseurs.view"><svg><use href="#i-arr"/></svg>Fournisseurs</button></td>
+          </tr>
+          <tr class="rowlink" data-n="5" data-d="27/08" data-t="15:24" data-type="Fournisseurs" data-crit="0" data-read="0" data-view="sa dg dirops" data-rule="Plafond d'encours dépassé" data-dest="Directeur des Opérations, DG" data-canal="Centre" data-go="fin-fournisseurs" data-go-perm="finance.fournisseurs.view" data-go-lbl="Fournisseurs">
+            <td><i class="nd"></i><span class="mono">15:24</span><div class="hint">27/08</div></td>
+            <td>Fournisseurs<div><span class="st mut"><svg><use href="#i-sliders"/></svg>Configurable</span></div></td>
+            <td data-c="msg"><b>Plafond d'encours dépassé : AGNEAUX 12,4 M / 10 M</b><div class="hint" data-c="hint"></div></td>
+            <td><button class="btn ghost sm" data-goto="fin-fournisseurs" data-perm="finance.fournisseurs.view"><svg><use href="#i-arr"/></svg>Fournisseurs</button></td>
+          </tr>
+          <tr class="rowlink" data-n="6" data-d="27/08" data-t="12:00" data-type="Comptes" data-crit="1" data-read="0" data-view="sa" data-rule="Relais ouvert au-delà du seuil (2 j)" data-dest="Admin" data-canal="Centre" data-go="fin-comptes" data-go-perm="finance.comptes.view" data-go-lbl="Comptes">
+            <td><i class="nd"></i><span class="mono">12:00</span><div class="hint">27/08</div></td>
+            <td>Comptes<div><span class="st bad"><svg><use href="#i-alert"/></svg>Critique</span></div></td>
+            <td data-c="msg"><b>Relais « Bictorys → Banque en cours » ouvert depuis 3 jours (seuil 2 j)</b><div class="hint" data-c="hint"></div></td>
+            <td><button class="btn ghost sm" data-goto="fin-comptes" data-perm="finance.comptes.view"><svg><use href="#i-arr"/></svg>Comptes</button></td>
+          </tr>
+          <tr class="rowlink" data-n="7" data-d="27/08" data-t="09:15" data-type="Demandes" data-crit="0" data-read="0" data-view="maas" data-rule="Demande administrative : accusé de soumission (Core §4.1)" data-dest="Initiateur B. Fall" data-canal="Centre" data-go="core-demandes" data-go-perm="core.demandes.view" data-go-lbl="Demandes">
+            <td><i class="nd"></i><span class="mono">09:15</span><div class="hint">27/08</div></td>
+            <td>Demandes<div><span class="st mut"><svg><use href="#i-sliders"/></svg>Configurable</span></div></td>
+            <td data-c="msg"><b>DEM-031 soumise : création utilisateur « Khady Sow », commerciale MaaS Ouakam · En attente</b><div class="hint" data-c="hint"></div></td>
+            <td><button class="btn ghost sm" data-goto="core-demandes" data-perm="core.demandes.view"><svg><use href="#i-arr"/></svg>Demandes</button></td>
+          </tr>
+          <tr class="rowlink" data-n="8" data-d="27/08" data-t="08:12" data-type="Sources" data-crit="0" data-read="1" data-view="sa" data-rule="Source non à jour (suivi de fraîcheur des sources, Finance §6.5)" data-dest="Admin" data-canal="Centre" data-go="fin-comptes" data-go-perm="finance.comptes.view" data-go-lbl="Comptes">
+            <td><i class="nd"></i><span class="mono">08:12</span><div class="hint">27/08</div></td>
+            <td>Sources<div><span class="st mut"><svg><use href="#i-sliders"/></svg>Configurable</span></div></td>
+            <td data-c="msg"><b>Synchronisation Bictorys réussie (<span class="amt" data-amt="2890000" data-nocur></span>)</b><div class="hint" data-c="hint"></div></td>
+            <td><button class="btn ghost sm" data-goto="fin-comptes" data-perm="finance.comptes.view"><svg><use href="#i-arr"/></svg>Comptes</button></td>
+          </tr>
+          <tr class="rowlink" data-n="9" data-d="27/08" data-t="08:00" data-type="Sources" data-crit="0" data-read="1" data-view="sa" data-rule="Source non à jour (suivi de fraîcheur des sources, Finance §6.5)" data-dest="Admin" data-canal="Centre" data-go="fin-import" data-go-perm="finance.import.view" data-go-lbl="Import relevé bancaire">
+            <td><i class="nd"></i><span class="mono">08:00</span><div class="hint">27/08</div></td>
+            <td>Sources<div><span class="st mut"><svg><use href="#i-sliders"/></svg>Configurable</span></div></td>
+            <td data-c="msg"><b>Import relevé BOA réussi : 14 lignes, 0 doublon</b><div class="hint" data-c="hint"></div></td>
+            <td><button class="btn ghost sm" data-goto="fin-import" data-perm="finance.import.view"><svg><use href="#i-arr"/></svg>Import</button></td>
+          </tr>
+          <tr class="rowlink" data-n="10" data-d="27/08" data-t="02:04" data-type="Réconciliation" data-crit="0" data-read="1" data-view="sa dg collecteur" data-rule="Réconciliation automatique des encaissements collectés (Finance §6.3)" data-dest="Admin, DG, Collecteur" data-canal="Centre" data-go="fin-reconciliation" data-go-perm="finance.reconciliation.view" data-go-lbl="Réconciliation">
+            <td><i class="nd"></i><span class="mono">02:04</span><div class="hint">27/08</div></td>
+            <td>Réconciliation<div><span class="st mut"><svg><use href="#i-sliders"/></svg>Configurable</span></div></td>
+            <td data-c="msg"><b>Encaissements collectés du 26/08 validés (<span class="amt" data-amt="4725000" data-nocur></span>)</b><div class="hint" data-c="hint"></div></td>
+            <td><button class="btn ghost sm" data-goto="fin-reconciliation" data-perm="finance.reconciliation.view"><svg><use href="#i-arr"/></svg>Réconciliation</button></td>
+          </tr>
+          <tr class="rowlink" data-n="11" data-d="26/08" data-t="23:00" data-type="Dépenses" data-crit="1" data-read="1" data-view="sa dirops" data-rule="Dépense « Pas sûr » à 23:00" data-dest="Directeur des Opérations, Admins, Super Admin" data-canal="Email + centre" data-go="fin-depenses" data-go-perm="finance.depenses.view" data-go-lbl="Dépenses">
+            <td><i class="nd"></i><span class="mono">23:00</span><div class="hint">26/08</div></td>
+            <td>Dépenses<div><span class="st bad"><svg><use href="#i-alert"/></svg>Critique</span></div></td>
+            <td data-c="msg"><b>1 dépense « Pas sûr » non résolue à 23:00</b><div class="hint" data-c="hint"></div></td>
+            <td><button class="btn ghost sm" data-goto="fin-depenses" data-perm="finance.depenses.view"><svg><use href="#i-arr"/></svg>Dépenses</button></td>
+          </tr>
+          <tr class="rowlink" data-n="12" data-d="26/08" data-t="22:14" data-type="Snapshot" data-crit="0" data-read="0" data-view="invest compta" data-rule="Snapshot automatique post-clôture (Finance §8.6) · agrégats uniquement" data-dest="Investisseur, Comptable externe · profils en lecture" data-canal="Centre" data-go="fin-historique" data-go-perm="finance.historique.view" data-go-lbl="Historique">
+            <td><i class="nd"></i><span class="mono">22:14</span><div class="hint">26/08</div></td>
+            <td>Snapshot<div><span class="st mut"><svg><use href="#i-sliders"/></svg>Configurable</span></div></td>
+            <td data-c="msg"><b>Snapshot post-clôture du 26/08 disponible : P&amp;L Global <span class="amt" data-amt="25105000" data-nocur></span> · Trésorerie totale contrôlée <span class="amt" data-amt="60790000" data-nocur></span></b><div class="hint" data-c="hint"></div></td>
+            <td><button class="btn ghost sm" data-goto="fin-historique" data-perm="finance.historique.view"><svg><use href="#i-arr"/></svg>Historique</button></td>
+          </tr>
+          <tr data-empty hidden><td colspan="4"><span class="hint">Aucune notification pour ce filtre dans votre périmètre · refus par défaut : rien n'est adressé hors du profil et des droits (§6.1)</span></td></tr>
+        </tbody>
+      </table></div></div>
+    </div>
+
+    <div>
+      <div class="card">
+        <div class="ch"><h3>Préférences</h3><span class="hint-r" data-rules-hint>Règles adressées à votre profil</span></div>
+        <div class="cb">
+          <div class="rl" data-view="sa dg collecteur caisse"><div><b>Écart de réconciliation</b><small>Email + centre · Admin, DG, Collecteur · déclarant informé sur sa caisse</small><small class="lk">Non désactivable : notification critique (§6.1)</small></div><span class="st bad"><svg><use href="#i-alert"/></svg>Critique</span><label class="swt" title="Critique (non désactivable) : envoyée quelles que soient les préférences (§6.1)"><input type="checkbox" checked disabled data-rule="ecart" data-name="Écart de réconciliation" aria-label="Écart de réconciliation, non désactivable"><i></i></label></div>
+          <div class="rl" data-view="sa dirops"><div><b>Dépense « Pas sûr » à 23:00</b><small>Email + centre · Directeur des Opérations, Admins, Super Admin</small><small class="lk">Non désactivable : notification critique (§6.1)</small></div><span class="st bad"><svg><use href="#i-alert"/></svg>Critique</span><label class="swt" title="Critique (non désactivable) : envoyée quelles que soient les préférences (§6.1)"><input type="checkbox" checked disabled data-rule="passur" data-name="Dépense « Pas sûr » à 23:00" aria-label="Dépense Pas sûr à 23:00, non désactivable"><i></i></label></div>
+          <div class="rl" data-view="sa dirops"><div><b>Échéance fournisseur dépassée</b><small>Centre · Directeur des Opérations · priorité aux dépassées (Finance §5.6)</small></div><span class="st warn"><svg><use href="#i-clock"/></svg>Haute</span><label class="swt"><input type="checkbox" checked data-rule="echeance" data-name="Échéance fournisseur dépassée" data-perm="core.notifications.view" aria-label="Échéance fournisseur dépassée"><i></i></label></div>
+          <div class="rl" data-view="sa dg dirops"><div><b>Plafond d'encours dépassé</b><small>Centre · Directeur des Opérations, DG · notification sans blocage (Finance §5.4)</small></div><span class="st mut"><svg><use href="#i-info"/></svg>Informative</span><label class="swt"><input type="checkbox" checked data-rule="plafond" data-name="Plafond d'encours dépassé" data-perm="core.notifications.view" aria-label="Plafond d'encours dépassé"><i></i></label></div>
+          <div class="rl" data-view="sa"><div><b>Relais ouvert au-delà du seuil (2 j)</b><small>Centre · Admin · seuil : Paramètres (§17)</small></div><span class="st warn"><svg><use href="#i-clock"/></svg>Haute</span><label class="swt"><input type="checkbox" checked data-rule="relais" data-name="Relais ouvert au-delà du seuil (2 j)" data-perm="core.notifications.view" aria-label="Relais ouvert au-delà du seuil"><i></i></label></div>
+          <div class="rl" data-view="sa dg"><div><b>Ajustement inhabituel (&gt; <span class="amt" data-amt="500000" data-nocur></span> ou &gt; 3 par jour)</b><small>Email + centre · DG, Super Admin</small><small class="lk">Non désactivable : notification critique (§6.1)</small></div><span class="st bad"><svg><use href="#i-alert"/></svg>Critique</span><label class="swt" title="Critique (non désactivable) : envoyée quelles que soient les préférences (§6.1)"><input type="checkbox" checked disabled data-rule="ajust" data-name="Ajustement inhabituel" aria-label="Ajustement inhabituel, non désactivable"><i></i></label></div>
+          <div class="rl" data-view="sa"><div><b>Source non à jour</b><small>Centre · Admin · états OK, Manquante, Erreur, Non à jour (Finance §6.5)</small></div><span class="st warn"><svg><use href="#i-clock"/></svg>Haute</span><label class="swt"><input type="checkbox" checked data-rule="source" data-name="Source non à jour" data-perm="core.notifications.view" aria-label="Source non à jour"><i></i></label></div>
+          <div class="rl" data-view="sa"><div><b>Budget agent IA &gt; 80 %</b><small>Centre · Super Admin (Core §7.2)</small></div><span class="st mut"><svg><use href="#i-info"/></svg>Informative</span><label class="swt"><input type="checkbox" checked data-rule="budget" data-name="Budget agent IA > 80 %" data-perm="core.notifications.view" aria-label="Budget agent IA supérieur à 80 %"><i></i></label></div>
+          <div class="rl" data-view="sa"><div><b>Correction post-clôture</b><small>Email · Super Admin · approbation obligatoire (Finance §10.1)</small><small class="lk">Non désactivable : notification critique (§6.1)</small></div><span class="st bad"><svg><use href="#i-alert"/></svg>Critique</span><label class="swt" title="Critique (non désactivable) : envoyée quelles que soient les préférences (§6.1)"><input type="checkbox" checked disabled data-rule="postcloture" data-name="Correction post-clôture" aria-label="Correction post-clôture, non désactivable"><i></i></label></div>
+          <div class="rl" data-view="sa"><div><b>Sauvegarde échouée</b><small>Email · Super Admin (Core §8.1)</small><small class="lk">Non désactivable : notification critique (§6.1)</small></div><span class="st bad"><svg><use href="#i-alert"/></svg>Critique</span><label class="swt" title="Critique (non désactivable) : envoyée quelles que soient les préférences (§6.1)"><input type="checkbox" checked disabled data-rule="sauvegarde" data-name="Sauvegarde échouée" aria-label="Sauvegarde échouée, non désactivable"><i></i></label></div>
+          <div class="note-strip" data-rules-empty hidden><svg><use href="#i-info"/></svg><span>Aucune règle d'alerte configurable n'est adressée au profil <b data-rules-who>—</b> : vous ne recevez que les notifications de votre périmètre (§6.1).</span></div>
+          <div class="note-strip"><svg><use href="#i-info"/></svg><span>Les notifications de type Validation, Demandes et Snapshot découlent des workflows (Core §4.2, Finance §7.3, §8.6) : adressées aux validateurs habilités, à l'initiateur ou aux profils en lecture, elles ne sont pas des règles d'alerte configurables. Modifier les règles elles-mêmes (destinataires, criticité) : <button class="linkish" data-goto="core-alertes" data-perm="core.alertes.view">écran Alertes</button> (permission core.alertes.modifier).</span></div>
+        </div>
+      </div>
+      <div class="card" style="margin-top:14px">
+        <div class="ch"><h3>Canaux</h3><span class="hint-r">Core §6.1 · §10.1</span></div>
+        <div class="cb">
+          <div class="rl"><div><b>Centre de notifications</b><small>toujours actif · boîte de réception et cloche</small></div><span class="st ok"><svg><use href="#i-check"/></svg>Actif</span></div>
+          <div class="rl"><div><b>Email</b><small>Email en V1 (§10.1) · règles « Email + centre » et « Email » · les critiques restent envoyées par email quelle que soit la préférence</small></div><span class="st ok"><svg><use href="#i-mail"/></svg>Actif · V1</span><label class="swt"><input type="checkbox" id="core-notifications-email" checked data-canal="Email" data-perm="core.notifications.view" aria-label="Recevoir les notifications configurables par email"><i></i></label></div>
+          <div class="rl"><div><b>WhatsApp</b><small>canaux additionnels prévus ultérieurement</small><small class="lk">Indisponible : prévu ultérieurement (§10.1)</small></div><span class="st mut"><svg><use href="#i-clock"/></svg>Prévu ultérieurement</span><label class="swt" title="Canal non disponible en V1 (§10.1)"><input type="checkbox" disabled aria-label="WhatsApp, prévu ultérieurement"><i></i></label></div>
+          <div class="rl"><div><b>SMS</b><small>canaux additionnels prévus ultérieurement</small><small class="lk">Indisponible : prévu ultérieurement (§10.1)</small></div><span class="st mut"><svg><use href="#i-clock"/></svg>Prévu ultérieurement</span><label class="swt" title="Canal non disponible en V1 (§10.1)"><input type="checkbox" disabled aria-label="SMS, prévu ultérieurement"><i></i></label></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="note-strip" data-view="invest compta"><svg><use href="#i-eyeoff"/></svg>Profil externe en lecture seule : seules les notifications portant sur des agrégats (P&amp;L, snapshots) de votre périmètre vous sont adressées ; aucune notification opérationnelle (caisses, fournisseurs, validations, transferts) n'est envoyée, aucune donnée Hautement sensible (§5.3).</div>
+  <div class="note-strip" data-view="caisse collecteur"><svg><use href="#i-lock"/></svg>Vous recevez les notifications de vos propres déclarations, caisses ou collectes et des opérations que vous avez initiées ; les autres périmètres restent hors de votre boîte (refus par défaut). Un écran cible hors périmètre est affiché refusé, jamais masqué.</div>
+  <div class="note-strip" data-view="maas"><svg><use href="#i-lock"/></svg>Gérant MaaS : notifications limitées à vos demandes administratives et à votre position MaaS Keur Massar.</div>
+  <div class="note-strip"><svg><use href="#i-info"/></svg>Une notification critique reste dans la boîte après lecture ; le marquage « lu » est personnel et n'efface rien. Les règles et leurs destinataires sont décrits dans l'écran Alertes ; le journal central (§5.4) conserve les modifications de règles.</div>
+
+  <aside class="drawer" data-ov="core-notifications-detail" aria-label="Détail de la notification">
+    <div class="dh"><h3 data-d="title">Notification</h3><button class="ib" data-close aria-label="Fermer"><svg><use href="#i-x"/></svg></button></div>
+    <div class="db">
+      <div class="meta-l" data-d="meta"></div>
+      <div class="msg" data-d="msg"></div>
+      <div data-d="kv"></div>
+      <div class="note-strip"><svg><use href="#i-info"/></svg>Les notifications respectent le profil et les droits (§6.1) : l'accès à l'écran cible reste soumis à sa permission de consultation ; un refus est affiché avec son motif, jamais masqué.</div>
+    </div>
+    <div class="df"><button class="btn ghost" data-act="toggle" data-perm="core.notifications.view"><svg><use href="#i-eye"/></svg>Marquer comme lue</button><button class="btn ghost" data-goto="core-alertes" data-perm="core.alertes.view"><svg><use href="#i-sliders"/></svg>Règle</button><div class="sp"></div><button class="btn pri" data-act="go" data-goto="hub" data-perm="core.notifications.view"><svg><use href="#i-arr"/></svg>Ouvrir</button></div>
+  </aside>
+  <div class="dback" data-ov-back="core-notifications-detail"></div>
+</section>
+<script data-screen="core-notifications">
+ERP.register('core-notifications', function (root, ctx) {
+  var q = function (s, r) { return (r || root).querySelector(s); };
+  var qa = function (s, r) { return Array.prototype.slice.call((r || root).querySelectorAll(s)); };
+  var tb = q('[data-rows]'), D = q('[data-ov="core-notifications-detail"]'), filter = 'toutes', cur = null;
+  function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+  function inView(el) { var v = el.getAttribute('data-view'); return !v || v.split(' ').indexOf(ctx.profile.id) >= 0; }
+  function rows() { return qa('tr[data-n]', tb); }
+  function isRead(tr) { return tr.getAttribute('data-read') === '1'; }
+  function isCrit(tr) { return tr.getAttribute('data-crit') === '1'; }
+  function tag(tr) { return tr.getAttribute('data-d') + ' ' + tr.getAttribute('data-t'); }
+  function plural(n, w) { return n + ' ' + w + (n > 1 ? 's' : ''); }
+  function setStat(k, arr) { q('[data-stat="' + k + '"]').textContent = arr.length; q('[data-fx="' + k + '"]').setAttribute('data-c', arr.length ? arr.join(' · ') : 'aucune'); }
+  /* Blocs data-view (init + erp:profile) : règles, notes et lignes adressées au profil actif (§6.1) ; les lignes passent aussi par le filtre */
+  function applyView() { qa('[data-view]').forEach(function (el) { if (!el.hasAttribute('data-n')) el.hidden = !inView(el); }); }
+  function refresh() {
+    var scope = [], unread = [], crit = [], today = [], vis = 0;
+    rows().forEach(function (tr) {
+      var ok = inView(tr), c = isCrit(tr), r = isRead(tr), t = tag(tr);
+      if (ok) { scope.push(t); if (!r) unread.push(t); if (c) crit.push(t); if (tr.getAttribute('data-d') === '27/08') today.push(t); }
+      tr.hidden = !(ok && (filter === 'toutes' || (filter === 'critiques' && c) || (filter === 'nonlues' && !r))); if (!tr.hidden) vis++;
+    });
+    q('tr[data-empty]', tb).hidden = vis > 0;
+    setStat('nonlues', unread); setStat('critiques', crit); setStat('today', today);
+    q('[data-scope-hint]').textContent = plural(scope.length, 'notification') + ' · ' + plural(unread.length, 'non lue') + ' · profil ' + ctx.profile.profile + ' (' + ctx.profile.short + ')';
+    var nr = qa('.rl[data-view]').filter(inView).length;
+    q('[data-rules-empty]').hidden = nr > 0; q('[data-rules-who]').textContent = ctx.profile.profile;
+    q('[data-rules-hint]').textContent = nr ? plural(nr, 'règle') + ' adressée' + (nr > 1 ? 's' : '') + ' à votre profil · critiques verrouillées' : 'Aucune règle adressée à votre profil';
+  }
+  function badge(r) { return r ? '<span class="st ok"><svg><use href="#i-check"/></svg>Lue</span>' : '<span class="st warn"><svg><use href="#i-bell"/></svg>Non lue</span>'; }
+  /* Tiroir : message, règle ou workflow d'origine, destinataires, canal, accès à l'écran cible soumis à sa permission (refus expliqué) */
+  function fill(tr) {
+    cur = tr; var c = isCrit(tr), r = isRead(tr), lbl = tr.getAttribute('data-go-lbl'), perm = tr.getAttribute('data-go-perm'), can = ctx.hasPerm(perm);
+    q('[data-d="title"]', D).textContent = tr.getAttribute('data-type') + ' · ' + tag(tr);
+    q('[data-d="meta"]', D).innerHTML = (c ? '<span class="st bad"><svg><use href="#i-alert"/></svg>Critique · non désactivable</span>' : '<span class="st mut"><svg><use href="#i-sliders"/></svg>Configurable</span>') + badge(r) + '<span class="sens std"><svg><use href="#i-shield"/></svg>Standard</span>';
+    q('[data-d="msg"]', D).innerHTML = q('[data-c="msg"] b', tr).innerHTML;
+    var kv = [['Horodatage', tag(tr) + ' · Dakar (GMT)'], ['Type', tr.getAttribute('data-type')], ['Règle ou workflow', tr.getAttribute('data-rule')], ['Destinataires', tr.getAttribute('data-dest')], ['Canal', tr.getAttribute('data-canal')],
+      ['Criticité', c ? 'Critique : non désactivable, envoyée quelles que soient les préférences (§6.1)' : 'Configurable dans les préférences'],
+      ['Écran cible', lbl + ' · ' + (can ? 'accessible au profil ' + ctx.profile.profile : 'refus par défaut : permission ' + perm + ' non accordée au profil ' + ctx.profile.profile)]];
+    q('[data-d="kv"]', D).innerHTML = kv.map(function (x) { return '<div class="kv"><span>' + x[0] + '</span><b>' + esc(x[1]) + '</b></div>'; }).join('');
+    var g = q('[data-act="go"]', D); g.setAttribute('data-goto', tr.getAttribute('data-go')); g.setAttribute('data-perm', perm); g.innerHTML = '<svg><use href="#i-arr"/></svg>Ouvrir ' + esc(lbl);
+    q('[data-act="toggle"]', D).innerHTML = '<svg><use href="#i-' + (r ? 'eyeoff' : 'eye') + '"/></svg>' + (r ? 'Marquer comme non lue' : 'Marquer comme lue');
+    ctx.formatAmounts(D); ctx.applyPerms();
+  }
+  ctx.on(root, 'click', function (e) {
+    var tr = e.target.closest('tr[data-n]'), b = e.target.closest('[data-act]');
+    if (tr && root.contains(tr)) { tr.setAttribute('data-read', '1'); if (!e.target.closest('[data-goto]')) { fill(tr); ctx.open('core-notifications-detail'); } refresh(); return; }
+    if (!b || !root.contains(b) || b.disabled || b.classList.contains('denied')) return;
+    var a = b.getAttribute('data-act');
+    if (a === 'all') { var n = 0; rows().forEach(function (t) { if (inView(t) && !isRead(t)) { t.setAttribute('data-read', '1'); n++; } }); refresh(); ctx.toast(n ? plural(n, 'notification') + ' marquée' + (n > 1 ? 's' : '') + ' comme lue' + (n > 1 ? 's' : '') + ' · marquage personnel, les critiques restent dans la boîte' : 'Aucune notification non lue dans votre périmètre'); }
+    if (a === 'toggle' && cur) { var r = !isRead(cur); cur.setAttribute('data-read', r ? '1' : '0'); fill(cur); refresh(); ctx.toast('Notification ' + tag(cur) + ' marquée comme ' + (r ? 'lue' : 'non lue')); }
+  });
+  /* Préférences : interrupteurs personnels ; les critiques et les canaux non disponibles sont verrouillés dans le HTML (disabled, motif visible) */
+  ctx.on(root, 'change', function (e) {
+    var i = e.target; if (i.disabled || i.classList.contains('denied')) return;
+    if (i.hasAttribute('data-rule')) ctx.toast('Règle « ' + i.getAttribute('data-name') + ' » ' + (i.checked ? 'réactivée' : 'désactivée') + ' pour votre compte · préférence personnelle, les notifications critiques restent envoyées (§6.1)');
+    if (i.hasAttribute('data-canal')) ctx.toast('Canal Email ' + (i.checked ? 'activé' : 'désactivé') + ' pour les notifications configurables · les critiques « Email + centre » et « Email » restent envoyées (§6.1, §10.1)');
+  });
+  qa('.chip[data-filter]').forEach(function (c) { ctx.on(c, 'click', function () { filter = c.getAttribute('data-filter'); qa('.chip[data-filter]').forEach(function (x) { x.classList.toggle('on', x === c); }); refresh(); }); });
+  rows().forEach(function (tr) { q('[data-c="hint"]', tr).textContent = tr.getAttribute('data-rule') + ' → ' + tr.getAttribute('data-dest') + ' · ' + tr.getAttribute('data-canal'); });
+  document.addEventListener('erp:profile', function () { setTimeout(function () { cur = null; applyView(); refresh(); ctx.applyPerms(); }, 0); });
+  applyView(); refresh(); ctx.formatAmounts(root); ctx.applyPerms();
+});
+</script>

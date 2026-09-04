@@ -1,0 +1,329 @@
+<!-- ÉCRAN : IMPORT / EXPORT (Mata Core §6.3, §5.2, §5.3 · Technique §8 · Mata Finance §5.7, §9.2) — assistant générique en 5 étapes, exports temporaires régénérables -->
+<section class="scr" data-scr="core-import" data-module="core" data-perm="core.import.view" data-sens="s" hidden>
+  <style data-screen="core-import">
+    #app [data-scr="core-import"] .cases{display:grid;grid-template-columns:repeat(3,1fr);gap:10px} #app [data-scr="core-import"] .cases .rline{margin:0}
+    #app [data-scr="core-import"] .filebox{display:flex;align-items:center;gap:12px;padding:14px;border:1px dashed var(--line-2);border-radius:12px;background:var(--card-2)} #app [data-scr="core-import"] .filebox>svg{width:26px;height:26px;color:var(--red);flex:none} #app [data-scr="core-import"] .filebox .st{margin-left:auto;flex:none}
+    #app [data-scr="core-import"] .filebox b{display:block;font-family:'Fira Code',monospace;font-size:12.5px;word-break:break-all} #app [data-scr="core-import"] .filebox small{color:var(--mut);font-size:11px;line-height:1.4}
+    #app [data-scr="core-import"] .kv{display:grid;grid-template-columns:auto 1fr;gap:7px 12px;font-size:12px;line-height:1.45;color:var(--ink-2)} #app [data-scr="core-import"] .kv .amt{font-weight:600;color:var(--ink)}
+    #app [data-scr="core-import"] .kv b{font-size:10.5px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;white-space:nowrap;padding-top:1px}
+    #app [data-scr="core-import"] .ch{flex-wrap:wrap} #app [data-scr="core-import"] .cb .grid2b{margin-top:0} #app [data-scr="core-import"] .cb .actionbar{margin:12px 0 0} #app [data-scr="core-import"] .prog{margin-top:10px}
+    #app [data-scr="core-import"] .cb .note-strip,#app [data-scr="core-import"] .tl,#app [data-scr="core-import"] .eq,#app [data-scr="core-import"] .kv.gap{margin-top:12px}
+    #app [data-scr="core-import"] .cb>.rline{margin:12px 0 0;max-width:none;width:auto} #app [data-scr="core-import"] .rline input[type=checkbox]{width:15px;height:15px;accent-color:var(--red);flex:none} #app [data-scr="core-import"] .steps li[data-go]{cursor:pointer}
+    #app [data-scr="core-import"] td .hint,#app [data-scr="core-import"] td .expire{display:block;margin-top:2px} #app [data-scr="core-import"] td .expire{white-space:nowrap} #app [data-scr="core-import"] td .btn{margin:1px 2px 1px 0} #app [data-scr="core-import"] [data-prev-rows] td:last-child,#app [data-scr="core-import"] [data-exp-rows] td:first-child{min-width:240px} #app [data-scr="core-import"] .modal .fld{margin-top:10px} #app [data-scr="core-import"] .modal .rline{margin:8px 0 0}
+    @media (max-width:900px){#app [data-scr="core-import"] .cases{grid-template-columns:1fr}}
+    @media (max-width:640px){#app [data-scr="core-import"] .kv{grid-template-columns:1fr}#app [data-scr="core-import"] .kv b{white-space:normal}#app [data-scr="core-import"] .filebox,#app [data-scr="core-import"] .rline{flex-wrap:wrap}#app [data-scr="core-import"] .rline .rh{margin-left:24px;width:100%}}
+  </style>
+  <div class="scr-head">
+    <div>
+      <h2>Import / Export</h2>
+      <p class="scr-sub">Service commun d’import et d’export de l’ERP (§6.3) · Formats selon le besoin : CSV, Excel, PDF · Fichier → Prévisualisation → Contrôles → Validation → Import · Le droit d’export reste distinct du droit de consultation · exports temporaires supprimés après 7 jours, régénérables à tout moment (Technique §8, Finance §5.7) · jeudi 27 août 2026</p>
+    </div>
+    <div class="scr-meta">
+      <span class="sens s"><svg><use href="#i-shield"/></svg>Sensible</span>
+      <span class="hint">Sensible : accès restreint ; modifications auditées ; export contrôlé (§5.3) · exécution de l’import selon la permission « core.import.executer », sans second validateur · téléchargement, régénération et nouvel export selon « core.export » : Consulter et Exporter sont deux permissions différentes (§3.4)</span>
+    </div>
+  </div>
+
+  <div class="statstrip">
+    <div class="card stat">
+      <div class="lb">Imports du jour<button class="fx" data-f="Une même opération reçue plusieurs fois ne doit produire qu'un seul effet. Donnée absente ≠ zéro." data-c="Relevé BOA 08:00 : 14 lignes, 0 doublon (S. Doucouré) · Achats du jour 17:00 : 5 achats intégrés, 0 doublon (API Achat)" data-src="Audit central (§5.4) · notifications « Sources » du centre commun (§6.1) · 27/08/2026" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></div>
+      <div class="v">2</div><div class="sub2">relevé BOA 08:00 (14 lignes, 0 doublon) · achats API 17:00 (5 achats, 0 doublon) · imports idempotents</div>
+    </div>
+    <div class="card stat">
+      <div class="lb">Exports disponibles<button class="fx" data-f="Les fichiers générés par le service d'export commun sont considérés comme des artefacts temporaires lorsqu'ils peuvent être reproduits à partir des données sources : ils sont supprimés automatiquement après une durée courte configurable." data-c="Relevé fournisseur AGNEAUX (PDF, 27/08) · Dépenses août (CSV, 26/08) · Journal d'audit (CSV, 25/08) · conservation 7 jours" data-src="Service d'export commun (Technique §8) · paramètre transverse « Conservation des exports : 7 jours » (§6.4) · 27/08/2026" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></div>
+      <div class="v" data-stat="nexp">3</div><div class="sub2">conservation 7 jours · prochaine suppression : Journal d’audit le 01/09/2026 · tous régénérables à partir des données sources</div>
+    </div>
+    <div class="card stat">
+      <div class="lb">Incident import ouvert</div><div class="v">INC-014</div>
+      <div class="sub2">Majeur · En cours · Import CSV BOA : référence dupliquée sur 2 lignes du 26/08 (S. Doucouré, 27/08 08:05) · <button class="linkish" data-goto="core-incidents" data-perm="core.incidents.view">Incidents</button></div>
+    </div>
+  </div>
+
+  <div class="deny-note" data-view="ro" hidden><svg><use href="#i-lock"/></svg><span><b>Refus par défaut</b> pour le profil <span data-ro-prof>DG Mata</span> : <span data-ro-why></span> · l’assistant se parcourt jusqu’à l’étape Validation ; les boutons restent visibles et désactivés avec leur motif (§3.4).</span></div>
+
+  <div class="card">
+    <div class="ch"><h3>Cas d’usage</h3><span class="hint-r">un assistant unique · le module propriétaire des données reste responsable de ses règles (§5.1)</span></div>
+    <div class="cb"><div class="cases">
+      <label class="rline"><input type="radio" name="core-import-cas" value="releve">Relevé bancaire (CSV)<span class="rh">Mata Finance · Banque BOA</span></label>
+      <label class="rline sel"><input type="radio" name="core-import-cas" value="fourn" checked>Fournisseurs (Excel)<span class="rh">Mata Core · référentiel Fournisseurs</span></label>
+      <label class="rline"><input type="radio" name="core-import-cas" value="users">Utilisateurs (CSV)<span class="rh">Mata Core · référentiel Utilisateurs</span></label>
+    </div></div>
+  </div>
+
+  <ol class="steps" data-steps style="margin-top:14px"><li class="on" data-go="1">Fichier</li><li data-go="2">Prévisualisation</li><li data-go="3">Contrôles</li><li data-go="4">Validation</li><li data-go="5">Import</li></ol>
+
+  <!-- ===== Étape 1 : Fichier ===== -->
+  <div class="card" data-step="1">
+    <div class="ch"><h3>Étape 1 — Fichier</h3><span class="hint-r">un fichier par import · contrat d’interface : source et destinataire, identifiant unique, champs obligatoires, date métier, horodatage, déclencheur, fraîcheur, idempotence, erreur, correction, authentification (§5.2)</span></div>
+    <div class="cb">
+      <div data-case="fourn">
+        <div class="grid2b">
+          <div>
+            <div class="filebox"><svg><use href="#i-file"/></svg><div><b>fournisseurs_2026-08-27.xlsx</b><small>Excel · feuille « Fournisseurs » · 8 lignes · reçu le 27/08/2026 · colonnes : identifiant externe, nom, catégorie, compte de paiement de référence, plafond d’encours</small></div><span class="st ok"><svg><use href="#i-check"/></svg>Lu</span></div>
+            <div class="actionbar"><button class="btn ghost" data-file-pick><svg><use href="#i-upload"/></svg>Choisir un autre fichier</button><span class="hint">Sélecteur simulé dans la maquette · Formats selon le besoin : CSV, Excel, PDF (§6.3)</span></div>
+            <div class="kv gap">
+              <b>Cible</b><span>Référentiel Fournisseurs, propriété de Mata Core (§2) · entité Mata Group · les modules métier référencent les objets Mata Core par leur identifiant et ne créent pas de référentiels parallèles (§2)</span>
+              <b>Attributs financiers</b><span>compte de paiement de référence (obligatoire : chaque compte Fournisseur en possède un, Finance §4.4) et plafond d’encours (facultatif, Finance §5.4), relayés à Mata Finance, propriétaire du compte Fournisseur (Finance §5.2)</span>
+              <b>Dernier import</b><span data-last-import>aucun import antérieur de ce référentiel · dernière création : Ferme Ndiaye par DEM-029 le 25/08 (compte de paiement de référence : Caisse générale)</span>
+            </div>
+          </div>
+          <div class="kv">
+            <b>Source → destinataire</b><span>fichier Excel déposé par l’utilisateur → Mata Core, référentiel Fournisseurs · attributs financiers relayés à Mata Finance</span>
+            <b>Identifiant unique</b><span>identifiant externe du fournisseur (colonne 1) · un identifiant déjà connu met à jour la fiche existante</span>
+            <b>Champs obligatoires</b><span>identifiant externe, nom, catégorie (configuration financière partagée, Finance §5.2), compte de paiement de référence (Finance §4.4) · plafond d’encours facultatif</span>
+            <b>Date métier · horodatage</b><span>date du fichier 27/08/2026 (ISO 8601) · horodatage de réception à la lecture · created_at, updated_at, updated_by automatiques (Technique §12)</span>
+            <b>Déclencheur · fraîcheur</b><span>import manuel par un utilisateur autorisé · fichier du jour : OK (états minimaux OK / Manquante / Erreur / Non à jour, §5.2)</span>
+            <b>Idempotence</b><span>Une même opération reçue plusieurs fois ne doit produire qu’un seul effet (§5.2) : identifiant connu → mise à jour, jamais un doublon</span>
+            <b>Erreur · correction · authentification</b><span>ligne en échec rejetée et listée dans le rapport, les lignes valides sont importées après validation explicite · Un référentiel déjà utilisé n’est normalement jamais supprimé physiquement : il est désactivé (§2) · utilisateur authentifié, permission « core.import.executer », action auditée avec ancienne/nouvelle valeur et source import (§5.4)</span>
+          </div>
+        </div>
+      </div>
+      <div data-case="releve" hidden>
+        <div class="kv">
+          <b>Cible</b><span>Position externe « Banque BOA » (IMPORT CSV), propriété de Mata Finance · dernier import 27/08 08:00 · 14 lignes · 0 doublon · position <span class="amt" data-amt="45200000"></span></span>
+          <b>Assistant</b><span>mêmes 5 étapes ; les règles Banque → Finance (référence bancaire = identifiant, empreinte logique, import idempotent, correction tracée) sont portées par Mata Finance, propriétaire des données (§5.1)</span>
+          <b>Incident lié</b><span>INC-014 · Majeur · En cours : référence dupliquée sur 2 lignes du 26/08</span>
+        </div>
+        <div class="actionbar"><button class="btn pri" data-goto="fin-import" data-perm="finance.import.view"><svg><use href="#i-bank"/></svg>Ouvrir l’assistant Import relevé bancaire</button><span class="hint">Mata Finance · consultation finance.import.view · exécution finance.import.executer</span></div>
+      </div>
+      <div data-case="users" hidden>
+        <div class="filebox"><svg><use href="#i-file"/></svg><div><b>Aucun fichier chargé</b><small>CSV · UTF-8 · colonnes attendues : nom, email, catégorie, profil, entité, dates de début et de fin d’accès (Externe — Accès temporaire, §3.2)</small></div><span class="st mut"><svg><use href="#i-alert"/></svg>Fichier requis</span></div>
+        <div class="actionbar"><button class="btn ghost" data-file-pick><svg><use href="#i-upload"/></svg>Choisir un fichier</button><span class="hint">Sélecteur simulé dans la maquette · la démonstration complète (aperçu, contrôles, import) est réalisée sur Fournisseurs (Excel)</span></div>
+        <div class="kv gap">
+          <b>Cible</b><span>Référentiel Utilisateurs (Mata Core, §2) · Chaque personne possède un seul compte ERP (§3.1) · Un seul profil est actif à la fois (§3.3)</span>
+          <b>Identifiant unique</b><span>email de connexion (§3.1) : email déjà connu → mise à jour du compte existant, jamais un second compte</span>
+          <b>Contrôles</b><span>doublons d’email dans le fichier · catégorie inconnue (Interne — Employé ; Externe — Comptable, Investisseur, Accès temporaire, §3.2) · profil ou entité inconnus · colonnes obligatoires</span>
+          <b>Permission</b><span>core.import.executer · les comptes créés sont Actifs · Les comptes utilisés ne sont pas supprimés : ils deviennent Actifs ou Désactivés (§3.1)</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== Étape 2 : Prévisualisation ===== -->
+  <div class="card" data-step="2" hidden>
+    <div class="ch"><h3>Étape 2 — Prévisualisation</h3><div class="chips"><button class="chip on" data-filter="tous">Toutes</button><button class="chip" data-filter="ok">Valides</button><button class="chip" data-filter="bad">Rejetées</button></div><span class="hint-r" data-prev-count>4 lignes affichées sur 8 · 4 non affichées</span></div>
+    <div class="tbl-scroll"><table>
+      <thead><tr><th>N°</th><th>Identifiant externe</th><th>Nom</th><th>Catégorie</th><th>Compte de paiement de référence</th><th>Plafond d’encours</th><th>Résultat</th></tr></thead>
+      <tbody data-prev-rows>
+        <tr data-res="ok"><td>1</td><td>F1</td><td><b>AGNEAUX</b></td><td>Achat bœuf</td><td>Caisse générale</td><td><span class="amt" data-amt="10000000" data-nocur></span></td><td><span class="st ok"><svg><use href="#i-check"/></svg>Valide</span><span class="hint">existant → mise à jour · catégorie : Manquante → Achat bœuf · plafond et compte inchangés</span></td></tr>
+        <tr data-res="ok"><td>2</td><td>F4</td><td><b>Bétail Thiès</b></td><td>Achat agneau</td><td>Caisse générale</td><td><span class="amt" data-amt="6000000" data-nocur></span></td><td><span class="st ok"><svg><use href="#i-check"/></svg>Valide</span><span class="hint">existant → mise à jour · catégorie : Manquante → Achat agneau · plafond et compte inchangés</span></td></tr>
+        <tr data-res="bad"><td>3</td><td>F7</td><td><b>Ferme Ndiaye</b></td><td><span class="st bad"><svg><use href="#i-alert"/></svg>Élevage</span></td><td>Caisse générale</td><td><span class="st mut">Non renseigné</span><span class="hint">facultatif (Finance §5.4)</span></td><td><span class="st bad"><svg><use href="#i-x"/></svg>Rejetée</span><span class="hint">catégorie inconnue de la configuration financière partagée (Finance §5.2) · fiche créée par DEM-029 inchangée</span></td></tr>
+        <tr data-res="bad"><td>4</td><td>F5</td><td><b>Abattoirs Dakar</b></td><td>Abattage</td><td><span class="st bad"><svg><use href="#i-alert"/></svg>Manquante</span></td><td><span class="amt" data-amt="2000000" data-nocur></span></td><td><span class="st bad"><svg><use href="#i-x"/></svg>Rejetée</span><span class="hint">colonne obligatoire manquante : Chaque compte Fournisseur possède un compte de paiement de référence (Finance §4.4) · fiche existante inchangée</span></td></tr>
+      </tbody>
+    </table></div>
+    <div class="cb">
+      <div class="declres"><div><div class="k">Lignes prévisualisées</div><div class="val">4 · 8 au total</div></div><div><div class="k">Valides</div><div class="val ok">2 affichées · 5 dans le fichier</div></div><div><div class="k">Rejetées</div><div class="val bad">2 affichées · 2 dans le fichier</div></div></div>
+      <div class="note-strip"><svg><use href="#i-info"/></svg><span>Aperçu limité à 4 lignes ; les 8 lignes sont contrôlées à l’étape suivante. Lignes non affichées : 5 MATA VOLAILLE CHAIR, 6 MATA VOLAILLE ŒUFS, 7 Aliments Sénégal (valides) et 8 Bétail Thiès (doublon de la ligne 2). Aucun montant de position n’est importé : le solde est toujours calculé, jamais saisi (Finance §3).</span></div>
+    </div>
+  </div>
+
+  <!-- ===== Étape 3 : Contrôles ===== -->
+  <div class="card" data-step="3" hidden>
+    <div class="ch"><h3>Étape 3 — Contrôles</h3><span class="hint-r">doublons · catégorie inconnue · colonnes obligatoires · format · idempotence · 8 lignes contrôlées</span></div>
+    <div class="tbl-scroll"><table>
+      <thead><tr><th>Contrôle</th><th>Résultat</th><th>Détail</th></tr></thead>
+      <tbody>
+        <tr><td><b>Format</b></td><td><span class="st ok"><svg><use href="#i-check"/></svg>OK</span></td><td>Excel, feuille « Fournisseurs » · 8 lignes lues · 5 colonnes attendues présentes · plafonds en entiers FCFA sans décimales · date du fichier ISO 8601</td></tr>
+        <tr><td><b>Colonnes obligatoires</b></td><td><span class="st bad"><svg><use href="#i-x"/></svg>1 échec</span></td><td>ligne 4 Abattoirs Dakar : compte de paiement de référence manquant · Chaque compte Fournisseur possède un compte de paiement de référence, de type Trésorerie ou Position externe (Finance §4.4) · Donnée absente ≠ zéro (§5.2) → ligne rejetée</td></tr>
+        <tr><td><b>Catégorie inconnue</b></td><td><span class="st bad"><svg><use href="#i-x"/></svg>1 échec</span></td><td>ligne 3 Ferme Ndiaye : « Élevage » absente de la configuration financière partagée (Finance §5.2) · catégories connues : Achat bœuf, Achat volaille, Achat agneau, Abattage, Logistique, Maintenance → ligne rejetée</td></tr>
+        <tr><td><b>Doublons</b></td><td><span class="st warn"><svg><use href="#i-alert"/></svg>1 doublon</span></td><td>Bétail Thiès présent en lignes 2 et 8 (même identifiant externe F4) → seconde occurrence ignorée · Une même opération reçue plusieurs fois ne doit produire qu’un seul effet (§5.2)</td></tr>
+        <tr><td><b>Idempotence</b></td><td><span class="st ok"><svg><use href="#i-check"/></svg>OK</span></td><td>5 identifiants déjà connus du référentiel (F1, F4, F2, F3, F6) → mise à jour de la fiche existante, 0 création, 0 double effet · un import répété du même fichier ne produit aucun effet supplémentaire</td></tr>
+      </tbody>
+    </table></div>
+    <div class="cb">
+      <div class="kv"><b>Bilan</b><span><span class="st warn"><svg><use href="#i-alert"/></svg>5 contrôles · 3 OK · 2 en échec</span> 8 lignes lues → 5 importables · 2 rejetées · 1 ignorée (doublon) · les rejets sont listés dans le rapport d’import ; passage à l’étape Validation autorisé pour les lignes valides</span></div>
+      <div class="prog"><i style="width:62%"></i></div>
+      <div class="note-strip"><svg><use href="#i-alert"/></svg><span><b>Rappel INC-014 · Majeur · En cours</b> — Import CSV BOA : référence dupliquée sur 2 lignes du 26/08 (S. Doucouré, 27/08 08:05). Le contrôle « Doublons » est commun à tous les cas d’usage de l’assistant : toute duplication d’identifiant est signalée ici avant l’étape Validation.</span></div>
+    </div>
+  </div>
+
+  <!-- ===== Étape 4 : Validation ===== -->
+  <div data-step="4" hidden>
+    <div class="statstrip">
+      <div class="card stat">
+        <div class="lb">Lignes importables<button class="fx" data-f="Une même opération reçue plusieurs fois ne doit produire qu'un seul effet. Donnée absente ≠ zéro." data-c="8 lignes lues − 2 rejetées (colonne obligatoire, catégorie inconnue) − 1 doublon ignoré = 5" data-src="Assistant d'import, étape Contrôles · fournisseurs_2026-08-27.xlsx · 27/08/2026 (§5.2, §6.3)" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></div>
+        <div class="v">5</div>
+        <div class="sub2">5 mises à jour · 0 création · 2 rejetées · 1 doublon ignoré</div>
+      </div>
+      <div class="card stat">
+        <div class="lb">Plafonds d’encours importés<button class="fx" data-f="Chaque fournisseur peut avoir un plafond d'encours. La dette utilisée pour ce contrôle est : max(0 ; − Position fournisseur). Le dépassement déclenche une alerte informative mais ne bloque pas la saisie en V1." data-c="AGNEAUX 10 000 000 · Bétail Thiès 6 000 000 · MATA VOLAILLE CHAIR 8 000 000 · MATA VOLAILLE ŒUFS 3 000 000 · Aliments Sénégal 1 500 000 · Ferme Ndiaye : facultatif, non renseigné (ligne rejetée)" data-src="fournisseurs_2026-08-27.xlsx, lignes valides · identiques aux plafonds en place dans Mata Finance (§5.4)" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></div>
+        <div class="v amt" data-amt="28500000"></div>
+        <div class="sub2">identiques aux plafonds en place · AGNEAUX déjà dépassé : <span class="amt" data-amt="12400000" data-nocur></span> / <span class="amt" data-amt="10000000" data-nocur></span> (alerte, aucun blocage)</div>
+      </div>
+      <div class="card stat">
+        <div class="lb">Dettes fournisseurs<button class="fx" data-f="Σ max(− Position fournisseur ; 0)." data-c="AGNEAUX 12 400 000 · MATA VOLAILLE CHAIR 4 300 000 · MATA VOLAILLE ŒUFS 1 150 000 · Bétail Thiès 4 600 000 · Aliments Sénégal 800 000" data-src="Moteur de calcul financier unique · positions CALCULÉ · 27/08/2026 (Finance §8.1)" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></div>
+        <div class="v amt" data-amt="23250000"></div>
+        <div class="sub2">5,1 % du CA de référence · inchangées : un import de référentiel ne crée aucun mouvement, le solde est toujours calculé, jamais saisi</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="ch"><h3>Étape 4 — Validation</h3><span class="hint-r">aucune écriture avant l’étape Import · validation humaine explicite (§6.3)</span></div>
+      <div class="cb">
+        <div class="eq" style="margin-top:0">Effet attendu = <b>5 mises à jour</b> (catégorie renseignée, ancienne valeur : Manquante) · <b>0 création</b> · <span class="ok">0 mouvement financier</span><br>Rejetées : ligne 3 Ferme Ndiaye (catégorie inconnue « Élevage ») · ligne 4 Abattoirs Dakar (compte de paiement de référence manquant) → <span class="bad">non importées</span>, à corriger puis réimporter (idempotent)<br>Ignorée : ligne 8 Bétail Thiès (doublon de la ligne 2) · plafonds et comptes de paiement de référence : aucun changement</div>
+        <div class="tl">
+          <div class="ev on"><b>Sensible : modifications auditées</b><small>chaque mise à jour inscrit au journal central utilisateur, profil, entité, module, action, objet, ancienne/nouvelle valeur, date et heure, source import (§5.4) · pas de validation renforcée : niveau Sensible, pas Hautement sensible (§5.3)</small></div>
+          <div class="ev"><b>Correction après import</b><small>Une donnée sensible ou validée ne doit pas être écrasée silencieusement : correction, nouvelle version ou désactivation, l’original reste accessible (§5.5) · écriture concurrente rejetée explicitement, jamais écrasée (Technique §12)</small></div>
+        </div>
+        <label class="rline"><input type="checkbox" data-confirm>J’ai vérifié la prévisualisation et les 5 contrôles ; les 2 lignes rejetées ne seront pas importées et figureront dans le rapport<span class="rh">obligatoire pour passer à l’étape Import</span></label>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== Étape 5 : Import ===== -->
+  <div class="card" data-step="5" hidden>
+    <div class="ch"><h3>Étape 5 — Import</h3><span class="hint-r">écriture auditée : acteur, profil, entité, action, ancienne/nouvelle valeur, date et heure, source import (§5.4)</span></div>
+    <div class="cb">
+      <div class="kv">
+        <b>Fichier</b><span>fournisseurs_2026-08-27.xlsx · 8 lignes · reçu le 27/08/2026</span>
+        <b>Cible</b><span>Référentiel Fournisseurs · Mata Core · entité Mata Group · attributs financiers relayés à Mata Finance</span>
+        <b>Effet attendu</b><span>5 mises à jour (catégorie) · 0 création · 2 rejetées · 1 doublon ignoré · aucun mouvement : Dettes fournisseurs <span class="amt" data-amt="23250000"></span> inchangées</span>
+        <b>Exécutant</b><span><span data-me>S. Doucouré · Super Admin</span> · sans second validateur · notification « Sources » au centre commun (§6.1)</span>
+      </div>
+      <div class="actionbar">
+        <button class="btn pri" data-import data-perm="core.import.executer"><svg><use href="#i-upload"/></svg>Importer</button>
+        <button class="btn ghost" data-report data-perm="core.export"><svg><use href="#i-dl"/></svg>Exporter le rapport d’import (CSV)</button>
+        <span class="hint">Le droit d’export reste distinct du droit de consultation (§6.3) · le rapport rejoint les exports générés, conservé 7 jours puis régénérable</span>
+      </div>
+      <div data-result hidden>
+        <div class="kv gap"><b>Résultat</b><span><span class="st ok"><svg><use href="#i-check"/></svg>Import réussi</span> 5 mises à jour · 0 création · 2 rejetées · 1 doublon ignoré · aucun mouvement financier</span></div>
+        <div class="tl" data-result-tl></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="actionbar" data-wiznav style="margin-top:14px">
+    <button class="btn ghost" data-prev><svg><use href="#i-arr"/></svg>Précédent</button>
+    <span class="hint" data-stepinfo>Étape 1 sur 5 · Fichier</span>
+    <div class="sp"></div>
+    <button class="btn pri" data-next>Suivant<svg><use href="#i-arr"/></svg></button>
+  </div>
+
+  <!-- ===== Exports générés ===== -->
+  <div class="card">
+    <div class="ch"><h3>Exports générés</h3><div class="chips"><button class="chip on" data-ffmt="tous">Tous</button><button class="chip" data-ffmt="csv">CSV</button><button class="chip" data-ffmt="excel">Excel</button><button class="chip" data-ffmt="pdf">PDF</button></div><span class="hint-r">artefacts temporaires : conservation 7 jours (§6.4), supprimés automatiquement, régénérables à tout moment sur demande (Finance §5.7)</span></div>
+    <div class="tbl-scroll"><table>
+      <thead><tr><th>Export</th><th>Format</th><th>Généré le</th><th>Par</th><th>Expiration</th><th>Actions</th></tr></thead>
+      <tbody data-exp-rows>
+        <tr data-fmt="pdf"><td><b>Relevé fournisseur AGNEAUX</b><span class="hint">position <span class="amt" data-amt="-12400000" data-nocur></span> · 3 échéances à venir (10/09, 14/09, 30/09) · Mata Finance §5.7 · génération PDF légère, sans navigateur headless (Technique §8)</span></td><td><span class="tag lock"><svg><use href="#i-file"/></svg>PDF</span></td><td data-gen>27/08/2026</td><td data-by>S. Doucouré<span class="hint">Super Admin · finance.export</span></td><td><span class="expire"><svg><use href="#i-clock"/></svg>supprimé le 03/09/2026</span><span class="hint" data-exp>dans 7 jours · régénérable</span></td><td><button class="btn ghost sm" data-dl data-perm="core.export"><svg><use href="#i-dl"/></svg>Télécharger</button><button class="btn ghost sm" data-regen data-perm="core.export"><svg><use href="#i-refresh"/></svg>Régénérer</button></td></tr>
+        <tr data-fmt="csv"><td><b>Dépenses août</b><span class="hint">dépenses filtrées : entité Mata Group, date métier du 01/08 au 26/08/2026 · Mata Finance §5.7 · les justificatifs sources ne sont pas inclus dans l’export et ne suivent pas cette politique</span></td><td><span class="tag lock"><svg><use href="#i-file"/></svg>CSV</span></td><td data-gen>26/08/2026</td><td data-by>O. Seck<span class="hint">DG Mata · finance.export</span></td><td><span class="expire"><svg><use href="#i-clock"/></svg>supprimé le 02/09/2026</span><span class="hint" data-exp>dans 6 jours · régénérable</span></td><td><button class="btn ghost sm" data-dl data-perm="core.export"><svg><use href="#i-dl"/></svg>Télécharger</button><button class="btn ghost sm" data-regen data-perm="core.export"><svg><use href="#i-refresh"/></svg>Régénérer</button></td></tr>
+        <tr data-fmt="csv"><td><b>Journal d’audit</b><span class="hint">Audit central, extrait au 25/08/2026 · modifications Finance et Core · Hautement sensible : export éventuellement interdit (§5.3), ici contrôlé par core.audit.exporter</span></td><td><span class="tag lock"><svg><use href="#i-file"/></svg>CSV</span></td><td data-gen>25/08/2026</td><td data-by>S. Doucouré<span class="hint">Super Admin · core.audit.exporter</span></td><td><span class="expire"><svg><use href="#i-clock"/></svg>supprimé le 01/09/2026</span><span class="hint" data-exp>dans 5 jours · régénérable</span></td><td><button class="btn ghost sm" data-dl data-perm="core.audit.exporter"><svg><use href="#i-dl"/></svg>Télécharger</button><button class="btn ghost sm" data-regen data-perm="core.audit.exporter"><svg><use href="#i-refresh"/></svg>Régénérer</button></td></tr>
+      </tbody>
+    </table></div>
+    <div class="cb">
+      <div class="actionbar" style="margin-top:0"><button class="btn pri" data-open="core-import-nouvel-export" data-perm="core.export"><svg><use href="#i-plus"/></svg>Nouvel export</button><span class="hint">Formats selon le besoin : CSV, Excel, PDF (§6.3) · Excel lorsque pertinent, selon les permissions gérées par Mata Core (Finance §9.2) · DEM-028 : permission temporaire « Exporter dépenses » refusée à F. Sarr par O. Seck le 24/08</span></div>
+      <div class="note-strip"><svg><use href="#i-info"/></svg><span>Les fichiers générés par le service d’export commun sont considérés comme des artefacts temporaires lorsqu’ils peuvent être reproduits à partir des données sources : ils sont supprimés automatiquement après une durée courte configurable (Technique §8 · paramètre « Conservation des exports : 7 jours »). Les documents sources (justificatifs, contrats, photos) ne suivent jamais cette politique — ils suivent leur propre cycle de conservation et ne sont jamais supprimés avec les exports (Finance §5.7). Le droit d’export reste distinct du droit de consultation (§6.3).</span></div>
+    </div>
+  </div>
+
+  <div class="mback" data-ov="core-import-nouvel-export"><div class="modal" role="dialog" aria-modal="true" aria-label="Nouvel export">
+    <h3><svg><use href="#i-dl"/></svg>Nouvel export</h3>
+    <div class="exp">Le droit d’export reste distinct du droit de consultation (§6.3). Les exports de comptes, mouvements, dépenses, positions fournisseurs/clients et résultats de contrôle réutilisent le service commun d’export de l’ERP (Finance §9.2). Fichier temporaire : 7 jours, puis supprimé et régénérable.</div>
+    <div class="fld"><label for="core-import-obj">Objet exporté</label><select id="core-import-obj" class="inp" data-obj><option>Comptes (Mata Finance)</option><option>Mouvements (Mata Finance)</option><option>Dépenses (Mata Finance)</option><option>Positions fournisseurs / clients (Mata Finance)</option><option>Résultats de contrôle (Mata Finance)</option><option>Entités (Mata Core)</option><option>Utilisateurs (Mata Core)</option><option>Audit central (Mata Core · core.audit.exporter)</option></select></div>
+    <label class="rline sel"><input type="radio" name="core-import-fmt" value="CSV" checked>CSV<span class="rh">tableur, échanges</span></label>
+    <label class="rline"><input type="radio" name="core-import-fmt" value="Excel">Excel<span class="rh">lorsque pertinent (Finance §9.2)</span></label>
+    <label class="rline"><input type="radio" name="core-import-fmt" value="PDF">PDF<span class="rh">relevés, rapports · génération légère (Technique §8)</span></label>
+    <div class="acts"><button class="btn ghost" data-close>Annuler</button><button class="btn pri" data-generate data-perm="core.export"><svg><use href="#i-dl"/></svg>Générer</button></div>
+  </div></div>
+</section>
+<script data-screen="core-import">
+ERP.register('core-import', function (root, ctx) {
+  var q = function (s, r) { return (r || root).querySelector(s); };
+  var qa = function (s, r) { return Array.prototype.slice.call((r || root).querySelectorAll(s)); };
+  var NAMES = ['Fichier', 'Prévisualisation', 'Contrôles', 'Validation', 'Import'];
+  var step = 1, reached = 1, imported = false, cas = 'fourn', nexp = 3, prev = q('[data-prev-rows]'), exps = q('[data-exp-rows]');
+  function now() { var d = new Date(); return '27/08/2026 · ' + ('0' + d.getHours()).slice(-2) + ':' + ('0' + d.getMinutes()).slice(-2); }
+  function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+  function who(p) { return esc(ctx.profile.short) + '<span class="hint">' + esc(ctx.profile.profile) + ' · ' + esc(p || 'core.export') + '</span>'; }
+  /* ---- Assistant : Fichier → Prévisualisation → Contrôles → Validation → Import (§6.3) ---- */
+  function gate() {
+    var nx = q('[data-next]'), why = cas === 'releve' ? 'Ce cas d’usage se poursuit dans Mata Finance : ouvrez l’assistant Import relevé bancaire' : cas === 'users' ? 'Fichier requis : choisissez un fichier CSV Utilisateurs' : (step === 4 && !q('[data-confirm]').checked ? 'Confirmation obligatoire : vérifiez la prévisualisation et les contrôles avant l’étape Import' : '');
+    nx.disabled = !!why; nx.title = why;
+  }
+  function show(n) {
+    step = n; reached = Math.max(reached, n);
+    qa('[data-step]').forEach(function (p) { p.hidden = +p.getAttribute('data-step') !== n; });
+    qa('.steps li').forEach(function (li, i) {
+      var k = i + 1, done = k < n || (imported && k === 5);
+      li.classList.toggle('done', done); li.classList.toggle('on', k === n && !done);
+      li.title = k <= reached ? 'Revenir à l’étape ' + k + ' · ' + NAMES[i] : 'Étape non encore atteinte : utilisez « Suivant »';
+    });
+    q('[data-prev]').disabled = n === 1; q('[data-next]').hidden = n === 5;
+    q('[data-stepinfo]').textContent = 'Étape ' + n + ' sur 5 · ' + NAMES[n - 1] + (n === 4 ? ' · aucune écriture avant l’étape Import' : n === 5 && !imported ? ' · permission « core.import.executer » requise' : '');
+    gate();
+  }
+  ctx.on(q('[data-prev]'), 'click', function () { if (step > 1) show(step - 1); });
+  ctx.on(q('[data-next]'), 'click', function () { if (q('[data-next]').disabled) { ctx.toast(q('[data-next]').title); return; } if (step < 5) show(step + 1); });
+  ctx.on(q('[data-steps]'), 'click', function (e) {
+    var li = e.target.closest('li[data-go]'); if (!li) return; var k = +li.getAttribute('data-go');
+    if (k <= reached) show(k); else ctx.toast('Étape « ' + NAMES[k - 1] + ' » non encore atteinte : l’assistant se parcourt dans l’ordre Fichier → Prévisualisation → Contrôles → Validation → Import (§6.3)');
+  });
+  ctx.on(q('[data-confirm]'), 'change', function (e) { e.target.closest('.rline').classList.toggle('sel', e.target.checked); gate(); });
+  /* ---- Cas d’usage : Relevé bancaire (Mata Finance), Fournisseurs (démonstration), Utilisateurs ---- */
+  qa('input[name="core-import-cas"]').forEach(function (r) { ctx.on(r, 'change', function () {
+    cas = r.value; qa('input[name="core-import-cas"]').forEach(function (x) { x.closest('.rline').classList.toggle('sel', x.checked); });
+    qa('[data-case]').forEach(function (b) { b.hidden = b.getAttribute('data-case') !== cas; });
+    reached = 1; show(1);
+    if (cas !== 'fourn') ctx.toast(cas === 'releve' ? 'Relevé bancaire : l’assistant est porté par Mata Finance, propriétaire de la Position externe Banque BOA (§5.1)' : 'Utilisateurs (CSV) : choisissez un fichier pour lancer l’assistant · démonstration complète sur Fournisseurs (Excel)');
+  }); });
+  qa('[data-file-pick]').forEach(function (b) { ctx.on(b, 'click', function () { ctx.toast(cas === 'fourn' ? 'Sélecteur de fichier simulé : fournisseurs_2026-08-27.xlsx conservé (8 lignes) · un fichier par import' : 'Sélecteur simulé : la démonstration complète (aperçu, contrôles, validation, import) est réalisée sur Fournisseurs (Excel)'); }); });
+  /* ---- Étape 2 : filtres de prévisualisation ---- */
+  function filter(f) {
+    ctx.filterRows(prev, 'res', f); var n = qa('tr', prev).filter(function (r) { return !r.hidden; }).length;
+    q('[data-prev-count]').textContent = f === 'tous' ? '4 lignes affichées sur 8 · 4 non affichées' : n + ' ligne' + (n > 1 ? 's' : '') + ' sur 4 prévisualisées · 8 au total';
+  }
+  qa('.chip[data-filter]').forEach(function (c) { ctx.on(c, 'click', function () { qa('.chip[data-filter]').forEach(function (x) { x.classList.toggle('on', x === c); }); filter(c.getAttribute('data-filter')); }); });
+  /* ---- Exports générés : ajout de lignes, téléchargement, régénération, filtre par format ---- */
+  function addExport(name, fmt, sub, perm) {
+    var tr = document.createElement('tr'), p = perm || 'core.export'; tr.setAttribute('data-fmt', fmt.toLowerCase());
+    tr.innerHTML = '<td><b>' + esc(name) + '</b><span class="hint">' + esc(sub) + '</span></td><td><span class="tag lock"><svg><use href="#i-file"/></svg>' + esc(fmt) + '</span></td><td data-gen>' + now() + '</td><td data-by>' + who(p) + '</td>' +
+      '<td><span class="expire"><svg><use href="#i-clock"/></svg>supprimé le 03/09/2026</span><span class="hint" data-exp>dans 7 jours · régénérable</span></td><td><button class="btn ghost sm" data-dl data-perm="' + esc(p) + '"><svg><use href="#i-dl"/></svg>Télécharger</button><button class="btn ghost sm" data-regen data-perm="' + esc(p) + '"><svg><use href="#i-refresh"/></svg>Régénérer</button></td>';
+    exps.insertBefore(tr, exps.firstChild); nexp++; q('[data-stat="nexp"]').textContent = String(nexp);
+    var f = qa('.chip[data-ffmt].on')[0]; if (f) ctx.filterRows(exps, 'fmt', f.getAttribute('data-ffmt'));
+    ctx.formatAmounts(tr); ctx.applyPerms();
+  }
+  ctx.on(exps, 'click', function (e) {
+    var b = e.target.closest('button'); if (!b || b.disabled) return; var tr = b.closest('tr'), nm = q('b', tr).textContent, p = b.getAttribute('data-perm');
+    if (b.hasAttribute('data-dl')) ctx.toast('Téléchargement de « ' + nm + ' » par ' + ctx.profile.short + ' (' + p + ') · export contrôlé et audité (§5.3) · disponible jusqu’à sa suppression automatique');
+    if (b.hasAttribute('data-regen')) {
+      q('[data-gen]', tr).textContent = now(); q('[data-exp]', tr).textContent = 'dans 7 jours · régénérable'; q('.expire', tr).innerHTML = '<svg><use href="#i-clock"/></svg>supprimé le 03/09/2026'; q('[data-by]', tr).innerHTML = who(p);
+      ctx.toast('« ' + nm + ' » régénéré à partir des données sources par ' + ctx.profile.short + ' · conservé 7 jours · export audité (§5.3)');
+    }
+  });
+  qa('.chip[data-ffmt]').forEach(function (c) { ctx.on(c, 'click', function () { qa('.chip[data-ffmt]').forEach(function (x) { x.classList.toggle('on', x === c); }); ctx.filterRows(exps, 'fmt', c.getAttribute('data-ffmt')); }); });
+  qa('input[name="core-import-fmt"]').forEach(function (r) { ctx.on(r, 'change', function () { qa('input[name="core-import-fmt"]').forEach(function (x) { x.closest('.rline').classList.toggle('sel', x.checked); }); }); });
+  ctx.on(q('[data-generate]'), 'click', function () {
+    var o = q('[data-obj]'), i = o.selectedIndex, lab = o.options[i].textContent, fmt = (qa('input[name="core-import-fmt"]').filter(function (x) { return x.checked; })[0] || { value: 'CSV' }).value, p = i === 7 ? 'core.audit.exporter' : 'core.export';
+    if (!ctx.hasPerm(p)) { ctx.toast('Refus par défaut : la permission ' + p + ' n’est pas accordée au profil ' + ctx.profile.profile + ' (§5.3)'); return; }
+    addExport(lab, fmt, 'généré à la demande · ' + (i < 5 ? 'service commun d’export (Finance §9.2)' : 'référentiel Mata Core (§2)') + ' · ' + now(), p);
+    ctx.close('core-import-nouvel-export'); ctx.toast('Export « ' + lab + ' » (' + fmt + ') généré par ' + ctx.profile.short + ' · disponible 7 jours puis supprimé automatiquement, régénérable');
+  });
+  /* ---- Étape 5 : Importer (idempotent, audité) et rapport d'import (droit d'export distinct) ---- */
+  ctx.on(q('[data-import]'), 'click', function () {
+    var t = now(), me = ctx.profile.short;
+    if (imported) { ctx.toast('Import répété : 5 identifiants déjà connus, aucun double effet (§5.2) · 2 lignes toujours rejetées · tentative auditée'); return; }
+    imported = true;
+    q('[data-result-tl]').innerHTML =
+      '<div class="ev on"><b>Import exécuté par ' + esc(me) + '</b><small>' + t + ' · fournisseurs_2026-08-27.xlsx · 8 lignes lues · 5 mises à jour · 0 création · 2 rejetées · 1 doublon ignoré · Mata Group</small></div>' +
+      '<div class="ev on"><b>Référentiel Fournisseurs (Mata Core)</b><small>catégorie renseignée pour AGNEAUX, Bétail Thiès, MATA VOLAILLE CHAIR, MATA VOLAILLE ŒUFS, Aliments Sénégal (ancienne valeur : Manquante) · plafonds et comptes de paiement de référence inchangés · Ferme Ndiaye et Abattoirs Dakar inchangés (lignes rejetées)</small></div>' +
+      '<div class="ev on"><b>Mata Finance</b><small>aucun mouvement, aucune position modifiée · Dettes fournisseurs <span class="amt" data-amt="23250000"></span> inchangées · le solde est toujours calculé, jamais saisi</small></div>' +
+      '<div class="ev on"><b>Audit central</b><small>' + esc(me) + ' · ' + esc(ctx.profile.profile) + ' · Core · Import référentiel Fournisseurs · Modification · Sensible · ancienne/nouvelle valeur par ligne, source import (§5.4)</small></div>' +
+      '<div class="ev"><b>Rapport d’import</b><small>2 lignes rejetées à corriger puis réimporter (idempotent) : ligne 3 Ferme Ndiaye, ligne 4 Abattoirs Dakar · exportable en CSV (core.export) · notification « Sources » au centre commun (§6.1)</small></div>';
+    q('[data-result]').hidden = false; q('[data-last-import]').textContent = t + ' · ' + me + ' · 8 lignes · 5 mises à jour · 2 rejetées · 1 doublon ignoré';
+    q('[data-import]').innerHTML = '<svg><use href="#i-refresh"/></svg>Importer à nouveau (aucun double effet)';
+    ctx.formatAmounts(root); ctx.applyPerms(); show(5);
+    ctx.toast('Import exécuté par ' + me + ' : 5 mises à jour, 0 création, 2 rejetées, 1 doublon ignoré · aucun mouvement financier · événement audité (§5.4)');
+  });
+  ctx.on(q('[data-report]'), 'click', function () { addExport('Rapport d’import Fournisseurs', 'CSV', '8 lignes · résultat des 5 contrôles · 2 rejets détaillés · fournisseurs_2026-08-27.xlsx'); ctx.toast('Rapport d’import (CSV) généré · ajouté aux exports générés · conservé 7 jours puis supprimé, régénérable'); });
+  /* ---- Profil : exécutant, refus expliqués, permissions réappliquées ---- */
+  function prof() {
+    qa('[data-me]').forEach(function (el) { el.textContent = ctx.profile.short + ' · ' + ctx.profile.profile; });
+    var miss = [];
+    if (!ctx.hasPerm('core.import.executer')) miss.push('« Importer » exige core.import.executer');
+    if (!ctx.hasPerm('core.export')) miss.push('« Télécharger », « Régénérer », « Nouvel export » et « Exporter le rapport » exigent core.export (Consulter et Exporter sont deux permissions différentes)');
+    if (!ctx.hasPerm('core.audit.exporter')) miss.push('le Journal d’audit (Hautement sensible) exige core.audit.exporter');
+    q('[data-view="ro"]').hidden = !miss.length; q('[data-ro-prof]').textContent = ctx.profile.profile; q('[data-ro-why]').textContent = miss.join(' · ');
+  }
+  document.addEventListener('erp:profile', function () { prof(); ctx.applyPerms(); gate(); });
+  prof(); filter('tous'); show(1); ctx.formatAmounts(root); ctx.applyPerms();
+});
+</script>
