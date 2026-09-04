@@ -65,6 +65,7 @@ Le moteur affiche une infobulle à trois niveaux au survol (desktop) ou au tap (
 | Bandeau de statistiques | `<div class="statstrip"><div class="card stat"><div class="lb">Libellé</div><div class="v amt" data-amt="…"></div><div class="sub2">Précision</div></div>…</div>` (3 par défaut ; `statstrip four` pour 4) |
 | Deux colonnes | `<div class="grid2">` (1,62 / 1) ou `<div class="grid2b">` (1 / 1) |
 | Tableau | `<div class="tbl-scroll"><table><thead><tr><th>…</th></tr></thead><tbody>…</tbody></table></div>` ; ligne cliquable : `<tr class="rowlink" data-open="fin-comptes-fiche">` |
+| Cellule numérique | `<td class="num">` / `<th class="num">` : alignée à droite, sans retour à la ligne (montants `data-amt`, ratios) |
 | Statut | `<span class="st ok\|warn\|bad\|mut\|info"><svg><use href="#i-check"/></svg>Validée</span>` |
 | Étiquette | `<span class="tag api"><svg><use href="#i-lock"/></svg>Lecture API</span>` ; `tag lock` neutre |
 | Sensibilité | `<span class="sens hs\|s\|std">Hautement sensible / Sensible / Standard</span>` |

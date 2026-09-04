@@ -5,21 +5,17 @@
     #app [data-scr="fin-stock"] [data-blk]{margin-top:14px}
     #app [data-scr="fin-stock"] .grid2,#app [data-scr="fin-stock"] .grid2b{align-items:start}
     #app [data-scr="fin-stock"] .grid2>.card,#app [data-scr="fin-stock"] .grid2b>.card{min-width:0}
-    #app [data-scr="fin-stock"] .sites table{min-width:540px}
-    #app [data-scr="fin-stock"] .contrat table{min-width:700px}
     #app [data-scr="fin-stock"] td.num,#app [data-scr="fin-stock"] th.num{text-align:right;white-space:nowrap}
     #app [data-scr="fin-stock"] td .st{white-space:nowrap}
     #app [data-scr="fin-stock"] .stat .v{font-size:21px;letter-spacing:-.02em}
-    #app [data-scr="fin-stock"] .stat.hero .v{color:var(--red)}
+    #app [data-scr="fin-stock"] .stat[data-hero] .v .amt:not(.neg){color:var(--ok)}
     #app [data-scr="fin-stock"] .stat .sub2{font-weight:600;color:var(--ink-2)}
-    #app [data-scr="fin-stock"] .miss{font-family:'Fira Code',monospace;font-weight:600;color:var(--bad)}
-    #app [data-scr="fin-stock"] .plus{font-family:'Fira Code',monospace;margin-right:2px}
-    #app [data-scr="fin-stock"] .brk [data-live],#app [data-scr="fin-stock"] .brk .miss{margin-left:auto;white-space:nowrap}
+    #app [data-scr="fin-stock"] .stat .v .st,#app [data-scr="fin-stock"] .big-amt .st{font-size:12px;vertical-align:middle}
+    #app [data-scr="fin-stock"] .brk [data-live],#app [data-scr="fin-stock"] .brk [data-miss]{margin-left:auto;white-space:nowrap}
     #app [data-scr="fin-stock"] .soon-wrap{display:inline-flex;cursor:not-allowed}
     #app [data-scr="fin-stock"] .soon-wrap .btn{pointer-events:none;opacity:.55;filter:saturate(.4)}
     #app [data-scr="fin-stock"] .jauge{min-width:90px;margin-bottom:3px}
-    #app [data-scr="fin-stock"] .drawer .dl{font-size:10.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-2);margin:14px 0 4px}
-    #app [data-scr="fin-stock"] .drawer .big-amt .miss{font-size:24px}
+    #app [data-scr="fin-stock"] .drawer [data-dl]{font-size:10.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-2);margin:14px 0 4px}
     #app [data-scr="fin-stock"] .ch .btn{min-height:30px;padding:5px 11px;font-size:11.5px}
   </style>
   <div class="scr-head">
@@ -29,7 +25,7 @@
     </div>
     <div class="scr-meta">
       <span class="sens std"><svg><use href="#i-shield"/></svg>Standard</span>
-      <span class="hint">Écran de lecture seule : aucune écriture, aucune validation · gestion physique et valorisation du stock hors périmètre V1, propriété du module Stock (§11.1) · consultation non auditée (Standard : l’audit de consultation vise les données hautement sensibles, §10.2)</span>
+      <span class="hint">Écran de lecture seule : aucune écriture, aucune validation · gestion physique et valorisation du stock hors périmètre V1, propriété du module Stock (§11.1) · consultation non soumise à l’audit de consultation renforcé réservé aux données hautement sensibles (§10.2 ; Core §5.3)</span>
     </div>
   </div>
 
@@ -47,39 +43,39 @@
   <!-- 1. VALEURS LUES ET ΔS (§8.3) : FCFA d’abord, ratios ensuite -->
   <div class="statstrip">
     <div class="card stat">
-      <div class="lb">Valeur financière du stock début<button class="fx" data-f="Valeur financière du stock début, fournie par Stock (§8.3) : lue par interface au début de la période, jamais calculée ni saisie dans Mata Finance." data-c="Valeur unique reçue de Stock au 01/08/2026 : 39 000 000 · le contrat Stock → Finance porte la valeur financière début/fin de période (§9)" data-src="Module Stock, propriétaire de la valorisation · valeur de début de période datée du 01/08/2026 · OK" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></div>
+      <div class="lb">Valeur financière du stock début<button class="fx" data-f="Valeur financière du stock début, fournie par Stock (§8.3) : lue par interface au début de la période, jamais calculée ni saisie dans Mata Finance." data-c="Valeur unique reçue de Stock au 01/08/2026 : 39 000 000 · le contrat Stock → Finance porte la valeur financière début/fin de période (§9)" data-src="Module Stock, propriétaire de la valorisation · valeur de début de période datée du 01/08/2026, reçue · état courant de la source Stock : OK" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></div>
       <div class="v"><span class="amt" data-amt="39000000"></span></div>
       <div class="sub2">Début de période · 01/08/2026 · valeur datée reçue de Stock, base de ΔS pour tout le mois</div>
     </div>
     <div class="card stat">
-      <div class="lb">Valeur financière du stock fin (courante)<button class="fx" data-f="Valeur financière du stock fin, fournie par Stock (§8.3) : dernière valeur datée reçue par interface ; Stock reste propriétaire de la valorisation ; donnée datée et fraîche (§9)." data-c="Abattoir 22 400 000 + Dépôt central 12 835 000 + Points de vente 6 000 000 = 41 235 000" data-src="Module Stock · lecture OK 27/08 06:00 · états possibles : OK, Manquante, Erreur, Non à jour (§3)" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></div>
-      <div class="v"><span data-live><span class="amt" data-amt="41235000"></span></span><span class="miss" data-miss hidden>Manquante</span></div>
+      <div class="lb">Valeur financière du stock fin (courante)<button class="fx" data-f="Valeur financière du stock fin, fournie par Stock (§8.3) : dernière valeur datée reçue par interface ; Stock reste propriétaire de la valorisation ; donnée datée et fraîche (§9)." data-c="Abattoir 22 400 000 + Dépôt central 12 835 000 + Points de vente 6 000 000 = 41 235 000" data-src="Module Stock · état OK 27/08 06:00 · états possibles : OK, Manquante, Erreur, Non à jour (§3)" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></div>
+      <div class="v"><span data-live><span class="amt" data-amt="41235000"></span></span><span class="st bad" data-miss hidden><svg><use href="#i-eyeoff"/></svg>Manquante</span></div>
       <div class="sub2">3 sites · <span data-live>lecture 27/08 06:00 · +5,7 % depuis le début de mois</span><span data-miss hidden>aucune valeur reçue pour la période, jamais remplacée par 0 (§9.1)</span></div>
     </div>
-    <div class="card stat hero">
+    <div class="card stat" data-hero>
       <div class="lb">ΔS — variation de stock<button class="fx" data-f="ΔS = Valeur financière du stock fin − valeur financière du stock début, fournie par Stock. (§8.3)" data-c="Stock fin 41 235 000 − stock début 39 000 000 = +2 235 000" data-src="Module Stock, seul propriétaire de la valorisation · Stock OK 27/08 06:00 · lecture seule dans Mata Finance · même valeur dans P&amp;L et KPI, Tableau de bord, snapshots et agents IA (moteur unique, §3)" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></div>
-      <div class="v"><span data-live><span class="plus">+</span><span class="amt" data-amt="2235000"></span></span><span class="miss" data-miss hidden>Non calculable</span></div>
+      <div class="v"><span data-live>+<span class="amt" data-amt="2235000"></span></span><span class="st bad" data-miss hidden><svg><use href="#i-alert"/></svg>Non calculable</span></div>
       <div class="sub2"><span data-live>+5,7 % de la valeur de début de mois · 0,5 % du CA de référence (<span class="amt" data-amt="452000000" data-nocur></span>) · 8,7 % du P&amp;L Global</span><span data-miss hidden>ΔS manquante : le P&amp;L n’est pas calculé avec 0 (§9.1)</span></div>
     </div>
   </div>
 
   <div class="grid2" style="margin-top:0">
     <!-- 2. RÉPARTITION PAR SITE : valeur financière seule -->
-    <div class="card sites">
+    <div class="card">
       <div class="ch"><h3>Répartition par site</h3><span class="hint-r">Valeur financière seule · quantités, prix et décote restent dans Stock · cliquer un site</span></div>
-      <div class="tbl-scroll"><table>
+      <div class="tbl-scroll"><table style="min-width:540px">
         <thead><tr><th>Site</th><th class="num">Valeur financière</th><th>Part de la valeur courante</th><th>Fraîcheur</th></tr></thead>
         <tbody data-sites>
-          <tr class="rowlink" data-open="fin-stock-site" data-site="Abattoir" data-val="22400000" data-part="54,3 %" data-pct="54" title="Ouvrir la fiche du site"><td><b>Abattoir</b></td><td class="num"><span data-live><span class="amt" data-amt="22400000" data-nocur></span></span><span class="miss" data-miss hidden>Manquante</span></td><td><div data-live><div class="jauge"><i style="width:54%"></i></div><span class="hint">54,3 %</span></div><span class="miss" data-miss hidden>Non calculable</span></td><td><span class="st ok" data-fresh="short"><svg><use href="#i-check"/></svg>OK 06:00</span></td></tr>
-          <tr class="rowlink" data-open="fin-stock-site" data-site="Dépôt central" data-val="12835000" data-part="31,1 %" data-pct="31" title="Ouvrir la fiche du site"><td><b>Dépôt central</b></td><td class="num"><span data-live><span class="amt" data-amt="12835000" data-nocur></span></span><span class="miss" data-miss hidden>Manquante</span></td><td><div data-live><div class="jauge"><i style="width:31%"></i></div><span class="hint">31,1 %</span></div><span class="miss" data-miss hidden>Non calculable</span></td><td><span class="st ok" data-fresh="short"><svg><use href="#i-check"/></svg>OK 06:00</span></td></tr>
-          <tr class="rowlink" data-open="fin-stock-site" data-site="Points de vente" data-val="6000000" data-part="14,6 %" data-pct="15" title="Ouvrir la fiche du site"><td><b>Points de vente</b></td><td class="num"><span data-live><span class="amt" data-amt="6000000" data-nocur></span></span><span class="miss" data-miss hidden>Manquante</span></td><td><div data-live><div class="jauge"><i style="width:15%"></i></div><span class="hint">14,6 %</span></div><span class="miss" data-miss hidden>Non calculable</span></td><td><span class="st ok" data-fresh="short"><svg><use href="#i-check"/></svg>OK 06:00</span></td></tr>
-          <tr><td><b>Total Mata Group</b><div class="hint">Somme des sites = valeur financière du stock fin</div></td><td class="num"><b><span data-live><span class="amt" data-amt="41235000" data-nocur></span></span><span class="miss" data-miss hidden>Manquante</span></b></td><td><div data-live><div class="jauge"><i style="width:100%"></i></div><span class="hint">100 %</span></div><span class="miss" data-miss hidden>Non calculable</span></td><td><span class="st ok" data-fresh="short"><svg><use href="#i-check"/></svg>OK 06:00</span></td></tr>
+          <tr class="rowlink" data-open="fin-stock-site" data-site="Abattoir" data-val="22400000" data-part="54,3 %" data-pct="54" title="Ouvrir la fiche du site"><td><b>Abattoir</b></td><td class="num"><span data-live><span class="amt" data-amt="22400000" data-nocur></span></span><span class="st bad" data-miss hidden><svg><use href="#i-eyeoff"/></svg>Manquante</span></td><td><div data-live><div class="jauge"><i style="width:54%"></i></div><span class="hint">54,3 %</span></div><span class="st bad" data-miss hidden><svg><use href="#i-alert"/></svg>Non calculable</span></td><td><span class="st ok" data-fresh="short"><svg><use href="#i-check"/></svg>OK 06:00</span></td></tr>
+          <tr class="rowlink" data-open="fin-stock-site" data-site="Dépôt central" data-val="12835000" data-part="31,1 %" data-pct="31" title="Ouvrir la fiche du site"><td><b>Dépôt central</b></td><td class="num"><span data-live><span class="amt" data-amt="12835000" data-nocur></span></span><span class="st bad" data-miss hidden><svg><use href="#i-eyeoff"/></svg>Manquante</span></td><td><div data-live><div class="jauge"><i style="width:31%"></i></div><span class="hint">31,1 %</span></div><span class="st bad" data-miss hidden><svg><use href="#i-alert"/></svg>Non calculable</span></td><td><span class="st ok" data-fresh="short"><svg><use href="#i-check"/></svg>OK 06:00</span></td></tr>
+          <tr class="rowlink" data-open="fin-stock-site" data-site="Points de vente" data-val="6000000" data-part="14,6 %" data-pct="15" title="Ouvrir la fiche du site"><td><b>Points de vente</b></td><td class="num"><span data-live><span class="amt" data-amt="6000000" data-nocur></span></span><span class="st bad" data-miss hidden><svg><use href="#i-eyeoff"/></svg>Manquante</span></td><td><div data-live><div class="jauge"><i style="width:15%"></i></div><span class="hint">14,6 %</span></div><span class="st bad" data-miss hidden><svg><use href="#i-alert"/></svg>Non calculable</span></td><td><span class="st ok" data-fresh="short"><svg><use href="#i-check"/></svg>OK 06:00</span></td></tr>
+          <tr><td><b>Total Mata Group</b><div class="hint">Somme des sites = valeur financière du stock fin</div></td><td class="num"><b><span data-live><span class="amt" data-amt="41235000" data-nocur></span></span><span class="st bad" data-miss hidden><svg><use href="#i-eyeoff"/></svg>Manquante</span></b></td><td><div data-live><div class="jauge"><i style="width:100%"></i></div><span class="hint">100 %</span></div><span class="st bad" data-miss hidden><svg><use href="#i-alert"/></svg>Non calculable</span></td><td><span class="st ok" data-fresh="short"><svg><use href="#i-check"/></svg>OK 06:00</span></td></tr>
         </tbody>
       </table></div>
       <div class="cb" style="padding-top:10px">
         <div class="eq" data-live><b>Contrôle</b> : 22 400 000 + 12 835 000 + 6 000 000 = <b>41 235 000</b> = valeur financière du stock fin <span class="ok">cohérent</span></div>
         <div class="eq" data-miss hidden><b>Contrôle</b> : aucune valeur par site reçue — les lignes affichent « Manquante », la somme n’est pas calculée avec 0 <span class="bad">(§9.1)</span></div>
-        <div class="note-strip"><svg><use href="#i-info"/></svg><span>Le contrat Stock → Finance ne porte que la valeur financière début/fin de période (§9) ; la répartition par site est une lecture d’affichage, elle n’intervient dans aucun calcul du moteur financier. Investigation d’un écart de ΔS : valeur → formule → composantes → source (§10.3) ; le détail par mouvement de stock relève du module Stock.</span></div>
+        <div class="note-strip"><svg><use href="#i-info"/></svg><span>§9 ne cite que la valeur financière début/fin de période ; la répartition par site affichée ici suppose un champ supplémentaire du contrat, à confirmer (§9.1) ; elle n’intervient dans aucun calcul du moteur financier. Investigation d’un écart de ΔS : valeur → formule → composantes → source (§10.3) ; le détail par mouvement de stock relève du module Stock.</span></div>
       </div>
     </div>
 
@@ -89,15 +85,15 @@
       <div class="cb">
         <div class="brk">
           <div class="row"><span class="sign p">+</span>CA <span class="hint">Ventes Mata · OK 20:30</span><span class="amt" data-amt="452000000" data-nocur></span></div>
-          <div class="row"><span class="sign p">+</span><b>ΔS</b> <span class="hint">Stock · OK 06:00</span><span data-live><span class="amt" data-amt="2235000" data-nocur></span></span><span class="miss" data-miss hidden>Manquante</span></div>
+          <div class="row"><span class="sign p">+</span><b>ΔS</b> <span class="hint">Stock</span><span class="st ok" data-fresh="short"><svg><use href="#i-check"/></svg>OK 06:00</span><span data-live><span class="amt" data-amt="2235000" data-nocur></span></span><span class="st bad" data-miss hidden><svg><use href="#i-eyeoff"/></svg>Manquante</span></div>
           <div class="row"><span class="sign m">−</span>D <span class="hint">dépenses par date métier</span><span class="amt m" data-amt="421500000" data-nocur></span></div>
           <div class="row"><span class="sign m">−</span>CF <span class="hint">charges fixes complémentaires</span><span class="amt m" data-amt="6900000" data-nocur></span></div>
-          <div class="row"><span class="sign p">=</span><b>P&amp;L Global</b><span data-live><span class="amt" data-amt="25835000" data-nocur></span></span><span class="miss" data-miss hidden>Non calculé</span></div>
+          <div class="row"><span class="sign">=</span><b>P&amp;L Global</b><span data-live><span class="amt" data-amt="25835000" data-nocur></span></span><span class="st bad" data-miss hidden><svg><use href="#i-alert"/></svg>Non calculé</span></div>
         </div>
         <div class="fcode">P&amp;L Global = CA + ΔS − D − CF<br>P&amp;L hors Investissements = CA + ΔS − (D − DI) − CF = P&amp;L Global + DI<br>P&amp;L hors Dépenses spéciales = CA + ΔS − (D − DS) − CF = P&amp;L Global + DS</div>
         <div class="eq" data-live style="margin-top:10px"><b>ΔS</b> = 41 235 000 − 39 000 000 = <b>+2 235 000</b><br><b>P&amp;L Global</b> = 452 000 000 + 2 235 000 − 421 500 000 − 6 900 000 = <b>25 835 000</b> · ΔS = <span class="ok">8,7 %</span> du P&amp;L Global</div>
         <div class="eq" data-miss hidden style="margin-top:10px"><b>ΔS</b> = Manquante − 39 000 000 = <span class="bad">Non calculable</span><br>Une donnée absente n’est jamais interprétée comme zéro (§9.1) : le <b>P&amp;L Global</b> reste non calculé tant que ΔS manque</div>
-        <div class="hint" style="margin-top:10px">Les trois variantes partagent la même ΔS ; les flags Investissement et Dépense spéciale n’agissent que sur D (§8.3). Snapshot 26/08 22:14 : P&amp;L Global <span class="amt" data-amt="25105000" data-nocur></span> · hors Investissements <span class="amt" data-amt="43105000" data-nocur></span> · hors Dépenses spéciales <span class="amt" data-amt="31605000" data-nocur></span>.</div>
+        <div class="hint" style="margin-top:10px">Les trois variantes partagent la même ΔS ; les flags Investissement et Dépense spéciale n’agissent que sur D (§8.3). Snapshot précédent 26/08 22:14, auto post-clôture : P&amp;L Global <span class="amt" data-amt="25105000" data-nocur></span> · hors Investissements <span class="amt" data-amt="43105000" data-nocur></span> · hors Dépenses spéciales <span class="amt" data-amt="31605000" data-nocur></span>.</div>
         <div class="actionbar" style="margin:12px 0 0"><button class="btn ghost" data-goto="fin-pnl" data-perm="finance.pnl.view"><svg><use href="#i-scale"/></svg>Ouvrir P&amp;L et KPI</button><button class="btn ghost" data-goto="fin-historique" data-perm="finance.historique.view"><svg><use href="#i-history"/></svg>Snapshots</button></div>
       </div>
     </div>
@@ -126,30 +122,31 @@
       <div class="cb">
         <div class="tl">
           <div class="ev"><b>01/08/2026 · Début de période</b><small>Valeur financière du stock début reçue de Stock : <span class="amt" data-amt="39000000" data-nocur></span> · base de ΔS pour tout le mois</small></div>
-          <div class="ev on"><b>27/08 · 06:00 · Lecture Stock OK</b><small>Valeur financière du stock fin : <span class="amt" data-amt="41235000" data-nocur></span> · Abattoir <span class="amt" data-amt="22400000" data-nocur></span> · Dépôt central <span class="amt" data-amt="12835000" data-nocur></span> · Points de vente <span class="amt" data-amt="6000000" data-nocur></span> · ΔS +<span class="amt" data-amt="2235000" data-nocur></span></small></div>
-          <div class="ev"><b>27/08 · Clôture du jour (filet 23:59)</b><small>Snapshot financier immuable, unique par date et entité : les P&amp;L et KPI sont figés tels qu’ils étaient connus, ΔS comprise (§8.6) · snapshot précédent 26/08 22:14, auto post-clôture</small></div>
+          <div class="ev on"><b>27/08 · 06:00 · Lecture Stock OK (dernière lecture reçue)</b><small>Valeur financière du stock fin : <span class="amt" data-amt="41235000" data-nocur></span> · Abattoir <span class="amt" data-amt="22400000" data-nocur></span> · Dépôt central <span class="amt" data-amt="12835000" data-nocur></span> · Points de vente <span class="amt" data-amt="6000000" data-nocur></span> · ΔS +<span class="amt" data-amt="2235000" data-nocur></span></small></div>
+          <div class="ev"><b>27/08 · 23:59 · Clôture du jour (à venir, filet 23:59)</b><small>Snapshot financier immuable, unique par date et entité : les P&amp;L et KPI seront figés tels qu’ils étaient connus ; ΔS y est incluse par le calcul, sa mémorisation séparée dans le snapshot reste à préciser (§8.6)</small></div>
         </div>
-        <div class="note-strip"><svg><use href="#i-history"/></svg><span>Une correction ultérieure ne réécrit pas le snapshot ; l’interface peut comparer le snapshot historique à la situation recalculée actuelle (§8.6). Une nouvelle valeur de stock transmise par Stock après clôture modifie la situation recalculée, jamais le snapshot. <button class="linkish" data-goto="fin-historique" data-perm="finance.historique.view">Historique et snapshots</button></span></div>
+        <div class="note-strip"><svg><use href="#i-history"/></svg><span>Une correction ultérieure ne réécrit pas le snapshot ; l’interface peut comparer le snapshot historique à la situation recalculée actuelle (§8.6). Une valeur de stock reçue après clôture ne réécrit jamais le snapshot (§8.6) ; son intégration à la situation recalculée d’un jour clos suit le workflow de correction post-clôture, à préciser au contrat (§3.1, §9.1). <button class="linkish" data-goto="fin-historique" data-perm="finance.historique.view">Historique et snapshots</button></span></div>
       </div>
     </div>
   </div>
 
   <!-- 6. CONTRAT D’INTERFACE STOCK → FINANCE (§9, §9.1) -->
-  <div class="card contrat" data-blk>
+  <div class="card" data-blk>
     <div class="ch"><h3>Contrat d’interface Stock → Finance</h3><span class="hint-r">§9 · §9.1 : à préciser avant développement · clarté des contrats d’interface, point à valider par le panel (§11.4)</span></div>
-    <div class="tbl-scroll"><table>
+    <div class="tbl-scroll"><table style="min-width:700px">
       <thead><tr><th>Élément du contrat (§9.1)</th><th>Stock → Finance</th><th>État</th></tr></thead>
       <tbody>
-        <tr><td><b>Système source et destinataire</b></td><td>Stock → Mata Finance · Stock reste propriétaire de la valorisation (§9)</td><td><span class="st ok"><svg><use href="#i-check"/></svg>Fixé (§9)</span></td></tr>
-        <tr><td><b>Données critiques</b></td><td>Valeur financière début/fin de période (§9)</td><td><span class="st ok"><svg><use href="#i-check"/></svg>Fixé (§9)</span></td></tr>
-        <tr><td><b>Identifiant externe</b></td><td>Identifiant externe stable exigé par l’idempotence (§3) ; format à fixer</td><td><span class="st warn"><svg><use href="#i-clock"/></svg>À fixer (§9.1)</span></td></tr>
-        <tr><td><b>Champs obligatoires, date métier, horodatage</b></td><td>Valeur financière, entité, date métier de la valorisation, horodatage de la lecture · donnée datée et fraîche (§9)</td><td><span class="st warn"><svg><use href="#i-clock"/></svg>À compléter (§9.1)</span></td></tr>
-        <tr><td><b>Fréquence / déclencheur</b></td><td>Lecture observée à 06:00 · fréquence contractuelle non fixée</td><td><span class="st warn"><svg><use href="#i-clock"/></svg>À fixer (§9.1)</span></td></tr>
-        <tr><td><b>Seuil de fraîcheur</b></td><td>Au-delà du seuil : état « Non à jour », dernière valeur connue affichée à titre informatif, aucune auto-validation (§9.1)</td><td><span class="st warn"><svg><use href="#i-clock"/></svg>À fixer (§9.1)</span></td></tr>
-        <tr><td><b>Règle d’idempotence</b></td><td>Toute opération d’interface ou d’import possède un identifiant externe stable ; un événement répété ne crée qu’un seul effet financier (§3)</td><td><span class="st ok"><svg><use href="#i-check"/></svg>Fixé (§3)</span></td></tr>
-        <tr><td><b>Comportement en cas d’erreur</b></td><td>États OK, Manquante, Erreur, Non à jour · une donnée absente n’est jamais interprétée comme zéro (§3, §9.1)</td><td><span class="st ok"><svg><use href="#i-check"/></svg>Fixé (§3, §9.1)</span></td></tr>
-        <tr><td><b>Correction / annulation</b></td><td>Nouvelle valeur datée fournie par Stock · aucune saisie ni correction de la valorisation dans Mata Finance (§2.2, §11.1)</td><td><span class="st warn"><svg><use href="#i-clock"/></svg>À préciser (§9.1)</span></td></tr>
-        <tr><td><b>Authentification</b></td><td>Interface contrôlée · mécanisme défini avec le document technique (§9)</td><td><span class="st warn"><svg><use href="#i-clock"/></svg>À fixer (§9.1)</span></td></tr>
+        <tr><td><b>Système source et destinataire</b></td><td>Stock → Mata Finance · Stock reste propriétaire de la valorisation (§9)</td><td><span class="st ok"><svg><use href="#i-check"/></svg>Précisé (§9)</span></td></tr>
+        <tr><td><b>Données critiques</b></td><td>Valeur financière début/fin de période (§9)</td><td><span class="st ok"><svg><use href="#i-check"/></svg>Précisé (§9)</span></td></tr>
+        <tr><td><b>Répartition par site</b></td><td>Valeur financière par site (Abattoir, Dépôt central, Points de vente) · affichage et contrôle de cohérence, hors moteur de calcul</td><td><span class="st warn"><svg><use href="#i-clock"/></svg>À préciser avant développement (§9.1)</span></td></tr>
+        <tr><td><b>Identifiant externe</b></td><td>Identifiant externe stable exigé par l’idempotence (§3) ; format à fixer</td><td><span class="st warn"><svg><use href="#i-clock"/></svg>À préciser avant développement (§9.1)</span></td></tr>
+        <tr><td><b>Champs obligatoires, date métier, horodatage</b></td><td>Valeur financière, entité, date métier de la valorisation, horodatage de la lecture · donnée datée et fraîche (§9)</td><td><span class="st warn"><svg><use href="#i-clock"/></svg>À préciser avant développement (§9.1)</span></td></tr>
+        <tr><td><b>Fréquence / déclencheur</b></td><td>Lecture observée à 06:00 · fréquence contractuelle non fixée</td><td><span class="st warn"><svg><use href="#i-clock"/></svg>À préciser avant développement (§9.1)</span></td></tr>
+        <tr><td><b>Seuil de fraîcheur</b></td><td>Au-delà du seuil : état « Non à jour », dernière valeur connue affichée à titre informatif, aucune auto-validation (§9.1)</td><td><span class="st warn"><svg><use href="#i-clock"/></svg>À préciser avant développement (§9.1)</span></td></tr>
+        <tr><td><b>Règle d’idempotence</b></td><td>Toute opération d’interface ou d’import possède un identifiant externe stable ; un événement répété ne crée qu’un seul effet financier (§3)</td><td><span class="st ok"><svg><use href="#i-check"/></svg>Précisé (§3)</span></td></tr>
+        <tr><td><b>Comportement en cas d’erreur</b></td><td>États OK, Manquante, Erreur, Non à jour · une donnée absente n’est jamais interprétée comme zéro (§3, §9.1)</td><td><span class="st ok"><svg><use href="#i-check"/></svg>Précisé (§3, §9.1)</span></td></tr>
+        <tr><td><b>Correction / annulation</b></td><td>Nouvelle valeur datée fournie par Stock · aucune saisie ni correction de la valorisation dans Mata Finance (§2.2, §11.1)</td><td><span class="st warn"><svg><use href="#i-clock"/></svg>À préciser avant développement (§9.1)</span></td></tr>
+        <tr><td><b>Authentification</b></td><td>Interface contrôlée · mécanisme défini avec le document technique (§9)</td><td><span class="st warn"><svg><use href="#i-clock"/></svg>À préciser avant développement (§9.1)</span></td></tr>
       </tbody>
     </table></div>
     <div class="cb" style="padding-top:10px"><div class="note-strip" style="margin:0"><svg><use href="#i-info"/></svg><span>Le mot « interface » désigne ici un contrat de données et de comportement entre modules — sa mise en œuvre technique (appel en processus ou réseau) est définie dans le document technique, §9, et n’a aucune incidence sur les règles ci-dessus. (§9) · Hors périmètre V1 : gestion physique/valorisation du stock, propriété du module Stock (§11.1).</span></div></div>
@@ -160,18 +157,18 @@
     <div class="dh"><h3 data-site-name>Abattoir</h3><button class="ib" data-close aria-label="Fermer"><svg><use href="#i-x"/></svg></button></div>
     <div class="db">
       <div class="hint">Valeur financière du stock du site, lue depuis le module Stock · aucune quantité, aucun prix unitaire, aucune décote dans Mata Finance (§2.2, §11.1)</div>
-      <div class="big-amt"><span data-live><span class="amt" data-site-amt data-amt="22400000"></span></span><span class="miss" data-miss hidden>Manquante</span></div>
+      <div class="big-amt"><span data-live><span class="amt" data-site-amt data-amt="22400000"></span></span><span class="st bad" data-miss hidden><svg><use href="#i-eyeoff"/></svg>Manquante</span></div>
       <div class="meta-l"><span class="st ok" data-fresh><svg><use href="#i-check"/></svg>OK · lecture 27/08 06:00</span><span class="tag lock"><svg><use href="#i-lock"/></svg>Lecture seule</span><span class="tag lock"><svg><use href="#i-box"/></svg>Propriétaire : Stock</span></div>
-      <div class="dl">Part de la valeur financière du stock fin</div>
+      <div data-dl>Part de la valeur financière du stock fin</div>
       <div class="jauge" data-live><i data-site-bar style="width:54%"></i></div>
       <div class="eq" data-live style="margin-top:10px"><span data-site-eq>22 400 000 / 41 235 000 = 54,3 %</span> · <b data-site-part>54,3 %</b> de la valeur courante</div>
       <div class="eq" data-miss hidden style="margin-top:10px">Part non calculable : valeur du site <span class="bad">Manquante</span>, jamais interprétée comme zéro (§9.1)</div>
-      <div class="dl">Ce que Mata Finance ne détient pas pour ce site</div>
+      <div data-dl>Ce que Mata Finance ne détient pas pour ce site</div>
       <div class="due"><span>Quantités</span><span class="hint">Module Stock</span></div>
       <div class="due"><span>Méthode de valorisation, prix unitaires</span><span class="hint">Module Stock</span></div>
-      <div class="due"><span>Décote et pertes</span><span class="hint">Module Stock · absentes des calculs Finance</span></div>
+      <div class="due"><span>Décote et pertes</span><span class="hint">Module Stock</span></div>
       <div class="due"><span>Fraîcheur de la lecture</span><span class="dt"><b>27/08 · 06:00</b></span></div>
-      <div class="note-strip"><svg><use href="#i-info"/></svg><span>Une modification de la valeur d’un site ne peut venir que d’une nouvelle lecture datée fournie par Stock ; Mata Finance ne corrige jamais une valeur de stock, même par Ajustement (§2.2, §4.7 : le compte Ajustement corrige des soldes de comptes, pas une valorisation).</span></div>
+      <div class="note-strip"><svg><use href="#i-info"/></svg><span>Décote et pertes restent dans le module Stock, absentes des calculs Finance : ΔS ne porte que la valeur financière fournie par Stock (§8.3). Une modification de la valeur d’un site ne peut venir que d’une nouvelle lecture datée fournie par Stock ; Mata Finance ne corrige jamais une valeur de stock, même par Ajustement (§2.2, §4.7 : le compte Ajustement corrige des soldes de comptes, pas une valorisation).</span></div>
     </div>
     <div class="df"><button class="btn ghost" data-close>Fermer</button><span class="soon-wrap" data-soon title="Module Stock : bientôt disponible dans l’ERP Mata"><button class="btn ghost" disabled aria-disabled="true"><svg><use href="#i-box"/></svg>Ouvrir dans Stock<span class="tag lock">Bientôt</span></button></span></div>
   </aside>
@@ -199,6 +196,11 @@ ERP.register('fin-stock', function (root, ctx) {
     $$('[data-fresh]').forEach(function (b) {
       b.className = 'st ' + s.cls;
       b.innerHTML = '<svg><use href="#i-' + s.ic + '"/></svg>' + (b.getAttribute('data-fresh') === 'short' ? s.short : s.lbl);
+    });
+    /* les sources des infobulles .fx suivent le même état (jamais « OK » affiché à côté de « Manquante ») */
+    $$('.fx[data-src]').forEach(function (b) {
+      if (!b.dataset.src0) b.dataset.src0 = b.getAttribute('data-src');
+      b.setAttribute('data-src', b.dataset.src0.replace(/OK( 27\/08 06:00)?/, s.lbl));
     });
     $$('[data-live]').forEach(function (el) { el.hidden = s.miss; });
     $$('[data-miss]').forEach(function (el) { el.hidden = !s.miss; });

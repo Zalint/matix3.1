@@ -29,7 +29,9 @@ def lint(sid):
     for fx in re.findall(r'<button class="fx"[^>]*>', html):
         if "data-f=" not in fx: out.append(".fx sans data-f : " + fx[:80])
     # 4. Montants en dur dans le texte visible (hors attributs, .fcode/.eq, script)
-    body = re.sub(r"<[^>]+>", lambda t: "<>" if not re.match(r"<(div|span|p|small|b|td|th|li|h\d)\b[^>]*class=\"[^\"]*(fcode|eq)\b", t.group(0)) else "<FX>", html)
+    # Les blocs .eq / .fcode entiers sont retirés d'abord (CONTRACT §2 : exception prévue), y compris leurs balises imbriquées (<b>, <span data-t>)
+    body = re.sub(r"<(div|span|p)\b[^>]*\bclass=\"(?:eq|fcode)\b[^\"]*\"[^>]*>.*?</\1>", "", html, flags=re.S)
+    body = re.sub(r"<[^>]+>", lambda t: "<>" if not re.match(r"<(div|span|p|small|b|td|th|li|h\d)\b[^>]*class=\"[^\"]*(fcode|eq)\b", t.group(0)) else "<FX>", body)
     body = re.sub(r"<FX>.*?<>", "", body, flags=re.S)
     hard = re.findall(r"(?<![\d/:])\b\d{1,3}(?: \d{3}){2,}\b", body)
     if hard: out.append("montants en dur dans le texte (%d) : %s" % (len(hard), ", ".join(sorted(set(hard))[:6])))

@@ -5,7 +5,6 @@
     #app [data-scr="fin-charges"] .grid2{align-items:start}
     #app [data-scr="fin-charges"] .grid2>.card{min-width:0}
     #app [data-scr="fin-charges"] .cfg table{min-width:980px}
-    #app [data-scr="fin-charges"] td.num,#app [data-scr="fin-charges"] th.num{text-align:right;white-space:nowrap}
     #app [data-scr="fin-charges"] .mono{font-family:'Fira Code',monospace;font-size:12px;white-space:nowrap}
     #app [data-scr="fin-charges"] tfoot td{font-weight:700;border-top:2px solid var(--line-2)}
     #app [data-scr="fin-charges"] td .btn,#app [data-scr="fin-charges"] .ch .btn{min-height:28px;padding:4px 10px;font-size:11.5px}
@@ -26,7 +25,7 @@
       <span class="hint">Modification selon la permission finance.charges.modifier, sans second validateur exigé par le cahier · configuration sensible : historisée, datée, auditée (Core §5.3, §6.4) · l’original n’est jamais écrasé (Core §5.5) · Exporter distinct de Consulter</span>
     </div>
   </div>
-  <div class="deny-note" data-view="readonly" hidden><svg><use href="#i-lock"/></svg><span><b>Lecture seule.</b> Profil <span data-t="prof">DG Mata</span> : la permission finance.charges.modifier n’est pas accordée — refus par défaut (Core §3.4). Les boutons Ajouter et Modifier restent visibles, désactivés avec le motif ; formules, composantes et versions restent consultables (§3 Explicabilité).</span></div>
+  <div class="deny-note" data-view="readonly" hidden><svg><use href="#i-lock"/></svg><span><b>Lecture seule.</b> Profil <span data-t="prof">DG Mata</span> : la permission finance.charges.modifier n’est pas accordée — refus par défaut (Core §3.5, chaîne de résolution ; invariant §10.2). Les boutons Ajouter et Modifier restent visibles, désactivés avec le motif ; formules, composantes et versions restent consultables (§3 Explicabilité).</span></div>
   <div class="note-strip" style="margin:0 0 14px"><svg><use href="#i-refresh"/></svg><span><b>Sources et fraîcheur (§3)</b> — Configuration des charges fixes <span class="st ok"><svg><use href="#i-check"/></svg>Version 2 en vigueur depuis le 01/07/2026</span> · Charge déjà comptabilisée : Dépenses par date métier <span class="st ok"><svg><use href="#i-check"/></svg>OK · import Achat 17:00</span> · Ventes Mata et Stock (P&amp;L) <span class="st ok"><svg><use href="#i-check"/></svg>OK 20:30 · 06:00</span> — états possibles : OK, Manquante, Erreur, Non à jour ; une donnée manquante n’est jamais affichée comme 0.</span></div>
 
   <div class="actionbar">
@@ -41,10 +40,10 @@
 
   <!-- 1. CARTE DE CALCUL EN BANDEAU : montant mensuel actif → théorique proratisée → déjà comptabilisée → CF (§8.4) -->
   <div class="statstrip four">
-    <div class="card stat"><div class="lb">Charges fixes actives — montant mensuel<button class="fx" data-fx="actif" data-f="Somme des montants mensuels des charges fixes au statut actif de l’entité (configuration §8.4)" data-c="Salaires 18 600 000 + Loyer 2 500 000 + Gardiennage et sécurité 600 000 = 21 700 000 · Assurance flotte 350 000 exclue (Inactif, fin 30/06/2026)" data-src="Configuration des charges fixes · Mata Group · version 2 en vigueur depuis le 01/07/2026" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></div><div class="v amt" data-amt="21700000" data-t="actif"></div><div class="sub2"><span data-t="nact">3 charges actives</span> · <span data-t="pcta">4,8 %</span> du CA de référence · août au 27</div></div>
-    <div class="card stat"><div class="lb">Charge théorique proratisée au 27/08<button class="fx" data-fx="theo" data-f="Charge théorique proratisée = Montant mensuel × Jours calendaires applicables / Jours calendaires du mois" data-c="21 700 000 × 27 / 31 = 18 900 000 · Salaires 16 200 000 · Loyer 2 177 419 · Gardiennage et sécurité 522 581" data-src="Configuration des charges fixes · jours calendaires du 1er au 27 août, dimanche inclus, sur 31 jours (§8.4) · arrondi au FCFA par charge" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></div><div class="v amt" data-amt="18900000" data-t="theo"></div><div class="sub2"><span data-t="fdays">27 / 31</span> jours calendaires applicables · dimanche inclus</div></div>
-    <div class="card stat"><div class="lb">Charge déjà comptabilisée<button class="fx" data-f="Charge déjà comptabilisée = charges fixes déjà enregistrées comme dépenses sur la période, par date métier" data-c="Dépenses du 1er au 27 août rattachées aux catégories des charges actives (Personnel, Locaux, Services) : 12 000 000" data-src="Dépenses · date métier · rattachement par catégorie de rattachement (§8.4) · import Achat 17:00 sans effet (aucune charge fixe)" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></div><div class="v amt" data-amt="12000000"></div><div class="sub2">Dépenses par date métier · <button class="linkish" data-goto="fin-depenses">Voir dans Dépenses</button></div></div>
-    <div class="card stat hero"><div class="lb">Charge fixe complémentaire (CF)<button class="fx" data-fx="cf" data-f="Charge fixe complémentaire = max(0 ; Charge théorique proratisée − Charge déjà comptabilisée)" data-c="max(0 ; 18 900 000 − 12 000 000) = 6 900 000" data-src="Moteur financier unique · injectée dans P&amp;L Global = CA + ΔS − D − CF (§8.3) · calcul au 27/08/2026 · mêmes chiffres que le Tableau de bord et les snapshots (§3)" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></div><div class="v amt" data-amt="6900000" data-t="cf"></div><div class="sub2"><span data-t="pct">1,5 %</span> du CA de référence · août au 27 · <button class="linkish" data-goto="fin-pnl">P&amp;L Global</button></div></div>
+    <div class="card stat"><div class="lb">Charges fixes actives — montant mensuel<button class="fx" data-fx="actif" data-f="Somme des montants mensuels des charges fixes au statut actif de l’entité (configuration §8.4)" data-c="Salaires 18 600 000 + Loyer 2 500 000 + Gardiennage et sécurité 600 000 = 21 700 000 · Assurance flotte 350 000 exclue (Inactif, fin 30/06/2026)" data-src="Configuration des charges fixes · Mata Group · version 2 en vigueur depuis le 01/07/2026" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></div><div class="v amt" data-amt="21700000" data-t="actif"></div><div class="sub2"><span data-t="nact">3 charges actives</span> · août au 27</div></div>
+    <div class="card stat"><div class="lb">Charge théorique proratisée au 27/08<button class="fx" data-fx="theo" data-f="Charge théorique proratisée = Montant mensuel × Jours calendaires applicables / Jours calendaires du mois" data-c="21 700 000 × 27 / 31 = 18 900 000 · Salaires 16 200 000 · Loyer 2 177 419 · Gardiennage et sécurité 522 581" data-src="Configuration des charges fixes · jours calendaires du 1er au 27 août, dimanche inclus, sur 31 jours (§8.4) · arrondi au FCFA par charge" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></div><div class="v amt" data-amt="18900000" data-t="theo"></div><div class="sub2"><span data-t="fdays">27 / 31</span> jours calendaires applicables · dimanche inclus · <span data-t="pcta">4,2 %</span> du CA de référence · août au 27</div></div>
+    <div class="card stat"><div class="lb">Charge déjà comptabilisée<button class="fx" data-f="Charge déjà comptabilisée = charges fixes déjà enregistrées comme dépenses sur la période, par date métier" data-c="Dépenses du 1er au 27 août rattachées aux catégories des charges actives (Personnel, Locaux, Services) : 12 000 000" data-src="Dépenses · date métier · rattachement par catégorie de rattachement (hypothèse de la maquette, règle d’appariement à confirmer par le panel) · import Achat 17:00 sans effet (aucune charge fixe)" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></div><div class="v amt" data-amt="12000000"></div><div class="sub2">Dépenses par date métier · <button class="linkish" data-goto="fin-depenses">Voir dans Dépenses</button></div></div>
+    <div class="card stat hero"><div class="lb">Charge fixe complémentaire (CF)<button class="fx" data-fx="cf" data-f="Charge fixe complémentaire = max(0 ; Charge théorique proratisée − Charge déjà comptabilisée)" data-c="max(0 ; 18 900 000 − 12 000 000) = 6 900 000" data-src="Moteur financier unique · injectée dans P&amp;L Global = CA + ΔS − D − CF (§8.3) · calcul au 27/08/2026 · mêmes chiffres que le Tableau de bord et P&amp;L et KPI (§3) ; les snapshots figent la valeur à leur date (§8.6)" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></div><div class="v amt" data-amt="6900000" data-t="cf"></div><div class="sub2"><span data-t="pct">1,5 %</span> du CA de référence · août au 27 · <button class="linkish" data-goto="fin-pnl">P&amp;L Global</button></div></div>
   </div>
 
   <div class="grid2" style="margin-top:0">
@@ -62,7 +61,7 @@
         </tbody>
         <tfoot><tr><td>Total des charges actives</td><td class="num"><span class="amt" data-amt="21700000" data-nocur data-t="factif"></span></td><td colspan="4" class="hint">Montant mensuel actif × jours applicables / 31 · arrondi au FCFA par charge · statut Inactif ou date de fin dépassée = 0 jour</td><td class="num mono" data-t="fdays2">27 / 31</td><td class="num"><span class="amt" data-amt="18900000" data-nocur data-t="ftheo"></span></td><td></td></tr></tfoot>
       </table></div>
-      <div class="cb" style="padding-top:8px"><div class="note-strip"><svg><use href="#i-info"/></svg><span>Une charge n’est jamais supprimée : elle reçoit une date de fin ou le statut Inactif et reste dans l’historique (Core §5.5). La catégorie de rattachement sert à reconnaître la charge déjà comptabilisée en dépenses (§8.4). Dates ISO 8601 en base, affichées au format 27/08/2026.</span></div></div>
+      <div class="cb" style="padding-top:8px"><div class="note-strip"><svg><use href="#i-info"/></svg><span>Une charge n’est jamais supprimée : elle reçoit une date de fin ou le statut Inactif et reste dans l’historique (Core §5.5). La catégorie de rattachement sert à reconnaître la charge déjà comptabilisée en dépenses (hypothèse de la maquette, règle d’appariement à confirmer par le panel). Dates ISO 8601 en base, affichées au format 27/08/2026.</span></div></div>
     </div>
 
     <!-- 3. CARTE DE CALCUL (§8.4) : formules mot pour mot, équation chiffrée, effet sur le P&L Global -->
@@ -82,7 +81,7 @@
         <div class="note-strip" style="margin-top:12px"><svg><use href="#i-info"/></svg><span>Le prorata utilise les jours calendaires, dimanche inclus. Cette mécanique permet un P&amp;L courant sans compter deux fois une charge fixe déjà enregistrée comme dépense. (§8.4)</span></div>
         <div class="hint" style="margin:12px 0 6px">Effet sur le P&amp;L de gestion (§8.3) · CA, ΔS et D inchangés par cet écran</div>
         <div class="eq"><b>P&amp;L Global</b> = CA + ΔS − D − CF = <span data-t="eq3">452 000 000 + 2 235 000 − 421 500 000 − 6 900 000 = <b>25 835 000</b></span></div>
-        <div class="due" style="margin-top:10px"><span><b>P&amp;L Global recalculé</b> <span class="hint">moteur unique · Tableau de bord, P&amp;L, snapshots, agents IA</span></span><span class="amt" data-amt="25835000" data-nocur data-t="pnl"></span></div>
+        <div class="due" style="margin-top:10px"><span><b>P&amp;L Global recalculé</b> <span class="hint">moteur unique · Tableau de bord, P&amp;L, prochains snapshots, agents IA</span></span><span class="amt" data-amt="25835000" data-nocur data-t="pnl"></span></div>
         <div class="due"><span>Snapshot 26/08 22:14 <span class="hint">immuable, jamais réécrit (§8.6)</span></span><span class="amt" data-amt="25105000" data-nocur></span></div>
         <div class="actionbar" style="margin:12px 0 0"><button class="btn ghost" data-goto="fin-pnl"><svg><use href="#i-chart"/></svg>P&amp;L et KPI</button><button class="btn ghost" data-goto="fin-historique"><svg><use href="#i-history"/></svg>Snapshots</button></div>
       </div>
@@ -91,13 +90,13 @@
 
   <!-- 4. HISTORISATION : configurations sensibles historisées et datées (Core §6.4), original accessible (Core §5.5) -->
   <div class="card" data-blk>
-    <div class="ch"><h3>Historisation de la configuration</h3><span class="hint-r"><span data-t="nver">2 versions</span> · configurations sensibles historisées et datées dans le temps (Core §6.4) · chaque enregistrement crée la version suivante</span><button class="btn ghost" data-goto="core-audit"><svg><use href="#i-history"/></svg>Journal d’audit</button></div>
+    <div class="ch"><h3>Historisation de la configuration</h3><span class="hint-r"><span data-t="nver">2 versions</span> · configurations sensibles historisées et datées dans le temps (Core §6.4) · chaque enregistrement crée la version suivante</span><button class="btn ghost" data-goto="core-audit" data-perm="core.audit.view"><svg><use href="#i-history"/></svg>Journal d’audit</button></div>
     <div class="cb">
       <div class="tl" data-versions>
         <div class="ev on"><b>Version 2 — en vigueur · date d’effet 01/07/2026</b><small>S. Doucouré · Super Admin · Mata Group · Salaires ajoutée : <span class="amt" data-amt="18600000" data-nocur></span> mensuel, Personnel, effet 01/07/2026 · Assurance flotte : date de fin 30/06/2026, statut Inactif · montant mensuel actif <span class="amt" data-amt="21700000" data-nocur></span></small></div>
-        <div class="ev"><b>Version 1 — date d’effet 01/03/2026</b><small>S. Doucouré · Super Admin · Mata Group · Gardiennage et sécurité ajoutée : <span class="amt" data-amt="600000" data-nocur></span> mensuel, Services, effet 01/03/2026 · Loyer <span class="amt" data-amt="2500000" data-nocur></span> (Locaux, effet 01/01/2026) et Assurance flotte <span class="amt" data-amt="350000" data-nocur></span> (Assurances, effet 01/01/2025) actives · montant mensuel actif <span class="amt" data-amt="3450000" data-nocur></span></small></div>
+        <div class="ev"><b>Version 1 — configuration initiale · date d’effet 01/01/2025</b><small>S. Doucouré · Super Admin · Mata Group · trois charges configurées, chacune avec sa propre date d’effet : Assurance flotte <span class="amt" data-amt="350000" data-nocur></span> (Assurances, effet 01/01/2025), Loyer <span class="amt" data-amt="2500000" data-nocur></span> (Locaux, effet 01/01/2026), Gardiennage et sécurité <span class="amt" data-amt="600000" data-nocur></span> (Services, effet 01/03/2026) · montant mensuel configuré <span class="amt" data-amt="3450000" data-nocur></span></small></div>
       </div>
-      <div class="note-strip"><svg><use href="#i-lock"/></svg><span>Une version n’est jamais écrasée : l’enregistrement crée la version suivante, datée par sa date d’effet ; created_at, updated_at et updated_by sont automatiques (§3). Ancienne et nouvelle valeur, acteur, profil, entité et motif sont inscrits au journal d’audit central (Core §5.4). Les snapshots des journées clôturées restent immuables ; la situation recalculée se compare dans Historique (§8.6).</span></div>
+      <div class="note-strip"><svg><use href="#i-lock"/></svg><span>Une version n’est jamais écrasée : l’enregistrement crée la version suivante, datée par la date de prise d’effet du changement et horodatée à l’enregistrement ; created_at, updated_at et updated_by sont automatiques (§3). Ancienne et nouvelle valeur, acteur, profil, entité et motif sont inscrits au journal d’audit central (Core §5.4). Les snapshots des journées clôturées restent immuables ; la situation recalculée se compare dans Historique (§8.6).</span></div>
     </div>
   </div>
 
@@ -108,7 +107,7 @@
     <div class="fld"><label for="fin-charges-nom">Nom</label><input id="fin-charges-nom" class="inp" data-field="nom" placeholder="Nom de la charge fixe"></div>
     <div class="grid2b">
       <div class="fld"><label for="fin-charges-montant">Montant mensuel (FCFA, sans décimales)</label><input id="fin-charges-montant" class="inp mono" data-field="montant" inputmode="numeric" placeholder="0"></div>
-      <div class="fld"><label for="fin-charges-cat">Catégorie de rattachement</label><select id="fin-charges-cat" class="inp" data-field="cat"><option>Personnel</option><option>Locaux</option><option>Services</option><option>Assurances</option><option>Logistique</option><option>Maintenance</option></select><span class="hint">Reconnaît la charge déjà comptabilisée en dépenses (§8.4)</span></div>
+      <div class="fld"><label for="fin-charges-cat">Catégorie de rattachement</label><select id="fin-charges-cat" class="inp" data-field="cat"><option>Personnel</option><option>Locaux</option><option>Services</option><option>Assurances</option><option>Logistique</option><option>Maintenance</option></select><span class="hint">Reconnaît la charge déjà comptabilisée en dépenses (hypothèse de la maquette, règle d’appariement à confirmer par le panel)</span></div>
     </div>
     <div class="grid2b">
       <div class="fld"><label for="fin-charges-effet">Date d’effet — obligatoire</label><input id="fin-charges-effet" class="inp mono" type="date" data-field="effet" required><span class="hint">ISO 8601 · premier jour calendaire applicable</span></div>
@@ -117,7 +116,7 @@
     <label class="rline" style="margin-top:12px"><input type="radio" name="fin-charges-statut" value="actif" checked>Actif<span class="rh">entre dans le prorata et dans CF</span></label>
     <label class="rline"><input type="radio" name="fin-charges-statut" value="inactif">Inactif<span class="rh">conservée dans l’historique, exclue du calcul</span></label>
     <div class="fld" style="margin-top:12px"><label for="fin-charges-motif">Motif (journal d’audit)</label><input id="fin-charges-motif" class="inp" data-field="motif" placeholder="Motif de la création ou de la modification"></div>
-    <div class="eq" data-m-preview>Au 27/08/2026 : <b>0 / 31</b> jours calendaires applicables · Charge théorique proratisée <b>0</b> · date d’effet manquante</div>
+    <div class="eq" data-m-preview>Au 27/08/2026 : <b>—</b> jours calendaires applicables · Charge théorique proratisée <b>—</b> · date d’effet manquante</div>
     <div class="note-strip" style="margin-top:12px"><svg><use href="#i-alert"/></svg><span>Une date d’effet antérieure au 27/08/2026 modifie le CF recalculé des journées déjà clôturées ; les snapshots restent immuables et se comparent dans Historique (§8.6).</span></div>
     <div class="acts"><button class="btn ghost" data-close>Annuler</button><button class="btn pri" data-perm="finance.charges.modifier" data-submit><svg><use href="#i-check"/></svg>Enregistrer</button></div>
   </div></div>
@@ -147,17 +146,20 @@ ERP.register('fin-charges', function (root, ctx) {
   function totals() {
     var rows = qa('tr[data-id]', tbody).map(read), act = rows.filter(function (r) { return r.statut === 'actif'; });
     var mens = act.reduce(function (s, r) { return s + r.montant; }, 0), th = rows.reduce(function (s, r) { return s + theo(r); }, 0), cf = Math.max(0, th - DEJA);
-    var js = act.map(days).filter(function (j) { return j > 0; }), uni = js.length > 0 && js.every(function (j) { return j === js[0]; }), jl = uni ? js[0] + ' / ' + DIM : 'variable';
+    var js = act.map(days).filter(function (j) { return j > 0; }), uni = js.length > 0 && js.every(function (j) { return j === js[0]; });
+    var jl = !js.length ? '0 / ' + DIM : uni ? js[0] + ' / ' + DIM : Math.min.apply(null, js) + ' à ' + Math.max.apply(null, js) + ' / ' + DIM;
     S.cf = cf;
     setAmt(q('[data-t="actif"]'), mens); setAmt(q('[data-t="theo"]'), th); setAmt(q('[data-t="cf"]'), cf); setAmt(q('[data-t="pnl"]'), BASE - cf); setAmt(q('[data-t="factif"]'), mens); setAmt(q('[data-t="ftheo"]'), th);
-    q('[data-t="nact"]').textContent = act.length + ' charge' + (act.length > 1 ? 's' : '') + ' active' + (act.length > 1 ? 's' : ''); q('[data-t="pct"]').textContent = pct(cf); q('[data-t="pcta"]').textContent = pct(mens);
+    q('[data-t="nact"]').textContent = act.length + ' charge' + (act.length > 1 ? 's' : '') + ' active' + (act.length > 1 ? 's' : ''); q('[data-t="pct"]').textContent = pct(cf); q('[data-t="pcta"]').textContent = pct(th);
     q('[data-t="fdays"]').textContent = jl; q('[data-t="fdays2"]').textContent = jl;
-    var prod = uni ? ctx.fmt(mens) + ' × ' + js[0] + ' / ' + DIM : 'Σ (Montant mensuel × jours applicables / ' + DIM + ')';
+    /* Composantes chiffrées même quand les jours applicables diffèrent d'une charge à l'autre (Core §7.1) */
+    var prod = uni ? ctx.fmt(mens) + ' × ' + js[0] + ' / ' + DIM : (act.filter(function (r) { return days(r) > 0; }).map(function (r) { return ctx.fmt(r.montant) + ' × ' + days(r) + ' / ' + DIM; }).join(' + ') || '0 × 0 / ' + DIM);
     q('[data-t="eq1"]').innerHTML = prod + ' = <b>' + ctx.fmt(th) + '</b>'; q('[data-t="eq2"]').innerHTML = 'max(0 ; ' + ctx.fmt(th) + ' − ' + ctx.fmt(DEJA) + ') = <b>' + ctx.fmt(cf) + '</b>';
     q('[data-t="eq3"]').innerHTML = ctx.fmt(CA) + ' + 2 235 000 − 421 500 000 − ' + ctx.fmt(cf) + ' = <b>' + ctx.fmt(BASE - cf) + '</b>';
     q('[data-brk]').innerHTML = act.map(function (r) { return '<div class="row"><span class="sign p">+</span>' + esc(r.nom) + ' <span class="hint">' + days(r) + ' j / ' + DIM + '</span><span class="amt" data-amt="' + theo(r) + '" data-nocur></span></div>'; }).join('') + '<div class="row"><span class="sign p">=</span><b>Charge théorique proratisée</b><span class="amt" data-amt="' + th + '" data-nocur></span></div><div class="row"><span class="sign m">−</span>Charge déjà comptabilisée<span class="amt m" data-amt="' + DEJA + '" data-nocur></span></div><div class="row"><span class="sign p">=</span><b>Charge fixe complémentaire (CF)</b><span class="amt" data-amt="' + cf + '" data-nocur></span></div>';
     ctx.formatAmounts(q('[data-brk]'));
-    q('[data-fx="actif"]').setAttribute('data-c', act.map(function (r) { return r.nom + ' ' + ctx.fmt(r.montant); }).join(' + ') + ' = ' + ctx.fmt(mens) + ' · ' + (rows.length - act.length) + ' charge(s) Inactif exclue(s)');
+    var exc = rows.filter(function (r) { return r.statut !== 'actif'; }).map(function (r) { return r.nom + ' ' + ctx.fmt(r.montant) + ' exclue (Inactif' + (r.fin ? ', fin ' + fr(r.fin) : '') + ')'; }).join(' · ');
+    q('[data-fx="actif"]').setAttribute('data-c', act.map(function (r) { return r.nom + ' ' + ctx.fmt(r.montant); }).join(' + ') + ' = ' + ctx.fmt(mens) + (exc ? ' · ' + exc : ''));
     q('[data-fx="theo"]').setAttribute('data-c', prod + ' = ' + ctx.fmt(th) + ' · ' + act.map(function (r) { return r.nom + ' ' + ctx.fmt(theo(r)); }).join(' · '));
     q('[data-fx="cf"]').setAttribute('data-c', 'max(0 ; ' + ctx.fmt(th) + ' − ' + ctx.fmt(DEJA) + ') = ' + ctx.fmt(cf));
   }
@@ -167,7 +169,11 @@ ERP.register('fin-charges', function (root, ctx) {
   /* Modale : lecture du formulaire, aperçu du prorata en direct, remplissage en ajout ou en modification */
   var stat = function () { return q('input[name="fin-charges-statut"]:checked', M).value; };
   function form() { return { nom: F('nom').value.trim(), montant: F('montant').value.replace(/\s/g, ''), effet: F('effet').value, fin: F('fin').value, cat: F('cat').value, statut: stat() }; }
-  function preview() { var f = form(), r = { montant: +f.montant || 0, effet: f.effet || CALC, fin: f.fin, statut: f.statut }, j = f.effet ? days(r) : 0; q('[data-m-preview]', M).innerHTML = 'Au 27/08/2026 : <b>' + j + ' / ' + DIM + '</b> jours calendaires applicables · Charge théorique proratisée <b>' + ctx.fmt(j ? theo(r) : 0) + '</b>' + (f.effet ? '' : ' · date d’effet manquante'); }
+  /* Aperçu : une date d'effet absente n'est jamais affichée comme 0 jour ou 0 FCFA (§3) ; le calcul n'a lieu qu'une fois la date saisie */
+  function preview() {
+    var f = form(), r = { montant: +f.montant || 0, effet: f.effet, fin: f.fin, statut: f.statut }, j = f.effet ? days(r) : null;
+    q('[data-m-preview]', M).innerHTML = f.effet ? 'Au 27/08/2026 : <b>' + j + ' / ' + DIM + '</b> jours calendaires applicables · Charge théorique proratisée <b>' + ctx.fmt(j ? theo(r) : 0) + '</b>' : 'Au 27/08/2026 : <b>—</b> jours calendaires applicables · Charge théorique proratisée <b>—</b> · date d’effet manquante';
+  }
   ['nom', 'montant', 'effet', 'fin', 'cat'].forEach(function (k) { ctx.on(F(k), 'input', preview); ctx.on(F(k), 'change', preview); });
   qa('input[name="fin-charges-statut"]', M).forEach(function (x) { ctx.on(x, 'change', preview); });
   function fill(r) {
@@ -194,7 +200,9 @@ ERP.register('fin-charges', function (root, ctx) {
     var LB = { nom: 'nom', montant: 'montant mensuel', statut: 'statut', effet: 'date d’effet', fin: 'date de fin', cat: 'catégorie' };
     var diff = old ? Object.keys(LB).filter(function (k) { return String(old[k]) !== String(r[k]); }).map(function (k) { var v = function (x) { return k === 'montant' ? ctx.fmt(x) : (k === 'effet' || k === 'fin' ? fr(x) : esc(x)); }; return LB[k] + ' ' + v(old[k]) + ' → ' + v(r[k]); }) : [];
     var chg = old ? (diff.length ? ' modifiée : ' + diff.join(', ') : ' réenregistrée sans changement de valeur') : ' ajoutée : ' + ctx.fmt(r.montant) + ' mensuel, ' + esc(r.cat) + ', ' + r.statut + (r.fin ? ', fin ' + fr(r.fin) : '');
-    q('[data-versions]').insertAdjacentHTML('afterbegin', '<div class="ev on"><b>Version ' + S.ver + ' — en vigueur · enregistrée le 27/08/2026 · date d’effet ' + fr(r.effet) + '</b><small>' + esc(ctx.profile.short + ' · ' + ctx.profile.profile) + ' · Mata Group · ' + esc(r.nom) + chg + (motif ? ' · motif « ' + esc(motif) + ' »' : ' · sans motif') + ' · CF ' + ctx.fmt(before) + ' → ' + ctx.fmt(S.cf) + '</small></div>');
+    /* La version est datée par la prise d'effet du changement (Core §6.4) : nouvelle date de fin, sinon date de l'enregistrement si la date d'effet est inchangée, sinon date d'effet */
+    var dv = old && r.fin && r.fin !== old.fin ? r.fin : (old && r.effet === old.effet ? CALC : r.effet);
+    q('[data-versions]').insertAdjacentHTML('afterbegin', '<div class="ev on"><b>Version ' + S.ver + ' — en vigueur · enregistrée le 27/08/2026 · date d’effet ' + fr(dv) + '</b><small>' + esc(ctx.profile.short + ' · ' + ctx.profile.profile) + ' · Mata Group · ' + esc(r.nom) + chg + (motif ? ' · motif « ' + esc(motif) + ' »' : ' · sans motif') + ' · CF ' + ctx.fmt(before) + ' → ' + ctx.fmt(S.cf) + '</small></div>');
     q('[data-t="nver"]').textContent = S.ver + ' versions';
     ctx.close('fin-charges-form');
     ctx.toast('Version ' + S.ver + ' enregistrée, la précédente reste consultable (Core §5.5) · modification auditée · CF recalculée ' + ctx.fmt(before) + ' → ' + ctx.fmt(S.cf) + ' FCFA, P&L Global recalculé par le moteur unique (§3)');
