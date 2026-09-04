@@ -27,6 +27,7 @@
       <p class="scr-sub">Référentiel des comptes ERP, propriété de Mata Core (§5.1) · une personne = un seul compte, quel que soit le nombre de profils (§3.1) · catégories multiples (§3.2) · un seul profil actif à la fois (§3.3) · désactivation, jamais suppression</p>
     </div>
     <div class="scr-meta">
+      <button class="linkish" data-open="help-core-utilisateurs"><svg><use href="#i-info"/></svg>Comment ça marche ?</button>
       <span class="sens s"><svg><use href="#i-shield"/></svg>Sensible</span>
       <span class="hint">Sensible : modifications auditées, export contrôlé (§5.3) · niveau de validation : aucune validation pour la création et la désactivation (hypothèse maquette, §4.2, à trancher par le panel) · motif conservé dans l'audit (§5.4) · demandes des MaaS via Demandes (§4.1)</span>
     </div>
@@ -160,6 +161,21 @@
     <div class="exp">Les comptes utilisés ne sont pas supprimés : ils deviennent Actifs ou Désactivés (§3.1). Connexion impossible, profils gelés, historique et audit conservés · aucune validation préalable (hypothèse maquette, §4.2) · modification auditée sous le profil actif avec son motif (§5.4) · réactivation possible par un utilisateur habilité.</div>
     <div class="fld"><label for="core-utilisateurs-motif">Motif · obligatoire, conservé dans l'audit</label><input id="core-utilisateurs-motif" class="inp" data-field="motif" placeholder="ex. fin de mission"></div>
     <div class="acts"><button class="btn ghost" data-close>Annuler</button><button class="btn pri" data-confirm-deact data-perm="core.utilisateurs.modifier"><svg><use href="#i-eyeoff"/></svg>Confirmer la désactivation</button></div>
+  </div></div>
+
+  <div class="mback" data-ov="help-core-utilisateurs"><div class="modal wide" role="dialog" aria-modal="true" aria-label="Comment ça marche : Utilisateurs">
+    <h3><svg><use href="#i-info"/></svg>Comment ça marche : Utilisateurs</h3>
+    <div class="exp">Le référentiel des comptes ERP : Super Admin et DG Mata (lecture) y créent, consultent et désactivent les comptes de toute l'entreprise, tous modules confondus.</div>
+    <ul class="help-list">
+      <li><b>Compte unique, jamais supprimé</b> — chaque personne a un seul compte ERP : sur 9 comptes, 8 sont actifs et 1 désactivé (M. Gueye, 30/06/2026) — jamais supprimé, seulement désactivé (§3.1).</li>
+      <li><b>Authentification V1</b> — email et mot de passe, réinitialisation par email ou forcée par le Super Admin, blocage après plusieurs tentatives échouées, MFA/2FA prévu plus tard (§3.1).</li>
+      <li><b>Catégories cumulables</b> — un utilisateur peut appartenir à plusieurs catégories à la fois : le référentiel compte 6 internes et 3 externes distincts (§3.2).</li>
+      <li><b>Accès temporaire qui expire seul</b> — une catégorie Accès temporaire porte une date de début et de fin : C. Mbaye va du 01/09/2026 au 30/09/2026, soit 34 jours restants, sans action manuelle à la fin (§3.2).</li>
+      <li><b>Un seul profil actif à la fois</b> — un utilisateur cumulant plusieurs profils (comme S. Doucouré : Super Admin Mata Group et Directeur financier MLC) en choisit un seul à la connexion ; les droits des deux ne s'additionnent jamais (§3.3).</li>
+    </ul>
+    <div class="note-strip"><svg><use href="#i-lock"/></svg>Refus par défaut : sans core.utilisateurs.creer ou .modifier, les boutons Nouvel utilisateur et Désactiver restent visibles mais désactivés, avec leur motif — jamais masqués sans explication.</div>
+    <div class="hint">Sources : Cahier Mata Core §3.1, §3.2, §3.3</div>
+    <div class="acts"><button class="btn ghost" data-close>Fermer</button></div>
   </div></div>
 </section>
 <script data-screen="core-utilisateurs">

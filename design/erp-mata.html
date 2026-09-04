@@ -5042,6 +5042,7 @@ ERP.register('fin-stock', function (root, ctx) {
       <p class="scr-sub">Banque → Finance : position bancaire via CSV et références disponibles · import idempotent ; correction tracée ; rapprochement ligne à ligne hors V1 (§9) · La Banque est alimentée en V1 par import CSV (§4.9) · Assistant : Fichier → Prévisualisation → Contrôles → Validation → Import (Core §6.3) · jeudi 27 août 2026</p>
     </div>
     <div class="scr-meta">
+      <button class="linkish" data-open="help-fin-import"><svg><use href="#i-info"/></svg>Comment ça marche ?</button>
       <span class="sens s"><svg><use href="#i-shield"/></svg>Sensible</span>
       <span class="hint">Sensible : accès restreint, modifications auditées, export contrôlé (Core §5.3) · exécution sous « finance.import.executer », sans second validateur</span>
     </div>
@@ -5185,6 +5186,21 @@ ERP.register('fin-stock', function (root, ctx) {
     <button class="btn pri" data-next>Suivant<svg><use href="#i-arr"/></svg></button>
   </div>
   <div class="note-strip"><svg><use href="#i-info"/></svg><span>Le CSV reste le mode V1 ; une bascule ultérieure vers une API bancaire n’aura aucun impact sur le comportement fonctionnel de la Position externe ni sur les écrans qui la consomment (§4.9). Bictorys, alimenté par synchronisation automatique, n’est jamais importé ni modifié à la main. La bascule vers une API bancaire (écriture automatique) passera par Test/Recette avant Production : nominal, idempotence, permissions, audit, cas de refus (Core §8).</span></div>
+
+  <div class="mback" data-ov="help-fin-import"><div class="modal wide" role="dialog" aria-modal="true" aria-label="Comment ça marche : Import relevé bancaire">
+    <h3><svg><use href="#i-info"/></svg>Comment ça marche : Import relevé bancaire</h3>
+    <div class="exp">Cet écran ajoute la position de la Banque BOA à partir d’un relevé CSV, sans jamais la saisir à la main. Il sert aux profils autorisés à importer (permission « finance.import.executer »), en pratique le Super Admin ou un Admin Finance.</div>
+    <ul class="help-list">
+      <li><b>La position vient du fichier, jamais d’une saisie</b> — le solde affiché, <span class="amt" data-amt="45200000" data-nocur></span>, est la valeur inscrite en en-tête du relevé CSV. Une correction manuelle comme <span class="amt" data-amt="-45000" data-nocur></span> (VAL-116, en attente) reste à part et n’écrase jamais cette valeur source (§4.9).</li>
+      <li><b>Identifier chaque ligne sans doublon</b> — la référence bancaire sert d’identifiant quand elle existe ; sinon le système fabrique une empreinte à partir du compte, de la date, du montant, du sens et du libellé. C’est ce qui distingue les 2 lignes sans référence, <span class="amt" data-amt="3000000" data-nocur></span> (versement) et <span class="amt" data-amt="800000" data-nocur></span> (retrait) (§4.9).</li>
+      <li><b>Réimporter ne double jamais l’effet</b> — les 14 lignes du fichier sont déjà connues de la position ; relancer l’import donne 0 doublon et 0 effet supplémentaire, la position reste à <span class="amt" data-amt="45200000" data-nocur></span> (§9).</li>
+      <li><b>Aucun rapprochement automatique avec une dépense</b> — même si un libellé évoque un client ou un transfert, comme le crédit <span class="amt" data-amt="150000" data-nocur></span> « VIR RECU TOUBA VIANDES », la ligne bancaire n’est reliée à rien : ce rapprochement ligne à ligne arrive dans une version ultérieure (§11.1).</li>
+      <li><b>Un assistant en 5 étapes, aucune écriture avant la fin</b> — Fichier, Prévisualisation, Contrôles, Validation puis Import : rien n’est enregistré avant que l’étape Import soit lancée. Le bouton « Exporter le journal d’import » utilise un droit distinct du droit de consultation (Core §6.3).</li>
+    </ul>
+    <div class="note-strip"><svg><use href="#i-shield"/></svg>Refus par défaut : sans la permission « finance.import.executer », le bouton Importer reste visible mais désactivé, avec l’explication affichée.</div>
+    <div class="hint">Sources : Cahier Mata Finance §4.9, §9, §11.1 · Mata Core §6.3</div>
+    <div class="acts"><button class="btn ghost" data-close>Fermer</button></div>
+  </div></div>
 </section>
 <script data-screen="fin-import">
 ERP.register('fin-import', function (root, ctx) {
@@ -5292,6 +5308,7 @@ ERP.register('fin-import', function (root, ctx) {
       <p class="scr-sub">Mata Group, filiales et MaaS du référentiel transverse (§2) · créées par configuration, jamais supprimées physiquement · Mata Group est le premier périmètre activé (Finance §2.3) et, à ce jour, la seule entité sélectionnable (référentiel §1)</p>
     </div>
     <div class="scr-meta">
+      <button class="linkish" data-open="help-core-entites"><svg><use href="#i-info"/></svg>Comment ça marche ?</button>
       <span class="sens std"><svg><use href="#i-shield"/></svg>Standard</span>
       <span class="hint">Standard : permissions normales (§5.3) · consultation sans validation · activation, désactivation et création : aucune validation (Core §4.2, hypothèse soumise au panel), permission core.entites.activer, motif obligatoire, enregistrées sous le profil actif et auditées (§5.4)</span>
     </div>
@@ -5435,6 +5452,21 @@ ERP.register('fin-import', function (root, ctx) {
     <div class="row-m"><span>Rattachement</span><b>Mata Group (entité mère)</b></div>
     <div class="acts"><button class="btn ghost" data-close>Annuler</button><button class="btn pri" data-act="create" data-perm="core.entites.activer"><svg><use href="#i-plus"/></svg>Créer « À activer »</button></div>
   </div></div>
+
+  <div class="mback" data-ov="help-core-entites"><div class="modal wide" role="dialog" aria-modal="true" aria-label="Comment ça marche : Entités">
+    <h3><svg><use href="#i-info"/></svg>Comment ça marche : Entités</h3>
+    <div class="exp">Le référentiel central des entités de l'ERP (Mata Group, filiales, MaaS) : consultation ouverte à tout profil standard, activation et création réservées aux profils autorisés (permission core.entites.activer).</div>
+    <ul class="help-list">
+      <li><b>Le référentiel n'est jamais vidé, seulement mis à jour</b> — 16 entités sont recensées et aucune n'est supprimée physiquement : une entité déjà utilisée passe au statut Désactivée pour conserver son historique (§2).</li>
+      <li><b>Mata Group est le premier périmètre activé</b> — sur 16 entités référencées, 1 seule (Mata Group) est active ; les autres pourront l'être plus tard, chacune sans fork applicatif (§2.3).</li>
+      <li><b>Activer une entité ne crée aucune infrastructure dédiée</b> — les 13 entités « À activer » (Keur Bally et les 12 MaaS) peuvent l'être par simple configuration, sans nouvelle base, schéma ni déploiement (Technique §3).</li>
+      <li><b>Chaque accès doit porter un contexte d'entité</b> — le bloc « Contexte d'entité du profil actif » affiche l'entité imposée au profil connecté ; sans ce contexte, l'accès aux données est refusé par défaut (Technique §3).</li>
+      <li><b>Les modules métier référencent l'entité par son identifiant</b> — le compte Créance client C1 de MaaS Keur Massar (<span class="amt" data-amt="3250000" data-nocur></span> FCFA) est relié à MAAS-KM par son entity_id : Mata Finance ne crée pas de référentiel parallèle (§2).</li>
+    </ul>
+    <div class="note-strip"><svg><use href="#i-lock"/></svg><span><b>Refus par défaut</b> : une action sans permission (comme Activer sur MLC ou Mata Volaille) reste visible, désactivée et expliquée — jamais masquée sans motif.</span></div>
+    <div class="hint">Sources : Cahier Mata Core §2 · Mata Finance §2.3 · Architecture technique §3</div>
+    <div class="acts"><button class="btn ghost" data-close>Fermer</button></div>
+  </div></div>
 </section>
 <script data-screen="core-entites">
 ERP.register('core-entites', function (root, ctx) {
@@ -5556,6 +5588,7 @@ ERP.register('core-entites', function (root, ctx) {
       <p class="scr-sub">Référentiel des comptes ERP, propriété de Mata Core (§5.1) · une personne = un seul compte, quel que soit le nombre de profils (§3.1) · catégories multiples (§3.2) · un seul profil actif à la fois (§3.3) · désactivation, jamais suppression</p>
     </div>
     <div class="scr-meta">
+      <button class="linkish" data-open="help-core-utilisateurs"><svg><use href="#i-info"/></svg>Comment ça marche ?</button>
       <span class="sens s"><svg><use href="#i-shield"/></svg>Sensible</span>
       <span class="hint">Sensible : modifications auditées, export contrôlé (§5.3) · niveau de validation : aucune validation pour la création et la désactivation (hypothèse maquette, §4.2, à trancher par le panel) · motif conservé dans l'audit (§5.4) · demandes des MaaS via Demandes (§4.1)</span>
     </div>
@@ -5689,6 +5722,21 @@ ERP.register('core-entites', function (root, ctx) {
     <div class="exp">Les comptes utilisés ne sont pas supprimés : ils deviennent Actifs ou Désactivés (§3.1). Connexion impossible, profils gelés, historique et audit conservés · aucune validation préalable (hypothèse maquette, §4.2) · modification auditée sous le profil actif avec son motif (§5.4) · réactivation possible par un utilisateur habilité.</div>
     <div class="fld"><label for="core-utilisateurs-motif">Motif · obligatoire, conservé dans l'audit</label><input id="core-utilisateurs-motif" class="inp" data-field="motif" placeholder="ex. fin de mission"></div>
     <div class="acts"><button class="btn ghost" data-close>Annuler</button><button class="btn pri" data-confirm-deact data-perm="core.utilisateurs.modifier"><svg><use href="#i-eyeoff"/></svg>Confirmer la désactivation</button></div>
+  </div></div>
+
+  <div class="mback" data-ov="help-core-utilisateurs"><div class="modal wide" role="dialog" aria-modal="true" aria-label="Comment ça marche : Utilisateurs">
+    <h3><svg><use href="#i-info"/></svg>Comment ça marche : Utilisateurs</h3>
+    <div class="exp">Le référentiel des comptes ERP : Super Admin et DG Mata (lecture) y créent, consultent et désactivent les comptes de toute l'entreprise, tous modules confondus.</div>
+    <ul class="help-list">
+      <li><b>Compte unique, jamais supprimé</b> — chaque personne a un seul compte ERP : sur 9 comptes, 8 sont actifs et 1 désactivé (M. Gueye, 30/06/2026) — jamais supprimé, seulement désactivé (§3.1).</li>
+      <li><b>Authentification V1</b> — email et mot de passe, réinitialisation par email ou forcée par le Super Admin, blocage après plusieurs tentatives échouées, MFA/2FA prévu plus tard (§3.1).</li>
+      <li><b>Catégories cumulables</b> — un utilisateur peut appartenir à plusieurs catégories à la fois : le référentiel compte 6 internes et 3 externes distincts (§3.2).</li>
+      <li><b>Accès temporaire qui expire seul</b> — une catégorie Accès temporaire porte une date de début et de fin : C. Mbaye va du 01/09/2026 au 30/09/2026, soit 34 jours restants, sans action manuelle à la fin (§3.2).</li>
+      <li><b>Un seul profil actif à la fois</b> — un utilisateur cumulant plusieurs profils (comme S. Doucouré : Super Admin Mata Group et Directeur financier MLC) en choisit un seul à la connexion ; les droits des deux ne s'additionnent jamais (§3.3).</li>
+    </ul>
+    <div class="note-strip"><svg><use href="#i-lock"/></svg>Refus par défaut : sans core.utilisateurs.creer ou .modifier, les boutons Nouvel utilisateur et Désactiver restent visibles mais désactivés, avec leur motif — jamais masqués sans explication.</div>
+    <div class="hint">Sources : Cahier Mata Core §3.1, §3.2, §3.3</div>
+    <div class="acts"><button class="btn ghost" data-close>Fermer</button></div>
   </div></div>
 </section>
 <script data-screen="core-utilisateurs">
@@ -5831,6 +5879,7 @@ ERP.register('core-utilisateurs', function (root, ctx) {
       <p class="scr-sub">Le profil détermine sous quelle autorité l'utilisateur agit (§3.3) · les rôles regroupent des permissions définies par action (§3.4) · un droit peut être limité à une entité, une filiale, un MaaS ou un module, sans héritage automatique (§3.4) · exceptions ci-dessous (§3.5)</p>
     </div>
     <div class="scr-meta">
+      <button class="linkish" data-open="help-core-profils"><svg><use href="#i-info"/></svg>Comment ça marche ?</button>
       <span class="sens s"><svg><use href="#i-shield"/></svg>Sensible</span>
       <span class="hint">Sensible : modifications auditées, export contrôlé (§5.3) · consultation sans validation · attribution d'un profil et exception enregistrées sous le profil actif, auditées (§5.4) · permission temporaire demandée via Demandes, validée par un Admin/Super Admin (§4.1)</span>
     </div>
@@ -5956,6 +6005,22 @@ ERP.register('core-utilisateurs', function (root, ctx) {
     <label for="core-profils-x-end">Date de fin (facultative, ISO 8601)</label><input id="core-profils-x-end" type="date" class="inp" data-x="end" min="2026-08-28">
     <label for="core-profils-x-why">Motif (obligatoire, audité)</label><input id="core-profils-x-why" class="inp" data-x="why" placeholder="ex. mission d'audit externe, clôture du mois">
     <div class="acts"><button class="btn ghost" data-close>Annuler</button><button class="btn pri" data-x="save" data-perm="core.droits.override"><svg><use href="#i-check"/></svg>Enregistrer l'exception</button></div>
+  </div></div>
+
+  <div class="mback" data-ov="help-core-profils"><div class="modal wide" role="dialog" aria-modal="true" aria-label="Comment ça marche : Profils et rôles">
+    <h3><svg><use href="#i-info"/></svg>Comment ça marche : Profils et rôles</h3>
+    <div class="exp">Cet écran définit qui peut faire quoi dans l'ERP : Admin et Super Admin y attribuent des profils et gèrent les exceptions ; tout utilisateur peut y vérifier ce que son profil autorise.</div>
+    <ul class="help-list">
+      <li><b>Profil actif unique</b> — un seul profil est actif à la fois ; la carte « Profil actif connecté » affiche Super Admin — S. Doucouré et la colonne correspondante est surlignée dans la matrice. Changer de profil recalcule aussitôt le menu et les permissions (§3.3).</li>
+      <li><b>Consulter ≠ Exporter</b> — ce sont deux permissions distinctes : le Directeur des Opérations (F. Sarr) consulte les Dépenses mais son Export reste « Non (refusé : permission Exporter distincte) » dans le tableau des profils (§3.4).</li>
+      <li><b>Pas d'héritage automatique</b> — un droit peut être limité à un périmètre précis : le Gérant MaaS Keur Massar (B. Fall) ne voit, sur finance.creances.view, que sa position MaaS Keur Massar, comme le montre son override dans les exceptions (§3.4).</li>
+      <li><b>Une matrice construite par action</b> — 10 actions possibles (consulter, créer, modifier…) sur 27 domaines d'écran donnent les 61 permissions distinctes affichées dans la carte « Permissions granulaires » (§3.4).</li>
+      <li><b>Chaîne de résolution des exceptions</b> — les 2 exceptions enregistrées (override contexte pour B. Fall, accès temporaire pour C. Mbaye) s'appliquent avant la permission de rôle, dans l'ordre Interdiction explicite → Override utilisateur → Override contexte → Permission rôle → Règle catégorie → Règle globale → Refus par défaut (§3.5).</li>
+      <li><b>Accès temporaire qui expire seul</b> — l'accès de C. Mbaye (Comptable externe) court du 01/09/2026 au 30/09/2026 ; non commencé au 27/08, il s'arrêtera automatiquement à l'échéance, sans action manuelle (§3.5).</li>
+    </ul>
+    <div class="note-strip"><svg><use href="#i-lock"/></svg>Refus par défaut : ce qui n'est pas explicitement autorisé est refusé — la demande DEM-028 de F. Sarr pour exporter les dépenses, refusée le 24/08, en est un exemple sur cet écran.</div>
+    <div class="hint">Sources : Cahier Mata Core §3.3 à §3.5</div>
+    <div class="acts"><button class="btn ghost" data-close>Fermer</button></div>
   </div></div>
 </section>
 <script data-screen="core-profils">
@@ -6368,6 +6433,7 @@ ERP.register('core-droits', function (root, ctx) {
       <p class="scr-sub">Demandes administratives (Core §4.1) : création d'un utilisateur, création d'un client, création d'un fournisseur, nouvel accès, profil, permission temporaire · accessibles aux Admin/Super Admin habilités · une demande peut être retournée à l'initiateur avec un motif ou commentaire, celui-ci la corrige et la soumet à nouveau · l'intégralité des retours, commentaires, versions et décisions est conservée</p>
     </div>
     <div class="scr-meta">
+      <button class="linkish" data-open="help-core-demandes"><svg><use href="#i-info"/></svg>Comment ça marche ?</button>
       <span class="sens s"><svg><use href="#i-shield"/></svg>Sensible</span>
       <span class="hint">Validation simple par un Admin/Super Admin habilité, sous un profil actif déterminé et intégralement auditée (§4.2) · l'initiateur ne valide jamais sa propre demande, le Super Admin ne contourne pas cette règle · modifications auditées, export contrôlé (§5.3)</span>
     </div>
@@ -6549,6 +6615,23 @@ ERP.register('core-droits', function (root, ctx) {
     <div class="fld"><label for="core-demandes-cobj">Objet corrigé</label><input id="core-demandes-cobj" class="inp" data-k="objet"></div>
     <div class="fld"><label for="core-demandes-cprec">Précisions apportées (obligatoire)</label><textarea id="core-demandes-cprec" class="inp" data-k="prec" rows="3"></textarea><span class="hint">Réponse au motif du retour, conservée dans l'historique des échanges</span></div>
     <div class="acts"><button class="btn ghost" data-close>Annuler</button><button class="btn pri" data-k="submit" data-perm="core.demandes.initier"><svg><use href="#i-check"/></svg>Soumettre la version corrigée</button></div>
+  </div></div>
+
+  <!-- Modale : aide contextuelle -->
+  <div class="mback" data-ov="help-core-demandes"><div class="modal wide" role="dialog" aria-modal="true" aria-label="Comment ça marche : Demandes">
+    <h3><svg><use href="#i-info"/></svg>Comment ça marche : Demandes</h3>
+    <div class="exp">Écran des demandes administratives (création d'un utilisateur, d'un client, d'un fournisseur, nouvel accès, profil, permission temporaire) : les MaaS et utilisateurs autorisés initient, un Admin/Super Admin habilité décide.</div>
+    <ul class="help-list">
+      <li><b>Cycle de statut</b> — une demande passe de En attente à Retournée, Validée, Refusée ou Annulée ; l'écran compte aujourd'hui 1 demande En attente (DEM-031) et 1 Retournée (DEM-030) (§4.1).</li>
+      <li><b>Retour motivé</b> — une demande retournée porte un motif conservé : DEM-030 a été retournée avec le motif « préciser la date de fin et le périmètre demandé », l'initiateur F. Sarr corrige et resoumet une nouvelle version, le motif et la version précédente restant conservés (§4.1).</li>
+      <li><b>Demande validée</b> — une demande validée crée ou attribue l'objet correspondant : DEM-029 validée a créé le compte Fournisseur « Ferme Ndiaye » (§4.1).</li>
+      <li><b>Initiateur ≠ validateur</b> — sur une demande de F. Sarr, le bouton Valider lui reste désactivé s'il est connecté : l'initiateur ne valide jamais sa propre demande, le Super Admin ne contourne pas cette règle (§4.2).</li>
+      <li><b>Décision auditée</b> — chaque validation, refus ou retour est réalisé sous un profil actif déterminé et journalisé : DEM-029 a été validée par S. Doucouré, profil Super Admin, le 25/08 à 17:40 (§4.2).</li>
+      <li><b>Conservation</b> — les demandes suivent la même politique de conservation et d'archivage que le journal central, sans mécanisme de rétention séparé pour les 5 demandes de l'écran (§5.4).</li>
+    </ul>
+    <div class="note-strip"><svg><use href="#i-shield"/></svg>Refus par défaut : sans la permission core.demandes.valider, la liste se limite aux demandes de l'initiateur connecté ; celles des autres restent hors périmètre.</div>
+    <div class="hint">Sources : Cahier Mata Core §4.1, §4.2, §5.4 · FIXTURES §10</div>
+    <div class="acts"><button class="btn ghost" data-close>Fermer</button></div>
   </div></div>
 </section>
 <script data-screen="core-demandes">

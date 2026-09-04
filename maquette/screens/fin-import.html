@@ -29,6 +29,7 @@
       <p class="scr-sub">Banque → Finance : position bancaire via CSV et références disponibles · import idempotent ; correction tracée ; rapprochement ligne à ligne hors V1 (§9) · La Banque est alimentée en V1 par import CSV (§4.9) · Assistant : Fichier → Prévisualisation → Contrôles → Validation → Import (Core §6.3) · jeudi 27 août 2026</p>
     </div>
     <div class="scr-meta">
+      <button class="linkish" data-open="help-fin-import"><svg><use href="#i-info"/></svg>Comment ça marche ?</button>
       <span class="sens s"><svg><use href="#i-shield"/></svg>Sensible</span>
       <span class="hint">Sensible : accès restreint, modifications auditées, export contrôlé (Core §5.3) · exécution sous « finance.import.executer », sans second validateur</span>
     </div>
@@ -172,6 +173,21 @@
     <button class="btn pri" data-next>Suivant<svg><use href="#i-arr"/></svg></button>
   </div>
   <div class="note-strip"><svg><use href="#i-info"/></svg><span>Le CSV reste le mode V1 ; une bascule ultérieure vers une API bancaire n’aura aucun impact sur le comportement fonctionnel de la Position externe ni sur les écrans qui la consomment (§4.9). Bictorys, alimenté par synchronisation automatique, n’est jamais importé ni modifié à la main. La bascule vers une API bancaire (écriture automatique) passera par Test/Recette avant Production : nominal, idempotence, permissions, audit, cas de refus (Core §8).</span></div>
+
+  <div class="mback" data-ov="help-fin-import"><div class="modal wide" role="dialog" aria-modal="true" aria-label="Comment ça marche : Import relevé bancaire">
+    <h3><svg><use href="#i-info"/></svg>Comment ça marche : Import relevé bancaire</h3>
+    <div class="exp">Cet écran ajoute la position de la Banque BOA à partir d’un relevé CSV, sans jamais la saisir à la main. Il sert aux profils autorisés à importer (permission « finance.import.executer »), en pratique le Super Admin ou un Admin Finance.</div>
+    <ul class="help-list">
+      <li><b>La position vient du fichier, jamais d’une saisie</b> — le solde affiché, <span class="amt" data-amt="45200000" data-nocur></span>, est la valeur inscrite en en-tête du relevé CSV. Une correction manuelle comme <span class="amt" data-amt="-45000" data-nocur></span> (VAL-116, en attente) reste à part et n’écrase jamais cette valeur source (§4.9).</li>
+      <li><b>Identifier chaque ligne sans doublon</b> — la référence bancaire sert d’identifiant quand elle existe ; sinon le système fabrique une empreinte à partir du compte, de la date, du montant, du sens et du libellé. C’est ce qui distingue les 2 lignes sans référence, <span class="amt" data-amt="3000000" data-nocur></span> (versement) et <span class="amt" data-amt="800000" data-nocur></span> (retrait) (§4.9).</li>
+      <li><b>Réimporter ne double jamais l’effet</b> — les 14 lignes du fichier sont déjà connues de la position ; relancer l’import donne 0 doublon et 0 effet supplémentaire, la position reste à <span class="amt" data-amt="45200000" data-nocur></span> (§9).</li>
+      <li><b>Aucun rapprochement automatique avec une dépense</b> — même si un libellé évoque un client ou un transfert, comme le crédit <span class="amt" data-amt="150000" data-nocur></span> « VIR RECU TOUBA VIANDES », la ligne bancaire n’est reliée à rien : ce rapprochement ligne à ligne arrive dans une version ultérieure (§11.1).</li>
+      <li><b>Un assistant en 5 étapes, aucune écriture avant la fin</b> — Fichier, Prévisualisation, Contrôles, Validation puis Import : rien n’est enregistré avant que l’étape Import soit lancée. Le bouton « Exporter le journal d’import » utilise un droit distinct du droit de consultation (Core §6.3).</li>
+    </ul>
+    <div class="note-strip"><svg><use href="#i-shield"/></svg>Refus par défaut : sans la permission « finance.import.executer », le bouton Importer reste visible mais désactivé, avec l’explication affichée.</div>
+    <div class="hint">Sources : Cahier Mata Finance §4.9, §9, §11.1 · Mata Core §6.3</div>
+    <div class="acts"><button class="btn ghost" data-close>Fermer</button></div>
+  </div></div>
 </section>
 <script data-screen="fin-import">
 ERP.register('fin-import', function (root, ctx) {

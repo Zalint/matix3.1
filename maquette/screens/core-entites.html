@@ -21,6 +21,7 @@
       <p class="scr-sub">Mata Group, filiales et MaaS du référentiel transverse (§2) · créées par configuration, jamais supprimées physiquement · Mata Group est le premier périmètre activé (Finance §2.3) et, à ce jour, la seule entité sélectionnable (référentiel §1)</p>
     </div>
     <div class="scr-meta">
+      <button class="linkish" data-open="help-core-entites"><svg><use href="#i-info"/></svg>Comment ça marche ?</button>
       <span class="sens std"><svg><use href="#i-shield"/></svg>Standard</span>
       <span class="hint">Standard : permissions normales (§5.3) · consultation sans validation · activation, désactivation et création : aucune validation (Core §4.2, hypothèse soumise au panel), permission core.entites.activer, motif obligatoire, enregistrées sous le profil actif et auditées (§5.4)</span>
     </div>
@@ -163,6 +164,21 @@
     <label for="core-entites-n-code">Identifiant (entity_id, stable)</label><input id="core-entites-n-code" class="inp code" placeholder="MAAS-XX">
     <div class="row-m"><span>Rattachement</span><b>Mata Group (entité mère)</b></div>
     <div class="acts"><button class="btn ghost" data-close>Annuler</button><button class="btn pri" data-act="create" data-perm="core.entites.activer"><svg><use href="#i-plus"/></svg>Créer « À activer »</button></div>
+  </div></div>
+
+  <div class="mback" data-ov="help-core-entites"><div class="modal wide" role="dialog" aria-modal="true" aria-label="Comment ça marche : Entités">
+    <h3><svg><use href="#i-info"/></svg>Comment ça marche : Entités</h3>
+    <div class="exp">Le référentiel central des entités de l'ERP (Mata Group, filiales, MaaS) : consultation ouverte à tout profil standard, activation et création réservées aux profils autorisés (permission core.entites.activer).</div>
+    <ul class="help-list">
+      <li><b>Le référentiel n'est jamais vidé, seulement mis à jour</b> — 16 entités sont recensées et aucune n'est supprimée physiquement : une entité déjà utilisée passe au statut Désactivée pour conserver son historique (§2).</li>
+      <li><b>Mata Group est le premier périmètre activé</b> — sur 16 entités référencées, 1 seule (Mata Group) est active ; les autres pourront l'être plus tard, chacune sans fork applicatif (§2.3).</li>
+      <li><b>Activer une entité ne crée aucune infrastructure dédiée</b> — les 13 entités « À activer » (Keur Bally et les 12 MaaS) peuvent l'être par simple configuration, sans nouvelle base, schéma ni déploiement (Technique §3).</li>
+      <li><b>Chaque accès doit porter un contexte d'entité</b> — le bloc « Contexte d'entité du profil actif » affiche l'entité imposée au profil connecté ; sans ce contexte, l'accès aux données est refusé par défaut (Technique §3).</li>
+      <li><b>Les modules métier référencent l'entité par son identifiant</b> — le compte Créance client C1 de MaaS Keur Massar (<span class="amt" data-amt="3250000" data-nocur></span> FCFA) est relié à MAAS-KM par son entity_id : Mata Finance ne crée pas de référentiel parallèle (§2).</li>
+    </ul>
+    <div class="note-strip"><svg><use href="#i-lock"/></svg><span><b>Refus par défaut</b> : une action sans permission (comme Activer sur MLC ou Mata Volaille) reste visible, désactivée et expliquée — jamais masquée sans motif.</span></div>
+    <div class="hint">Sources : Cahier Mata Core §2 · Mata Finance §2.3 · Architecture technique §3</div>
+    <div class="acts"><button class="btn ghost" data-close>Fermer</button></div>
   </div></div>
 </section>
 <script data-screen="core-entites">

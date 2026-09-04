@@ -15,6 +15,7 @@
       <p class="scr-sub">Demandes administratives (Core §4.1) : création d'un utilisateur, création d'un client, création d'un fournisseur, nouvel accès, profil, permission temporaire · accessibles aux Admin/Super Admin habilités · une demande peut être retournée à l'initiateur avec un motif ou commentaire, celui-ci la corrige et la soumet à nouveau · l'intégralité des retours, commentaires, versions et décisions est conservée</p>
     </div>
     <div class="scr-meta">
+      <button class="linkish" data-open="help-core-demandes"><svg><use href="#i-info"/></svg>Comment ça marche ?</button>
       <span class="sens s"><svg><use href="#i-shield"/></svg>Sensible</span>
       <span class="hint">Validation simple par un Admin/Super Admin habilité, sous un profil actif déterminé et intégralement auditée (§4.2) · l'initiateur ne valide jamais sa propre demande, le Super Admin ne contourne pas cette règle · modifications auditées, export contrôlé (§5.3)</span>
     </div>
@@ -196,6 +197,23 @@
     <div class="fld"><label for="core-demandes-cobj">Objet corrigé</label><input id="core-demandes-cobj" class="inp" data-k="objet"></div>
     <div class="fld"><label for="core-demandes-cprec">Précisions apportées (obligatoire)</label><textarea id="core-demandes-cprec" class="inp" data-k="prec" rows="3"></textarea><span class="hint">Réponse au motif du retour, conservée dans l'historique des échanges</span></div>
     <div class="acts"><button class="btn ghost" data-close>Annuler</button><button class="btn pri" data-k="submit" data-perm="core.demandes.initier"><svg><use href="#i-check"/></svg>Soumettre la version corrigée</button></div>
+  </div></div>
+
+  <!-- Modale : aide contextuelle -->
+  <div class="mback" data-ov="help-core-demandes"><div class="modal wide" role="dialog" aria-modal="true" aria-label="Comment ça marche : Demandes">
+    <h3><svg><use href="#i-info"/></svg>Comment ça marche : Demandes</h3>
+    <div class="exp">Écran des demandes administratives (création d'un utilisateur, d'un client, d'un fournisseur, nouvel accès, profil, permission temporaire) : les MaaS et utilisateurs autorisés initient, un Admin/Super Admin habilité décide.</div>
+    <ul class="help-list">
+      <li><b>Cycle de statut</b> — une demande passe de En attente à Retournée, Validée, Refusée ou Annulée ; l'écran compte aujourd'hui 1 demande En attente (DEM-031) et 1 Retournée (DEM-030) (§4.1).</li>
+      <li><b>Retour motivé</b> — une demande retournée porte un motif conservé : DEM-030 a été retournée avec le motif « préciser la date de fin et le périmètre demandé », l'initiateur F. Sarr corrige et resoumet une nouvelle version, le motif et la version précédente restant conservés (§4.1).</li>
+      <li><b>Demande validée</b> — une demande validée crée ou attribue l'objet correspondant : DEM-029 validée a créé le compte Fournisseur « Ferme Ndiaye » (§4.1).</li>
+      <li><b>Initiateur ≠ validateur</b> — sur une demande de F. Sarr, le bouton Valider lui reste désactivé s'il est connecté : l'initiateur ne valide jamais sa propre demande, le Super Admin ne contourne pas cette règle (§4.2).</li>
+      <li><b>Décision auditée</b> — chaque validation, refus ou retour est réalisé sous un profil actif déterminé et journalisé : DEM-029 a été validée par S. Doucouré, profil Super Admin, le 25/08 à 17:40 (§4.2).</li>
+      <li><b>Conservation</b> — les demandes suivent la même politique de conservation et d'archivage que le journal central, sans mécanisme de rétention séparé pour les 5 demandes de l'écran (§5.4).</li>
+    </ul>
+    <div class="note-strip"><svg><use href="#i-shield"/></svg>Refus par défaut : sans la permission core.demandes.valider, la liste se limite aux demandes de l'initiateur connecté ; celles des autres restent hors périmètre.</div>
+    <div class="hint">Sources : Cahier Mata Core §4.1, §4.2, §5.4 · FIXTURES §10</div>
+    <div class="acts"><button class="btn ghost" data-close>Fermer</button></div>
   </div></div>
 </section>
 <script data-screen="core-demandes">

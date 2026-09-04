@@ -86,6 +86,17 @@ a.mod:hover .arr{transform:translateX(3px);color:var(--red)}
 .rl div span:last-child{color:var(--ink-2);text-align:right}
 .hint{color:var(--mut);font-size:12.5px;margin-top:12px}
 
+.map{margin-top:16px}
+.dirgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px 28px;margin-top:6px}
+.dirh{margin:14px 0 2px;font-family:var(--head);font-weight:600;font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--red)}
+.dirh:first-child{margin-top:0}
+.dirlist{display:flex;flex-direction:column;gap:1px}
+.dlink{display:block;padding:7px 10px;margin:0 -10px;border-radius:8px;text-decoration:none;color:inherit;min-height:44px;transition:background .15s}
+.dlink:hover{background:var(--red-tint)}
+.dlink b{display:block;font-size:13px;font-weight:700;color:var(--ink)}
+.dlink small{display:block;margin-top:1px;font-size:12px;line-height:1.4;color:var(--ink-2)}
+@media (max-width:640px){.dirgrid{grid-template-columns:1fr}}
+
 footer{border-top:1px solid var(--line);padding:16px clamp(16px,4vw,40px);display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;font-size:12.5px;color:var(--mut);background:var(--card)}
 footer a{color:var(--ink-2);text-decoration:underline;text-underline-offset:3px;min-height:44px;display:inline-flex;align-items:center}
 footer .ver{font-family:var(--mono);font-size:11.5px}
@@ -182,6 +193,50 @@ footer .ver{font-family:var(--mono);font-size:11.5px}
       <p class="hint">Formules visibles au survol des icônes d'information, sauf sur les écrans de déclaration en aveugle.</p>
     </section>
   </div>
+
+  <section class="card map" aria-labelledby="h-map">
+    <h2 id="h-map">Les 27 écrans en un coup d'œil</h2>
+    <p class="hint" style="margin-top:0">Chaque écran détaille aussi son propre fonctionnement : bouton « Comment ça marche ? » dans son en-tête, avec la référence du cahier utilisée.</p>
+    <div class="dirgrid">
+      <div>
+        <h3 class="dirh">Mata Core · 12 écrans</h3>
+        <div class="dirlist">
+          <a class="dlink" href="erp-mata.html#core-entites"><b>Entités</b><small>Organisation, filiales et MaaS : activation par configuration, sans déploiement ni base dédiée.</small></a>
+          <a class="dlink" href="erp-mata.html#core-utilisateurs"><b>Utilisateurs</b><small>Comptes internes et externes, catégories, accès temporaires — jamais supprimé, seulement désactivé.</small></a>
+          <a class="dlink" href="erp-mata.html#core-profils"><b>Profils et rôles</b><small>Qui peut faire quoi : matrice des permissions par profil, plus les exceptions individuelles.</small></a>
+          <a class="dlink" href="erp-mata.html#core-droits"><b>Droits effectifs</b><small>Simule un utilisateur sur une action donnée et affiche la chaîne de décision à 7 niveaux.</small></a>
+          <a class="dlink" href="erp-mata.html#core-demandes"><b>Demandes</b><small>Création de comptes, clients ou fournisseurs : une demande, une validation, jamais d'auto-validation.</small></a>
+          <a class="dlink" href="erp-mata.html#core-audit"><b>Audit central</b><small>Journal de toutes les actions sensibles, qui a fait quoi et quand — sa consultation est elle-même auditée.</small></a>
+          <a class="dlink" href="erp-mata.html#core-agents"><b>Agents IA</b><small>Budget, autonomie et périmètre de chaque agent : lecture seule, sauf action explicitement autorisée.</small></a>
+          <a class="dlink" href="erp-mata.html#core-notifications"><b>Notifications</b><small>Centre de messages reçus, filtré selon le profil actif.</small></a>
+          <a class="dlink" href="erp-mata.html#core-alertes"><b>Alertes</b><small>Règles qui déclenchent les notifications : seuils, destinataires, niveau de criticité.</small></a>
+          <a class="dlink" href="erp-mata.html#core-import"><b>Import / Export</b><small>Import de référentiels (fournisseurs, utilisateurs) et exports générés, expiration automatique.</small></a>
+          <a class="dlink" href="erp-mata.html#core-parametres"><b>Paramètres</b><small>Réglages transverses (devise, fuseau, seuils d'alerte) par portée : globale ou override local.</small></a>
+          <a class="dlink" href="erp-mata.html#core-incidents"><b>Incidents</b><small>Suivi des anomalies techniques et fonctionnelles, supervision de la disponibilité des modules.</small></a>
+        </div>
+      </div>
+      <div>
+        <h3 class="dirh">Mata Finance · 15 écrans</h3>
+        <div class="dirlist">
+          <a class="dlink" href="erp-mata.html#fin-dashboard"><b>Tableau de bord</b><small>Vue consolidée de la journée : trésorerie, fournisseurs, clients, activité, contrôles, P&amp;L.</small></a>
+          <a class="dlink" href="erp-mata.html#fin-comptes"><b>Comptes</b><small>Les 6 types de comptes financiers, tous à solde calculé, jamais saisi à la main.</small></a>
+          <a class="dlink" href="erp-mata.html#fin-depenses"><b>Dépenses</b><small>Enregistrement immédiat, contrôlé ensuite par la réconciliation du soir.</small></a>
+          <a class="dlink" href="erp-mata.html#fin-fournisseurs"><b>Fournisseurs</b><small>Dettes et avances par fournisseur, échéances et paiement affecté en FIFO.</small></a>
+          <a class="dlink" href="erp-mata.html#fin-creances"><b>Créances clients</b><small>Ce que chaque client (MaaS compris) doit à Mata, recalculé à chaque vente et encaissement.</small></a>
+          <a class="dlink" href="erp-mata.html#fin-reconciliation"><b>Réconciliation</b><small>Les 4 circuits du jour comparés en aveugle au montant déclaré, gelés à 23:59.</small></a>
+          <a class="dlink" href="erp-mata.html#fin-declarations"><b>Déclarations</b><small>Où chaque caissier ou collecteur déclare son solde compté, sans jamais voir le théorique avant.</small></a>
+          <a class="dlink" href="erp-mata.html#fin-transferts"><b>Transferts</b><small>Mouvements entre comptes Trésorerie ou Positions externes, validés par une personne distincte de l'initiateur.</small></a>
+          <a class="dlink" href="erp-mata.html#fin-validations"><b>Validations</b><small>File d'attente des opérations sensibles en attente d'un second regard, simple ou double.</small></a>
+          <a class="dlink" href="erp-mata.html#fin-pnl"><b>P&amp;L et KPI</b><small>Résultat de gestion en trois variantes et les 9 indicateurs clés du mois, montant puis ratio.</small></a>
+          <a class="dlink" href="erp-mata.html#fin-charges"><b>Charges fixes</b><small>Loyer, salaires : proratisés au jour, sans doublon avec les dépenses déjà comptabilisées.</small></a>
+          <a class="dlink" href="erp-mata.html#fin-visualisation"><b>Visualisation</b><small>Courbes des grands indicateurs sur 30 jours, pour repérer une dérive tôt.</small></a>
+          <a class="dlink" href="erp-mata.html#fin-historique"><b>Historique</b><small>Photos figées de la situation financière à chaque clôture, comparées à la situation recalculée d'aujourd'hui.</small></a>
+          <a class="dlink" href="erp-mata.html#fin-stock"><b>Stock (lecture)</b><small>Valeur du stock fournie par le module Stock, en lecture seule — Finance ne recalcule rien.</small></a>
+          <a class="dlink" href="erp-mata.html#fin-import"><b>Import relevé bancaire</b><small>Import du relevé Banque BOA, avec détection automatique des doublons.</small></a>
+        </div>
+      </div>
+    </div>
+  </section>
 </main>
 
 <footer>

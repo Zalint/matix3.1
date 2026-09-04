@@ -29,6 +29,7 @@
       <p class="scr-sub">Le profil détermine sous quelle autorité l'utilisateur agit (§3.3) · les rôles regroupent des permissions définies par action (§3.4) · un droit peut être limité à une entité, une filiale, un MaaS ou un module, sans héritage automatique (§3.4) · exceptions ci-dessous (§3.5)</p>
     </div>
     <div class="scr-meta">
+      <button class="linkish" data-open="help-core-profils"><svg><use href="#i-info"/></svg>Comment ça marche ?</button>
       <span class="sens s"><svg><use href="#i-shield"/></svg>Sensible</span>
       <span class="hint">Sensible : modifications auditées, export contrôlé (§5.3) · consultation sans validation · attribution d'un profil et exception enregistrées sous le profil actif, auditées (§5.4) · permission temporaire demandée via Demandes, validée par un Admin/Super Admin (§4.1)</span>
     </div>
@@ -154,6 +155,22 @@
     <label for="core-profils-x-end">Date de fin (facultative, ISO 8601)</label><input id="core-profils-x-end" type="date" class="inp" data-x="end" min="2026-08-28">
     <label for="core-profils-x-why">Motif (obligatoire, audité)</label><input id="core-profils-x-why" class="inp" data-x="why" placeholder="ex. mission d'audit externe, clôture du mois">
     <div class="acts"><button class="btn ghost" data-close>Annuler</button><button class="btn pri" data-x="save" data-perm="core.droits.override"><svg><use href="#i-check"/></svg>Enregistrer l'exception</button></div>
+  </div></div>
+
+  <div class="mback" data-ov="help-core-profils"><div class="modal wide" role="dialog" aria-modal="true" aria-label="Comment ça marche : Profils et rôles">
+    <h3><svg><use href="#i-info"/></svg>Comment ça marche : Profils et rôles</h3>
+    <div class="exp">Cet écran définit qui peut faire quoi dans l'ERP : Admin et Super Admin y attribuent des profils et gèrent les exceptions ; tout utilisateur peut y vérifier ce que son profil autorise.</div>
+    <ul class="help-list">
+      <li><b>Profil actif unique</b> — un seul profil est actif à la fois ; la carte « Profil actif connecté » affiche Super Admin — S. Doucouré et la colonne correspondante est surlignée dans la matrice. Changer de profil recalcule aussitôt le menu et les permissions (§3.3).</li>
+      <li><b>Consulter ≠ Exporter</b> — ce sont deux permissions distinctes : le Directeur des Opérations (F. Sarr) consulte les Dépenses mais son Export reste « Non (refusé : permission Exporter distincte) » dans le tableau des profils (§3.4).</li>
+      <li><b>Pas d'héritage automatique</b> — un droit peut être limité à un périmètre précis : le Gérant MaaS Keur Massar (B. Fall) ne voit, sur finance.creances.view, que sa position MaaS Keur Massar, comme le montre son override dans les exceptions (§3.4).</li>
+      <li><b>Une matrice construite par action</b> — 10 actions possibles (consulter, créer, modifier…) sur 27 domaines d'écran donnent les 61 permissions distinctes affichées dans la carte « Permissions granulaires » (§3.4).</li>
+      <li><b>Chaîne de résolution des exceptions</b> — les 2 exceptions enregistrées (override contexte pour B. Fall, accès temporaire pour C. Mbaye) s'appliquent avant la permission de rôle, dans l'ordre Interdiction explicite → Override utilisateur → Override contexte → Permission rôle → Règle catégorie → Règle globale → Refus par défaut (§3.5).</li>
+      <li><b>Accès temporaire qui expire seul</b> — l'accès de C. Mbaye (Comptable externe) court du 01/09/2026 au 30/09/2026 ; non commencé au 27/08, il s'arrêtera automatiquement à l'échéance, sans action manuelle (§3.5).</li>
+    </ul>
+    <div class="note-strip"><svg><use href="#i-lock"/></svg>Refus par défaut : ce qui n'est pas explicitement autorisé est refusé — la demande DEM-028 de F. Sarr pour exporter les dépenses, refusée le 24/08, en est un exemple sur cet écran.</div>
+    <div class="hint">Sources : Cahier Mata Core §3.3 à §3.5</div>
+    <div class="acts"><button class="btn ghost" data-close>Fermer</button></div>
   </div></div>
 </section>
 <script data-screen="core-profils">
