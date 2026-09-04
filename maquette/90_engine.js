@@ -21,7 +21,7 @@ var PERSONAS=[
 var ENTITIES=[
  {id:'MG',name:'Mata Group',type:'Entité mère',st:'ok',lbl:'Active'},
  {id:'MLC',name:'MLC',type:'Filiale',st:'mut',lbl:'À migrer',off:'Référentiels MLC à migrer avant activation'},
- {id:'MV',name:'Mata Volaille',type:'Filiale',st:'mut',lbl:'À migrer',off:'Fork historique à resynchroniser avant activation'},
+ {id:'MV',name:'Mata Volaille',type:'Filiale',st:'mut',lbl:'À migrer',off:'Référentiels Mata Volaille à migrer avant activation'},
  {id:'KB',name:'Keur Bally',type:'Filiale (franchise)',st:'mut',lbl:'À activer',off:'Activation par configuration, sans fork applicatif'},
  {id:'MAAS-KM',name:'MaaS Keur Massar',type:'MaaS',st:'mut',lbl:'À activer',off:'Instance MaaS activable ultérieurement par configuration'},
  {id:'MAAS-ALL',name:'11 autres MaaS',type:'MaaS',st:'mut',lbl:'À activer',off:'Ouakam, Pikine, Rufisque, Grand Yoff, Parcelles, Médina, Yoff, Ngor, Thiaroye, Guédiawaye, HLM'}

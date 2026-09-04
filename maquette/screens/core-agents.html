@@ -21,7 +21,6 @@
     #app [data-scr="core-agents"] .jrow b{font-family:'Fira Code',monospace;color:var(--ink)}
     #app [data-scr="core-agents"] .bud .hint{display:block;margin-top:6px;line-height:1.45}
     #app [data-scr="core-agents"] .agacts{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
-    #app [data-scr="core-agents"] .st.info{background:var(--red-tint);color:var(--red)}
     #app [data-scr="core-agents"] .rules{list-style:none;margin:0;padding:0}
     #app [data-scr="core-agents"] .rules li{font-size:12px;line-height:1.5;padding:7px 0;border-bottom:1px dashed var(--line);display:flex;gap:9px;color:var(--ink-2)}
     #app [data-scr="core-agents"] .rules li svg{width:13px;height:13px;flex:none;color:var(--red);margin-top:3px}
@@ -52,14 +51,14 @@
       <div class="sub2" data-k="n-sub">2 actifs · 1 inactif · Conseiller 2 · Exécutant 1</div>
     </div>
     <div class="card stat">
-      <div class="lb">Budget mensuel plafond · Σ<button class="fx" data-f="Chaque agent porte un budget mensuel plafond, configurable depuis un écran d'administration dédié ; au-delà du plafond, l'agent cesse de répondre jusqu'au mois suivant ou jusqu'à relèvement explicite par un utilisateur autorisé." data-c="AG-01 150 000 · AG-02 80 000 · AG-03 40 000 · Σ = 270 000" data-src="Mata Core · registre des agents (§7.2) · plafonds en vigueur au 27/08/2026" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></div>
+      <div class="lb">Budget mensuel plafond · Σ<button class="fx" data-k="fx-bud" data-f="Chaque agent porte un budget mensuel plafond, configurable depuis un écran d'administration dédié ; au-delà du plafond, l'agent cesse de répondre jusqu'au mois suivant ou jusqu'à relèvement explicite par un utilisateur autorisé." data-c="AG-01 150 000 · AG-02 80 000 · AG-03 40 000 · Σ = 270 000" data-src="Mata Core · registre des agents (§7.2) · plafonds en vigueur au 27/08/2026" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></div>
       <div class="v amt" data-amt="270000" data-k="bud-total"></div>
       <div class="sub2">FCFA par mois · éditable agent par agent (core.agents.budget)</div>
     </div>
     <div class="card stat">
-      <div class="lb">Consommé en août<button class="fx" data-f="Un budget mensuel plafond, configurable par agent depuis Mata Core, ne peut être dépassé ; au-delà du plafond, l'agent cesse de répondre jusqu'au mois suivant ou jusqu'à relèvement explicite du plafond par un utilisateur autorisé." data-c="AG-01 93 000 (62 %) · AG-02 12 400 (16 %) · AG-03 0 (0 %) · Σ = 105 400 / 270 000 = 39 %" data-src="Mata Core · compteur de consommation par agent au 27/08 · Finance §9.3 · règle d'alerte « Budget agent IA > 80 % » → Super Admin, Informative" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></div>
+      <div class="lb">Consommé en août<button class="fx" data-k="fx-used" data-f="Un budget mensuel plafond, configurable par agent depuis Mata Core, ne peut être dépassé ; au-delà du plafond, l'agent cesse de répondre jusqu'au mois suivant ou jusqu'à relèvement explicite du plafond par un utilisateur autorisé." data-c="AG-01 93 000 (62 %) · AG-02 12 400 (16 %) · AG-03 0 (0 %) · Σ = 105 400 / 270 000 = 39 %" data-src="Mata Core · compteur de consommation par agent au 27/08 · Finance §9.3 · règle d'alerte « Budget agent IA > 80 % » → Super Admin, Informative" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></div>
       <div class="v amt" data-amt="105400" data-k="used-total"></div>
-      <div class="sub2"><span data-k="used-pct">39 %</span> du plafond cumulé · alerte Super Admin à partir de 80 % par agent</div>
+      <div class="sub2"><span data-k="used-pct">39 %</span> du plafond cumulé · alerte Super Admin au-delà de 80 % par agent</div>
     </div>
     <div class="card stat">
       <div class="lb">Overrides de modèle actifs</div>
@@ -110,7 +109,7 @@
         <div class="kv"><span>Autonomie</span><b>Préparation + confirmation humaine</b></div>
         <div class="kv"><span>Modules</span><b>Mata Finance (réconciliation)</b></div>
         <div class="kv"><span>Modèle par défaut</span><b>Économique</b></div>
-        <div class="kv"><span>Écriture</span><b>Prépare un rapprochement fournisseur ; la validation reste humaine (finance.reconciliation.valider)</b></div>
+        <div class="kv"><span>Écriture</span><b>Prépare une réconciliation ; la validation reste humaine (finance.reconciliation.valider)</b></div>
         <div class="kv"><span>Droits effectifs pour vous</span><b data-k="eff"></b></div>
         <div class="bud">
           <div class="lb">Budget mensuel plafond<button class="fx" data-f="Chaque agent porte un budget mensuel plafond, configurable depuis un écran d'administration dédié ; au-delà du plafond, l'agent cesse de répondre jusqu'au mois suivant ou jusqu'à relèvement explicite par un utilisateur autorisé." data-c="Consommé août 12 400 / plafond 80 000 = 16 % · seuil d'alerte 80 % · reste 67 600" data-src="Mata Core · registre des agents, compteur au 27/08 · environnement Test/Recette" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></div>
@@ -119,7 +118,7 @@
           <div class="jauge"><i data-k="bar" style="width:16%"></i></div>
           <span class="hint" data-k="budnote"></span>
         </div>
-        <div class="deny-note" style="margin:12px 0 0"><svg><use href="#i-alert"/></svg><span><b>Test / Recette obligatoire</b> : un agent ayant des droits d'écriture doit passer en Test/Recette avant Production (§7.2, §8). Toute écriture préparée reste soumise aux règles de sensibilité, de validation et d'audit ; passage en Production après recette validée.</span></div>
+        <div class="note-strip" style="margin:12px 0 0"><svg><use href="#i-alert"/></svg><span><b>Test / Recette obligatoire</b> : un agent ayant des droits d'écriture doit passer en Test/Recette avant Production (§7.2, §8). Toute écriture préparée reste soumise aux règles de sensibilité, de validation et d'audit ; passage en Production après recette validée.</span></div>
         <div class="agacts"><button class="btn ghost sm" data-open="core-agents-fiche"><svg><use href="#i-file"/></svg>Fiche registre</button><button class="btn ghost sm" data-open="core-agents-override" data-perm="core.agents.override"><svg><use href="#i-clock"/></svg>Relever temporairement</button></div>
       </div>
     </article>
@@ -166,7 +165,7 @@
       <div class="cb">
         <div class="tl" data-k="tl"></div>
         <div class="kv"><span>Requêtes déclenchées par un écran</span><b>0 · aucun appel en arrière-plan</b></div>
-        <div class="kv"><span>Alerte « Budget agent IA &gt; 80 % »</span><b>Centre · Super Admin · Informative · aucun agent au-dessus du seuil</b></div>
+        <div class="kv"><span>Alerte « Budget agent IA &gt; 80 % »</span><b data-k="alert80">Centre · Super Admin · Informative · aucun agent au-dessus du seuil</b></div>
         <div class="kv"><span>Conservation</span><b>Modifications 24 mois puis archive 10 ans · consultations 90 jours (Technique §11)</b></div>
       </div>
     </div>
@@ -176,10 +175,10 @@
     <h3><svg><use href="#i-clock"/></svg>Relever temporairement le modèle</h3>
     <div class="exp">Un utilisateur autorisé peut choisir temporairement, pour une requête ou une période limitée, un modèle plus coûteux pour un agent donné ; le système revient ensuite automatiquement au modèle par défaut, et le plafond budgétaire reste applicable sauf relèvement explicite (§7.2).</div>
     <div class="fld"><label for="core-agents-ov-agent">Agent</label><select id="core-agents-ov-agent" class="inp" data-o="agent"></select></div>
-    <div class="fld"><label for="core-agents-ov-model">Modèle</label><select id="core-agents-ov-model" class="inp" data-o="model"><option value="Modèle avancé">Modèle avancé (plus coûteux)</option><option value="Économique">Économique (routage par défaut)</option></select><span class="hint">Par défaut, le routage choisit le modèle répondant au besoin au coût le plus faible (Technique §10)</span></div>
+    <div class="fld"><label for="core-agents-ov-model">Modèle</label><select id="core-agents-ov-model" class="inp" data-o="model"><option value="Modèle avancé">Modèle avancé (plus coûteux)</option></select><span class="hint">Par défaut, le routage choisit le modèle répondant au besoin au coût le plus faible (Technique §10) · le retour anticipé au modèle par défaut se fait par « Révoquer » sur la carte de l'agent</span></div>
     <label class="rline"><input type="radio" name="core-agents-scope" value="req" checked>Une requête<span class="rh">retour au modèle par défaut après la prochaine réponse</span></label>
     <label class="rline"><input type="radio" name="core-agents-scope" value="dur">Une durée<span class="rh">expire automatiquement à l'échéance</span></label>
-    <div class="fld"><label for="core-agents-ov-dur">Durée</label><select id="core-agents-ov-dur" class="inp" data-o="dur" disabled><option value="60">1 heure</option><option value="240">4 heures</option><option value="close">Jusqu'au gel de 23:59</option><option value="1440">24 heures</option></select></div>
+    <div class="fld"><label for="core-agents-ov-dur">Durée</label><select id="core-agents-ov-dur" class="inp" data-o="dur" disabled><option value="60">1 heure</option><option value="240">4 heures</option><option value="close">Jusqu'à minuit</option><option value="1440">24 heures</option></select></div>
     <div class="fld"><label for="core-agents-ov-why">Motif (journal d'audit)</label><input id="core-agents-ov-why" class="inp" data-o="why" placeholder="Analyse demandée, complexité justifiant un modèle plus coûteux"></div>
     <div class="note-strip"><svg><use href="#i-alert"/></svg><span>Expire automatiquement · tracé dans l'audit (acteur, profil, agent, modèle, portée, échéance, motif) · le plafond reste applicable sauf relèvement explicite du budget mensuel.</span></div>
     <div class="acts"><button class="btn ghost" data-close>Annuler</button><button class="btn pri" data-perm="core.agents.override" data-act="ov-save"><svg><use href="#i-check"/></svg>Activer l'override</button></div>
@@ -223,26 +222,28 @@ ERP.register('core-agents', function (root, ctx) {
   var LBL = { dashboard: 'Tableau de bord', comptes: 'Comptes', depenses: 'Dépenses', fournisseurs: 'Fournisseurs', creances: 'Créances', reconciliation: 'Réconciliation', declarations: 'Déclarations', transferts: 'Transferts', validations: 'Validations', pnl: 'P&L et KPI', charges: 'Charges fixes', visualisation: 'Visualisation', historique: 'Historique', stock: 'Stock', import: 'Import', demandes: 'Demandes' };
   var MOD = { 'Mata Finance (lecture)': VF.map(function (x) { return 'finance.' + x + '.view'; }), 'Mata Finance (réconciliation)': ['finance.reconciliation.view'], 'Mata Core (Demandes)': ['core.demandes.view'] };
   var A = {
-    'AG-01': { n: 'Conseiller financier Mata', type: 'Conseiller', auto: 'Conseil', mod: 'Mata Finance (lecture)', env: 'Production · lecture seule', st: 'ok', ic: 'check', on: true, bud: 150000, used: 93000, ov: { model: 'Modèle avancé', until: '27/08 18:00', by: 'S. Doucouré', scope: 'durée' }, log: [{ t: '27/08 · 15:30', a: 'S. Doucouré · Super Admin', x: 'Override modèle agent : modèle avancé jusqu\'à 18:00 · Sensible', on: true, s: 0 }] },
-    'AG-02': { n: 'Assistant réconciliation', type: 'Exécutant', auto: 'Préparation + confirmation humaine', mod: 'Mata Finance (réconciliation)', env: 'Test / Recette', st: 'warn', ic: 'alert', on: true, bud: 80000, used: 12400, ov: null, write: 'Préparation de rapprochement fournisseur, confirmation humaine', log: [] },
+    'AG-01': { n: 'Conseiller financier Mata', type: 'Conseiller', auto: 'Conseil', mod: 'Mata Finance (lecture)', env: 'Production · lecture seule', st: 'ok', ic: 'check', on: true, bud: 150000, used: 93000, ov: { model: 'Modèle avancé', until: '27/08 · 18:00', by: 'S. Doucouré', scope: 'durée' }, log: [{ t: '27/08 · 15:30', a: 'S. Doucouré · Super Admin', x: 'Override modèle agent : modèle avancé jusqu\'à 18:00 · Sensible', on: true, s: 0 }] },
+    'AG-02': { n: 'Assistant réconciliation', type: 'Exécutant', auto: 'Préparation + confirmation humaine', mod: 'Mata Finance (réconciliation)', env: 'Test / Recette', st: 'warn', ic: 'alert', on: true, bud: 80000, used: 12400, ov: null, write: 'Préparation de réconciliation, confirmation humaine', log: [] },
     'AG-03': { n: 'Assistant Demandes', type: 'Conseiller', auto: 'Conseil', mod: 'Mata Core (Demandes)', env: 'Inactif', st: 'mut', ic: 'eyeoff', on: false, bud: 40000, used: 0, ov: null, log: [] }
   };
   var clock = 21 * 60 + 30, cur = 'AG-01', seq = 4, ls = 1;
   function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
-  function hm(m) { var d = m >= 1440 ? '28/08' : '27/08'; m = m % 1440; return d + ' ' + ('0' + Math.floor(m / 60)).slice(-2) + ':' + ('0' + m % 60).slice(-2); }
-  function now() { return hm(clock++).replace(' ', ' · '); }
+  function hm(m) { var d = m >= 1440 ? '28/08' : '27/08'; m = m % 1440; return d + ' · ' + ('0' + Math.floor(m / 60)).slice(-2) + ':' + ('0' + m % 60).slice(-2); }
+  function now() { return hm(clock++); }
   function card(id) { return q('[data-agent="' + id + '"]'); }
   function pct(a) { return a.bud > 0 ? Math.round(a.used / a.bud * 100) : 0; }
   function effList(a) { return MOD[a.mod].filter(function (p) { return ctx.hasPerm(p); }).map(function (p) { var k = p.split('.')[1]; return LBL[k] + (/^(comptes|transferts|validations|reconciliation)$/.test(k) ? ' (HS, consultation auditée)' : ''); }); }
-  function effTxt(a, full) { var L = effList(a), n = MOD[a.mod].length, hs = L.filter(function (x) { return /\(HS/.test(x); }).length; if (!a.on) return 'Agent inactif : aucune requête acceptée'; if (!L.length) return 'Aucun droit effectif pour le profil ' + ctx.profile.profile + ' : l\'agent ne répond à aucune requête'; return L.length + ' / ' + n + ' écran(s) en lecture · ' + (full ? L.join(', ') : (hs ? 'dont ' + hs + ' Hautement sensible (consultation auditée)' : 'aucun Hautement sensible')) + (a.write ? ' · ' + a.write : ''); }
-  function ovHtml(a, id) { var o = a.ov; if (!o) return ''; return '<svg><use href="#i-clock"/></svg><div><b>' + esc(o.model) + ' actif ' + (o.scope === 'requête' ? 'pour la prochaine requête' : 'jusqu\'au ' + esc(o.until)) + '</b>, demandé par ' + esc(o.by) + ', audité · retour automatique au modèle par défaut Économique · plafond de <span class="amt" data-amt="' + a.bud + '"></span> toujours applicable</div><button class="btn ghost sm" data-perm="core.agents.override" data-act="revoke"><svg><use href="#i-x"/></svg>Révoquer</button>'; }
+  function capped(a) { return a.on && pct(a) >= 100; }
+  function stOf(a) { var f = capped(a); return { c: 'st ' + (f ? 'bad' : a.st), h: '<svg><use href="#i-' + (f ? 'alert' : a.ic) + '"/></svg>' + esc((f ? 'Plafond atteint · ' : '') + a.env) }; }
+  function effTxt(a, full) { var L = effList(a), n = MOD[a.mod].length, hs = L.filter(function (x) { return /\(HS/.test(x); }).length; if (!a.on) return 'Agent inactif : aucune requête acceptée'; if (capped(a)) return 'Plafond mensuel atteint : l\'agent ne répond plus jusqu\'au mois suivant ou relèvement explicite du plafond'; if (!L.length) return 'Aucun droit effectif pour le profil ' + ctx.profile.profile + ' : l\'agent ne répond à aucune requête'; return L.length + ' / ' + n + ' écran(s) en lecture · ' + (full ? L.join(', ') : (hs ? 'dont ' + hs + ' Hautement sensible (consultation auditée)' : 'aucun Hautement sensible')) + (a.write ? ' · ' + a.write : ''); }
+  function ovHtml(a, id) { var o = a.ov; if (!o) return ''; return '<svg><use href="#i-clock"/></svg><div><b>' + esc(o.model) + ' actif ' + (o.scope === 'requête' ? 'pour la prochaine requête' : 'jusqu\'au ' + esc(o.until)) + '</b>, demandé par ' + esc(o.by) + ', audité · retour automatique au modèle par défaut Économique · plafond de <span class="amt" data-amt="' + a.bud + '"></span> toujours applicable' + (capped(a) ? ' · <b>plafond atteint : l\'agent ne répond plus</b>' : '') + '</div><button class="btn ghost sm" data-perm="core.agents.override" data-act="revoke"><svg><use href="#i-x"/></svg>Révoquer</button>'; }
   function paint(id) {
-    var a = A[id], c = card(id), p = pct(a), full = p >= 100;
-    c.setAttribute('data-state', a.on ? 'on' : 'off');
-    q('[data-k="state"]', c).className = 'st ' + a.st; q('[data-k="state"]', c).innerHTML = '<svg><use href="#i-' + a.ic + '"/></svg>' + esc(a.env);
+    var a = A[id], c = card(id), p = pct(a), full = p >= 100, s = stOf(a), st = q('[data-k="state"]', c);
+    c.setAttribute('data-state', a.on ? 'on' : 'off'); st.className = s.c; st.innerHTML = s.h;
     q('[data-k="budget"]', c).value = a.bud; q('[data-k="used"]', c).setAttribute('data-amt', a.used); q('[data-k="pct"]', c).textContent = p + ' %';
+    q('.fx', c).setAttribute('data-c', 'Consommé août ' + ctx.fmt(a.used) + ' / plafond ' + ctx.fmt(a.bud) + ' = ' + p + ' % · seuil d\'alerte 80 % · reste ' + ctx.fmt(Math.max(a.bud - a.used, 0)) + (a.on ? '' : ' · agent inactif, aucune requête') + (a.just ? ' · justification : ' + a.just : ''));
     var bar = q('[data-k="bar"]', c); bar.style.width = Math.min(p, 100) + '%'; bar.className = full ? 'over' : (p >= 50 ? 'hot' : '');
-    q('[data-k="budnote"]', c).textContent = full ? 'Plafond atteint : l\'agent cesse de répondre jusqu\'au mois suivant ou jusqu\'à relèvement explicite du plafond' : (p > 80 ? 'Au-dessus de 80 % : alerte « Budget agent IA > 80 % » envoyée au Super Admin (Informative)' : 'Reste ' + ctx.fmt(a.bud - a.used) + ' FCFA · alerte Super Admin à partir de 80 % · au-delà du plafond, l\'agent cesse de répondre');
+    q('[data-k="budnote"]', c).textContent = full ? 'Plafond atteint : l\'agent cesse de répondre jusqu\'au mois suivant ou jusqu\'à relèvement explicite du plafond' : (p > 80 ? 'Au-dessus de 80 % : alerte « Budget agent IA > 80 % » envoyée au Super Admin (Informative)' : 'Reste ' + ctx.fmt(a.bud - a.used) + ' FCFA · alerte Super Admin au-delà de 80 % · au-delà du plafond, l\'agent cesse de répondre');
     var ov = q('[data-k="ovr"]', c); ov.innerHTML = ovHtml(a, id); ov.hidden = !a.ov;
     q('[data-k="eff"]', c).textContent = effTxt(a);
     var act = q('[data-k="activate"]', c), ob = q('[data-k="ovbtn"]', c); if (act) act.hidden = a.on; if (ob) ob.hidden = !a.on;
@@ -252,15 +253,19 @@ ERP.register('core-agents', function (root, ctx) {
     var ids = Object.keys(A), on = ids.filter(function (i) { return A[i].on; }).length, ovs = ids.filter(function (i) { return A[i].ov; }), B = 0, U = 0;
     ids.forEach(function (i) { B += A[i].bud; U += A[i].used; });
     q('[data-k="n-total"]').textContent = ids.length; q('[data-k="n-sub"]').textContent = on + ' actif(s) · ' + (ids.length - on) + ' inactif(s) · Conseiller ' + ids.filter(function (i) { return A[i].type === 'Conseiller'; }).length + ' · Exécutant ' + (ids.length - ids.filter(function (i) { return A[i].type === 'Conseiller'; }).length);
-    q('[data-k="bud-total"]').setAttribute('data-amt', B); q('[data-k="used-total"]').setAttribute('data-amt', U); q('[data-k="used-pct"]').textContent = (B ? Math.round(U / B * 100) : 0) + ' %';
-    q('[data-k="n-ov"]').textContent = ovs.length; q('[data-k="ov-sub"]').textContent = ovs.length ? ovs.map(function (i) { return i + ' · ' + A[i].ov.model.toLowerCase() + ' · ' + (A[i].ov.scope === 'requête' ? 'prochaine requête' : 'expire ' + A[i].ov.until); }).join(' · ') + ' · retour automatique au routage par défaut' : 'Aucun override en cours · routage par défaut sur tous les agents';
+    var P = B ? Math.round(U / B * 100) : 0, al = ids.filter(function (i) { return pct(A[i]) > 80; });
+    q('[data-k="bud-total"]').setAttribute('data-amt', B); q('[data-k="used-total"]').setAttribute('data-amt', U); q('[data-k="used-pct"]').textContent = P + ' %';
+    q('[data-k="fx-bud"]').setAttribute('data-c', ids.map(function (i) { return i + ' ' + ctx.fmt(A[i].bud); }).join(' · ') + ' · Σ = ' + ctx.fmt(B));
+    q('[data-k="fx-used"]').setAttribute('data-c', ids.map(function (i) { return i + ' ' + ctx.fmt(A[i].used) + ' (' + pct(A[i]) + ' %)'; }).join(' · ') + ' · Σ = ' + ctx.fmt(U) + ' / ' + ctx.fmt(B) + ' = ' + P + ' %');
+    q('[data-k="alert80"]').textContent = 'Centre · Super Admin · Informative · ' + (al.length ? 'émise pour ' + al.map(function (i) { return i + ' (' + pct(A[i]) + ' %)'; }).join(', ') : 'aucun agent au-dessus du seuil');
+    q('[data-k="n-ov"]').textContent = ovs.length; q('[data-k="ov-sub"]').textContent = ovs.length ? ovs.map(function (i) { return i + ' · ' + A[i].ov.model.toLowerCase() + ' · ' + (A[i].ov.scope === 'requête' ? 'prochaine requête' : 'expire ' + A[i].ov.until) + (capped(A[i]) ? ' · plafond atteint : l\'agent ne répond plus' : ''); }).join(' · ') + ' · retour automatique au routage par défaut' : 'Aucun override en cours · routage par défaut sur tous les agents';
     q('[data-k="tl"]').innerHTML = ids.reduce(function (L, i) { return L.concat(A[i].log.map(function (e) { return { i: i, e: e }; })); }, []).sort(function (x, y) { return y.e.s - x.e.s; }).map(function (r) { return '<div class="ev' + (r.e.on ? ' on' : '') + '"><b>' + r.i + ' · ' + esc(r.e.x) + '</b><small>' + esc(r.e.a) + ' · ' + r.e.t + '</small></div>'; }).join('') || '<div class="ev"><b>Aucune trace</b><small>27/08</small></div>';
     ctx.formatAmounts(q('.statstrip'));
   }
   function log(id, x, on) { A[id].log.push({ t: now(), a: ctx.profile.short + ' · ' + ctx.profile.profile, x: x, on: !!on, s: ls++ }); }
   function fiche(id) {
     var a = A[id], L = effList(a); cur = id; q('[data-d="title"]').textContent = id + ' · ' + a.n;
-    q('[data-d="meta"]').innerHTML = '<span class="st ' + a.st + '"><svg><use href="#i-' + a.ic + '"/></svg>' + esc(a.env) + '</span><span class="tag lock">' + esc(a.type) + '</span><span class="tag lock">' + esc(a.auto) + '</span>';
+    var s = stOf(a); q('[data-d="meta"]').innerHTML = '<span class="' + s.c + '">' + s.h + '</span><span class="tag lock">' + esc(a.type) + '</span><span class="tag lock">' + esc(a.auto) + '</span>';
     var K = [['Catégorie', a.type + (a.type === 'Conseiller' ? ' — consulte, analyse, recommande, simule ; aucune écriture directe' : ' — uniquement les actions explicitement autorisées')], ['Autonomie', a.auto], ['Modules', a.mod], ['Modèle par défaut', 'Économique · routage au coût le plus faible (Technique §10)'], ['Déclenchement', 'À la demande explicite uniquement · aucun appel en arrière-plan'], ['Mémoire', 'Aucune base vectorielle, indexation sémantique ni mémoire implicite (V1)'], ['Budget mensuel plafond', ctx.fmt(a.bud) + ' FCFA · consommé ' + ctx.fmt(a.used) + ' (' + pct(a) + ' %)'], ['Override', a.ov ? a.ov.model + (a.ov.scope === 'requête' ? ' · prochaine requête' : ' · jusqu\'au ' + a.ov.until) + ' · ' + a.ov.by + ' · audité' : 'Aucun · modèle par défaut'], ['Droits de l\'agent', MOD[a.mod].join(', ') + (a.write ? ' · ' + a.write : '')], ['Environnement', a.env + (a.write ? ' · Test/Recette avant Production (droits d\'écriture)' : '')]];
     q('[data-d="kv"]').innerHTML = K.map(function (r) { return '<div class="kv"><span>' + r[0] + '</span><b>' + esc(r[1]) + '</b></div>'; }).join('');
     q('[data-d="who"]').textContent = ctx.profile.short + ' (' + ctx.profile.profile + ')'; q('[data-d="eff"]').textContent = effTxt(a, true) + (L.length && /\(HS/.test(L.join()) ? ' · Hautement sensible : consultation elle-même auditée, restrictions possibles pour les agents IA (§5.3)' : '') + (L.indexOf('Déclarations') >= 0 ? ' · l\'agent ne restitue jamais le solde théorique à un déclarant : saisie en aveugle (Finance §4.8)' : '');
@@ -277,19 +282,19 @@ ERP.register('core-agents', function (root, ctx) {
   function ovSave() {
     var id = q('[data-o="agent"]').value, a = A[id], model = q('[data-o="model"]').value, dur = q('input[name="core-agents-scope"]:checked').value === 'dur', d = q('[data-o="dur"]').value, why = q('[data-o="why"]').value.trim();
     if (!why) { ctx.toast('Le motif est obligatoire : l\'override est audité (§5.4)'); q('[data-o="why"]').focus(); return; }
-    if (model === 'Économique') { a.ov = null; log(id, 'Retour au modèle par défaut Économique · motif : ' + why, true); }
-    else { a.ov = { model: model, until: dur ? (d === 'close' ? '27/08 23:59' : hm(clock + Number(d))) : '', by: ctx.profile.short, scope: dur ? 'durée' : 'requête' }; log(id, 'Override modèle agent : ' + model.toLowerCase() + (dur ? ' jusqu\'au ' + a.ov.until : ' pour une requête') + ' · motif : ' + why + ' · Sensible', true); }
+    a.ov = { model: model, until: dur ? (d === 'close' ? '27/08 · 23:59' : hm(clock + Number(d))) : '', by: ctx.profile.short, scope: dur ? 'durée' : 'requête' }; log(id, 'Override modèle agent : ' + model.toLowerCase() + (dur ? ' jusqu\'au ' + a.ov.until : ' pour une requête') + ' · motif : ' + why + ' · Sensible', true);
     q('[data-o="why"]').value = ''; paint(id); stats(); if (q('[data-ov="core-agents-fiche"]').classList.contains('on')) fiche(id); ctx.close('core-agents-override');
-    ctx.toast(id + ' : ' + (a.ov ? a.ov.model + (dur ? ' jusqu\'au ' + a.ov.until : ' pour la prochaine requête') + ' · expire automatiquement' : 'modèle par défaut rétabli') + ' · audité · le plafond reste applicable');
+    ctx.toast(id + ' : ' + a.ov.model + (dur ? ' jusqu\'au ' + a.ov.until : ' pour la prochaine requête') + ' · expire automatiquement · audité · le plafond reste applicable' + (capped(a) ? ' (atteint : l\'agent ne répond plus)' : ''));
   }
   function newAgent() {
     var name = q('[data-n="name"]').value.trim(), v = q('[data-n="budget"]').value.replace(/\s/g, ''), why = q('[data-n="why"]').value.trim(), type = q('[data-n="type"]').value;
     if (!name || !why || !/^\d+$/.test(v) || Number(v) <= 0) { ctx.toast('Nom, budget mensuel plafond (entier positif) et justification sont obligatoires'); return; }
+    if (type === 'Conseiller' && q('[data-n="auto"]').value !== 'Conseil') { ctx.toast('Un Conseiller n\'a aucune écriture directe (§7.2) : autonomie « Conseil » uniquement'); return; }
     var id = 'AG-0' + seq++, write = type === 'Exécutant' ? 'Actions explicitement autorisées, à définir en Test/Recette' : '';
-    A[id] = { n: name, type: type, auto: q('[data-n="auto"]').value, mod: q('[data-n="mod"]').value, env: 'Inactif', st: 'mut', ic: 'eyeoff', on: false, bud: Number(v), used: 0, ov: null, write: write, log: [] };
+    A[id] = { n: name, type: type, auto: q('[data-n="auto"]').value, mod: q('[data-n="mod"]').value, env: 'Inactif', st: 'mut', ic: 'eyeoff', on: false, bud: Number(v), used: 0, ov: null, write: write, just: why, log: [] };
     var c = card('AG-03').cloneNode(true); c.setAttribute('data-agent', id); c.setAttribute('data-type', type === 'Conseiller' ? 'conseiller' : 'executant');
     q('h3', c).innerHTML = '<svg><use href="#i-bot"/></svg>' + id + ' · ' + esc(name); q('.agtags', c).innerHTML = '<span class="tag lock">' + esc(type) + '</span>' + (write ? '<span class="tag lock"><svg><use href="#i-alert"/></svg>Droits d\'écriture</span>' : '');
-    var kv = qa('.kv b', c); kv[0].textContent = A[id].auto; kv[1].textContent = A[id].mod; kv[3].textContent = write || 'Aucune écriture directe (Conseiller)'; q('.fx', c).setAttribute('data-c', 'Consommé 0 / plafond ' + ctx.fmt(Number(v)) + ' = 0 % · justification : ' + why); q('[data-k="budget"]', c).setAttribute('aria-label', 'Budget mensuel plafond ' + id);
+    var kv = qa('.kv b', c); kv[0].textContent = A[id].auto; kv[1].textContent = A[id].mod; kv[3].textContent = write || 'Aucune écriture directe (Conseiller)'; q('[data-k="budget"]', c).setAttribute('aria-label', 'Budget mensuel plafond ' + id);
     q('[data-k="agents"]').appendChild(c); log(id, 'Création de l\'agent (Inactif) · ' + type + ' · ' + A[id].mod + ' · justification : ' + why, true); paint(id); stats(); applyFilter();
     qa('[data-n]').forEach(function (i) { if (i.tagName === 'INPUT') i.value = ''; }); ctx.close('core-agents-nouveau'); ctx.toast(id + ' créé Inactif · budget ' + ctx.fmt(Number(v)) + ' FCFA · audité · ' + (write ? 'Test/Recette obligatoire avant Production' : 'activation par un utilisateur autorisé'));
   }
@@ -297,7 +302,12 @@ ERP.register('core-agents', function (root, ctx) {
   ctx.on(root, 'click', function (e) {
     var t = e.target, c = t.closest('[data-agent]'), id = c ? c.getAttribute('data-agent') : cur, act = t.closest('[data-act]'), ch = t.closest('[data-filter]'), op = t.closest('[data-open]');
     if (ch) { qa('[data-filter]').forEach(function (x) { x.classList.toggle('on', x === ch); }); applyFilter(); return; }
-    if (op && !op.classList.contains('denied')) { if (op.getAttribute('data-open') === 'core-agents-fiche') fiche(id); if (op.getAttribute('data-open') === 'core-agents-override') { q('[data-o="agent"]').innerHTML = Object.keys(A).filter(function (i) { return A[i].on; }).map(function (i) { return '<option value="' + i + '"' + (i === id ? ' selected' : '') + '>' + i + ' · ' + esc(A[i].n) + '</option>'; }).join(''); } return; }
+    if (op && !op.classList.contains('denied')) {
+      var o = op.getAttribute('data-open'); if (o === 'core-agents-fiche') fiche(id);
+      if (o === 'core-agents-override') { q('[data-o="agent"]').innerHTML = Object.keys(A).filter(function (i) { return A[i].on; }).map(function (i) { return '<option value="' + i + '"' + (i === id ? ' selected' : '') + '>' + i + ' · ' + esc(A[i].n) + '</option>'; }).join(''); q('[data-o="model"]').selectedIndex = 0; q('input[name="core-agents-scope"][value="req"]').checked = true; q('[data-o="dur"]').disabled = true; q('[data-o="dur"]').selectedIndex = 0; q('[data-o="why"]').value = ''; }
+      if (o === 'core-agents-nouveau') { qa('select[data-n]').forEach(function (s) { s.selectedIndex = 0; }); syncAuto(); }
+      return;
+    }
     if (!act || act.disabled || act.classList.contains('denied')) return;
     var k = act.getAttribute('data-act');
     if (k === 'budget') saveBudget(id);
@@ -307,6 +317,8 @@ ERP.register('core-agents', function (root, ctx) {
     else if (k === 'new-save') newAgent();
   });
   qa('input[name="core-agents-scope"]').forEach(function (r) { ctx.on(r, 'change', function () { q('[data-o="dur"]').disabled = r.value !== 'dur'; }); });
+  function syncAuto() { var cons = q('[data-n="type"]').value === 'Conseiller', s = q('[data-n="auto"]'); qa('option', s).forEach(function (o, i) { o.disabled = cons && i > 0; }); if (cons) s.selectedIndex = 0; }
+  ctx.on(q('[data-n="type"]'), 'change', syncAuto);
   document.addEventListener('erp:profile', function () { setTimeout(function () { Object.keys(A).forEach(function (i) { q('[data-k="eff"]', card(i)).textContent = effTxt(A[i]); }); if (q('[data-ov="core-agents-fiche"]').classList.contains('on')) fiche(cur); }, 0); });
   Object.keys(A).forEach(paint); stats(); ctx.formatAmounts(root); ctx.applyPerms();
 });

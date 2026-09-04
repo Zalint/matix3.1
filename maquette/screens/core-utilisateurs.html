@@ -28,7 +28,7 @@
     </div>
     <div class="scr-meta">
       <span class="sens s"><svg><use href="#i-shield"/></svg>Sensible</span>
-      <span class="hint">Sensible : modifications auditées, export contrôlé (§5.3) · création et désactivation : aucune validation, écriture immédiate sous le profil actif, motif conservé dans l'audit (§5.4) · demandes des MaaS via Demandes (§4.1)</span>
+      <span class="hint">Sensible : modifications auditées, export contrôlé (§5.3) · niveau de validation : aucune validation pour la création et la désactivation (hypothèse maquette, §4.2, à trancher par le panel) · motif conservé dans l'audit (§5.4) · demandes des MaaS via Demandes (§4.1)</span>
     </div>
   </div>
 
@@ -39,12 +39,12 @@
       <div class="sub2" data-stat="sub">8 actifs · 1 désactivé (M. Gueye, 30/06/2026) · jamais supprimé</div>
     </div>
     <div class="card stat">
-      <div class="lb">Internes · Externes<button class="fx" data-f="Un utilisateur peut appartenir simultanément à plusieurs catégories : Interne — Employé. Externe — Comptable, Investisseur, Accès temporaire." data-c="Interne — Employé 6 (dont 1 désactivé) · Externe — Investisseur 1 · Externe — Comptable 1 (aussi Accès temporaire) · Externe — MaaS 1" data-src="Mata Core · catégories utilisateurs (§3.2) · lu à l'instant" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></div>
+      <div class="lb">Internes · Externes<button class="fx" data-fx="cats" data-f="Un utilisateur peut appartenir simultanément à plusieurs catégories : Interne — Employé. Externe — Comptable, Investisseur, Accès temporaire." data-c="Interne — Employé 6 (dont 1 désactivé) · Externe — Comptable 1 · Externe — Investisseur 1 · Externe — Accès temporaire 1 · Externe — MaaS 1 (catégorie hors liste §3.2, question panel) · une personne compte une fois par catégorie : internes distincts 6 · externes distincts 3" data-src="Mata Core · catégories utilisateurs (§3.2) · lu à l'instant" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></div>
       <div class="v" data-stat="int">6 · 3</div>
-      <div class="sub2">catégories utilisables dans les règles d'accès : Investisseur limité à la lecture, Comptable externe borné au périmètre financier autorisé (§3.2)</div>
+      <div class="sub2">catégories utilisables dans les règles d'accès : Investisseur limité à la lecture, Comptable externe limité au périmètre financier autorisé (§3.2)</div>
     </div>
     <div class="card stat">
-      <div class="lb">Accès temporaire<button class="fx" data-f="Un accès temporaire possède une date de début et de fin et expire automatiquement." data-c="C. Mbaye : début 01/09/2026 · fin 30/09/2026 · jours restants = 30/09/2026 − 27/08/2026 = 34" data-src="Mata Core · catégorie Externe — Accès temporaire (§3.2) · date de référence 27/08/2026" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></div>
+      <div class="lb">Accès temporaire<button class="fx" data-fx="temp" data-f="Un accès temporaire possède une date de début et de fin et expire automatiquement." data-c="C. Mbaye : début 01/09/2026 · fin 30/09/2026 · jours restants = 30/09/2026 − 27/08/2026 = 34" data-src="Mata Core · catégorie Externe — Accès temporaire (§3.2) · date de référence 27/08/2026" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></div>
       <div class="v" data-stat="temp">1</div>
       <div class="sub2" data-stat="tempsub">C. Mbaye · 01/09/2026 → 30/09/2026 · dans 34 jours · expire automatiquement (§3.2)</div>
     </div>
@@ -72,7 +72,7 @@
         <thead><tr><th>Utilisateur</th><th>Catégories</th><th>Profil(s)</th><th>Entité</th><th>Statut</th><th>Accès temporaire</th><th>Action</th></tr></thead>
         <tbody data-rows><tr data-empty hidden><td colspan="7" class="hint">Aucun compte ne correspond à ce filtre · les comptes désactivés restent listés, jamais supprimés (§3.1)</td></tr></tbody>
       </table></div>
-      <div class="hint" style="margin-top:8px">Cliquer une ligne : fiche et droits effectifs réels du profil · Désactiver : modification auditée, motif obligatoire · les profils externes (Investisseur, Comptable) n'atteignent pas cet écran : refus par défaut (§10.2)</div>
+      <div class="hint" style="margin-top:8px">Cliquer une ligne : fiche et droits effectifs réels du profil · Désactiver : modification auditée, motif obligatoire · accès à cet écran : Super Admin et DG Mata (lecture) uniquement, refus par défaut pour les autres profils, internes comme externes (§10.2, FIXTURES §2)</div>
     </div>
   </div>
 
@@ -137,10 +137,11 @@
       <div class="fld"><label for="core-utilisateurs-email">Email (identifiant)</label><input id="core-utilisateurs-email" class="inp" type="email" data-field="email" placeholder="prenom.nom@mata.sn"></div>
     </div>
     <label>Catégories · plusieurs possibles (§3.2)</label>
-    <label class="rline"><input type="checkbox" data-cat="int" value="Interne — Employé">Interne — Employé<span class="rh">fonctionnalités réservées aux Internes</span></label>
+    <label class="rline"><input type="checkbox" data-cat="int" value="Interne — Employé">Interne — Employé<span class="rh">fonctionnalité réservée aux Internes</span></label>
     <label class="rline"><input type="checkbox" data-cat="cpt" value="Externe — Comptable">Externe — Comptable<span class="rh">périmètre financier autorisé</span></label>
     <label class="rline"><input type="checkbox" data-cat="inv" value="Externe — Investisseur">Externe — Investisseur<span class="rh">limité à la lecture</span></label>
     <label class="rline"><input type="checkbox" data-cat="temp" value="Externe — Accès temporaire">Externe — Accès temporaire<span class="rh">date de début et de fin · expire automatiquement</span></label>
+    <label class="rline"><input type="checkbox" data-cat="maas" value="Externe — MaaS">Externe — MaaS<span class="rh">catégorie de la maquette, absente du §3.2 · à trancher par le panel</span></label>
     <div class="formgrid" data-temp-wrap hidden>
       <div class="fld"><label for="core-utilisateurs-deb">Début d'accès</label><input id="core-utilisateurs-deb" class="inp mono" type="date" data-field="deb"></div>
       <div class="fld"><label for="core-utilisateurs-fin">Fin d'accès</label><input id="core-utilisateurs-fin" class="inp mono" type="date" data-field="fin"></div>
@@ -156,7 +157,7 @@
 
   <div class="mback" data-ov="core-utilisateurs-desactiver"><div class="modal" role="dialog" aria-modal="true" aria-label="Désactiver un compte">
     <h3><svg><use href="#i-eyeoff"/></svg>Désactiver le compte de <span data-x="n">l'utilisateur</span></h3>
-    <div class="exp">Les comptes utilisés ne sont pas supprimés : ils deviennent Actifs ou Désactivés (§3.1). Connexion impossible, profils gelés, historique et audit conservés · aucune validation préalable, modification auditée sous le profil actif avec son motif (§5.3, §5.4) · réactivation possible par un utilisateur habilité.</div>
+    <div class="exp">Les comptes utilisés ne sont pas supprimés : ils deviennent Actifs ou Désactivés (§3.1). Connexion impossible, profils gelés, historique et audit conservés · aucune validation préalable (hypothèse maquette, §4.2) · modification auditée sous le profil actif avec son motif (§5.4) · réactivation possible par un utilisateur habilité.</div>
     <div class="fld"><label for="core-utilisateurs-motif">Motif · obligatoire, conservé dans l'audit</label><input id="core-utilisateurs-motif" class="inp" data-field="motif" placeholder="ex. fin de mission"></div>
     <div class="acts"><button class="btn ghost" data-close>Annuler</button><button class="btn pri" data-confirm-deact data-perm="core.utilisateurs.modifier"><svg><use href="#i-eyeoff"/></svg>Confirmer la désactivation</button></div>
   </div></div>
@@ -176,7 +177,7 @@ ERP.register('core-utilisateurs', function (root, ctx) {
     'Investisseur': ['Notifications', 'Dashboard (blocs P&L et Trésorerie agrégée), P&L, Historique — lecture seule', 'Non', 'Standard + agrégats'],
     'Comptable externe': ['Notifications', 'Comptes (lecture), Dépenses (lecture), Fournisseurs (lecture), P&L, Historique — lecture seule ; Transferts, Validations, Audit interdits', 'Non', 'Sensible'],
     'Gérant MaaS Keur Massar': ['Demandes (initier : utilisateur, client), Notifications', 'Créances (sa position MaaS Keur Massar uniquement), Déclarations (versements de son MaaS)', 'Non', 'Sensible (son périmètre)'],
-    'Administrateur Mata Finance': ['Périmètre non décrit dans les périmètres de démonstration (FIXTURES §2) · à préciser au cadrage', 'Non décrit · à préciser au cadrage', 'À préciser', 'À préciser'],
+    'Administrateur Mata Finance': ['Périmètre du profil à préciser au cadrage', 'Périmètre du profil à préciser au cadrage', 'À préciser', 'À préciser'],
     'Directeur financier MLC': ['Profil non activable : entité MLC à migrer', 'Profil non activable : entité MLC à migrer', 'Non évaluable', 'Non évaluable']
   };
   var U = {
@@ -197,12 +198,15 @@ ERP.register('core-utilisateurs', function (root, ctx) {
   function has(u, k) { return u.cats.some(function (c) { return c.indexOf(k) === 0; }); }
   function audit(u) { return u.audit || 'Aucune attribution de droit enregistrée le 27/08 pour ' + u.s + ' · profil en vigueur avant la journée · historique complet dans l’Audit central (§5.4).'; }
   function tagsHtml(u) { return u.cats.map(function (c) { return '<span class="tag lock"><svg><use href="#i-' + (IC[c] || 'user') + '"/></svg>' + esc(c) + '</span>'; }).join(''); }
-  function expHtml(u) { return u.temp ? '<span class="expire"><svg><use href="#i-clock"/></svg>expire le ' + u.temp.fin + ' · dans ' + u.temp.days + ' jour' + (u.temp.days > 1 ? 's' : '') + '</span>' : '<span class="hint">—</span>'; }
+  function dj(d) { return d < 0 ? 'expiré' : d === 0 ? 'expire aujourd’hui' : 'dans ' + d + ' jour' + (d > 1 ? 's' : ''); }
+  var SELF = 'Refus : désactivation de son propre compte non autorisée (hypothèse maquette, hors cahier) · un autre acteur habilité doit agir';
+  function perms() { ctx.applyPerms(); qa('[data-deact]').forEach(function (b) { var u = U[b.getAttribute('data-u') || cur]; if (u && u.n === ctx.profile.user && !b.classList.contains('denied')) { b.disabled = true; b.classList.add('denied'); b.title = SELF; } }); }
+  function expHtml(u) { return u.temp ? '<span class="expire"><svg><use href="#i-clock"/></svg>expire le ' + u.temp.fin + ' · ' + dj(u.temp.days) + '</span>' : '<span class="hint">—</span>'; }
   function stHtml(u) { return u.st === 'actif' ? '<span class="st ok"><svg><use href="#i-check"/></svg>Actif</span>' : '<span class="st bad"><svg><use href="#i-eyeoff"/></svg>Désactivé</span><div class="hint">le ' + u.since + ' · jamais supprimé</div>'; }
   function profHtml(p) { return esc(p.p) + (p.sc ? ' (' + esc(p.sc) + ')' : '') + (p.off ? ' <span class="hint">(' + esc(p.off) + ')</span>' : ''); }
   function rowHtml(id) {
-    var u = U[id], act = u.st === 'actif', tags = (has(u, 'Interne') ? 'interne ' : '') + (has(u, 'Externe') ? 'externe ' : '') + u.st + (u.temp ? ' temporaire' : '');
-    return '<tr class="rowlink' + (act ? '' : ' off') + '" data-u="' + id + '" data-open="core-utilisateurs-fiche" data-tags="' + tags + '"><td><div class="who"><span class="av">' + esc(u.av) + '</span><div><b>' + esc(u.n) + '</b><div class="hint">' + esc(u.e) + '</div></div></div></td><td>' + tagsHtml(u) + '</td><td>' + u.prof.map(profHtml).join('<br>') + '</td><td>' + esc(EN[u.prof[0].ent]) + '</td><td>' + stHtml(u) + '</td><td>' + expHtml(u) + '</td><td>' + (act ? '<button class="btn ghost sm" data-deact data-u="' + id + '" data-open="core-utilisateurs-desactiver" data-perm="core.utilisateurs.modifier"><svg><use href="#i-eyeoff"/></svg>Désactiver</button>' : '<span class="hint">jamais supprimé (§3.1)</span>') + '</td></tr>';
+    var u = U[id], act = u.st === 'actif', self = u.n === ctx.profile.user, tags = (has(u, 'Interne') ? 'interne ' : '') + (has(u, 'Externe') ? 'externe ' : '') + u.st + (u.temp ? ' temporaire' : '');
+    return '<tr class="rowlink' + (act ? '' : ' off') + '" data-u="' + id + '" data-open="core-utilisateurs-fiche" data-tags="' + tags + '"><td><div class="who"><span class="av">' + esc(u.av) + '</span><div><b>' + esc(u.n) + '</b><div class="hint">' + esc(u.e) + '</div></div></div></td><td>' + tagsHtml(u) + '</td><td>' + u.prof.map(profHtml).join('<br>') + '</td><td>' + esc(EN[u.prof[0].ent]) + '</td><td>' + stHtml(u) + '</td><td>' + expHtml(u) + '</td><td>' + (act ? '<button class="btn ghost sm' + (self ? ' denied' : '') + '" data-deact data-u="' + id + '" data-open="core-utilisateurs-desactiver" data-perm="core.utilisateurs.modifier"' + (self ? ' disabled title="' + SELF + '"' : '') + '><svg><use href="#i-eyeoff"/></svg>Désactiver</button>' : '<span class="hint">jamais supprimé (§3.1)</span>') + '</td></tr>';
   }
   function counts() {
     var ids = Object.keys(U), act = ids.filter(function (i) { return U[i].st === 'actif'; }), des = ids.filter(function (i) { return U[i].st !== 'actif'; }), tmp = ids.filter(function (i) { return U[i].temp; });
@@ -210,7 +214,9 @@ ERP.register('core-utilisateurs', function (root, ctx) {
     q('[data-stat="total"]').textContent = ids.length; q('[data-stat="int"]').textContent = int + ' · ' + ext; q('[data-stat="temp"]').textContent = tmp.length; q('[data-count]').textContent = ids.length + ' comptes · ' + act.length + ' actifs · ' + dl;
     q('[data-stat="sub"]').textContent = act.length + ' actifs · ' + dl + (des.length ? ' (' + des.map(function (i) { return U[i].s + ', ' + U[i].since; }).join(' · ') + ')' : '') + ' · jamais supprimé';
     q('[data-fx="comptes"]').setAttribute('data-c', 'Actifs ' + act.length + ' · Désactivés ' + des.length + (des.length ? ' (' + des.map(function (i) { return U[i].s + ', ' + U[i].since; }).join(' · ') + ')' : ''));
-    q('[data-stat="tempsub"]').textContent = tmp.length ? tmp.map(function (i) { return U[i].s + ' · ' + U[i].temp.deb + ' → ' + U[i].temp.fin + ' · dans ' + U[i].temp.days + ' jours'; }).join(' · ') + ' · expire automatiquement (§3.2)' : 'Aucun accès temporaire en cours · un accès temporaire expire automatiquement (§3.2)';
+    q('[data-fx="cats"]').setAttribute('data-c', Object.keys(IC).map(function (c) { var n = ids.filter(function (i) { return U[i].cats.indexOf(c) >= 0; }), d = n.filter(function (i) { return U[i].st !== 'actif'; }).length; return c + ' ' + n.length + (d ? ' (dont ' + d + ' désactivé' + (d > 1 ? 's' : '') + ')' : '') + (c === 'Externe — MaaS' ? ' (catégorie hors liste §3.2, question panel)' : ''); }).join(' · ') + ' · une personne compte une fois par catégorie : internes distincts ' + int + ' · externes distincts ' + ext);
+    q('[data-fx="temp"]').setAttribute('data-c', tmp.map(function (i) { var t = U[i].temp; return U[i].s + ' : début ' + t.deb + ' · fin ' + t.fin + ' · jours restants = ' + t.fin + ' − 27/08/2026 = ' + t.days; }).join(' · ') || 'Aucun accès temporaire');
+    q('[data-stat="tempsub"]').textContent = tmp.length ? tmp.map(function (i) { return U[i].s + ' · ' + U[i].temp.deb + ' → ' + U[i].temp.fin + ' · ' + dj(U[i].temp.days); }).join(' · ') + ' · expire automatiquement (§3.2)' : 'Aucun accès temporaire en cours · un accès temporaire expire automatiquement (§3.2)';
   }
   function applyFilter(f) {
     flt = f; var vis = 0;
@@ -224,15 +230,16 @@ ERP.register('core-utilisateurs', function (root, ctx) {
     q('[data-d="meta"]', DR).innerHTML = stHtml(u) + tagsHtml(u) + (u.temp ? expHtml(u) : '');
     q('[data-d="profs"]', DR).innerHTML = u.prof.map(function (p, i) { return '<div class="kv"><span>' + esc(p.p) + (p.sc ? ' (' + esc(p.sc) + ')' : '') + '<small>' + esc(EN[p.ent]) + '</small></span><b>' + (p.off ? 'Non activable · ' + esc(p.off) : !act ? 'Gelé depuis la désactivation' : i === 0 ? 'Activable · évalué ci-dessous' : 'Activable') + '</b></div>'; }).join('');
     ['core', 'fin', 'exp', 'sens'].forEach(function (k, i) { q('[data-d="' + k + '"]', DR).textContent = act ? per[i] : 'Gelé · compte désactivé le ' + u.since + ' · aucune connexion possible'; });
-    var t = q('[data-d="temp"]', DR); t.hidden = !u.temp; if (u.temp) q('span', t).textContent = 'Accès temporaire du ' + u.temp.deb + ' au ' + u.temp.fin + ' · expire automatiquement (§3.2) · dans ' + u.temp.days + ' jours' + (u.temp.dem ? ' · ' + u.temp.dem : '');
-    q('[data-d="audit"]', DR).textContent = audit(u); q('[data-deact]', DR).hidden = !act; q('[data-react]', DR).hidden = act; q('[data-reset]', DR).hidden = !act;
+    var t = q('[data-d="temp"]', DR); t.hidden = !u.temp; if (u.temp) q('span', t).textContent = 'Accès temporaire du ' + u.temp.deb + ' au ' + u.temp.fin + ' · expire automatiquement (§3.2) · ' + dj(u.temp.days) + (u.temp.dem ? ' · ' + u.temp.dem : '');
+    q('[data-d="audit"]', DR).textContent = audit(u); q('[data-deact]', DR).hidden = !act; q('[data-react]', DR).hidden = act; q('[data-reset]', DR).hidden = !act; perms();
   }
-  function redraw(id) { q('tr[data-u="' + id + '"]', tbody).outerHTML = rowHtml(id); counts(); applyFilter(flt); ctx.applyPerms(); if (cur === id && DR.classList.contains('on')) fill(id); }
+  function redraw(id) { q('tr[data-u="' + id + '"]', tbody).outerHTML = rowHtml(id); counts(); applyFilter(flt); if (cur === id && DR.classList.contains('on')) fill(id); else perms(); }
   function applyView() { var p = ctx.profile, ro = !ctx.hasPerm('core.utilisateurs.creer') && !ctx.hasPerm('core.utilisateurs.modifier'); q('[data-view="ro"]').hidden = !ro; q('[data-ro-prof]').textContent = p.profile; q('[data-me]').textContent = p.short + ' · ' + p.profile; }
+  function refresh() { applyView(); qa('tr[data-u]', tbody).forEach(function (tr) { tr.outerHTML = rowHtml(tr.getAttribute('data-u')); }); applyFilter(flt); if (cur && DR.classList.contains('on')) fill(cur); else perms(); }
   function stamp(verb) { return ctx.profile.short + ', sous le profil ' + ctx.profile.profile + ', ' + verb + ' le ' + now(); }
   ctx.on(root, 'click', function (e) {
     var b = e.target.closest('[data-deact]'), tr = e.target.closest('tr[data-u]');
-    if (b) { var id = b.getAttribute('data-u') || cur, u = U[id]; if (u.n === ctx.profile.user) { e.stopPropagation(); ctx.toast('Refus : la désactivation de son propre compte n’est pas autorisée · un autre acteur habilité doit agir (séparation des responsabilités, §4.2)'); return; } MD.dataset.u = id; q('[data-x="n"]', MD).textContent = u.n; q('[data-field="motif"]', MD).value = ''; return; }
+    if (b) { var id = b.getAttribute('data-u') || cur, u = U[id]; if (u.n === ctx.profile.user) { e.stopPropagation(); ctx.toast(SELF); return; } MD.dataset.u = id; q('[data-x="n"]', MD).textContent = u.n; q('[data-field="motif"]', MD).value = ''; return; }
     if (tr) fill(tr.getAttribute('data-u'));
   });
   qa('.chip[data-filter]').forEach(function (c) { ctx.on(c, 'click', function () { applyFilter(c.getAttribute('data-filter')); }); });
@@ -240,7 +247,7 @@ ERP.register('core-utilisateurs', function (root, ctx) {
     var id = MD.dataset.u, u = U[id], motif = q('[data-field="motif"]', MD).value.trim();
     if (!motif) { ctx.toast('Motif obligatoire : la désactivation est une modification auditée, avec son motif (§5.4)'); return; }
     u.st = 'desactive'; u.since = '27/08/2026'; u.audit = stamp('a désactivé le compte de ' + u.s) + ', motif « ' + motif + ' » · ' + audit(u); redraw(id); ctx.close('core-utilisateurs-desactiver');
-    ctx.toast('Compte ' + u.s + ' désactivé, jamais supprimé (§3.1) · profils gelés, connexion impossible · notification aux administrateurs · audité');
+    ctx.toast('Compte ' + u.s + ' désactivé, jamais supprimé (§3.1) · profils gelés, connexion impossible · audité sous le profil ' + ctx.profile.profile);
   });
   ctx.on(q('[data-react]', DR), 'click', function () { var u = U[cur]; u.st = 'actif'; u.audit = stamp('a réactivé le compte de ' + u.s) + ' · ' + audit(u); delete u.since; redraw(cur); ctx.toast('Compte ' + u.s + ' réactivé · profils de nouveau activables à la prochaine connexion · audité'); });
   ctx.on(q('[data-reset]', DR), 'click', function () { ctx.toast('Réinitialisation forcée pour ' + U[cur].s + ' : email envoyé à ' + U[cur].e + ' (§3.1) · auditée sous le profil ' + ctx.profile.profile); });
@@ -250,15 +257,15 @@ ERP.register('core-utilisateurs', function (root, ctx) {
     if (!nom || !/^[^@\s]+@[^@\s]+\.[a-z]{2,}$/.test(email)) { ctx.toast('Nom et email valide obligatoires : l’email est l’identifiant de connexion (§3.1)'); return; }
     if (Object.keys(U).some(function (i) { return U[i].e === email; })) { ctx.toast('Compte unique (§3.1) : un compte existe déjà pour ' + email + ' · ajouter un profil à ce compte plutôt que d’en créer un second'); return; }
     if (!cats.length || !profs.length) { ctx.toast('Au moins une catégorie (§3.2) et un profil (§3.3) sont obligatoires : sans autorité explicite, refus par défaut'); return; }
-    if (tmp && (!deb || !fin || fin <= deb)) { ctx.toast('Accès temporaire : date de début et date de fin obligatoires, fin postérieure au début (§3.2)'); return; }
+    if (tmp && (!deb || !fin || fin <= deb || fin < '2026-08-27')) { ctx.toast('Accès temporaire : date de début et date de fin obligatoires, fin postérieure au début et non antérieure au 27/08/2026, sinon l’accès serait déjà expiré (§3.2)'); return; }
     var w = nom.split(/\s+/), id = 'u' + (++seq), days = tmp ? Math.round((new Date(fin) - TODAY) / 864e5) : 0, ent = F('ent').value;
     U[id] = { n: nom, s: w.length > 1 ? w[0][0] + '. ' + w.slice(1).join(' ') : nom, e: email, av: w.map(function (x) { return x[0]; }).slice(0, 2).join('').toUpperCase(), cats: cats, prof: profs.map(function (p) { return { p: p, ent: ent }; }), st: 'actif', temp: tmp ? { deb: fr(deb), fin: fr(fin), days: days } : null };
     U[id].audit = stamp('a créé le compte et attribué le profil ' + profs.join(', ') + ' à ' + U[id].s) + (tmp ? ' (accès temporaire ' + fr(deb) + ' → ' + fr(fin) + ')' : '') + '.';
-    tbody.insertAdjacentHTML('afterbegin', rowHtml(id)); counts(); applyFilter(flt); ctx.formatAmounts(tbody); ctx.applyPerms(); ctx.close('core-utilisateurs-nouveau');
+    tbody.insertAdjacentHTML('afterbegin', rowHtml(id)); counts(); applyFilter(flt); ctx.formatAmounts(tbody); perms(); ctx.close('core-utilisateurs-nouveau');
     F('nom').value = F('email').value = F('deb').value = F('fin').value = ''; qa('[data-cat]', MN).forEach(function (c) { c.checked = false; }); qa('option', F('prof')).forEach(function (o) { o.selected = false; }); q('[data-temp-wrap]', MN).hidden = true;
     ctx.toast('Compte ' + U[id].s + ' créé Actif · email de réinitialisation envoyé pour fixer le mot de passe (§3.1) · audité sous le profil ' + ctx.profile.profile + (tmp ? ' · expire automatiquement le ' + fr(fin) : ''));
   });
-  tbody.insertAdjacentHTML('afterbegin', Object.keys(U).map(rowHtml).join('')); counts(); applyFilter('tous'); applyView(); fill('u1'); ctx.formatAmounts(root); ctx.applyPerms();
-  document.addEventListener('erp:profile', applyView);
+  tbody.insertAdjacentHTML('afterbegin', Object.keys(U).map(rowHtml).join('')); counts(); applyFilter('tous'); applyView(); ctx.formatAmounts(root); fill('u1');
+  document.addEventListener('erp:profile', refresh);
 });
 </script>

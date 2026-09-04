@@ -150,3 +150,6 @@
 
 /* Colonnes de grille : min-width:0 pour que les tableaux defilent dans leur carte au lieu d elargir la page (constat vague 5) */
 #app .grid2>div,#app .grid2b>div,#app .grid2>.card,#app .grid2b>.card{min-width:0}
+
+/* Statut informatif (catalogue CONTRACT §4) : teinte rouge légère, sans caractère d'alerte */
+#app .st.info{background:var(--red-tint);color:var(--red)}
