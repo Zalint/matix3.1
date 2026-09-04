@@ -20,6 +20,7 @@
       <p class="scr-sub">4 circuits · jeudi 27 août 2026 · solde toujours calculé, déclaration en aveugle · gel « À réconcilier » à 23:59 GMT · déclenchement automatique vers 02:00 uniquement si les sources sont complètes et à jour</p>
     </div>
     <div class="scr-meta">
+      <button class="linkish" data-open="help-fin-reconciliation"><svg><use href="#i-info"/></svg>Comment ça marche ?</button>
       <span class="sens hs"><svg><use href="#i-shield"/></svg>Hautement sensible</span>
       <span class="hint">Consultation auditée (périmètre Caisses) · aucune auto-validation en cas d'écart ou de source non à jour (§6.3, §6.5) · correction uniquement par Ajustement : motif et deux validateurs distincts (§4.7)</span>
     </div>
@@ -215,6 +216,23 @@
     <div class="df"><button class="btn ghost" data-goto="fin-comptes"><svg><use href="#i-wallet"/></svg>Mouvements du compte</button><div class="sp"></div><button class="btn pri" data-perm="finance.ajustements.initier" data-open="fin-reconciliation-ajust"><svg><use href="#i-scale"/></svg>Corriger par Ajustement</button></div>
   </aside>
   <div class="dback" data-ov-back="fin-reconciliation-invest"></div>
+
+  <!-- Modale d'aide -->
+  <div class="mback" data-ov="help-fin-reconciliation"><div class="modal wide" role="dialog" aria-modal="true" aria-label="Comment ça marche : Réconciliation">
+    <h3><svg><use href="#i-info"/></svg>Comment ça marche : Réconciliation</h3>
+    <div class="exp">Cet écran regroupe les 4 contrôles quotidiens qui comparent l'argent réellement détenu aux mouvements enregistrés : Caisses, Encaissements collectés, Ventes du jour et Fournisseurs. Il sert aux gérants de caisse, au collecteur, au Directeur des Opérations et aux profils Admin/DG qui suivent l'avancement et les écarts.</div>
+    <ul class="help-list">
+      <li><b>Solde théorique des Caisses</b> — le théorique additionne au dernier solde réconcilié tous les mouvements du jour, puis se compare au montant déclaré en aveugle. Sur la Sous-caisse Marché : <span class="amt" data-amt="1275000" data-nocur></span> FCFA de théorique contre <span class="amt" data-amt="1250000" data-nocur></span> FCFA déclarés, écart −25 000 FCFA, compte laissé « À réconcilier » (§4.8).</li>
+      <li><b>Masquage puis gel</b> — tant qu'une caisse n'a pas déclaré, son théorique reste masqué (Caisse générale, <span class="amt" data-amt="8450000" data-nocur></span> FCFA) ; à 23:59 GMT toute caisse encore ouverte est gelée « À réconcilier » et sa correction demandera ensuite l'approbation du Super Admin (§3.1).</li>
+      <li><b>Deux sources pour la collecte</b> — Source A additionne les 12 déclarations MaaS (<span class="amt" data-amt="4725000" data-nocur></span> FCFA), Source B est la déclaration séparée du collecteur A. Ndiaye (<span class="amt" data-amt="4725000" data-nocur></span> FCFA) ; égalité = écart 0, la collecte du 26/08 a été validée automatiquement à 02:04 (§6.3).</li>
+      <li><b>Équation des ventes du jour</b> — le CA de <span class="amt" data-amt="6200000" data-nocur></span> FCFA doit égaler Versements (<span class="amt" data-amt="3100000" data-nocur></span>) + Bictorys (<span class="amt" data-amt="1250000" data-nocur></span>) + Créances nettes nouvelles (<span class="amt" data-amt="2450000" data-nocur></span>) − Remboursements à neutraliser (600 000) ; écart calculé 0, statut « Cohérente » (§6.4).</li>
+      <li><b>Position théorique des Fournisseurs</b> — recalculée à partir de la dernière position réconciliée, des paiements/avances et des dépenses. AGNEAUX (F1) passe à <span class="amt" data-amt="-12400000" data-nocur></span> FCFA après l'achat du jour, validé sans écart ; les 6 fournisseurs se répartissent en 3 validés, 2 en attente, 1 sans mouvement (§5.5).</li>
+      <li><b>Fraîcheur des sources</b> — le bandeau affiche 7 sources à l'état OK (Ventes Mata 20:30, Bictorys 08:12…) ; une source Manquante, en Erreur ou Non à jour bloquerait l'auto-validation mais resterait visible avec son horodatage (§6.5).</li>
+    </ul>
+    <div class="note-strip"><svg><use href="#i-shield"/></svg>Réconciliation en aveugle : le solde théorique reste masqué tant que vous n'avez pas déclaré (Caisse générale, Bétail Thiès, Abattoirs Dakar affichent « Masqué jusqu'à votre déclaration ») afin qu'aucune déclaration ne s'aligne sciemment sur le chiffre attendu.</div>
+    <div class="hint">Sources : Cahier Mata Finance §3.1, §4.8, §5.5, §6.3, §6.4, §6.5</div>
+    <div class="acts"><button class="btn ghost" data-close>Fermer</button></div>
+  </div></div>
 </section>
 <script data-screen="fin-reconciliation">
 ERP.register('fin-reconciliation', function (root, ctx) {

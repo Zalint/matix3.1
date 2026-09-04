@@ -11,6 +11,7 @@
       <p class="scr-sub">15 comptes Créance client, chacun relié à un identifiant du Référentiel ERP (§4.5) · position toujours calculée, jamais saisie : Position précédente + Ventes Mata − Encaissements affectés au compte client ± Ajustements validés (§4.3)</p>
     </div>
     <div class="scr-meta">
+      <button class="linkish" data-open="help-fin-creances"><svg><use href="#i-info"/></svg>Comment ça marche ?</button>
       <span class="sens s"><svg><use href="#i-shield"/></svg>Sensible</span>
       <span class="hint">Positions client sensibles : modifications selon permissions et clôture (§10.1) · correction uniquement par Ajustement à double validation (§4.7) · audit de modification</span>
     </div>
@@ -135,6 +136,23 @@
     <div class="fld" style="margin-top:10px"><label for="fin-creances-acc-dt">Valable jusqu'au</label><input id="fin-creances-acc-dt" class="inp mono" type="date" value="2026-09-30"></div>
     <div class="fld" style="margin-top:10px"><label for="fin-creances-acc-mo">Motif (obligatoire, audité)</label><input id="fin-creances-acc-mo" class="inp" placeholder="Ex. livraison exceptionnelle réglée à 7 jours"></div>
     <div class="acts"><button class="btn ghost" data-close>Annuler</button><button class="btn pri" data-perm="finance.creances.accorder" data-act="acc-ok"><svg><use href="#i-check"/></svg>Accorder</button></div>
+  </div></div>
+
+  <!-- Modale : aide contextuelle -->
+  <div class="mback" data-ov="help-fin-creances"><div class="modal wide" role="dialog" aria-modal="true" aria-label="Comment ça marche : Créances clients">
+    <h3><svg><use href="#i-info"/></svg>Comment ça marche : Créances clients</h3>
+    <div class="exp">Cet écran donne la position de chaque client et MaaS envers Mata, mise à jour par les ventes et les encaissements du jour. Il sert à la Direction et à la Comptabilité pour tout le périmètre Mata Group, et au Gérant MaaS pour la seule position de son MaaS.</div>
+    <ul class="help-list">
+      <li><b>Position calculée</b> — chaque position vient de Position précédente + Ventes Mata − Encaissements affectés ± Ajustements validés, jamais saisie à la main ; MaaS Keur Massar affiche <span class="amt" data-amt="3250000" data-nocur></span> (§4.3).</li>
+      <li><b>Sens du montant</b> — positif = le client doit à Mata, négatif = une avance absorbée par ses ventes futures ; seule Touba Viandes est en négatif, à −150 000 (§4.3).</li>
+      <li><b>Contrepartie reliée au Référentiel ERP</b> — chaque compte Créance pointe vers un identifiant existant, jamais recréé ici ; MaaS Keur Massar porte entity_id MAAS-KM (§4.5).</li>
+      <li><b>Créance créée à 100 %</b> — une vente Mata reçue par API crée aussitôt une créance pour son montant plein ; les Ventes du jour totalisent <span class="amt" data-amt="6200000" data-nocur></span> sur le périmètre affiché (§6.1).</li>
+      <li><b>« Encaissements collectés » vérifiés à deux sources</b> — un remboursement n'est affecté au compte client que si la somme des déclarations (Source A) égale la déclaration du collecteur (Source B) ; ici <span class="amt" data-amt="4725000" data-nocur></span> = <span class="amt" data-amt="4725000" data-nocur></span>, validé le 27/08 à 02:04 (§6.3).</li>
+      <li><b>Réconciliation des ventes du jour</b> — l'écran vérifie que Ventes Mata du jour = Versements + Paiements Bictorys + Créances nettes nouvelles − Remboursements à neutraliser ; <span class="amt" data-amt="6200000" data-nocur></span> = <span class="amt" data-amt="3100000" data-nocur></span> + <span class="amt" data-amt="1250000" data-nocur></span> + <span class="amt" data-amt="2450000" data-nocur></span> − 600 000, écart 0 (§6.4).</li>
+    </ul>
+    <div class="note-strip"><svg><use href="#i-info"/></svg>Refus par défaut : le Gérant MaaS ne voit que la position de son MaaS (Keur Massar) ; « Accorder une créance », « Générer la facture » et « Exporter » restent visibles mais désactivés hors permission.</div>
+    <div class="hint">Sources : Cahier Mata Finance §4.3, §4.5, §6.1, §6.3, §6.4 · FIXTURES §3, §6</div>
+    <div class="acts"><button class="btn ghost" data-close>Fermer</button></div>
   </div></div>
 </section>
 <script data-screen="fin-creances">

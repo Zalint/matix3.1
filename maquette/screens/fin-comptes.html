@@ -21,6 +21,7 @@
       <p class="scr-sub">Le compte est l'objet central de Mata Finance : son type décrit sa nature économique ; les permissions, la source du solde et les règles de contrôle sont des attributs distincts (§4). Six types (§4.1) · le solde d'un compte calculé n'est jamais édité directement, une correction passe par le compte Ajustement (§4.2) · entité Mata Group · jeudi 27 août 2026.</p>
     </div>
     <div class="scr-meta">
+      <button class="linkish" data-open="help-fin-comptes"><svg><use href="#i-info"/></svg>Comment ça marche ?</button>
       <span class="sens hs"><svg><use href="#i-shield"/></svg>Hautement sensible</span>
       <span class="hint">Comptes &amp; Trésorerie : création selon permission ; désactivation par un second acteur habilité (§10.1) · consultation auditée (§10.2) · Ajustement : deux validateurs distincts de l'initiateur et entre eux (§4.7)</span>
     </div>
@@ -183,6 +184,23 @@
     </div>
     <div class="hint">La source est imposée par le type (§4.1) : Trésorerie, Fournisseur, Créance client et Relais sont calculés ; une Position externe est synchronisée ou importée.</div>
     <div class="acts"><button class="btn ghost" data-close>Annuler</button><button class="btn pri" data-perm="finance.comptes.creer" data-new-save><svg><use href="#i-check"/></svg>Créer le compte</button></div>
+  </div></div>
+
+  <div class="mback" data-ov="help-fin-comptes"><div class="modal wide" role="dialog" aria-modal="true" aria-label="Comment ça marche : Comptes">
+    <h3><svg><use href="#i-info"/></svg>Comment ça marche : Comptes</h3>
+    <div class="exp">Cet écran liste tous les comptes de Mata Group avec leur solde et son origine : Direction, Comptabilité et Gestionnaires de caisse s'en servent pour vérifier d'où vient chaque montant avant de le contester ou de le corriger.</div>
+    <ul class="help-list">
+      <li><b>Six types de comptes</b> — chaque type a sa propre origine de solde. Les 29 comptes affichés se répartissent en 3 Trésorerie, 2 Position externe, 6 Fournisseur, 15 Créance client, 2 Relais et 1 Ajustement (§4.1).</li>
+      <li><b>Le solde n'est jamais tapé au clavier</b> — celui de la Caisse générale, <span class="amt" data-amt="8450000" data-nocur></span> FCFA, sort du calcul (dernier solde réconcilié + mouvements depuis) ; pour le corriger, il faut passer par le compte Ajustement (§4.2).</li>
+      <li><b>Le signe dit qui doit à qui</b> — un solde fournisseur négatif est une dette (<span class="amt" data-amt="23250000" data-nocur></span> FCFA au total), un solde positif une avance (350 000 FCFA, Abattoirs Dakar) ; les deux restent affichés côte à côte plutôt que compensés (§4.3).</li>
+      <li><b>Compte de paiement de référence</b> — chaque Fournisseur pointe vers le compte qui le règle : AGNEAUX (F1), dette de <span class="amt" data-amt="12400000" data-nocur></span> FCFA, est réglé depuis la Caisse générale ; ce lien peut changer sans toucher les paiements déjà faits (§4.4).</li>
+      <li><b>Un Relais ne compte qu'une fois</b> — la trésorerie en transit (<span class="amt" data-amt="2850000" data-nocur></span> FCFA) additionne le Dépôt en cours (<span class="amt" data-amt="2500000" data-nocur></span>) et le virement Bictorys → Banque (350 000) ; un relais resté ouvert plus de 2 jours déclenche une alerte (§4.6).</li>
+      <li><b>Ajustement : deux validateurs, jamais un seul</b> — la demande VAL-117 (+180 000 FCFA sur la Caisse générale) a sa première validation par O. Seck ; tant que la seconde n'arrive pas, le solde ne bouge pas (§4.7).</li>
+      <li><b>Position externe garde sa source</b> — Banque BOA (<span class="amt" data-amt="45200000" data-nocur></span> FCFA) vient d'un import CSV horodaté 08:00, Bictorys (<span class="amt" data-amt="2890000" data-nocur></span> FCFA) d'une synchronisation à 08:12 ; la valeur reçue est conservée telle quelle (§4.9).</li>
+    </ul>
+    <div class="note-strip"><svg><use href="#i-eyeoff"/></svg>Réconciliation en aveugle : tant que le déclarant d'un compte n'a pas fait sa déclaration, le solde théorique de ce compte et les totaux qui le contiennent restent masqués pour lui ; les autres comptes restent visibles.</div>
+    <div class="hint">Sources : Cahier Mata Finance §4.1, §4.2, §4.3, §4.4, §4.6, §4.7, §4.9</div>
+    <div class="acts"><button class="btn ghost" data-close>Fermer</button></div>
   </div></div>
 </section>
 <script data-screen="fin-comptes">

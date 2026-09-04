@@ -153,3 +153,10 @@
 
 /* Statut informatif (catalogue CONTRACT §4) : teinte rouge légère, sans caractère d'alerte */
 #app .st.info{background:var(--red-tint);color:var(--red)}
+
+/* Aide d ecran (CONTRACT.md §4a) : liste a puces dans la modale "Comment ca marche ?" */
+#app .help-list{list-style:none;margin:14px 0 0;padding:0;display:flex;flex-direction:column;gap:11px}
+#app .help-list li{position:relative;padding-left:18px;font-size:13px;line-height:1.55;color:var(--ink-2)}
+#app .help-list li::before{content:"";position:absolute;left:0;top:7px;width:6px;height:6px;border-radius:50%;background:var(--red)}
+#app .help-list li b{color:var(--ink);font-weight:700}
+#app .modal .hint{margin-top:12px;display:block}

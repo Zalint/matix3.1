@@ -619,6 +619,13 @@ svg{display:block;flex:none}
 /* Statut informatif (catalogue CONTRACT §4) : teinte rouge légère, sans caractère d'alerte */
 #app .st.info{background:var(--red-tint);color:var(--red)}
 
+/* Aide d ecran (CONTRACT.md §4a) : liste a puces dans la modale "Comment ca marche ?" */
+#app .help-list{list-style:none;margin:14px 0 0;padding:0;display:flex;flex-direction:column;gap:11px}
+#app .help-list li{position:relative;padding-left:18px;font-size:13px;line-height:1.55;color:var(--ink-2)}
+#app .help-list li::before{content:"";position:absolute;left:0;top:7px;width:6px;height:6px;border-radius:50%;background:var(--red)}
+#app .help-list li b{color:var(--ink);font-weight:700}
+#app .modal .hint{margin-top:12px;display:block}
+
 </style>
 </head>
 <body>
@@ -790,6 +797,7 @@ svg{display:block;flex:none}
       <p class="scr-sub">Jeudi 27 août 2026 · Mata Group · six blocs du §8.5 : Trésorerie, Fournisseurs, Clients, Activité, Contrôles, P&amp;L. Montants en FCFA d’abord, ratios ensuite (§8.2). Moteur financier unique : mêmes chiffres que les rapports, snapshots et agents IA (§3).</p>
     </div>
     <div class="scr-meta">
+      <button class="linkish" data-open="help-fin-dashboard"><svg><use href="#i-info"/></svg>Comment ça marche ?</button>
       <span class="sens s"><svg><use href="#i-shield"/></svg>Sensible</span>
       <span class="hint">Lecture agrégée, aucune écriture ici : chaque action renvoie vers l’écran propriétaire et son niveau de validation (§10.1) · gel « À réconcilier » à 23:59 GMT</span>
     </div>
@@ -1015,6 +1023,23 @@ svg{display:block;flex:none}
     <div class="df"><button class="btn ghost" data-goto="fin-comptes"><svg><use href="#i-wallet"/></svg>Ouvrir dans Comptes</button><button class="btn ghost" data-goto="fin-historique"><svg><use href="#i-history"/></svg>Historique</button></div>
   </aside>
   <div class="dback" data-ov-back="fin-dashboard-compte"></div>
+
+  <!-- Aide contextuelle -->
+  <div class="mback" data-ov="help-fin-dashboard"><div class="modal wide" role="dialog" aria-modal="true" aria-label="Comment ça marche : Tableau de bord">
+    <h3><svg><use href="#i-info"/></svg>Comment ça marche : Tableau de bord</h3>
+    <div class="exp">Vue consolidée et en lecture seule de la situation financière du jour, pour la Direction, le Directeur des Opérations, le Super Admin et les profils en lecture (Investisseur, Comptable externe) : aucune écriture ne se fait ici, chaque action renvoie vers l’écran propriétaire.</div>
+    <ul class="help-list">
+      <li><b>Trésorerie disponible</b> — somme des comptes Trésorerie et Positions externes immédiatement mobilisables : <span class="amt" data-amt="58455000"></span>, soit 12,9 % du CA de référence (§8.1).</li>
+      <li><b>Trésorerie totale contrôlée</b> — disponible + en transit (comptes Relais actifs) : <span class="amt" data-amt="61305000" data-nocur></span> = <span class="amt" data-amt="58455000" data-nocur></span> + <span class="amt" data-amt="2850000" data-nocur></span> (§8.1).</li>
+      <li><b>Montant d’abord, ratio ensuite</b> — changer le CA de référence dans le sélecteur ne modifie que les pourcentages affichés, jamais les montants FCFA (§8.2).</li>
+      <li><b>Échéancier fournisseurs</b> — priorité aux échéances déjà dépassées puis à la prochaine due : 2 dépassées pour <span class="amt" data-amt="1950000"></span> (Aliments Sénégal, MATA VOLAILLE ŒUFS), puis Bétail Thiès <span class="amt" data-amt="1600000"></span> le 02/09/2026 (§5.6).</li>
+      <li><b>Six blocs fixes</b> — Trésorerie, Fournisseurs, Clients, Activité, Contrôles, P&amp;L : mêmes chiffres que les autres écrans, un seul moteur de calcul (§8.5).</li>
+      <li><b>Bloc Contrôles</b> — regroupe les signaux de qualité : 1 dépense « Pas sûr » (Carburant 85 000), 3 circuits de réconciliation ouverts sur 4, aucune source non à jour, 4 validations en attente (§10.4).</li>
+    </ul>
+    <div class="note-strip"><svg><use href="#i-shield"/></svg>La ligne Caisse générale illustre la réconciliation en aveugle : le solde théorique reste masqué au déclarant tant qu’il n’a pas saisi son solde constaté ; seuls les validateurs le voient.</div>
+    <div class="hint">Sources : Cahier Mata Finance §8.1, §8.2, §5.6, §8.5, §10.4</div>
+    <div class="acts"><button class="btn ghost" data-close>Fermer</button></div>
+  </div></div>
 </section>
 <script data-screen="fin-dashboard">
 ERP.register('fin-dashboard', function (root, ctx) {
@@ -1121,6 +1146,7 @@ ERP.register('fin-dashboard', function (root, ctx) {
       <p class="scr-sub">Le compte est l'objet central de Mata Finance : son type décrit sa nature économique ; les permissions, la source du solde et les règles de contrôle sont des attributs distincts (§4). Six types (§4.1) · le solde d'un compte calculé n'est jamais édité directement, une correction passe par le compte Ajustement (§4.2) · entité Mata Group · jeudi 27 août 2026.</p>
     </div>
     <div class="scr-meta">
+      <button class="linkish" data-open="help-fin-comptes"><svg><use href="#i-info"/></svg>Comment ça marche ?</button>
       <span class="sens hs"><svg><use href="#i-shield"/></svg>Hautement sensible</span>
       <span class="hint">Comptes &amp; Trésorerie : création selon permission ; désactivation par un second acteur habilité (§10.1) · consultation auditée (§10.2) · Ajustement : deux validateurs distincts de l'initiateur et entre eux (§4.7)</span>
     </div>
@@ -1284,6 +1310,23 @@ ERP.register('fin-dashboard', function (root, ctx) {
     <div class="hint">La source est imposée par le type (§4.1) : Trésorerie, Fournisseur, Créance client et Relais sont calculés ; une Position externe est synchronisée ou importée.</div>
     <div class="acts"><button class="btn ghost" data-close>Annuler</button><button class="btn pri" data-perm="finance.comptes.creer" data-new-save><svg><use href="#i-check"/></svg>Créer le compte</button></div>
   </div></div>
+
+  <div class="mback" data-ov="help-fin-comptes"><div class="modal wide" role="dialog" aria-modal="true" aria-label="Comment ça marche : Comptes">
+    <h3><svg><use href="#i-info"/></svg>Comment ça marche : Comptes</h3>
+    <div class="exp">Cet écran liste tous les comptes de Mata Group avec leur solde et son origine : Direction, Comptabilité et Gestionnaires de caisse s'en servent pour vérifier d'où vient chaque montant avant de le contester ou de le corriger.</div>
+    <ul class="help-list">
+      <li><b>Six types de comptes</b> — chaque type a sa propre origine de solde. Les 29 comptes affichés se répartissent en 3 Trésorerie, 2 Position externe, 6 Fournisseur, 15 Créance client, 2 Relais et 1 Ajustement (§4.1).</li>
+      <li><b>Le solde n'est jamais tapé au clavier</b> — celui de la Caisse générale, <span class="amt" data-amt="8450000" data-nocur></span> FCFA, sort du calcul (dernier solde réconcilié + mouvements depuis) ; pour le corriger, il faut passer par le compte Ajustement (§4.2).</li>
+      <li><b>Le signe dit qui doit à qui</b> — un solde fournisseur négatif est une dette (<span class="amt" data-amt="23250000" data-nocur></span> FCFA au total), un solde positif une avance (350 000 FCFA, Abattoirs Dakar) ; les deux restent affichés côte à côte plutôt que compensés (§4.3).</li>
+      <li><b>Compte de paiement de référence</b> — chaque Fournisseur pointe vers le compte qui le règle : AGNEAUX (F1), dette de <span class="amt" data-amt="12400000" data-nocur></span> FCFA, est réglé depuis la Caisse générale ; ce lien peut changer sans toucher les paiements déjà faits (§4.4).</li>
+      <li><b>Un Relais ne compte qu'une fois</b> — la trésorerie en transit (<span class="amt" data-amt="2850000" data-nocur></span> FCFA) additionne le Dépôt en cours (<span class="amt" data-amt="2500000" data-nocur></span>) et le virement Bictorys → Banque (350 000) ; un relais resté ouvert plus de 2 jours déclenche une alerte (§4.6).</li>
+      <li><b>Ajustement : deux validateurs, jamais un seul</b> — la demande VAL-117 (+180 000 FCFA sur la Caisse générale) a sa première validation par O. Seck ; tant que la seconde n'arrive pas, le solde ne bouge pas (§4.7).</li>
+      <li><b>Position externe garde sa source</b> — Banque BOA (<span class="amt" data-amt="45200000" data-nocur></span> FCFA) vient d'un import CSV horodaté 08:00, Bictorys (<span class="amt" data-amt="2890000" data-nocur></span> FCFA) d'une synchronisation à 08:12 ; la valeur reçue est conservée telle quelle (§4.9).</li>
+    </ul>
+    <div class="note-strip"><svg><use href="#i-eyeoff"/></svg>Réconciliation en aveugle : tant que le déclarant d'un compte n'a pas fait sa déclaration, le solde théorique de ce compte et les totaux qui le contiennent restent masqués pour lui ; les autres comptes restent visibles.</div>
+    <div class="hint">Sources : Cahier Mata Finance §4.1, §4.2, §4.3, §4.4, §4.6, §4.7, §4.9</div>
+    <div class="acts"><button class="btn ghost" data-close>Fermer</button></div>
+  </div></div>
 </section>
 <script data-screen="fin-comptes">
 ERP.register('fin-comptes', function (root, ctx) {
@@ -1422,6 +1465,7 @@ ERP.register('fin-comptes', function (root, ctx) {
       <p class="scr-sub">Enregistrées immédiatement, sans validation préalable, puis contrôlées par la réconciliation et la clôture (§5.2) · montant payé immédiatement compris entre 0 et le montant total, sinon « Pas sûr » (§5.1) · flags Investissement et Dépense spéciale indépendants, faux par défaut (§8.3)</p>
     </div>
     <div class="scr-meta">
+      <button class="linkish" data-open="help-fin-depenses"><svg><use href="#i-info"/></svg>Comment ça marche ?</button>
       <span class="sens s"><svg><use href="#i-shield"/></svg>Sensible</span>
       <span class="hint">Aucune validation préalable à la création (§5.2) · modifications selon permissions et clôture (§10.1) · audit de modification · Exporter distinct de Consulter (§5.7)</span>
     </div>
@@ -1562,6 +1606,23 @@ ERP.register('fin-comptes', function (root, ctx) {
     <div class="df"><button class="btn ghost" data-close>Annuler</button><div class="sp"></div><button class="btn pri" data-perm="finance.depenses.modifier" data-resolve><svg><use href="#i-check"/></svg>Enregistrer le montant payé</button></div>
   </aside>
   <div class="dback" data-ov-back="fin-depenses-resoudre"></div>
+
+  <!-- Modale : aide contextuelle -->
+  <div class="mback" data-ov="help-fin-depenses"><div class="modal wide" role="dialog" aria-modal="true" aria-label="Comment ça marche : Dépenses">
+    <h3><svg><use href="#i-info"/></svg>Comment ça marche : Dépenses</h3>
+    <div class="exp">Cet écran liste et permet de créer les dépenses de l'entité, avec leur montant payé, leur statut « Pas sûr » et leurs échéances de paiement. Le Gestionnaire de caisse et le Directeur des Opérations y saisissent leurs dépenses ; le Comptable externe consulte seulement.</div>
+    <ul class="help-list">
+      <li><b>Montant payé immédiatement</b> — valeur comprise entre 0 et le montant total de la dépense : Achat volaille est réglé en totalité (<span class="amt" data-amt="420000" data-nocur></span>), Achat bœuf n'a encore rien reçu sur ses <span class="amt" data-amt="850000" data-nocur></span> (§5.1).</li>
+      <li><b>Dépense « Pas sûr »</b> — quand le montant payé n'est pas connu avec certitude, la dépense prend ce statut : Carburant véhicule livraison (<span class="amt" data-amt="85000" data-nocur></span>) est « Pas sûr » et bloque uniquement le périmètre Sous-caisse Livraisons (§5.2).</li>
+      <li><b>Import depuis Achat</b> — 5 des 14 écritures du jour viennent de l'interface Achat, intégrées à 17:00 sans doublon ; si le montant payé n'est pas renseigné, la dépense est créée « Pas sûr » par défaut, jamais à zéro (§5.2).</li>
+      <li><b>Échéances</b> — chaque dépense impayée porte sa propre date de paiement souhaitée au plus tard : Achat bœuf (<span class="amt" data-amt="850000" data-nocur></span>) est attendu avant le 30/09, Achat agneau (<span class="amt" data-amt="262000" data-nocur></span>) avant le 12/09 (§5.3).</li>
+      <li><b>Investissement et Dépense spéciale</b> — deux flags indépendants, faux par défaut : au mois, les dépenses Investissement totalisent <span class="amt" data-amt="18000000" data-nocur></span>, dont la chambre froide à <span class="amt" data-amt="12000000" data-nocur></span>, réintégrées dans le P&amp;L hors Investissements (§8.3).</li>
+      <li><b>Export</b> — Exporter est une permission distincte de Consulter : les boutons Export CSV et Export PDF restent désactivés sans elle, et chaque export reste téléchargeable 7 jours avant suppression automatique, régénérable à la demande (§5.7).</li>
+    </ul>
+    <div class="note-strip"><svg><use href="#i-shield"/></svg>Refus par défaut : Consulter, Créer, Modifier et Exporter restent quatre permissions distinctes — le Comptable externe ne voit que la consultation, et un bouton sans la permission requise reste visible mais désactivé, avec son motif.</div>
+    <div class="hint">Sources : Cahier Mata Finance §5.1, §5.2, §5.3, §5.7, §8.3</div>
+    <div class="acts"><button class="btn ghost" data-close>Fermer</button></div>
+  </div></div>
 </section>
 <script data-screen="fin-depenses">
 ERP.register('fin-depenses', function (root, ctx) {
@@ -1691,6 +1752,7 @@ ERP.register('fin-depenses', function (root, ctx) {
       <p class="scr-sub">6 comptes Fournisseur · position calculée, jamais saisie · paiements affectés par défaut aux échéances les plus proches (FIFO) · plafond d'encours : alerte informative, aucun blocage</p>
     </div>
     <div class="scr-meta">
+      <button class="linkish" data-open="help-fin-fournisseurs"><svg><use href="#i-info"/></svg>Comment ça marche ?</button>
       <span class="sens s"><svg><use href="#i-shield"/></svg>Sensible</span>
       <span class="hint">Positions fournisseur : modifications selon permissions et clôture (§10.1) · paiement enregistré sans validation préalable, contrôlé par la réconciliation fournisseur (§5.2, §5.5) · Exporter distinct de Consulter (§5.7)</span>
     </div>
@@ -1846,6 +1908,24 @@ ERP.register('fin-depenses', function (root, ctx) {
     <label class="rline"><input type="checkbox">Justificatifs groupés (service documentaire commun)<span class="rh">§5.7</span></label>
     <div class="acts"><button class="btn ghost" data-close>Annuler</button><button class="btn pri" data-perm="finance.export" data-rel-go><svg><use href="#i-dl"/></svg>Générer le relevé</button></div>
   </div></div>
+
+  <!-- Modale : Aide -->
+  <div class="mback" data-ov="help-fin-fournisseurs"><div class="modal wide" role="dialog" aria-modal="true" aria-label="Comment ça marche : Fournisseurs">
+    <h3><svg><use href="#i-info"/></svg>Comment ça marche : Fournisseurs</h3>
+    <div class="exp">Cet écran affiche la position calculée de chaque fournisseur, les échéances à payer et le plafond d'encours. Il sert au Directeur des Opérations pour déclarer et payer, et au Comptable externe pour consulter en lecture seule.</div>
+    <ul class="help-list">
+      <li><b>Position fournisseur</b> — jamais saisie, toujours calculée : Position précédente + Paiements/avances − Dépenses ± Ajustements validés. AGNEAUX doit <span class="amt" data-amt="12400000" data-nocur></span> (solde négatif) ; Abattoirs Dakar a une avance de 350 000, consommée automatiquement par les achats futurs avant qu'une dette ne se forme (§4.3).</li>
+      <li><b>Compte de paiement de référence</b> — modifiable à tout moment (ex. Caisse générale pour AGNEAUX) ; le changement ne réécrit aucun paiement déjà enregistré, il s'applique seulement aux prochaines opérations (§4.4).</li>
+      <li><b>Paiement FIFO</b> — un paiement affecte d'abord l'échéance la plus proche ; la tranche MATA VOLAILLE ŒUFS de <span class="amt" data-amt="1150000" data-nocur></span> due depuis le 25/08 serait réglée en premier. Une affectation manuelle reste possible mais est auditée (§5.3).</li>
+      <li><b>Plafond d'encours</b> — informatif, jamais bloquant : AGNEAUX est à 124 % de son plafond de <span class="amt" data-amt="10000000" data-nocur></span> (dette <span class="amt" data-amt="12400000" data-nocur></span>), l'écran affiche une alerte, la saisie reste ouverte (§5.4).</li>
+      <li><b>Réconciliation en aveugle</b> — un compte qui a bougé doit être déclaré chaque jour ; Bétail Thiès a bougé (achat de 262 000) et reste « En attente », sa position masquée au Directeur des Opérations tant qu'il n'a pas déclaré (§5.5).</li>
+      <li><b>Échéances dépassées en priorité</b> — le tableau montre d'abord les retards, puis la prochaine échéance : <span class="amt" data-amt="1950000" data-nocur></span> sont dépassés, la prochaine tombe le 02/09 pour <span class="amt" data-amt="1600000" data-nocur></span> (§5.6).</li>
+      <li><b>Exporter ≠ Consulter</b> — le bouton « Relevé fournisseur PDF » exige la permission Exporter, distincte de la permission de consultation de l'écran (§5.7).</li>
+    </ul>
+    <div class="note-strip"><svg><use href="#i-shield"/></svg>Refus par défaut : Consulter, Payer et Exporter sont trois permissions séparées. Un bouton sans la permission requise reste visible mais désactivé, avec son motif.</div>
+    <div class="hint">Sources : Cahier Mata Finance §4.3, §4.4, §5.3 à §5.7 · FIXTURES §3, §8</div>
+    <div class="acts"><button class="btn ghost" data-close>Fermer</button></div>
+  </div></div>
 </section>
 <script data-screen="fin-fournisseurs">
 ERP.register('fin-fournisseurs', function (root, ctx) {
@@ -1985,6 +2065,7 @@ ERP.register('fin-fournisseurs', function (root, ctx) {
       <p class="scr-sub">15 comptes Créance client, chacun relié à un identifiant du Référentiel ERP (§4.5) · position toujours calculée, jamais saisie : Position précédente + Ventes Mata − Encaissements affectés au compte client ± Ajustements validés (§4.3)</p>
     </div>
     <div class="scr-meta">
+      <button class="linkish" data-open="help-fin-creances"><svg><use href="#i-info"/></svg>Comment ça marche ?</button>
       <span class="sens s"><svg><use href="#i-shield"/></svg>Sensible</span>
       <span class="hint">Positions client sensibles : modifications selon permissions et clôture (§10.1) · correction uniquement par Ajustement à double validation (§4.7) · audit de modification</span>
     </div>
@@ -2109,6 +2190,23 @@ ERP.register('fin-fournisseurs', function (root, ctx) {
     <div class="fld" style="margin-top:10px"><label for="fin-creances-acc-dt">Valable jusqu'au</label><input id="fin-creances-acc-dt" class="inp mono" type="date" value="2026-09-30"></div>
     <div class="fld" style="margin-top:10px"><label for="fin-creances-acc-mo">Motif (obligatoire, audité)</label><input id="fin-creances-acc-mo" class="inp" placeholder="Ex. livraison exceptionnelle réglée à 7 jours"></div>
     <div class="acts"><button class="btn ghost" data-close>Annuler</button><button class="btn pri" data-perm="finance.creances.accorder" data-act="acc-ok"><svg><use href="#i-check"/></svg>Accorder</button></div>
+  </div></div>
+
+  <!-- Modale : aide contextuelle -->
+  <div class="mback" data-ov="help-fin-creances"><div class="modal wide" role="dialog" aria-modal="true" aria-label="Comment ça marche : Créances clients">
+    <h3><svg><use href="#i-info"/></svg>Comment ça marche : Créances clients</h3>
+    <div class="exp">Cet écran donne la position de chaque client et MaaS envers Mata, mise à jour par les ventes et les encaissements du jour. Il sert à la Direction et à la Comptabilité pour tout le périmètre Mata Group, et au Gérant MaaS pour la seule position de son MaaS.</div>
+    <ul class="help-list">
+      <li><b>Position calculée</b> — chaque position vient de Position précédente + Ventes Mata − Encaissements affectés ± Ajustements validés, jamais saisie à la main ; MaaS Keur Massar affiche <span class="amt" data-amt="3250000" data-nocur></span> (§4.3).</li>
+      <li><b>Sens du montant</b> — positif = le client doit à Mata, négatif = une avance absorbée par ses ventes futures ; seule Touba Viandes est en négatif, à −150 000 (§4.3).</li>
+      <li><b>Contrepartie reliée au Référentiel ERP</b> — chaque compte Créance pointe vers un identifiant existant, jamais recréé ici ; MaaS Keur Massar porte entity_id MAAS-KM (§4.5).</li>
+      <li><b>Créance créée à 100 %</b> — une vente Mata reçue par API crée aussitôt une créance pour son montant plein ; les Ventes du jour totalisent <span class="amt" data-amt="6200000" data-nocur></span> sur le périmètre affiché (§6.1).</li>
+      <li><b>« Encaissements collectés » vérifiés à deux sources</b> — un remboursement n'est affecté au compte client que si la somme des déclarations (Source A) égale la déclaration du collecteur (Source B) ; ici <span class="amt" data-amt="4725000" data-nocur></span> = <span class="amt" data-amt="4725000" data-nocur></span>, validé le 27/08 à 02:04 (§6.3).</li>
+      <li><b>Réconciliation des ventes du jour</b> — l'écran vérifie que Ventes Mata du jour = Versements + Paiements Bictorys + Créances nettes nouvelles − Remboursements à neutraliser ; <span class="amt" data-amt="6200000" data-nocur></span> = <span class="amt" data-amt="3100000" data-nocur></span> + <span class="amt" data-amt="1250000" data-nocur></span> + <span class="amt" data-amt="2450000" data-nocur></span> − 600 000, écart 0 (§6.4).</li>
+    </ul>
+    <div class="note-strip"><svg><use href="#i-info"/></svg>Refus par défaut : le Gérant MaaS ne voit que la position de son MaaS (Keur Massar) ; « Accorder une créance », « Générer la facture » et « Exporter » restent visibles mais désactivés hors permission.</div>
+    <div class="hint">Sources : Cahier Mata Finance §4.3, §4.5, §6.1, §6.3, §6.4 · FIXTURES §3, §6</div>
+    <div class="acts"><button class="btn ghost" data-close>Fermer</button></div>
   </div></div>
 </section>
 <script data-screen="fin-creances">
@@ -2236,6 +2334,7 @@ ERP.register('fin-creances', function (root, ctx) {
       <p class="scr-sub">4 circuits · jeudi 27 août 2026 · solde toujours calculé, déclaration en aveugle · gel « À réconcilier » à 23:59 GMT · déclenchement automatique vers 02:00 uniquement si les sources sont complètes et à jour</p>
     </div>
     <div class="scr-meta">
+      <button class="linkish" data-open="help-fin-reconciliation"><svg><use href="#i-info"/></svg>Comment ça marche ?</button>
       <span class="sens hs"><svg><use href="#i-shield"/></svg>Hautement sensible</span>
       <span class="hint">Consultation auditée (périmètre Caisses) · aucune auto-validation en cas d'écart ou de source non à jour (§6.3, §6.5) · correction uniquement par Ajustement : motif et deux validateurs distincts (§4.7)</span>
     </div>
@@ -2431,6 +2530,23 @@ ERP.register('fin-creances', function (root, ctx) {
     <div class="df"><button class="btn ghost" data-goto="fin-comptes"><svg><use href="#i-wallet"/></svg>Mouvements du compte</button><div class="sp"></div><button class="btn pri" data-perm="finance.ajustements.initier" data-open="fin-reconciliation-ajust"><svg><use href="#i-scale"/></svg>Corriger par Ajustement</button></div>
   </aside>
   <div class="dback" data-ov-back="fin-reconciliation-invest"></div>
+
+  <!-- Modale d'aide -->
+  <div class="mback" data-ov="help-fin-reconciliation"><div class="modal wide" role="dialog" aria-modal="true" aria-label="Comment ça marche : Réconciliation">
+    <h3><svg><use href="#i-info"/></svg>Comment ça marche : Réconciliation</h3>
+    <div class="exp">Cet écran regroupe les 4 contrôles quotidiens qui comparent l'argent réellement détenu aux mouvements enregistrés : Caisses, Encaissements collectés, Ventes du jour et Fournisseurs. Il sert aux gérants de caisse, au collecteur, au Directeur des Opérations et aux profils Admin/DG qui suivent l'avancement et les écarts.</div>
+    <ul class="help-list">
+      <li><b>Solde théorique des Caisses</b> — le théorique additionne au dernier solde réconcilié tous les mouvements du jour, puis se compare au montant déclaré en aveugle. Sur la Sous-caisse Marché : <span class="amt" data-amt="1275000" data-nocur></span> FCFA de théorique contre <span class="amt" data-amt="1250000" data-nocur></span> FCFA déclarés, écart −25 000 FCFA, compte laissé « À réconcilier » (§4.8).</li>
+      <li><b>Masquage puis gel</b> — tant qu'une caisse n'a pas déclaré, son théorique reste masqué (Caisse générale, <span class="amt" data-amt="8450000" data-nocur></span> FCFA) ; à 23:59 GMT toute caisse encore ouverte est gelée « À réconcilier » et sa correction demandera ensuite l'approbation du Super Admin (§3.1).</li>
+      <li><b>Deux sources pour la collecte</b> — Source A additionne les 12 déclarations MaaS (<span class="amt" data-amt="4725000" data-nocur></span> FCFA), Source B est la déclaration séparée du collecteur A. Ndiaye (<span class="amt" data-amt="4725000" data-nocur></span> FCFA) ; égalité = écart 0, la collecte du 26/08 a été validée automatiquement à 02:04 (§6.3).</li>
+      <li><b>Équation des ventes du jour</b> — le CA de <span class="amt" data-amt="6200000" data-nocur></span> FCFA doit égaler Versements (<span class="amt" data-amt="3100000" data-nocur></span>) + Bictorys (<span class="amt" data-amt="1250000" data-nocur></span>) + Créances nettes nouvelles (<span class="amt" data-amt="2450000" data-nocur></span>) − Remboursements à neutraliser (600 000) ; écart calculé 0, statut « Cohérente » (§6.4).</li>
+      <li><b>Position théorique des Fournisseurs</b> — recalculée à partir de la dernière position réconciliée, des paiements/avances et des dépenses. AGNEAUX (F1) passe à <span class="amt" data-amt="-12400000" data-nocur></span> FCFA après l'achat du jour, validé sans écart ; les 6 fournisseurs se répartissent en 3 validés, 2 en attente, 1 sans mouvement (§5.5).</li>
+      <li><b>Fraîcheur des sources</b> — le bandeau affiche 7 sources à l'état OK (Ventes Mata 20:30, Bictorys 08:12…) ; une source Manquante, en Erreur ou Non à jour bloquerait l'auto-validation mais resterait visible avec son horodatage (§6.5).</li>
+    </ul>
+    <div class="note-strip"><svg><use href="#i-shield"/></svg>Réconciliation en aveugle : le solde théorique reste masqué tant que vous n'avez pas déclaré (Caisse générale, Bétail Thiès, Abattoirs Dakar affichent « Masqué jusqu'à votre déclaration ») afin qu'aucune déclaration ne s'aligne sciemment sur le chiffre attendu.</div>
+    <div class="hint">Sources : Cahier Mata Finance §3.1, §4.8, §5.5, §6.3, §6.4, §6.5</div>
+    <div class="acts"><button class="btn ghost" data-close>Fermer</button></div>
+  </div></div>
 </section>
 <script data-screen="fin-reconciliation">
 ERP.register('fin-reconciliation', function (root, ctx) {
@@ -2561,6 +2677,7 @@ ERP.register('fin-reconciliation', function (root, ctx) {
       <p class="scr-sub">Réconciliation en aveugle (§3) : lorsqu'un déclarant constitue une source de contrôle, il ne voit pas la valeur théorique avant sa déclaration · Caisses (§4.8), positions fournisseurs (§5.5), encaissements collectés (§6.3) · jeudi 27 août 2026 · gel « À réconcilier » à 23:59 GMT (§3.1)</p>
     </div>
     <div class="scr-meta">
+      <button class="linkish" data-open="help-fin-declarations"><svg><use href="#i-info"/></svg>Comment ça marche ?</button>
       <span class="sens s"><svg><use href="#i-shield"/></svg>Sensible</span>
       <span class="hint">Déclaration = écriture auditée (auteur, horodatage, valeur) sans validation préalable : le contrôle est la comparaison au théorique · écart corrigé uniquement par Ajustement à double validation (§4.7, §10.1)</span>
     </div>
@@ -2734,6 +2851,22 @@ ERP.register('fin-reconciliation', function (root, ctx) {
     <label for="fin-declarations-f-montant">Position constatée (FCFA, signée, sans décimales)</label><input id="fin-declarations-f-montant" inputmode="numeric" placeholder="Montant signé" data-f-inp>
     <div class="row-m"><span>Position théorique</span><span class="amt">••••••••</span></div>
     <div class="acts"><button class="btn ghost" data-close>Annuler</button><button class="btn pri" data-perm="finance.declarations.declarer" data-f-save><svg><use href="#i-eyeoff"/></svg>Déclarer</button></div>
+  </div></div>
+
+  <!-- Modale : aide contextuelle -->
+  <div class="mback" data-ov="help-fin-declarations"><div class="modal wide" role="dialog" aria-modal="true" aria-label="Comment ça marche : Déclarations">
+    <h3><svg><use href="#i-info"/></svg>Comment ça marche : Déclarations</h3>
+    <div class="exp">Cet écran fait réconcilier chaque périmètre ayant bougé aujourd'hui : le déclarant (gestionnaire de caisse, collecteur, gérant MaaS, directeur des opérations) saisit en aveugle ce qu'il constate, sans voir le solde système ; le Super Admin et le DG, qui ne déclarent pas, voient le théorique et pilotent les écarts.</div>
+    <ul class="help-list">
+      <li><b>Déclaration en aveugle</b> — avant la déclaration, seul un bandeau « Solde système masqué » apparaît ; une fois F. Sarr déclaré à 20:48, l'écran affiche <span class="amt" data-amt="640000" data-nocur></span> déclarés pour <span class="amt" data-amt="640000" data-nocur></span> de théorique, écart nul (§3).</li>
+      <li><b>Solde théorique d'une caisse</b> — dernier solde réconcilié + mouvements du jour. Sur Sous-caisse Marché, <span class="amt" data-amt="1250000" data-nocur></span> déclarés contre <span class="amt" data-amt="1275000" data-nocur></span> de théorique laissent un écart de <span class="amt" data-amt="-25000" data-nocur></span> : le compte reste « À réconcilier », corrigé seulement par Ajustement (§4.8).</li>
+      <li><b>Position théorique d'un fournisseur</b> — dernière position réconciliée + paiements/avances − dépenses ± ajustements. Sur AGNEAUX, l'achat bœuf de <span class="amt" data-amt="850000" data-nocur></span> impayé laisse déclaré et théorique égaux à <span class="amt" data-amt="-12400000" data-nocur></span>, écart nul, position validée (§5.5).</li>
+      <li><b>Mouvement non bloquant</b> — 5 fournisseurs ayant bougé sont attendus aujourd'hui ; Aliments Sénégal, sans mouvement depuis sa dernière réconciliation, reste « Sans mouvement · non bloquant » et n'est pas compté (§5.5).</li>
+      <li><b>Deux sources pour une collecte</b> — Source A (Σ des 12 déclarations MaaS) comparée à la Source B (déclaration du collecteur). Le 26/08, les deux étaient à <span class="amt" data-amt="4725000" data-nocur></span> : sources égales, collecte validée automatiquement à 02:04 ; en cas d'écart, aucune validation automatique n'a lieu (§6.3).</li>
+    </ul>
+    <div class="note-strip"><svg><use href="#i-shield"/></svg>Réconciliation en aveugle : le déclarant ne voit le solde ou la position théorique qu'après avoir soumis sa propre déclaration, jamais avant (§3).</div>
+    <div class="hint">Sources : Cahier Mata Finance §3, §4.8, §5.5, §6.3</div>
+    <div class="acts"><button class="btn ghost" data-close>Fermer</button></div>
   </div></div>
 </section>
 <script data-screen="fin-declarations">
@@ -3180,6 +3313,7 @@ ERP.register('fin-transferts', function (root, ctx) {
       <p class="scr-sub">Écran unique centralisant les validations financières en cours (§7.3) : transferts, ajustements, contrepassations, corrections de Positions externes, désactivations sensibles · chaque utilisateur ne voit que les demandes de son périmètre et les actions pour lesquelles il est habilité · le détail complet de l'opération est consultable avant toute décision</p>
     </div>
     <div class="scr-meta">
+      <button class="linkish" data-open="help-fin-validations"><svg><use href="#i-info"/></svg>Comment ça marche ?</button>
       <span class="sens hs"><svg><use href="#i-shield"/></svg>Hautement sensible</span>
       <span class="hint">Consultation auditée · validation simple (transfert, désactivation) ou double (ajustement, correction) selon §10.1 · l'initiateur ne valide jamais sa propre opération, le Super Admin ne contourne pas cette règle (Core §4.2)</span>
     </div>
@@ -3558,6 +3692,7 @@ ERP.register('fin-validations', function (root, ctx) {
       <p class="scr-sub">Cumul du 1er au 27 août 2026 · Mata Group · trois variantes du P&amp;L de gestion (§8.3), neuf indicateurs de trésorerie et d’expositions (§8.1) · valeur en FCFA d’abord, ratio sur le CA de référence ensuite (§8.2) · moteur financier unique : mêmes chiffres que le Tableau de bord, les snapshots et les agents IA (§3).</p>
     </div>
     <div class="scr-meta">
+      <button class="linkish" data-open="help-fin-pnl"><svg><use href="#i-info"/></svg>Comment ça marche ?</button>
       <span class="sens s"><svg><use href="#i-shield"/></svg>Sensible</span>
       <span class="hint">Écran de lecture, aucune validation ici · les flags Investissement / Dépense spéciale se modifient dans Dépenses selon permissions et clôture (§10.1) ; après clôture, correction post-clôture avec approbation du Super Admin (§3.1) · Exporter distinct de Consulter (§5.7)</span>
     </div>

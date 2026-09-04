@@ -95,10 +95,42 @@ Le moteur affiche une infobulle à trois niveaux au survol (desktop) ou au tap (
 | Résultat de déclaration | `<div class="declres"><div><div class="k">Déclaré</div><div class="val">…</div></div>…</div>` (classes `.val.ok` / `.val.bad`) ; verdict de chaîne `<span class="res">Autorisé</span>` |
 | Jauge | `<div class="jauge"><i class="hot" style="width:62%"></i></div>` ; expiration `<span class="expire"><svg><use href="#i-clock"/></svg>expire le 30/09/2026</span>` |
 | Situation figée | `<div class="frozen">…</div>` |
+| Liste d'aide | `<ul class="help-list"><li><b>Concept</b> — explication (§4.3).</li></ul>` (voir §4a) |
 
 Les permissions de consultation (`*.view`) peuvent aussi être portées par un bouton de navigation `data-goto` pour afficher le refus expliqué à l'avance.
 
 - Bouton compact : `.btn.sm` (cellules de tableau, listes denses) — s'ajoute à `.btn.ghost` / `.btn.pri`.
+
+## 4a. Aide d'écran obligatoire (« Comment ça marche ? »)
+
+Chaque écran porte un lien d'aide contextuelle : replié par défaut dans une modale (ne pèse pas sur la densité de l'écran), il explique en français simple le fonctionnement de l'écran et cite la partie exacte du cahier utilisée.
+
+```html
+<div class="scr-meta">
+  <button class="linkish" data-open="help-fin-comptes"><svg><use href="#i-info"/></svg>Comment ça marche ?</button>
+  <span class="sens hs">…</span>
+  <span class="hint">…</span>
+</div>
+… (contenu de l'écran) …
+<div class="mback" data-ov="help-fin-comptes"><div class="modal wide" role="dialog" aria-modal="true" aria-label="Comment ça marche : Comptes">
+  <h3><svg><use href="#i-info"/></svg>Comment ça marche : Comptes</h3>
+  <div class="exp">Une ou deux phrases : à quoi sert l'écran, pour qui.</div>
+  <ul class="help-list">
+    <li><b>Concept clé</b> — explication simple, avec un exemple chiffré réellement affiché sur cet écran (§4.3).</li>
+    <li><b>Autre mécanisme</b> — … (§4.8).</li>
+  </ul>
+  <div class="note-strip"><svg><use href="#i-shield"/></svg>La règle la plus importante à retenir sur cet écran, si elle s'y illustre (réconciliation en aveugle, refus par défaut, double validation…).</div>
+  <div class="hint">Sources : Cahier Mata Finance §4.1 à §4.7, §4.9, §10.1 · FIXTURES §3, §17</div>
+  <div class="acts"><button class="btn ghost" data-close>Fermer</button></div>
+</div></div>
+```
+
+Règles :
+- Le bouton est le PREMIER élément de `.scr-meta`, avant le badge de sensibilité — même id que l'écran, préfixé `help-`.
+- La modale est ajoutée à la fin de la section (avec les autres modales de l'écran) ; le `<script data-screen>` n'est pas modifié, l'ouverture/fermeture est générique (§5).
+- 4 à 7 points dans `.help-list`, chacun avec un exemple chiffré déjà présent sur l'écran (jamais un nombre inventé, jamais une donnée hors FIXTURES) et la référence `(§x.y)` exacte du paragraphe du cahier dont il provient. Comme partout ailleurs (§2) : tout montant ≥ 4 chiffres s'écrit `<span class="amt" data-amt="…" data-nocur></span>`, jamais en dur dans le texte — `python lint.py` le vérifie.
+- La ligne `Sources` en pied de modale reprend les sections du cahier réellement citées dans les points ci-dessus (pas plus).
+- `.note-strip` optionnel : seulement pour une règle métier transverse déjà illustrée sur cet écran (réconciliation en aveugle, refus par défaut, séparation initiateur/validateur, double validation…).
 
 ## 5. Interactions communes fournies par le moteur
 

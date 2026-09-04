@@ -12,6 +12,7 @@
       <p class="scr-sub">Jeudi 27 août 2026 · Mata Group · six blocs du §8.5 : Trésorerie, Fournisseurs, Clients, Activité, Contrôles, P&amp;L. Montants en FCFA d’abord, ratios ensuite (§8.2). Moteur financier unique : mêmes chiffres que les rapports, snapshots et agents IA (§3).</p>
     </div>
     <div class="scr-meta">
+      <button class="linkish" data-open="help-fin-dashboard"><svg><use href="#i-info"/></svg>Comment ça marche ?</button>
       <span class="sens s"><svg><use href="#i-shield"/></svg>Sensible</span>
       <span class="hint">Lecture agrégée, aucune écriture ici : chaque action renvoie vers l’écran propriétaire et son niveau de validation (§10.1) · gel « À réconcilier » à 23:59 GMT</span>
     </div>
@@ -237,6 +238,23 @@
     <div class="df"><button class="btn ghost" data-goto="fin-comptes"><svg><use href="#i-wallet"/></svg>Ouvrir dans Comptes</button><button class="btn ghost" data-goto="fin-historique"><svg><use href="#i-history"/></svg>Historique</button></div>
   </aside>
   <div class="dback" data-ov-back="fin-dashboard-compte"></div>
+
+  <!-- Aide contextuelle -->
+  <div class="mback" data-ov="help-fin-dashboard"><div class="modal wide" role="dialog" aria-modal="true" aria-label="Comment ça marche : Tableau de bord">
+    <h3><svg><use href="#i-info"/></svg>Comment ça marche : Tableau de bord</h3>
+    <div class="exp">Vue consolidée et en lecture seule de la situation financière du jour, pour la Direction, le Directeur des Opérations, le Super Admin et les profils en lecture (Investisseur, Comptable externe) : aucune écriture ne se fait ici, chaque action renvoie vers l’écran propriétaire.</div>
+    <ul class="help-list">
+      <li><b>Trésorerie disponible</b> — somme des comptes Trésorerie et Positions externes immédiatement mobilisables : <span class="amt" data-amt="58455000"></span>, soit 12,9 % du CA de référence (§8.1).</li>
+      <li><b>Trésorerie totale contrôlée</b> — disponible + en transit (comptes Relais actifs) : <span class="amt" data-amt="61305000" data-nocur></span> = <span class="amt" data-amt="58455000" data-nocur></span> + <span class="amt" data-amt="2850000" data-nocur></span> (§8.1).</li>
+      <li><b>Montant d’abord, ratio ensuite</b> — changer le CA de référence dans le sélecteur ne modifie que les pourcentages affichés, jamais les montants FCFA (§8.2).</li>
+      <li><b>Échéancier fournisseurs</b> — priorité aux échéances déjà dépassées puis à la prochaine due : 2 dépassées pour <span class="amt" data-amt="1950000"></span> (Aliments Sénégal, MATA VOLAILLE ŒUFS), puis Bétail Thiès <span class="amt" data-amt="1600000"></span> le 02/09/2026 (§5.6).</li>
+      <li><b>Six blocs fixes</b> — Trésorerie, Fournisseurs, Clients, Activité, Contrôles, P&amp;L : mêmes chiffres que les autres écrans, un seul moteur de calcul (§8.5).</li>
+      <li><b>Bloc Contrôles</b> — regroupe les signaux de qualité : 1 dépense « Pas sûr » (Carburant 85 000), 3 circuits de réconciliation ouverts sur 4, aucune source non à jour, 4 validations en attente (§10.4).</li>
+    </ul>
+    <div class="note-strip"><svg><use href="#i-shield"/></svg>La ligne Caisse générale illustre la réconciliation en aveugle : le solde théorique reste masqué au déclarant tant qu’il n’a pas saisi son solde constaté ; seuls les validateurs le voient.</div>
+    <div class="hint">Sources : Cahier Mata Finance §8.1, §8.2, §5.6, §8.5, §10.4</div>
+    <div class="acts"><button class="btn ghost" data-close>Fermer</button></div>
+  </div></div>
 </section>
 <script data-screen="fin-dashboard">
 ERP.register('fin-dashboard', function (root, ctx) {

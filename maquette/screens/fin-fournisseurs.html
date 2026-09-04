@@ -20,6 +20,7 @@
       <p class="scr-sub">6 comptes Fournisseur · position calculée, jamais saisie · paiements affectés par défaut aux échéances les plus proches (FIFO) · plafond d'encours : alerte informative, aucun blocage</p>
     </div>
     <div class="scr-meta">
+      <button class="linkish" data-open="help-fin-fournisseurs"><svg><use href="#i-info"/></svg>Comment ça marche ?</button>
       <span class="sens s"><svg><use href="#i-shield"/></svg>Sensible</span>
       <span class="hint">Positions fournisseur : modifications selon permissions et clôture (§10.1) · paiement enregistré sans validation préalable, contrôlé par la réconciliation fournisseur (§5.2, §5.5) · Exporter distinct de Consulter (§5.7)</span>
     </div>
@@ -174,6 +175,24 @@
     <label class="rline"><input type="checkbox" checked>Échéancier des tranches impayées<span class="rh">§5.3</span></label>
     <label class="rline"><input type="checkbox">Justificatifs groupés (service documentaire commun)<span class="rh">§5.7</span></label>
     <div class="acts"><button class="btn ghost" data-close>Annuler</button><button class="btn pri" data-perm="finance.export" data-rel-go><svg><use href="#i-dl"/></svg>Générer le relevé</button></div>
+  </div></div>
+
+  <!-- Modale : Aide -->
+  <div class="mback" data-ov="help-fin-fournisseurs"><div class="modal wide" role="dialog" aria-modal="true" aria-label="Comment ça marche : Fournisseurs">
+    <h3><svg><use href="#i-info"/></svg>Comment ça marche : Fournisseurs</h3>
+    <div class="exp">Cet écran affiche la position calculée de chaque fournisseur, les échéances à payer et le plafond d'encours. Il sert au Directeur des Opérations pour déclarer et payer, et au Comptable externe pour consulter en lecture seule.</div>
+    <ul class="help-list">
+      <li><b>Position fournisseur</b> — jamais saisie, toujours calculée : Position précédente + Paiements/avances − Dépenses ± Ajustements validés. AGNEAUX doit <span class="amt" data-amt="12400000" data-nocur></span> (solde négatif) ; Abattoirs Dakar a une avance de 350 000, consommée automatiquement par les achats futurs avant qu'une dette ne se forme (§4.3).</li>
+      <li><b>Compte de paiement de référence</b> — modifiable à tout moment (ex. Caisse générale pour AGNEAUX) ; le changement ne réécrit aucun paiement déjà enregistré, il s'applique seulement aux prochaines opérations (§4.4).</li>
+      <li><b>Paiement FIFO</b> — un paiement affecte d'abord l'échéance la plus proche ; la tranche MATA VOLAILLE ŒUFS de <span class="amt" data-amt="1150000" data-nocur></span> due depuis le 25/08 serait réglée en premier. Une affectation manuelle reste possible mais est auditée (§5.3).</li>
+      <li><b>Plafond d'encours</b> — informatif, jamais bloquant : AGNEAUX est à 124 % de son plafond de <span class="amt" data-amt="10000000" data-nocur></span> (dette <span class="amt" data-amt="12400000" data-nocur></span>), l'écran affiche une alerte, la saisie reste ouverte (§5.4).</li>
+      <li><b>Réconciliation en aveugle</b> — un compte qui a bougé doit être déclaré chaque jour ; Bétail Thiès a bougé (achat de 262 000) et reste « En attente », sa position masquée au Directeur des Opérations tant qu'il n'a pas déclaré (§5.5).</li>
+      <li><b>Échéances dépassées en priorité</b> — le tableau montre d'abord les retards, puis la prochaine échéance : <span class="amt" data-amt="1950000" data-nocur></span> sont dépassés, la prochaine tombe le 02/09 pour <span class="amt" data-amt="1600000" data-nocur></span> (§5.6).</li>
+      <li><b>Exporter ≠ Consulter</b> — le bouton « Relevé fournisseur PDF » exige la permission Exporter, distincte de la permission de consultation de l'écran (§5.7).</li>
+    </ul>
+    <div class="note-strip"><svg><use href="#i-shield"/></svg>Refus par défaut : Consulter, Payer et Exporter sont trois permissions séparées. Un bouton sans la permission requise reste visible mais désactivé, avec son motif.</div>
+    <div class="hint">Sources : Cahier Mata Finance §4.3, §4.4, §5.3 à §5.7 · FIXTURES §3, §8</div>
+    <div class="acts"><button class="btn ghost" data-close>Fermer</button></div>
   </div></div>
 </section>
 <script data-screen="fin-fournisseurs">

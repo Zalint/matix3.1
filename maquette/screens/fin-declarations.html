@@ -19,6 +19,7 @@
       <p class="scr-sub">Réconciliation en aveugle (§3) : lorsqu'un déclarant constitue une source de contrôle, il ne voit pas la valeur théorique avant sa déclaration · Caisses (§4.8), positions fournisseurs (§5.5), encaissements collectés (§6.3) · jeudi 27 août 2026 · gel « À réconcilier » à 23:59 GMT (§3.1)</p>
     </div>
     <div class="scr-meta">
+      <button class="linkish" data-open="help-fin-declarations"><svg><use href="#i-info"/></svg>Comment ça marche ?</button>
       <span class="sens s"><svg><use href="#i-shield"/></svg>Sensible</span>
       <span class="hint">Déclaration = écriture auditée (auteur, horodatage, valeur) sans validation préalable : le contrôle est la comparaison au théorique · écart corrigé uniquement par Ajustement à double validation (§4.7, §10.1)</span>
     </div>
@@ -192,6 +193,22 @@
     <label for="fin-declarations-f-montant">Position constatée (FCFA, signée, sans décimales)</label><input id="fin-declarations-f-montant" inputmode="numeric" placeholder="Montant signé" data-f-inp>
     <div class="row-m"><span>Position théorique</span><span class="amt">••••••••</span></div>
     <div class="acts"><button class="btn ghost" data-close>Annuler</button><button class="btn pri" data-perm="finance.declarations.declarer" data-f-save><svg><use href="#i-eyeoff"/></svg>Déclarer</button></div>
+  </div></div>
+
+  <!-- Modale : aide contextuelle -->
+  <div class="mback" data-ov="help-fin-declarations"><div class="modal wide" role="dialog" aria-modal="true" aria-label="Comment ça marche : Déclarations">
+    <h3><svg><use href="#i-info"/></svg>Comment ça marche : Déclarations</h3>
+    <div class="exp">Cet écran fait réconcilier chaque périmètre ayant bougé aujourd'hui : le déclarant (gestionnaire de caisse, collecteur, gérant MaaS, directeur des opérations) saisit en aveugle ce qu'il constate, sans voir le solde système ; le Super Admin et le DG, qui ne déclarent pas, voient le théorique et pilotent les écarts.</div>
+    <ul class="help-list">
+      <li><b>Déclaration en aveugle</b> — avant la déclaration, seul un bandeau « Solde système masqué » apparaît ; une fois F. Sarr déclaré à 20:48, l'écran affiche <span class="amt" data-amt="640000" data-nocur></span> déclarés pour <span class="amt" data-amt="640000" data-nocur></span> de théorique, écart nul (§3).</li>
+      <li><b>Solde théorique d'une caisse</b> — dernier solde réconcilié + mouvements du jour. Sur Sous-caisse Marché, <span class="amt" data-amt="1250000" data-nocur></span> déclarés contre <span class="amt" data-amt="1275000" data-nocur></span> de théorique laissent un écart de <span class="amt" data-amt="-25000" data-nocur></span> : le compte reste « À réconcilier », corrigé seulement par Ajustement (§4.8).</li>
+      <li><b>Position théorique d'un fournisseur</b> — dernière position réconciliée + paiements/avances − dépenses ± ajustements. Sur AGNEAUX, l'achat bœuf de <span class="amt" data-amt="850000" data-nocur></span> impayé laisse déclaré et théorique égaux à <span class="amt" data-amt="-12400000" data-nocur></span>, écart nul, position validée (§5.5).</li>
+      <li><b>Mouvement non bloquant</b> — 5 fournisseurs ayant bougé sont attendus aujourd'hui ; Aliments Sénégal, sans mouvement depuis sa dernière réconciliation, reste « Sans mouvement · non bloquant » et n'est pas compté (§5.5).</li>
+      <li><b>Deux sources pour une collecte</b> — Source A (Σ des 12 déclarations MaaS) comparée à la Source B (déclaration du collecteur). Le 26/08, les deux étaient à <span class="amt" data-amt="4725000" data-nocur></span> : sources égales, collecte validée automatiquement à 02:04 ; en cas d'écart, aucune validation automatique n'a lieu (§6.3).</li>
+    </ul>
+    <div class="note-strip"><svg><use href="#i-shield"/></svg>Réconciliation en aveugle : le déclarant ne voit le solde ou la position théorique qu'après avoir soumis sa propre déclaration, jamais avant (§3).</div>
+    <div class="hint">Sources : Cahier Mata Finance §3, §4.8, §5.5, §6.3</div>
+    <div class="acts"><button class="btn ghost" data-close>Fermer</button></div>
   </div></div>
 </section>
 <script data-screen="fin-declarations">

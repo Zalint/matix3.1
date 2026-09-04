@@ -12,6 +12,7 @@
       <p class="scr-sub">Enregistrées immédiatement, sans validation préalable, puis contrôlées par la réconciliation et la clôture (§5.2) · montant payé immédiatement compris entre 0 et le montant total, sinon « Pas sûr » (§5.1) · flags Investissement et Dépense spéciale indépendants, faux par défaut (§8.3)</p>
     </div>
     <div class="scr-meta">
+      <button class="linkish" data-open="help-fin-depenses"><svg><use href="#i-info"/></svg>Comment ça marche ?</button>
       <span class="sens s"><svg><use href="#i-shield"/></svg>Sensible</span>
       <span class="hint">Aucune validation préalable à la création (§5.2) · modifications selon permissions et clôture (§10.1) · audit de modification · Exporter distinct de Consulter (§5.7)</span>
     </div>
@@ -152,6 +153,23 @@
     <div class="df"><button class="btn ghost" data-close>Annuler</button><div class="sp"></div><button class="btn pri" data-perm="finance.depenses.modifier" data-resolve><svg><use href="#i-check"/></svg>Enregistrer le montant payé</button></div>
   </aside>
   <div class="dback" data-ov-back="fin-depenses-resoudre"></div>
+
+  <!-- Modale : aide contextuelle -->
+  <div class="mback" data-ov="help-fin-depenses"><div class="modal wide" role="dialog" aria-modal="true" aria-label="Comment ça marche : Dépenses">
+    <h3><svg><use href="#i-info"/></svg>Comment ça marche : Dépenses</h3>
+    <div class="exp">Cet écran liste et permet de créer les dépenses de l'entité, avec leur montant payé, leur statut « Pas sûr » et leurs échéances de paiement. Le Gestionnaire de caisse et le Directeur des Opérations y saisissent leurs dépenses ; le Comptable externe consulte seulement.</div>
+    <ul class="help-list">
+      <li><b>Montant payé immédiatement</b> — valeur comprise entre 0 et le montant total de la dépense : Achat volaille est réglé en totalité (<span class="amt" data-amt="420000" data-nocur></span>), Achat bœuf n'a encore rien reçu sur ses <span class="amt" data-amt="850000" data-nocur></span> (§5.1).</li>
+      <li><b>Dépense « Pas sûr »</b> — quand le montant payé n'est pas connu avec certitude, la dépense prend ce statut : Carburant véhicule livraison (<span class="amt" data-amt="85000" data-nocur></span>) est « Pas sûr » et bloque uniquement le périmètre Sous-caisse Livraisons (§5.2).</li>
+      <li><b>Import depuis Achat</b> — 5 des 14 écritures du jour viennent de l'interface Achat, intégrées à 17:00 sans doublon ; si le montant payé n'est pas renseigné, la dépense est créée « Pas sûr » par défaut, jamais à zéro (§5.2).</li>
+      <li><b>Échéances</b> — chaque dépense impayée porte sa propre date de paiement souhaitée au plus tard : Achat bœuf (<span class="amt" data-amt="850000" data-nocur></span>) est attendu avant le 30/09, Achat agneau (<span class="amt" data-amt="262000" data-nocur></span>) avant le 12/09 (§5.3).</li>
+      <li><b>Investissement et Dépense spéciale</b> — deux flags indépendants, faux par défaut : au mois, les dépenses Investissement totalisent <span class="amt" data-amt="18000000" data-nocur></span>, dont la chambre froide à <span class="amt" data-amt="12000000" data-nocur></span>, réintégrées dans le P&amp;L hors Investissements (§8.3).</li>
+      <li><b>Export</b> — Exporter est une permission distincte de Consulter : les boutons Export CSV et Export PDF restent désactivés sans elle, et chaque export reste téléchargeable 7 jours avant suppression automatique, régénérable à la demande (§5.7).</li>
+    </ul>
+    <div class="note-strip"><svg><use href="#i-shield"/></svg>Refus par défaut : Consulter, Créer, Modifier et Exporter restent quatre permissions distinctes — le Comptable externe ne voit que la consultation, et un bouton sans la permission requise reste visible mais désactivé, avec son motif.</div>
+    <div class="hint">Sources : Cahier Mata Finance §5.1, §5.2, §5.3, §5.7, §8.3</div>
+    <div class="acts"><button class="btn ghost" data-close>Fermer</button></div>
+  </div></div>
 </section>
 <script data-screen="fin-depenses">
 ERP.register('fin-depenses', function (root, ctx) {
