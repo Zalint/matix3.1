@@ -1,0 +1,371 @@
+<section class="scr" data-scr="fin-validations" data-module="finance" data-perm="finance.validations.view" data-sens="hs" hidden>
+  <style data-screen="fin-validations">
+    #app [data-scr="fin-validations"] .btn.sm{min-height:28px;padding:4px 10px;font-size:11px}
+    #app [data-scr="fin-validations"] td .acts-c{display:flex;gap:6px;flex-wrap:wrap}
+    #app [data-scr="fin-validations"] td .prog{margin-top:5px;max-width:120px}
+    #app [data-scr="fin-validations"] .pnl-tabs{margin-bottom:14px}
+    #app [data-scr="fin-validations"] .pnl-tabs .n{font-family:'Fira Code',monospace;font-size:10.5px;margin-left:6px;opacity:.85}
+    #app [data-scr="fin-validations"] .kv{display:flex;justify-content:space-between;gap:12px;font-size:12px;padding:6px 0;border-bottom:1px dashed var(--line)}
+    #app [data-scr="fin-validations"] .kv:last-of-type{border-bottom:none}
+    #app [data-scr="fin-validations"] .kv b{text-align:right;font-weight:600}
+    #app [data-scr="fin-validations"] .drawer h4{font-family:var(--head);font-size:11.5px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-2);margin:16px 0 8px}
+    #app [data-scr="fin-validations"] .modal textarea.inp{min-height:84px;resize:vertical;font-family:var(--body)}
+  </style>
+  <div class="scr-head">
+    <div>
+      <h2>Validations</h2>
+      <p class="scr-sub">Écran unique centralisant les validations financières en cours (§7.3) : transferts, ajustements, contrepassations, corrections de Positions externes, désactivations sensibles · chaque utilisateur ne voit que les demandes de son périmètre et les actions pour lesquelles il est habilité · le détail complet de l'opération est consultable avant toute décision</p>
+    </div>
+    <div class="scr-meta">
+      <span class="sens hs"><svg><use href="#i-shield"/></svg>Hautement sensible</span>
+      <span class="hint">Consultation auditée · validation simple (transfert, désactivation) ou double (ajustement, correction) selon §10.1 · l'initiateur ne valide jamais sa propre opération, le Super Admin ne contourne pas cette règle (Core §4.2)</span>
+    </div>
+  </div>
+
+  <div class="statstrip four">
+    <div class="card stat">
+      <div class="lb">À valider</div>
+      <div class="v" data-stat="pending">4</div>
+      <div class="sub2">dont <span data-stat="double">2</span> en double validation · compteur menu « Validations (<span data-stat="menu">4</span>) » (§7.3)</div>
+    </div>
+    <div class="card stat">
+      <div class="lb">Montants en attente de décision<button class="fx" data-f="Avant validation, aucun solde n'est modifié (§7.2) · Σ des montants des demandes « À valider » du périmètre, non encore imputés aux comptes" data-c="VAL-118 transfert 600 000 · VAL-117 ajustement 180 000 · VAL-116 correction 45 000 · VAL-115 désactivation sans montant" data-src="Moteur transverse de validation (Core §4.2) · demandes En attente au 27/08 · 21:15" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></div>
+      <div class="v amt" data-amt="825000" data-stat="susp"></div>
+      <div class="sub2">aucun solde modifié avant validation · effet atomique à la validation (§7.1)</div>
+    </div>
+    <div class="card stat">
+      <div class="lb">Mes demandes</div>
+      <div class="v">4</div>
+      <div class="sub2" data-stat="mine-sub">1 En attente · 1 Validée · 1 Refusée · 1 Annulée (§7.3)</div>
+    </div>
+    <div class="card stat">
+      <div class="lb">Dernière décision auditée</div>
+      <div class="v" data-stat="last">19:02</div>
+      <div class="sub2"><span data-stat="last-sub">O. Seck · DG Mata · 1re validation VAL-117</span> · <button class="linkish" data-goto="core-audit">Preuve dans l'Audit central</button></div>
+    </div>
+  </div>
+
+  <div class="pnl-tabs" role="tablist">
+    <button class="on" data-tab="avalider" role="tab" aria-selected="true">À valider<span class="n" data-stat="tab-pending">4</span></button>
+    <button data-tab="mes" role="tab" aria-selected="false">Mes demandes<span class="n">4</span></button>
+  </div>
+
+  <!-- Vue : À valider -->
+  <div data-pane="avalider">
+    <div class="actionbar">
+      <div class="chips">
+        <button class="chip on" data-filter="tous">Tous</button>
+        <button class="chip" data-filter="transfert">Transferts</button>
+        <button class="chip" data-filter="ajustement">Ajustements</button>
+        <button class="chip" data-filter="correction">Corrections de Position externe</button>
+        <button class="chip" data-filter="desactivation">Désactivations</button>
+      </div>
+      <div class="sp"></div>
+      <button class="btn ghost" data-goto="fin-transferts"><svg><use href="#i-swap"/></svg>Transferts</button>
+      <button class="btn ghost" data-goto="core-audit"><svg><use href="#i-history"/></svg>Audit central</button>
+    </div>
+    <div class="card">
+      <div class="ch"><h3>À valider — demandes sur lesquelles vous pouvez agir</h3><span class="hint-r" data-stat="pending-hint">4 demandes · périmètre Mata Group · profil Super Admin</span></div>
+      <div class="tbl-scroll"><table>
+        <thead><tr><th>Réf.</th><th>Type</th><th>Initiateur</th><th>Sensibilité</th><th>Niveau de validation</th><th>Montant</th><th>Décision</th></tr></thead>
+        <tbody data-rows="avalider">
+          <tr data-type="transfert" data-val="VAL-118">
+            <td><b>VAL-118</b><div class="hint">27/08 · 18:05</div></td>
+            <td><b>Transfert</b><div class="hint">Banque BOA → Caisse générale · destination confirmée, sans Relais</div></td>
+            <td>F. Sarr<div class="hint">Directeur des Opérations</div></td>
+            <td><span class="sens hs"><svg><use href="#i-shield"/></svg>Hautement sensible</span></td>
+            <td data-cell="niveau">Validation simple<div class="hint">un validateur distinct de l'initiateur (§7.2)</div></td>
+            <td><span class="amt" data-amt="600000" data-nocur></span></td>
+            <td data-cell="decision"><div class="acts-c"><button class="btn ghost sm" data-open="fin-validations-detail" data-val="VAL-118"><svg><use href="#i-eye"/></svg>Détail</button><button class="btn pri sm" data-act="valider" data-val="VAL-118" data-perm="finance.validations.agir" data-initiator="F. Sarr"><svg><use href="#i-check"/></svg>Valider</button><button class="btn ghost sm" data-act="refuser" data-val="VAL-118" data-perm="finance.validations.agir" data-initiator="F. Sarr"><svg><use href="#i-x"/></svg>Refuser</button></div></td>
+          </tr>
+          <tr data-type="ajustement" data-val="VAL-117">
+            <td><b>VAL-117</b><div class="hint">27/08 · 1re validation 19:02</div></td>
+            <td><b>Ajustement</b><div class="hint">Caisse générale · motif « écart de comptage du 26/08 » · contrepartie compte Ajustement</div></td>
+            <td>M. Diop<div class="hint">Gestionnaire de caisse</div></td>
+            <td><span class="sens hs"><svg><use href="#i-shield"/></svg>Hautement sensible</span></td>
+            <td data-cell="niveau">Double validation <b data-prog-lbl>1/2</b><div class="prog"><i data-prog style="width:50%"></i></div><div class="hint" data-prog-hint>1re : O. Seck · 19:02 · 2e requise par un validateur distinct de l'initiateur et du 1er validateur (§4.7)</div></td>
+            <td>+<span class="amt" data-amt="180000" data-nocur></span></td>
+            <td data-cell="decision"><div class="acts-c"><button class="btn ghost sm" data-open="fin-validations-detail" data-val="VAL-117"><svg><use href="#i-eye"/></svg>Détail</button><button class="btn pri sm" data-act="valider" data-val="VAL-117" data-perm="finance.validations.agir" data-initiator="M. Diop" data-validated-by="O. Seck"><svg><use href="#i-check"/></svg>Valider</button><button class="btn ghost sm" data-act="refuser" data-val="VAL-117" data-perm="finance.validations.agir" data-initiator="M. Diop" data-validated-by="O. Seck"><svg><use href="#i-x"/></svg>Refuser</button></div></td>
+          </tr>
+          <tr data-type="correction" data-val="VAL-116">
+            <td><b>VAL-116</b><div class="hint">27/08</div></td>
+            <td><b>Correction Position externe</b><div class="hint">Banque BOA · motif « frais bancaires non importés » · matérialisée par un ajustement validé (§4.2)</div></td>
+            <td>F. Sarr<div class="hint">Directeur des Opérations</div></td>
+            <td><span class="sens hs"><svg><use href="#i-shield"/></svg>Hautement sensible</span></td>
+            <td data-cell="niveau">Double validation <b data-prog-lbl>0/2</b><div class="prog"><i data-prog style="width:0%"></i></div><div class="hint" data-prog-hint>deux validateurs distincts de l'initiateur et l'un de l'autre (§10.1)</div></td>
+            <td><span class="amt" data-amt="-45000" data-nocur></span></td>
+            <td data-cell="decision"><div class="acts-c"><button class="btn ghost sm" data-open="fin-validations-detail" data-val="VAL-116"><svg><use href="#i-eye"/></svg>Détail</button><button class="btn pri sm" data-act="valider" data-val="VAL-116" data-perm="finance.validations.agir" data-initiator="F. Sarr"><svg><use href="#i-check"/></svg>Valider</button><button class="btn ghost sm" data-act="refuser" data-val="VAL-116" data-perm="finance.validations.agir" data-initiator="F. Sarr"><svg><use href="#i-x"/></svg>Refuser</button></div></td>
+          </tr>
+          <tr data-type="desactivation" data-val="VAL-115">
+            <td><b>VAL-115</b><div class="hint">27/08</div></td>
+            <td><b>Désactivation compte</b><div class="hint">Sous-caisse Abattoir · Trésorerie · inactive depuis 3 mois</div></td>
+            <td>F. Sarr<div class="hint">Directeur des Opérations</div></td>
+            <td><span class="sens hs"><svg><use href="#i-shield"/></svg>Hautement sensible</span></td>
+            <td data-cell="niveau">Validation simple<div class="hint">désactivation par un second acteur habilité (§10.1)</div></td>
+            <td><span class="hint">Sans montant · compte jamais supprimé</span></td>
+            <td data-cell="decision"><div class="acts-c"><button class="btn ghost sm" data-open="fin-validations-detail" data-val="VAL-115"><svg><use href="#i-eye"/></svg>Détail</button><button class="btn pri sm" data-act="valider" data-val="VAL-115" data-perm="finance.validations.agir" data-initiator="F. Sarr"><svg><use href="#i-check"/></svg>Valider</button><button class="btn ghost sm" data-act="refuser" data-val="VAL-115" data-perm="finance.validations.agir" data-initiator="F. Sarr"><svg><use href="#i-x"/></svg>Refuser</button></div></td>
+          </tr>
+          <tr data-empty hidden><td colspan="7" class="hint">Aucune demande de ce type en attente de votre décision.</td></tr>
+        </tbody>
+      </table></div>
+    </div>
+    <div class="note-strip"><svg><use href="#i-info"/></svg><span><b>§7.3 —</b> L'écran Validations sert au travail opérationnel ; l'Audit conserve la preuve historique : acteur, profil, horodatage, motif et chaîne de validation complète (§10.2). <button class="linkish" data-goto="core-audit">Ouvrir l'Audit central</button> · Les Demandes administratives de Mata Core (création d'utilisateur, de client, de fournisseur, nouvel accès, permission temporaire) suivent un autre cycle, avec l'état « Retournée » qui n'existe pas ici (Core §4.1). <button class="linkish" data-goto="core-demandes">Ouvrir les Demandes</button></span></div>
+    <div class="note-strip"><svg><use href="#i-shield"/></svg><span><b>Refus par défaut.</b> Consulter et Agir sont deux permissions distinctes : le Directeur des Opérations et le Gestionnaire de caisse suivent leurs demandes sans valider ; le Comptable externe et l'Investisseur n'accèdent pas à cet écran. Un bouton grisé porte toujours son motif : permission manquante, initiateur de l'opération, ou validateur déjà intervenu (double validation, §4.7). Il n'existe pas d'auto-validation, y compris pour le Super Admin ; avant validation, aucun solde n'est modifié (§7.2).</span></div>
+  </div>
+
+  <!-- Vue : Mes demandes -->
+  <div data-pane="mes" hidden>
+    <div class="card">
+      <div class="ch"><h3>Mes demandes — initiées par S. Doucouré</h3><span class="hint-r">En attente, Validée, Refusée ou Annulée (§7.3) · une demande validée ne se corrige que par contrepassation (§7.2)</span></div>
+      <div class="tbl-scroll"><table>
+        <thead><tr><th>Réf.</th><th>Type</th><th>Objet</th><th>Sensibilité</th><th>Niveau de validation</th><th>Décision</th><th>Statut</th></tr></thead>
+        <tbody>
+          <tr data-val="VAL-114">
+            <td><b>VAL-114</b><div class="hint">27/08 · 16:42</div></td>
+            <td><b>Transfert</b></td>
+            <td><span class="amt" data-amt="1500000" data-nocur></span><div class="hint">Caisse générale → Banque BOA via Relais « Dépôt en cours (Caisse → Banque) » (§4.6)</div></td>
+            <td><span class="sens hs"><svg><use href="#i-shield"/></svg>Hautement sensible</span></td>
+            <td>Validation simple<div class="hint">un validateur distinct de l'initiateur (§7.2)</div></td>
+            <td data-cell="decision"><div class="hint">Un autre validateur doit agir : l'initiateur ne valide pas (Core §4.2)</div></td>
+            <td data-cell="statut"><div class="acts-c"><span class="st warn"><svg><use href="#i-clock"/></svg>En attente</span><button class="btn ghost sm" data-open="fin-validations-detail" data-val="VAL-114"><svg><use href="#i-eye"/></svg>Détail</button><button class="btn ghost sm" data-act="annuler" data-val="VAL-114" data-perm="finance.transferts.initier"><svg><use href="#i-x"/></svg>Annuler</button></div></td>
+          </tr>
+          <tr data-val="VAL-109">
+            <td><b>VAL-109</b><div class="hint">26/08</div></td>
+            <td><b>Contrepassation</b></td>
+            <td>Dépense du 25/08 saisie deux fois<div class="hint">contrepassation de la double saisie · l'opération originale reste visible (§7.2, §10.2)</div></td>
+            <td><span class="sens s"><svg><use href="#i-shield"/></svg>Sensible</span></td>
+            <td>Validation simple<div class="hint">dépenses : modifications selon permissions et clôture (§10.1)</div></td>
+            <td><div class="hint">Validée par O. Seck · 26/08</div></td>
+            <td><span class="st ok"><svg><use href="#i-check"/></svg>Validée</span></td>
+          </tr>
+          <tr data-val="VAL-103">
+            <td><b>VAL-103</b><div class="hint">21/08</div></td>
+            <td><b>Ajustement</b></td>
+            <td><span class="amt" data-amt="-60000" data-nocur></span><div class="hint">Sous-caisse Marché · contrepartie compte Ajustement (§4.7)</div></td>
+            <td><span class="sens hs"><svg><use href="#i-shield"/></svg>Hautement sensible</span></td>
+            <td>Double validation <b>0/2</b><div class="hint">refusée au premier validateur · aucun solde modifié</div></td>
+            <td><div class="hint">Refusée par O. Seck · 21/08 · motif « justificatif manquant »</div></td>
+            <td><span class="st bad"><svg><use href="#i-x"/></svg>Refusée</span></td>
+          </tr>
+          <tr data-val="VAL-098">
+            <td><b>VAL-098</b><div class="hint">19/08</div></td>
+            <td><b>Transfert</b></td>
+            <td><span class="amt" data-amt="200000" data-nocur></span><div class="hint">Caisse générale → Banque BOA</div></td>
+            <td><span class="sens hs"><svg><use href="#i-shield"/></svg>Hautement sensible</span></td>
+            <td>Validation simple<div class="hint">un validateur distinct de l'initiateur (§7.2)</div></td>
+            <td><div class="hint">Annulée par l'initiateur · 19/08 · aucun solde modifié</div></td>
+            <td><span class="st mut"><svg><use href="#i-x"/></svg>Annulée</span></td>
+          </tr>
+        </tbody>
+      </table></div>
+    </div>
+    <div class="note-strip" data-mine-note hidden><svg><use href="#i-user"/></svg><span data-mine-txt></span></div>
+    <div class="note-strip"><svg><use href="#i-info"/></svg><span>Vos propres demandes n'apparaissent jamais dans « À valider » : VAL-114 attend un second utilisateur habilité, distinct de l'initiateur (§7.2). Une demande En attente peut être annulée par son initiateur ; une demande Validée ne se modifie que par contrepassation, l'opération originale restant visible. Chaque décision est réalisée sous un profil actif déterminé et intégralement auditée (Core §4.2).</span></div>
+  </div>
+
+  <!-- Tiroir : détail complet avant décision -->
+  <aside class="drawer" data-ov="fin-validations-detail" aria-label="Détail de la demande de validation">
+    <div class="dh"><h3 data-d="title">Détail</h3><button class="ib" data-close aria-label="Fermer"><svg><use href="#i-x"/></svg></button></div>
+    <div class="db">
+      <div data-detail="VAL-118">
+        <div class="hint">Transfert manuel · proposé le 27/08 · 18:05 par F. Sarr (Directeur des Opérations)</div>
+        <b>Banque BOA → Caisse générale</b>
+        <div class="big-amt amt" data-amt="600000"></div>
+        <div class="meta-l"><span class="sens hs"><svg><use href="#i-shield"/></svg>Hautement sensible</span><span class="st warn"><svg><use href="#i-clock"/></svg>Validation simple</span><span class="tag lock"><svg><use href="#i-swap"/></svg>Position externe → Trésorerie</span></div>
+        <h4>Opération complète</h4>
+        <div class="kv"><span>Compte source</span><b>Banque BOA · Position externe · IMPORT CSV · <span class="amt" data-amt="45200000" data-nocur></span></b></div>
+        <div class="kv"><span>Compte destination</span><b>Caisse générale · Trésorerie · CALCULÉ · <span class="amt" data-amt="8450000" data-nocur></span></b></div>
+        <div class="kv"><span>Effet à la validation</span><b>Débit <span class="amt" data-amt="600000" data-nocur></span> et crédit <span class="amt" data-amt="600000" data-nocur></span>, atomiques (§7.1)</b></div>
+        <div class="kv"><span>Impact P&amp;L</span><b>Aucun : ni dépense, ni revenu, ni encaissement client (§7.1)</b></div>
+        <div class="kv"><span>Relais</span><b>Aucun : destination confirmée (§7.1)</b></div>
+        <div class="kv"><span>Soldes avant validation</span><b>Inchangés (§7.2)</b></div>
+        <h4>Motif</h4>
+        <div class="hint">Facultatif pour un transfert manuel (§7.1) · non renseigné par l'initiateur</div>
+      </div>
+      <div data-detail="VAL-117" hidden>
+        <div class="hint">Ajustement · initié le 27/08 par M. Diop (Gestionnaire de caisse) · 1re validation O. Seck · 19:02</div>
+        <b>Caisse générale · mouvement depuis le compte Ajustement</b>
+        <div class="big-amt">+<span class="amt" data-amt="180000"></span></div>
+        <div class="meta-l"><span class="sens hs"><svg><use href="#i-shield"/></svg>Hautement sensible</span><span class="st warn"><svg><use href="#i-clock"/></svg>Double validation 1/2</span><span class="tag lock"><svg><use href="#i-wallet"/></svg>Ajustement → Trésorerie</span></div>
+        <h4>Opération complète</h4>
+        <div class="kv"><span>Compte cible</span><b>Caisse générale · Trésorerie · CALCULÉ · <span class="amt" data-amt="8450000" data-nocur></span></b></div>
+        <div class="kv"><span>Contrepartie</span><b>Compte Ajustement (technique) · exclu des agrégats de trésorerie et du P&amp;L (§4.7)</b></div>
+        <div class="kv"><span>Effet à la 2e validation</span><b>Crédit Caisse générale <span class="amt" data-amt="180000" data-nocur></span> · seul l'effet validé sur le compte cible est pris en compte (§4.7)</b></div>
+        <div class="kv"><span>Origine</span><b>Réconciliation des Caisses du 26/08 : écart investigué, correction par Ajustement (§4.8)</b></div>
+        <div class="kv"><span>Clôture</span><b>Date métier 26/08/2026, journée clôturée : le Super Admin constitue l'un des validateurs requis, sans bypass global (§3.1)</b></div>
+        <div class="kv"><span>Seuil « ajustement inhabituel »</span><b><span class="amt" data-amt="180000" data-nocur></span> &lt; <span class="amt" data-amt="500000" data-nocur></span> · 1 ajustement sur ce compte aujourd'hui · pas d'alerte (§10.4)</b></div>
+        <h4>Motif (obligatoire, §4.7)</h4>
+        <div class="hint">« écart de comptage du 26/08 » · saisi par M. Diop</div>
+      </div>
+      <div data-detail="VAL-116" hidden>
+        <div class="hint">Correction de Position externe · proposée le 27/08 par F. Sarr (Directeur des Opérations)</div>
+        <b>Banque BOA · « Corriger le solde »</b>
+        <div class="big-amt amt" data-amt="-45000"></div>
+        <div class="meta-l"><span class="sens hs"><svg><use href="#i-shield"/></svg>Hautement sensible</span><span class="st warn"><svg><use href="#i-clock"/></svg>Double validation 0/2</span><span class="tag lock"><svg><use href="#i-bank"/></svg>Ajustement validé (§4.2)</span></div>
+        <h4>Opération complète</h4>
+        <div class="kv"><span>Valeur source conservée</span><b>Import CSV 27/08 · 08:00 · <span class="amt" data-amt="45200000" data-nocur></span> · réf. bancaire = identifiant (§4.9)</b></div>
+        <div class="kv"><span>Position corrigée à la validation</span><b><span class="amt" data-amt="45155000" data-nocur></span> · valeur originale et correction conservées toutes deux (§4.9)</b></div>
+        <div class="kv"><span>Contrepartie</span><b>Compte Ajustement · exclu des agrégats (§4.7)</b></div>
+        <div class="kv"><span>Conservation</span><b>Valeur reçue, horodatage, source et correction manuelle conservés distinctement (§4.9)</b></div>
+        <div class="kv"><span>Soldes avant validation</span><b>Inchangés (§7.2) · Trésorerie disponible reste <span class="amt" data-amt="58455000" data-nocur></span></b></div>
+        <h4>Motif (obligatoire : ajustement, §4.7)</h4>
+        <div class="hint">« frais bancaires non importés » · saisi par F. Sarr</div>
+      </div>
+      <div data-detail="VAL-115" hidden>
+        <div class="hint">Désactivation de compte · proposée le 27/08 par F. Sarr (Directeur des Opérations)</div>
+        <b>Sous-caisse Abattoir</b>
+        <div class="big-amt">Actif → Inactif</div>
+        <div class="meta-l"><span class="sens hs"><svg><use href="#i-shield"/></svg>Hautement sensible</span><span class="st warn"><svg><use href="#i-clock"/></svg>Validation simple</span><span class="tag lock"><svg><use href="#i-wallet"/></svg>Trésorerie · CALCULÉ</span></div>
+        <h4>Opération complète</h4>
+        <div class="kv"><span>Compte</span><b>Sous-caisse Abattoir · Trésorerie · entité Mata Group</b></div>
+        <div class="kv"><span>Activité</span><b>Inactive depuis 3 mois · aucun mouvement depuis la dernière réconciliation, absence de déclaration non bloquante (§4.8)</b></div>
+        <div class="kv"><span>Effet</span><b>Statut inactif (§4.2) · historique de mouvements et soldes conservés · jamais supprimé (§10.2)</b></div>
+        <div class="kv"><span>Règle</span><b>Comptes &amp; Trésorerie : désactivation par un second acteur habilité (§10.1)</b></div>
+        <h4>Motif</h4>
+        <div class="hint">« inactive depuis 3 mois » · saisi par F. Sarr</div>
+      </div>
+      <div data-detail="VAL-114" hidden>
+        <div class="hint">Transfert manuel via Relais · proposé le 27/08 · 16:42 par S. Doucouré (Super Admin Mata Group)</div>
+        <b>Caisse générale → Banque BOA</b>
+        <div class="big-amt amt" data-amt="1500000"></div>
+        <div class="meta-l"><span class="sens hs"><svg><use href="#i-shield"/></svg>Hautement sensible</span><span class="st warn"><svg><use href="#i-clock"/></svg>Validation simple</span><span class="tag lock"><svg><use href="#i-swap"/></svg>Trésorerie → Relais → Position externe</span></div>
+        <h4>Opération complète</h4>
+        <div class="kv"><span>Compte source</span><b>Caisse générale · Trésorerie · CALCULÉ · <span class="amt" data-amt="8450000" data-nocur></span></b></div>
+        <div class="kv"><span>Passage par Relais</span><b>« Dépôt en cours (Caisse → Banque) » · destination non encore confirmée (§7.1) · compté une seule fois dans la trésorerie totale contrôlée (§4.6)</b></div>
+        <div class="kv"><span>Compte destination</span><b>Banque BOA · Position externe · confirmation au prochain import CSV</b></div>
+        <div class="kv"><span>Effet à la validation</span><b>Débit Caisse générale et crédit Relais de <span class="amt" data-amt="1500000" data-nocur></span>, atomiques ; dénouement vers Banque BOA à la confirmation</b></div>
+        <h4>Motif</h4>
+        <div class="hint">Facultatif pour un transfert manuel (§7.1) · non renseigné</div>
+      </div>
+      <h4>Chaîne de validation</h4>
+      <div class="tl" data-d="chain"></div>
+      <h4>Séparation des responsabilités</h4>
+      <ol class="chain" data-d="sep"></ol>
+      <div class="hint" style="margin-top:12px">Chaque validation est réalisée sous un profil actif déterminé et intégralement auditée (Core §4.2) · l'Audit central conserve la chaîne de validation complète, le motif et les références métier (§10.2).</div>
+    </div>
+    <div class="df"><button class="btn ghost" data-close>Fermer</button><div class="sp"></div><button class="btn ghost" data-act="refuser" data-val="" data-perm="finance.validations.agir"><svg><use href="#i-x"/></svg>Refuser</button><button class="btn pri" data-act="valider" data-val="" data-perm="finance.validations.agir"><svg><use href="#i-check"/></svg>Valider</button></div>
+  </aside>
+  <div class="dback" data-ov-back="fin-validations-detail"></div>
+
+  <!-- Modale : décision (valider / refuser / annuler) -->
+  <div class="mback" data-ov="fin-validations-decision"><div class="modal" role="dialog" aria-modal="true" aria-label="Décision sur une demande de validation">
+    <h3><svg><use href="#i-shield"/></svg><span data-m="title">Décision</span></h3>
+    <div class="exp" data-m="exp"></div>
+    <div class="row-m"><span>Opération</span><b data-m="obj"></b></div>
+    <div class="fld"><label for="fin-validations-motif" data-m="motif-lbl">Motif</label><textarea id="fin-validations-motif" class="inp" data-m="motif" rows="3" placeholder="Saisir le motif"></textarea><span class="hint">Conservé dans l'Audit central avec la décision, l'acteur et le profil actif (§10.2)</span></div>
+    <div class="acts"><button class="btn ghost" data-close>Annuler</button><button class="btn pri" data-m="confirm" data-val=""><svg><use href="#i-check"/></svg><span data-m="confirm-lbl">Confirmer</span></button></div>
+  </div></div>
+</section>
+<script data-screen="fin-validations">
+ERP.register('fin-validations', function (root, ctx) {
+  var q = function (s, r) { return (r || root).querySelector(s); };
+  var qa = function (s, r) { return Array.prototype.slice.call((r || root).querySelectorAll(s)); };
+  var clock = 21 * 60 + 30, pending = 4, mode = '', curId = '', F = function (n) { return ctx.fmt(n) + ' FCFA'; };
+  var V = {
+    'VAL-118': { type: 'Transfert', amt: 600000, obj: 'Banque BOA → Caisse générale · ' + F(600000), lvl: 1, done: [], init: 'F. Sarr', initP: 'Directeur des Opérations', when: '27/08 · 18:05', st: 'En attente', effet: 'débit Banque BOA et crédit Caisse générale de ' + F(600000) + ', atomiques (§7.1)' },
+    'VAL-117': { type: 'Ajustement', amt: 180000, obj: '+' + F(180000) + ' sur Caisse générale · motif « écart de comptage du 26/08 »', lvl: 2, done: [{ who: 'O. Seck', prof: 'DG Mata', at: '27/08 · 19:02' }], init: 'M. Diop', initP: 'Gestionnaire de caisse', when: '27/08', st: 'En attente', effet: 'crédit Caisse générale de ' + F(180000) + ' en contrepartie du compte Ajustement (§4.7)' },
+    'VAL-116': { type: 'Correction Position externe', amt: 45000, obj: 'Banque BOA −' + F(45000) + ' · motif « frais bancaires non importés »', lvl: 2, done: [], init: 'F. Sarr', initP: 'Directeur des Opérations', when: '27/08', st: 'En attente', effet: 'ajustement de −' + F(45000) + ' sur Banque BOA, valeur source conservée (§4.2, §4.9)' },
+    'VAL-115': { type: 'Désactivation compte', amt: 0, obj: 'Sous-caisse Abattoir · statut actif → inactif', lvl: 1, done: [], init: 'F. Sarr', initP: 'Directeur des Opérations', when: '27/08', st: 'En attente', effet: 'compte Sous-caisse Abattoir inactif, historique conservé, jamais supprimé (§4.2, §10.2)' },
+    'VAL-114': { type: 'Transfert', amt: 1500000, obj: 'Caisse générale → Banque BOA via Relais · ' + F(1500000), lvl: 1, done: [], init: 'S. Doucouré', initP: 'Super Admin Mata Group', when: '27/08 · 16:42', st: 'En attente', effet: 'débit Caisse générale et crédit Relais de ' + F(1500000) + ', atomiques (§7.1)' }
+  };
+  var D = q('[data-ov="fin-validations-detail"]'), M = q('[data-ov="fin-validations-decision"]'), mot = q('[data-m="motif"]', M), tb = q('[data-rows="avalider"]');
+  function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+  function now() { var m = clock++; return '27/08 · ' + ('0' + Math.floor(m / 60)).slice(-2) + ':' + ('0' + m % 60).slice(-2); }
+  function me() { return ctx.profile.short; }
+  function setAmt(el, v) { el.textContent = ctx.fmt(v); var c = document.createElement('span'); c.className = 'cur'; c.textContent = 'FCFA'; el.appendChild(c); }
+  function can(v) {
+    if (!ctx.hasPerm('finance.validations.agir')) return 'Refus par défaut : la permission finance.validations.agir n’est pas accordée au profil ' + ctx.profile.profile;
+    if (v.init === me()) return 'l’initiateur ne valide jamais sa propre opération (Core §4.2)';
+    if (v.done.some(function (d) { return d.who === me(); })) return 'les deux validateurs doivent être distincts (§4.7)';
+    return '';
+  }
+  function deny(b, why) { b.disabled = true; b.classList.add('denied'); b.setAttribute('data-guard', '1'); b.title = 'Refus : ' + why; }
+  /* Après le moteur de permissions : validateur déjà intervenu (double validation) et annulation réservée à l'initiateur */
+  function guard() {
+    qa('[data-guard]').forEach(function (b) { b.disabled = false; b.classList.remove('denied'); b.removeAttribute('title'); b.removeAttribute('data-guard'); });
+    ctx.applyPerms();
+    qa('[data-val][data-perm="finance.validations.agir"]').forEach(function (b) {
+      var v = V[b.getAttribute('data-val')];
+      if (v && !b.disabled && v.done.some(function (d) { return d.who === me(); })) deny(b, 'les deux validateurs doivent être distincts (§4.7) · ' + me() + ' a déjà donné la 1re validation');
+    });
+    var a = q('[data-act="annuler"]'); if (a && !a.disabled && me() !== V['VAL-114'].init) deny(a, 'seul l’initiateur (S. Doucouré) annule sa propre demande');
+    var mine = me() === 'S. Doucouré'; q('[data-mine-note]').hidden = mine;
+    if (!mine) q('[data-mine-txt]').innerHTML = 'Connecté en tant que <b>' + esc(me()) + '</b> (' + esc(ctx.profile.profile) + ') : en production, « Mes demandes » ne liste que vos propres demandes (§7.3). Celles de S. Doucouré restent affichées ici à titre de démonstration ; leur bouton « Annuler » vous est refusé.';
+    q('[data-stat="pending-hint"]').textContent = pending + ' demande' + (pending > 1 ? 's' : '') + ' · périmètre Mata Group · profil ' + ctx.profile.profile;
+  }
+  function stats() {
+    var dbl = ['VAL-117', 'VAL-116'].filter(function (k) { return V[k].st === 'En attente'; }).length;
+    var susp = ['VAL-118', 'VAL-117', 'VAL-116'].reduce(function (s, k) { return s + (V[k].st === 'En attente' ? V[k].amt : 0); }, 0);
+    ['pending', 'tab-pending', 'menu'].forEach(function (k) { q('[data-stat="' + k + '"]').textContent = pending; });
+    q('[data-stat="double"]').textContent = dbl; setAmt(q('[data-stat="susp"]'), susp);
+  }
+  /* Tiroir : opération complète (blocs statiques), chaîne de validation et séparation des responsabilités (calculées) */
+  function fill(id) {
+    var v = V[id], lbl = function (i) { return v.lvl > 1 ? (i ? '2e' : '1re') + ' validation' : 'Validation'; }; curId = id;
+    q('[data-d="title"]', D).textContent = id + ' · ' + v.type;
+    qa('[data-detail]', D).forEach(function (b) { b.hidden = b.getAttribute('data-detail') !== id; });
+    var ev = [{ t: v.when, tx: 'Proposition par <b>' + v.init + '</b> (' + v.initP + ')' }];
+    v.done.forEach(function (d, i) { ev.push({ t: d.at, tx: lbl(i) + ' par <b>' + d.who + '</b> (' + esc(d.prof) + ')' }); });
+    for (var i = v.done.length; i < v.lvl && v.st === 'En attente'; i++) ev.push({ on: 1, t: 'requise', tx: lbl(i) + ' par un validateur distinct' + (i ? ' de l’initiateur et du 1er validateur (§4.7)' : ' de l’initiateur (§7.2)') });
+    if (v.st === 'Validée') ev.push({ t: v.at, tx: '<b>Validée</b> · ' + esc(v.effet) });
+    if (v.st === 'Refusée') ev.push({ t: v.at, tx: '<b>Refusée</b> par ' + esc(v.by) + ' · motif « ' + esc(v.motif) + ' » · aucun solde modifié' });
+    if (v.st === 'Annulée') ev.push({ t: v.at, tx: '<b>Annulée</b> par l’initiateur · aucun solde modifié' });
+    q('[data-d="chain"]', D).innerHTML = ev.map(function (e) { return '<div class="ev' + (e.on ? ' on' : '') + '">' + e.tx + '<small>' + e.t + '</small></div>'; }).join('');
+    var why = v.st === 'En attente' ? can(v) : 'demande ' + v.st.toLowerCase() + ' : plus aucune décision à prendre';
+    var sep = ['<li class="' + (v.init === me() ? 'hit deny' : 'skip') + '">Initiateur · ' + v.init + ' <small>ne valide jamais sa propre opération (Core §4.2)</small></li>'];
+    v.done.forEach(function (d) { sep.push('<li class="' + (d.who === me() ? 'hit deny' : 'skip') + '">Validateur · ' + d.who + ' <small>' + d.at + ' · ne peut pas donner la validation suivante (§4.7)</small></li>'); });
+    sep.push('<li class="hit ' + (why ? 'deny' : 'allow') + '">Vous · ' + esc(me()) + ' <small>' + esc(ctx.profile.profile) + '</small><span class="res">' + (why ? esc(why) : 'peut décider') + '</span></li>');
+    q('[data-d="sep"]', D).innerHTML = sep.join('');
+    qa('.df [data-act]', D).forEach(function (b) { b.setAttribute('data-val', id); b.setAttribute('data-initiator', v.init); b.hidden = v.st !== 'En attente'; });
+    ctx.formatAmounts(D); guard();
+  }
+  /* Modale de décision : le refus exige un motif ; la validation et l'annulation acceptent un commentaire facultatif */
+  function ask(m, id) {
+    var v = V[id]; mode = m; curId = id; mot.value = ''; ctx.close('fin-validations-detail');
+    var T = { valider: ['Valider ' + id, 'Vous validez sous le profil <b>' + esc(ctx.profile.profile) + '</b> (' + esc(me()) + '). Décision auditée : acteur, profil, horodatage, chaîne de validation (§10.2). ' + (v.done.length + 1 < v.lvl ? 'Il s’agit de la 1re validation sur 2 : aucun solde n’est modifié avant la 2e (§7.2).' : 'Effet à la confirmation : ' + esc(v.effet) + '.'), 'Commentaire (facultatif)', 'Confirmer la validation'],
+      refuser: ['Refuser ' + id, 'Refus motivé et audité (§10.2) · aucun solde n’est modifié (§7.2) · l’initiateur ' + esc(v.init) + ' est notifié.', 'Motif du refus (obligatoire)', 'Confirmer le refus'],
+      annuler: ['Annuler ' + id, 'Annulation par l’initiateur d’une demande En attente (§7.3) · aucun solde n’a été modifié (§7.2) · l’annulation est auditée.', 'Commentaire (facultatif)', 'Confirmer l’annulation'] }[m];
+    q('[data-m="title"]', M).textContent = T[0]; q('[data-m="exp"]', M).innerHTML = T[1]; q('[data-m="motif-lbl"]', M).textContent = T[2]; q('[data-m="confirm-lbl"]', M).textContent = T[3];
+    q('[data-m="obj"]', M).textContent = v.type + ' · ' + v.obj;
+    var cb = q('[data-m="confirm"]', M); cb.setAttribute('data-val', id); cb.setAttribute('data-act', m);
+    if (m === 'annuler') { cb.setAttribute('data-perm', 'finance.transferts.initier'); cb.removeAttribute('data-initiator'); } else { cb.setAttribute('data-perm', 'finance.validations.agir'); cb.setAttribute('data-initiator', v.init); }
+    ctx.open('fin-validations-decision'); guard(); mot.focus();
+  }
+  function settle(row, cls, ic, lbl, txt) {
+    q('[data-cell="decision"]', row).innerHTML = '<span class="st ' + cls + '"><svg><use href="#i-' + ic + '"/></svg>' + lbl + '</span><div class="hint">' + txt + '</div><button class="btn ghost sm" style="margin-top:6px" data-open="fin-validations-detail" data-val="' + curId + '"><svg><use href="#i-eye"/></svg>Détail</button>';
+    pending--; stats();
+  }
+  function decide() {
+    var v = V[curId], motif = mot.value.trim(), t = now(), row = q('tr[data-val="' + curId + '"]'), why = mode === 'annuler' ? '' : can(v);
+    if (mode === 'refuser' && !motif) { ctx.toast('Le motif du refus est obligatoire'); mot.focus(); return; }
+    if (why) { ctx.toast('Refus : ' + why); return; }
+    if (mode === 'valider') {
+      v.done.push({ who: me(), prof: ctx.profile.profile, at: t });
+      if (v.done.length < v.lvl) { q('[data-prog]', row).style.width = '50%'; q('[data-prog-lbl]', row).textContent = '1/2'; q('[data-prog-hint]', row).textContent = '1re : ' + me() + ' · ' + t.slice(8) + ' · 2e requise par un validateur distinct de l’initiateur et du 1er validateur (§4.7)'; ctx.toast('1re validation de ' + curId + ' enregistrée sous le profil ' + ctx.profile.profile + ' · 2e validation requise par un validateur distinct · aucun solde modifié (§7.2)'); }
+      else { v.st = 'Validée'; v.at = t; settle(row, 'ok', 'check', 'Validée', 'par ' + esc(me()) + ' · ' + t + (v.lvl > 1 ? ' · 2e validation' : '') + (motif ? ' · « ' + esc(motif) + ' »' : '')); ctx.toast(curId + ' validée sous le profil ' + ctx.profile.profile + ' · ' + v.effet + ' · audité'); }
+    } else if (mode === 'refuser') { v.st = 'Refusée'; v.by = me(); v.motif = motif; v.at = t; settle(row, 'bad', 'x', 'Refusée', 'par ' + esc(me()) + ' · ' + t + ' · motif « ' + esc(motif) + ' » · aucun solde modifié'); ctx.toast(curId + ' refusée · motif enregistré et audité · aucun solde modifié · ' + v.init + ' notifié'); }
+    else {
+      v.st = 'Annulée'; v.at = t; q('[data-cell="statut"]', row).innerHTML = '<span class="st mut"><svg><use href="#i-x"/></svg>Annulée</span> <button class="btn ghost sm" data-open="fin-validations-detail" data-val="VAL-114"><svg><use href="#i-eye"/></svg>Détail</button>';
+      q('[data-cell="decision"]', row).innerHTML = '<div class="hint">Annulée par l’initiateur · ' + t + (motif ? ' · « ' + esc(motif) + ' »' : '') + ' · aucun solde modifié</div>'; q('[data-stat="mine-sub"]').textContent = '0 En attente · 1 Validée · 1 Refusée · 2 Annulées (§7.3)'; ctx.toast(curId + ' annulée par l’initiateur · aucun solde n’a été modifié · audité');
+    }
+    q('[data-stat="last"]').textContent = t.slice(8); q('[data-stat="last-sub"]').textContent = me() + ' · ' + ctx.profile.profile + ' · ' + (mode === 'valider' && v.st !== 'Validée' ? '1re validation ' : v.st + ' ') + curId;
+    ctx.close('fin-validations-decision'); guard();
+  }
+  ctx.on(root, 'click', function (e) {
+    var d = e.target.closest('[data-open="fin-validations-detail"][data-val]'), b = e.target.closest('[data-act][data-val]');
+    if (d && root.contains(d)) { fill(d.getAttribute('data-val')); return; }
+    if (!b || !root.contains(b) || b.disabled || b.classList.contains('denied')) return;
+    if (b.hasAttribute('data-m')) decide(); else ask(b.getAttribute('data-act'), b.getAttribute('data-val'));
+  });
+  qa('.pnl-tabs [data-tab]').forEach(function (b) { ctx.on(b, 'click', function () {
+    qa('.pnl-tabs [data-tab]').forEach(function (x) { var on = x === b; x.classList.toggle('on', on); x.setAttribute('aria-selected', on); });
+    qa('[data-pane]').forEach(function (p) { p.hidden = p.getAttribute('data-pane') !== b.getAttribute('data-tab'); });
+  }); });
+  qa('.chip[data-filter]').forEach(function (c) { ctx.on(c, 'click', function () {
+    var f = c.getAttribute('data-filter'); qa('.chip[data-filter]').forEach(function (x) { x.classList.toggle('on', x === c); });
+    ctx.filterRows(tb, 'type', f); q('tr[data-empty]', tb).hidden = qa('tr[data-type]', tb).some(function (tr) { return f === 'tous' || tr.getAttribute('data-type') === f; });
+  }); });
+  document.addEventListener('erp:profile', function () { setTimeout(function () { guard(); if (curId && D.classList.contains('on')) fill(curId); }, 0); });
+  stats(); ctx.formatAmounts(root); guard();
+});
+</script>

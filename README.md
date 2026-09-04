@@ -8,11 +8,15 @@ Maquettes interactives du module Mata Finance (ERP Mata), basées sur le Cahier 
 
 ## Ouvrir la maquette
 
-Ouvrir [`design/maquette-mata-finance.html`](design/maquette-mata-finance.html) dans un navigateur. Le fichier est autonome : aucune dépendance, aucune connexion réseau (polices et icônes embarquées).
+Page d'accueil : [`design/index.html`](design/index.html) — choix du module (Mata Core, Mata Finance ; Achat, Ventes et Stock annoncés). Chaque module ouvre la maquette ERP [`design/erp-mata.html`](design/erp-mata.html) sur son premier écran autorisé (`?m=core`, `?m=finance`) ; un écran précis s'ouvre par ancre (`#fin-dashboard`, `#core-audit`…). Les fichiers sont autonomes : aucune dépendance, aucune connexion réseau (polices et icônes embarquées).
 
-Aperçu en ligne : https://htmlpreview.github.io/?https://github.com/Zalint/matix3.1/blob/main/design/maquette-mata-finance.html
+Aperçu en ligne : https://htmlpreview.github.io/?https://github.com/Zalint/matix3.1/blob/main/design/index.html
 
-## Contenu
+Sources de la maquette ERP dans [`maquette/`](maquette/) : un fragment par écran (`screens/`), coquille, moteur et feuilles de style ; `python maquette/build.py --check` réassemble `design/` et vérifie identifiants, surcouches et icônes. `FIXTURES.md` fixe les données fictives communes, `CONTRACT.md` le contrat d'écran, `AMBIGUITES_PANEL.md` les questions à trancher.
+
+Archive : la première maquette Finance seule ([`design/maquette-mata-finance.html`](design/maquette-mata-finance.html)) et les trois propositions initiales ([`design/mata-finance-propositions.html`](design/mata-finance-propositions.html)).
+
+## Contenu des propositions initiales (archive)
 
 Trois directions de design, toutes en rouge et blanc, à comparer avec le sélecteur en bas de page (ou les touches 1, 2, 3) :
 

@@ -1,0 +1,320 @@
+<!-- ÉCRAN : TABLEAU DE BORD — Mata Finance §8.5 (six blocs, FCFA d’abord puis ratio §8.2) -->
+<section class="scr" data-scr="fin-dashboard" data-module="finance" data-perm="finance.dashboard.view" data-sens="s" hidden>
+  <style data-screen="fin-dashboard">
+    #app [data-scr="fin-dashboard"] [data-blk]{margin-top:14px}
+    #app [data-scr="fin-dashboard"] .ch .btn{min-height:30px;padding:5px 11px;font-size:11.5px}
+    #app [data-scr="fin-dashboard"] .al .tx .actionbar{margin:8px 0 0}
+    #app [data-scr="fin-dashboard"] .al .tx{flex:1;min-width:0}
+  </style>
+  <div class="scr-head">
+    <div>
+      <h2>Tableau de bord</h2>
+      <p class="scr-sub">Jeudi 27 août 2026 · Mata Group · six blocs du §8.5 : Trésorerie, Fournisseurs, Clients, Activité, Contrôles, P&amp;L. Montants en FCFA d’abord, ratios ensuite (§8.2). Moteur financier unique : mêmes chiffres que les rapports, snapshots et agents IA (§3).</p>
+    </div>
+    <div class="scr-meta">
+      <span class="sens s"><svg><use href="#i-shield"/></svg>Sensible</span>
+      <span class="hint">Lecture agrégée, aucune écriture ici : chaque action renvoie vers l’écran propriétaire et son niveau de validation (§10.1) · gel « À réconcilier » à 23:59 GMT</span>
+    </div>
+  </div>
+  <div class="deny-note" data-view-note hidden><svg><use href="#i-lock"/></svg><span><b>Vue restreinte.</b> <span data-view-note-tx></span></span></div>
+  <div class="actionbar">
+    <div class="fld"><label for="fin-dashboard-ca">CA de référence des ratios (§8.2)</label>
+      <select id="fin-dashboard-ca" class="inp">
+        <option value="452000000" data-short="août au 27">Mois en cours — août 2026 au 27 : 452 000 000 FCFA</option>
+        <option value="438500000" data-short="juillet">Mois précédent — juillet 2026 : 438 500 000 FCFA</option>
+        <option value="1301200000" data-short="3 derniers mois">3 derniers mois : 1 301 200 000 FCFA</option>
+      </select></div>
+    <div class="sp"></div>
+    <button class="btn ghost" data-goto="fin-comptes"><svg><use href="#i-wallet"/></svg>Comptes</button>
+    <button class="btn ghost" data-goto="fin-reconciliation"><svg><use href="#i-scale"/></svg>Réconciliation</button>
+    <button class="btn ghost" data-goto="fin-validations"><svg><use href="#i-clipboard"/></svg>Validations</button>
+    <button class="btn ghost" data-goto="fin-historique"><svg><use href="#i-history"/></svg>Historique</button>
+    <button class="btn ghost" data-perm="finance.export" data-export><svg><use href="#i-dl"/></svg>Exporter</button>
+  </div>
+  <div class="note-strip" style="margin:0 0 14px"><svg><use href="#i-refresh"/></svg><span><b>Sources et fraîcheur (§6.5)</b> — Ventes Mata <span class="st ok">OK 20:30</span> · Bictorys <span class="st ok">OK 08:12</span> · Banque BOA <span class="st ok">OK 08:00</span> · Stock <span class="st ok">OK 06:00</span> · Achat <span class="st ok">OK 17:00 · 5 achats, 0 doublon</span> — états possibles : OK, Manquante, Erreur, Non à jour ; une source périmée reste visible avec son horodatage mais bloque l’auto-validation (§3).</span></div>
+
+  <!-- 1. TRÉSORERIE (§8.1) -->
+  <div class="kpis">
+    <div class="card kpi hero">
+      <div class="lb">Trésorerie disponible<button class="fx" data-f="Somme des comptes Trésorerie et Positions externes configurés comme immédiatement disponibles." data-c="Caisse générale 8 450 000 · Sous-caisse Marché 1 275 000 · Sous-caisse Livraisons 640 000 · Banque BOA 45 200 000 · Bictorys 2 890 000" data-c-blind="Caisse générale (masquée, à déclarer) · Sous-caisse Marché 1 275 000 · Sous-caisse Livraisons 640 000 · Banque BOA 45 200 000 · Bictorys 2 890 000" data-src="Moteur financier · CALCULÉ (caisses) · IMPORT CSV 27/08 08:00 (BOA) · SYNCHRONISÉ 27/08 08:12 (Bictorys) · compte Ajustement exclu (§4.7)" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></div>
+      <div class="v amt" data-amt="58455000"></div>
+      <div class="ratio" data-ratio-of="58455000">12,9 % du CA de référence · août au 27</div>
+    </div>
+    <div class="card kpi">
+      <div class="lb">Trésorerie en transit<button class="fx" data-f="Somme des comptes Relais actifs." data-c="Dépôt en cours (Caisse → Banque) 2 500 000 · Bictorys → Banque en cours 350 000" data-src="Moteur financier · comptes Relais CALCULÉ · compté une seule fois dans la trésorerie totale contrôlée (§4.6)" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></div>
+      <div class="v amt" data-amt="2850000"></div>
+      <div class="ratio" data-ratio-of="2850000">0,6 % du CA de référence · août au 27</div>
+    </div>
+    <div class="card kpi">
+      <div class="lb">Trésorerie totale contrôlée<button class="fx" data-f="Trésorerie disponible + Trésorerie en transit." data-c="58 455 000 + 2 850 000" data-src="Moteur financier · recalcul continu · snapshot 26/08 22:14 : 60 790 000" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></div>
+      <div class="v amt" data-amt="61305000"></div>
+      <div class="ratio" data-ratio-of="61305000">13,6 % du CA de référence · août au 27</div>
+    </div>
+    <div class="card kpi">
+      <div class="lb">Position financière nette<button class="fx" data-f="Trésorerie totale contrôlée + Avances fournisseurs + Créances clients − Dettes fournisseurs − Avances clients." data-c="61 305 000 + 350 000 + 20 075 000 − 23 250 000 − 150 000" data-src="Moteur financier · positions bilatérales CALCULÉ (§4.3) · les expositions restent affichées séparément (§8.1)" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></div>
+      <div class="v amt" data-amt="58330000"></div>
+      <div class="ratio" data-ratio-of="58330000">12,9 % du CA de référence · août au 27</div>
+    </div>
+  </div>
+  <div class="card" data-blk>
+    <div class="ch"><h3>Trésorerie totale contrôlée — 30 derniers jours</h3><span class="hint-r">En millions de FCFA · même moteur que l’écran Visualisation</span><button class="btn ghost" data-goto="fin-visualisation"><svg><use href="#i-chart"/></svg>Superposer</button></div>
+    <div class="cb"><div class="linechart" data-series="treso" style="height:220px"></div></div>
+  </div>
+  <div class="grid2" data-view="detail">
+    <div class="card">
+      <div class="ch"><h3>Détail par compte</h3><span class="hint-r">Trésorerie, Positions externes, Relais, Ajustement · cliquer une ligne</span></div>
+      <div class="tbl-scroll"><table>
+        <thead><tr><th>Compte</th><th>Type</th><th>Source du solde</th><th>Solde / position</th><th>État</th></tr></thead>
+        <tbody data-cpt-body>
+          <tr class="rowlink" data-open="fin-dashboard-compte" data-nom="Caisse générale" data-type="Trésorerie" data-source="CALCULÉ (mouvements)" data-solde="8450000" data-blind-decl data-frais-blind="Masqué jusqu'à votre déclaration en aveugle (§3, §4.8)" data-frais="Dernier solde réconcilié 26/08 : 7 980 000 · somme algébrique des mouvements depuis : +470 000" data-etat="À déclarer avant 23:59 GMT — réconciliation en aveugle, solde théorique masqué au déclarant (§4.8)" data-incl="Oui · réconciliation obligatoire" data-action="Déclaration par M. Diop (Gestionnaire de caisse) ; sinon gel « À réconcilier » à 23:59"><td><b>Caisse générale</b></td><td>Trésorerie</td><td class="hint">CALCULÉ</td><td><span data-cg-val><span class="amt" data-amt="8450000" data-nocur></span></span><span class="tag lock" data-cg-mask hidden><svg><use href="#i-eyeoff"/></svg>Masqué · à déclarer</span></td><td><span class="st mut"><svg><use href="#i-eyeoff"/></svg>À déclarer</span></td></tr>
+          <tr class="rowlink" data-open="fin-dashboard-compte" data-nom="Sous-caisse Marché" data-type="Trésorerie" data-source="CALCULÉ (mouvements)" data-solde="1275000" data-frais="Déclaré 1 250 000 à 21:12 par M. Diop · théorique 1 275 000" data-etat="Écart −25 000 · reste « À réconcilier » · email envoyé à Admin, DG et Collecteur" data-incl="Oui · réconciliation obligatoire" data-action="Investigation de l’écart ; correction éventuelle par Ajustement (deux validateurs distincts, §4.7)"><td><b>Sous-caisse Marché</b></td><td>Trésorerie</td><td class="hint">CALCULÉ</td><td><span class="amt" data-amt="1275000" data-nocur></span></td><td><span class="st bad"><svg><use href="#i-alert"/></svg>Écart <span class="amt" data-amt="-25000" data-nocur></span></span></td></tr>
+          <tr class="rowlink" data-open="fin-dashboard-compte" data-nom="Sous-caisse Livraisons" data-type="Trésorerie" data-source="CALCULÉ (mouvements)" data-solde="640000" data-frais="Déclaré 640 000 à 20:48 par F. Sarr = théorique 640 000" data-etat="Réconciliée 20:48 (déclaré = théorique 640 000) · clôture du périmètre suspendue : dépense « Pas sûr » Carburant 85 000 non résolue (§5.2)" data-incl="Oui · réconciliation obligatoire" data-action="Résoudre la dépense « Pas sûr » (Dépenses) puis clôture événementielle du périmètre (§3.1)"><td><b>Sous-caisse Livraisons</b></td><td>Trésorerie</td><td class="hint">CALCULÉ</td><td><span class="amt" data-amt="640000" data-nocur></span></td><td><span class="st ok"><svg><use href="#i-check"/></svg>Réconciliée 20:48</span></td></tr>
+          <tr class="rowlink" data-open="fin-dashboard-compte" data-nom="Banque BOA" data-type="Position externe" data-source="IMPORT CSV" data-solde="45200000" data-frais="Dernier import 27/08 08:00 · 14 lignes, 0 doublon · référence bancaire = identifiant (§4.9)" data-etat="Correction −45 000 (frais bancaires non importés) en attente de double validation — VAL-116" data-incl="Oui" data-action="La valeur source est conservée ; « Corriger le solde » se matérialise par un ajustement validé (§4.2)"><td><b>Banque BOA</b></td><td>Position externe</td><td class="hint">IMPORT CSV · 08:00</td><td><span class="amt" data-amt="45200000" data-nocur></span></td><td><span class="st warn"><svg><use href="#i-clock"/></svg>Correction en attente</span></td></tr>
+          <tr class="rowlink" data-open="fin-dashboard-compte" data-nom="Bictorys" data-type="Position externe" data-source="SYNCHRONISÉ (API)" data-solde="2890000" data-frais="Dernière synchronisation 27/08 08:12" data-etat="Solde disponible en lecture API seule, jamais modifiable à la main" data-incl="Oui" data-action="Aucune · le transfert en cours vers la banque passe par le Relais « Bictorys → Banque en cours »"><td><b>Bictorys</b></td><td>Position externe</td><td class="hint">SYNCHRONISÉ · 08:12</td><td><span class="amt" data-amt="2890000" data-nocur></span></td><td><span class="tag api"><svg><use href="#i-lock"/></svg>Lecture API</span></td></tr>
+          <tr class="rowlink" data-open="fin-dashboard-compte" data-nom="Dépôt en cours (Caisse → Banque)" data-type="Relais" data-source="CALCULÉ (mouvements)" data-solde="2500000" data-frais="Créé 27/08 07:45 par A. Ndiaye · âge 0 j" data-etat="En transit · doit revenir à zéro au dénouement (§4.6)" data-incl="Non · compté dans la trésorerie en transit" data-action="Confirmation à destination sur le relevé BOA"><td><b>Dépôt en cours (Caisse → Banque)</b></td><td>Relais</td><td class="hint">CALCULÉ</td><td><span class="amt" data-amt="2500000" data-nocur></span></td><td><span class="st mut"><svg><use href="#i-swap"/></svg>Transit · 0 j</span></td></tr>
+          <tr class="rowlink" data-open="fin-dashboard-compte" data-nom="Bictorys → Banque en cours" data-type="Relais" data-source="CALCULÉ (mouvements)" data-solde="350000" data-frais="Créé 24/08 · âge 3 j" data-etat="Alerte relais ancien : seuil 2 j dépassé (§4.6)" data-incl="Non · compté dans la trésorerie en transit" data-action="Vérifier le dénouement sur le relevé BOA du 22/08 au 24/08"><td><b>Bictorys → Banque en cours</b></td><td>Relais</td><td class="hint">CALCULÉ</td><td><span class="amt" data-amt="350000" data-nocur></span></td><td><span class="st warn"><svg><use href="#i-clock"/></svg>Relais ancien · 3 j</span></td></tr>
+          <tr class="rowlink" data-open="fin-dashboard-compte" data-nom="Ajustement" data-type="Ajustement (compte technique)" data-source="CALCULÉ (mouvements)" data-solde="0" data-frais="Compte technique de correction explicite · 1 ajustement en cours de double validation (VAL-117, +180 000 Caisse générale)" data-etat="Exclu de tous les agrégats de trésorerie et du P&amp;L (§4.7)" data-incl="Non · exclu" data-action="Jamais manipulé directement : motif + deux validations humaines distinctes"><td><b>Ajustement</b> <span class="hint">technique</span></td><td>Ajustement</td><td class="hint">CALCULÉ</td><td><span class="amt" data-amt="0" data-nocur></span></td><td><span class="tag lock"><svg><use href="#i-lock"/></svg>Exclu des agrégats</span></td></tr>
+        </tbody>
+      </table></div>
+    </div>
+    <div class="card">
+      <div class="ch"><h3>Caisses à réconcilier</h3><span class="hint-r">§4.8 · 1 réconciliée, 1 écart, 1 à déclarer</span></div>
+      <div class="cb rl">
+        <div class="row"><div class="nm">Sous-caisse Livraisons<small>Déclaré <span class="amt" data-amt="640000" data-nocur></span> à 20:48 (F. Sarr) = théorique · clôture suspendue (Pas sûr)</small></div><span class="st ok"><svg><use href="#i-check"/></svg>Réconciliée</span></div>
+        <div class="row"><div class="nm">Sous-caisse Marché<small>Déclaré <span class="amt" data-amt="1250000" data-nocur></span> à 21:12 (M. Diop) · théorique <span class="amt" data-amt="1275000" data-nocur></span> · email Admin, DG, Collecteur</small></div><span class="st bad"><svg><use href="#i-alert"/></svg>Écart <span class="amt" data-amt="-25000" data-nocur></span></span></div>
+        <div class="row"><div class="nm">Caisse générale<small>A bougé aujourd’hui <span data-cg-hide>(+<span class="amt" data-amt="470000" data-nocur></span>)</span> · déclaration en aveugle attendue avant 23:59 GMT</small></div><span class="st mut"><svg><use href="#i-eyeoff"/></svg>À déclarer</span></div>
+      </div>
+      <div class="cb" style="padding-top:0">
+        <div class="eq"><b>Solde théorique</b> = Dernier solde réconcilié + Somme algébrique des mouvements depuis cette réconciliation<br><span data-cg-hide>Caisse générale : 7 980 000 + 470 000 = <b>8 450 000</b> · </span>masqué aux profils déclarants tant que la caisse n’est pas déclarée (§3) ; visible aux validateurs (Super Admin, DG)</div>
+        <div class="actionbar" style="margin:12px 0 0"><button class="btn ghost" data-goto="fin-reconciliation"><svg><use href="#i-scale"/></svg>Investiguer l’écart</button><button class="btn ghost" data-goto="fin-declarations"><svg><use href="#i-eyeoff"/></svg>Déclarations</button></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. FOURNISSEURS (§5.6, §8.1) -->
+  <div class="card" data-view="ops" data-blk>
+    <div class="ch"><h3>Fournisseurs</h3><span class="hint-r">§5.6 : échéances dépassées en priorité, puis prochaine date de paiement due · paiements affectés aux échéances les plus proches (§5.3)</span><button class="btn ghost" data-goto="fin-fournisseurs"><svg><use href="#i-arr"/></svg>Ouvrir</button></div>
+    <div class="cb">
+      <div class="statstrip">
+        <div class="card stat"><div class="lb">Échéances dépassées<button class="fx" data-f="Le Dashboard affiche en priorité les échéances déjà dépassées, puis la prochaine date de paiement due et le montant total correspondant." data-c="Aliments Sénégal 800 000 (20/08/2026, 7 j) · MATA VOLAILLE ŒUFS 1 150 000 (25/08/2026, 2 j)" data-src="Dépenses · date de paiement souhaitée au plus tard par lot (§5.3) · notification 17:30 au Directeur des Opérations" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></div><div class="v amt" data-amt="1950000"></div><div class="sub2"><span class="st bad"><svg><use href="#i-alert"/></svg>2 dépassées</span> Aliments Sénégal 20/08 (7 j) · ŒUFS 25/08 (2 j)</div></div>
+        <div class="card stat"><div class="lb">Prochaine date de paiement due<button class="fx" data-f="Le Dashboard affiche en priorité les échéances déjà dépassées, puis la prochaine date de paiement due et le montant total correspondant." data-c="02/09/2026 · Bétail Thiès · Lot AG-260820-01 · 1 600 000 · compte de paiement de référence : Caisse générale" data-src="Échéancier fournisseurs (§5.6) · paiements affectés par défaut aux échéances les plus proches (§5.3)" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></div><div class="v amt" data-amt="1600000"></div><div class="sub2">02/09/2026 · Bétail Thiès · lot AG-260820-01 · compte de paiement de référence : Caisse générale</div></div>
+        <div class="card stat"><div class="lb">Encours AGNEAUX / plafond<button class="fx" data-f="La dette utilisée pour ce contrôle est : max(0 ; − Position fournisseur)." data-c="AGNEAUX : max(0 ; 12 400 000) = 12 400 000 · plafond 10 000 000 · 124 %" data-src="§5.4 · alerte informative 15:24 (Directeur des Opérations, DG) · aucun blocage de la saisie en V1" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></div><div class="v amt" data-amt="12400000"></div><div class="encbar"><i class="over" style="width:100%"></i></div><div class="sub2">plafond <span class="amt" data-amt="10000000" data-nocur></span> · 124 % · alerte informative, aucun blocage en V1 (§5.4)</div></div>
+      </div>
+      <div class="statstrip">
+        <div class="card stat"><div class="lb">Dettes fournisseurs<button class="fx" data-f="Σ max(− Position fournisseur ; 0)." data-c="AGNEAUX 12 400 000 · MATA VOLAILLE CHAIR 4 300 000 · Bétail Thiès 4 600 000 · MATA VOLAILLE ŒUFS 1 150 000 · Aliments Sénégal 800 000" data-src="Comptes Fournisseur CALCULÉ · Position fournisseur = Position précédente + Paiements/avances − Dépenses ± Ajustements validés (§4.3)" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></div><div class="v amt" data-amt="23250000"></div><div class="sub2" data-ratio-of="23250000">5,1 % du CA de référence · août au 27</div></div>
+        <div class="card stat"><div class="lb">Avances fournisseurs<button class="fx" data-f="Σ max(Position fournisseur ; 0)." data-c="Abattoirs Dakar +350 000" data-src="Comptes Fournisseur CALCULÉ · une avance est consommée par les achats futurs avant toute dette (§4.3)" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></div><div class="v amt" data-amt="350000"></div><div class="sub2">Abattoirs Dakar · réconciliation en attente (frais d’abattage <span class="amt" data-amt="150000" data-nocur></span>)</div></div>
+        <div class="card stat"><div class="lb">Trésorerie après fournisseurs<button class="fx" data-f="Trésorerie totale contrôlée − Dettes fournisseurs. Le transit est inclus car il est considéré comme reçu avant le paiement fournisseur." data-c="61 305 000 − 23 250 000" data-src="Moteur financier · §8.1, §8.2" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></div><div class="v amt" data-amt="38055000"></div><div class="sub2" data-ratio-of="38055000">8,4 % du CA de référence · août au 27</div></div>
+      </div>
+      <div class="card">
+        <div class="ch"><h3>Échéancier</h3><div class="chips" data-ech-chips><button class="chip on" data-filter="tous">Toutes</button><button class="chip" data-filter="dep">Dépassées</button><button class="chip" data-filter="proch">Prochaine</button><button class="chip" data-filter="avenir">À venir</button></div><span class="hint-r" data-ech-count>8 échéances · total <span class="amt" data-amt="23250000" data-nocur></span> = Dettes fournisseurs</span></div>
+        <div class="tbl-scroll"><table>
+          <thead><tr><th>État</th><th>Fournisseur</th><th>Dépense / lot</th><th>Montant restant</th><th>Date souhaitée au plus tard</th><th>Compte de paiement de référence</th></tr></thead>
+          <tbody data-ech-body>
+            <tr data-etat="dep"><td><span class="st bad"><svg><use href="#i-alert"/></svg>Dépassée (7 j)</span></td><td><b>Aliments Sénégal</b></td><td>Aliment volaille 05/08</td><td><span class="amt" data-amt="800000" data-nocur></span></td><td class="hint">20/08/2026</td><td>Banque BOA</td></tr>
+            <tr data-etat="dep"><td><span class="st bad"><svg><use href="#i-alert"/></svg>Dépassée (2 j)</span></td><td><b>MATA VOLAILLE ŒUFS</b></td><td>Lot œufs 18/08</td><td><span class="amt" data-amt="1150000" data-nocur></span></td><td class="hint">25/08/2026</td><td>Caisse générale</td></tr>
+            <tr data-etat="proch"><td><span class="st warn"><svg><use href="#i-clock"/></svg>Prochaine</span></td><td><b>Bétail Thiès</b></td><td>Lot AG-260820-01</td><td><span class="amt" data-amt="1600000" data-nocur></span></td><td class="hint">02/09/2026</td><td>Caisse générale</td></tr>
+            <tr data-etat="avenir"><td><span class="st mut">À venir</span></td><td><b>MATA VOLAILLE CHAIR</b></td><td>Lot 22/08</td><td><span class="amt" data-amt="4300000" data-nocur></span></td><td class="hint">05/09/2026</td><td>Banque BOA</td></tr>
+            <tr data-etat="avenir"><td><span class="st mut">À venir</span></td><td><b>AGNEAUX</b></td><td>Lot BV-260810</td><td><span class="amt" data-amt="2000000" data-nocur></span></td><td class="hint">10/09/2026</td><td>Caisse générale</td></tr>
+            <tr data-etat="avenir"><td><span class="st mut">À venir</span></td><td><b>Bétail Thiès</b></td><td>Lot AG-260827-02 (+ antérieurs)</td><td><span class="amt" data-amt="3000000" data-nocur></span></td><td class="hint">12/09/2026</td><td>Caisse générale</td></tr>
+            <tr data-etat="avenir"><td><span class="st mut">À venir</span></td><td><b>AGNEAUX</b></td><td>Lot BV-260818</td><td><span class="amt" data-amt="3000000" data-nocur></span></td><td class="hint">14/09/2026</td><td>Caisse générale</td></tr>
+            <tr data-etat="avenir"><td><span class="st mut">À venir</span></td><td><b>AGNEAUX</b></td><td>Lot BV-260827-04 (+ antérieurs)</td><td><span class="amt" data-amt="7400000" data-nocur></span></td><td class="hint">30/09/2026</td><td>Caisse générale</td></tr>
+          </tbody>
+        </table></div>
+      </div>
+      <div class="note-strip"><svg><use href="#i-info"/></svg>Réconciliation fournisseurs du jour (§5.5) : AGNEAUX validée 18:30 · MATA VOLAILLE CHAIR validée 17:50 · MATA VOLAILLE ŒUFS validée 17:20 · Bétail Thiès en attente (achat agneau 262 000) · Abattoirs Dakar en attente (frais d’abattage 150 000) · Aliments Sénégal sans mouvement, non bloquant.</div>
+      <div class="actionbar" style="margin:12px 0 0"><button class="btn ghost" data-perm="finance.fournisseurs.payer" data-goto="fin-fournisseurs"><svg><use href="#i-coins"/></svg>Payer (échéances les plus proches d’abord)</button><button class="btn ghost" data-perm="finance.export" data-export><svg><use href="#i-dl"/></svg>Relevé fournisseur</button></div>
+    </div>
+  </div>
+
+  <!-- 3. CLIENTS (§6, §8.1) -->
+  <div class="card" data-view="detail" data-blk>
+    <div class="ch"><h3>Clients</h3><span class="hint-r">Position client = Position précédente + Ventes Mata − Encaissements affectés au compte client ± Ajustements validés (§4.3) · positif = le client doit à Mata</span><button class="btn ghost" data-goto="fin-creances"><svg><use href="#i-arr"/></svg>Ouvrir</button></div>
+    <div class="cb">
+      <div class="statstrip four">
+        <div class="card stat"><div class="lb">Créances clients<button class="fx" data-f="Σ max(Position client ; 0)." data-c="MaaS Keur Massar 3 250 000 · MaaS Ouakam 2 870 000 · Restaurant Le Baobab 2 400 000 · MaaS Pikine 1 985 000 · Boucherie des Almadies 1 730 000 · 9 autres MaaS 7 840 000" data-src="Comptes Créance client CALCULÉ · ventes issues exclusivement de Ventes Mata (§6.1)" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></div><div class="v amt" data-amt="20075000"></div><div class="sub2" data-ratio-of="20075000">4,4 % du CA de référence · août au 27</div></div>
+        <div class="card stat"><div class="lb">Avances clients<button class="fx" data-f="Σ max(− Position client ; 0)." data-c="Touba Viandes 150 000" data-src="Comptes Créance client CALCULÉ · excédent de paiement sur la créance à solder (§6.1)" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></div><div class="v amt" data-amt="150000"></div><div class="sub2">Touba Viandes · absorbée par les ventes futures (§4.3)</div></div>
+        <div class="card stat"><div class="lb">Versements du jour<button class="fx" data-f="Versements du jour : encaissements hors Bictorys reçus pendant la journée, qu’ils règlent des ventes du jour, des créances antérieures ou constituent une avance. Paiements Bictorys du jour : encaissements via Bictorys, exclus du total Versements afin d’éviter tout double comptage." data-c="Versements du jour 3 100 000 (collecte du 27/08, à réconcilier vers 02:00) · Paiements Bictorys du jour 1 250 000, comptés à part" data-src="Flux de versements · Bictorys OK 08:12 · §6.2, §6.4" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></div><div class="v amt" data-amt="3100000"></div><div class="sub2">Paiements Bictorys du jour <span class="amt" data-amt="1250000" data-nocur></span> · jamais additionnés aux Versements (§6.4) · collecte à réconcilier 02:00</div></div>
+        <div class="card stat"><div class="lb">Remboursements affectés (collecte du 26/08)<button class="fx" data-f="Si les sources sont complètes, à jour et égales, la collecte est validée, la Caisse est créditée et les remboursements sont affectés aux comptes clients." data-c="Source A : 12 déclarations MaaS 4 725 000 · Source B : collecteur A. Ndiaye 4 725 000" data-src="Moteur réconciliation · auto-validation 27/08 02:04 · date métier 26/08 (§6.3)" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></div><div class="v amt" data-amt="4725000"></div><div class="sub2">Collecte du 26/08 validée 02:04 · affectés aux 12 comptes MaaS</div></div>
+      </div>
+      <div class="grid2b" style="margin-top:0">
+        <div class="card"><div class="ch"><h3>Principaux débiteurs</h3><span class="hint-r">14 positions positives · 1 avance client</span></div><div class="cb">
+          <div class="due"><span>MaaS Keur Massar <span class="hint">MaaS · réf. ERP MAAS-KM</span></span><span class="amt" data-amt="3250000" data-nocur></span></div>
+          <div class="due"><span>MaaS Ouakam <span class="hint">MaaS</span></span><span class="amt" data-amt="2870000" data-nocur></span></div>
+          <div class="due"><span>Restaurant Le Baobab <span class="hint">Gros client</span></span><span class="amt" data-amt="2400000" data-nocur></span></div>
+          <div class="due"><span>MaaS Pikine <span class="hint">MaaS</span></span><span class="amt" data-amt="1985000" data-nocur></span></div>
+          <div class="due"><span>Boucherie des Almadies <span class="hint">Gros client</span></span><span class="amt" data-amt="1730000" data-nocur></span></div>
+          <div class="due"><span>9 autres MaaS <span class="hint">Rufisque, Grand Yoff, Parcelles, Médina, Yoff, Ngor, Thiaroye, Guédiawaye, HLM</span></span><span class="amt" data-amt="7840000" data-nocur></span></div>
+          <div class="hint" style="margin-top:8px">Avance client (position négative, §4.3)</div>
+          <div class="due"><span>Touba Viandes <span class="hint">Gros client · avance client</span></span><span class="amt" data-amt="-150000" data-nocur></span></div>
+        </div></div>
+        <div class="card"><div class="ch"><h3>Encaissements collectés</h3><span class="hint-r">§6.3 · circuit MaaS</span></div><div class="cb">
+          <div class="due"><span>Collecte du 26/08</span><span class="st ok"><svg><use href="#i-check"/></svg>Validée 02:04</span></div>
+          <div class="eq"><b>Somme des versements déclarés</b> = <b>Montant déclaré par le collecteur</b><br>Source A : 12 déclarations MaaS 4 725 000 · Source B : A. Ndiaye 4 725 000 → <span class="ok">égalité · Caisse créditée</span></div>
+          <div class="due"><span>Collecte du 27/08 <span class="hint">versements du jour</span></span><span class="amt" data-amt="3100000" data-nocur></span></div>
+          <div class="hint">Réconciliation automatique cette nuit vers 02:00 si les sources sont complètes et à jour ; en cas d’écart, aucune auto-validation possible.</div>
+          <div class="actionbar" style="margin:12px 0 0"><button class="btn ghost" data-perm="finance.creances.accorder" data-goto="fin-creances"><svg><use href="#i-plus"/></svg>Accorder une créance</button><button class="btn ghost" data-goto="fin-reconciliation"><svg><use href="#i-scale"/></svg>Réconciliation</button></div>
+        </div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. ACTIVITÉ (§6.4, §5.1) -->
+  <div class="card" data-view="detail" data-blk>
+    <div class="ch"><h3>Activité du jour</h3><span class="hint-r">Jeudi 27 août 2026 · date métier · le CA n’est jamais saisi dans Mata Finance</span><button class="btn ghost" data-goto="fin-depenses"><svg><use href="#i-arr"/></svg>Dépenses</button></div>
+    <div class="cb">
+      <div class="statstrip">
+        <div class="card stat"><div class="lb">CA du jour<button class="fx" data-f="Chiffre d’affaires Mata de la période, fourni par Ventes Mata." data-c="Ventes Mata du jour 27/08 : 6 200 000" data-src="Ventes Mata · OK · maj 27/08 20:30" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></div><div class="v amt" data-amt="6200000"></div><div class="sub2">Ventes Mata · source OK 20:30 · cumul du mois au 27 : <span class="amt" data-amt="452000000" data-nocur></span></div></div>
+        <div class="card stat"><div class="lb">Réconciliation des ventes du jour<button class="fx" data-f="Ventes Mata du jour = Versements du jour + Paiements Bictorys du jour + Créances nettes nouvelles du jour − Remboursements à neutraliser du jour" data-c="6 200 000 = 3 100 000 + 1 250 000 + 2 450 000 − 600 000 · écart 0" data-src="§6.4 · Ventes OK 20:30 · Versements OK · Bictorys OK 08:12 · Comptes créance OK" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></div><div class="v"><span class="st ok"><svg><use href="#i-check"/></svg>Cohérente</span></div><div class="sub2">Sources : Ventes OK 20:30 · Versements OK · Bictorys OK 08:12 · Comptes créance OK</div></div>
+        <div class="card stat"><div class="lb">Dépenses du jour<button class="fx" data-f="Toutes les dépenses de la période selon leur date métier." data-c="Achat bœuf lot BV-260827-04 850 000 · Achat volaille 420 000 · Achat agneau lot AG-260827-02 262 000 · Frais d’abattage 150 000 · Entretien chambre froide 95 000 · Carburant véhicule livraison 85 000 (Pas sûr) · + 8 autres" data-src="Dépenses par date métier · import Achat idempotent 17:00 : 5 achats intégrés, 0 doublon (3 détaillés ci-dessus) · le reste en saisie manuelle" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></div><div class="v amt" data-amt="1862000"></div><div class="sub2">14 écritures · 1 « Pas sûr » (Carburant <span class="amt" data-amt="85000" data-nocur></span>) · aucun flag Investissement ni Dépense spéciale</div></div>
+      </div>
+      <div class="eq"><b>Ventes Mata du jour</b> = Versements du jour + Paiements Bictorys du jour + Créances nettes nouvelles du jour − Remboursements à neutraliser du jour<br><b>6 200 000</b> = 3 100 000 + 1 250 000 + 2 450 000 − 600 000 → <span class="ok">écart 0 · Cohérente</span> · si l’équation ne concorde pas, chaque composante et l’écart restent visibles et la réconciliation reste ouverte (§6.4)</div>
+      <div class="actionbar" style="margin:12px 0 0"><button class="btn ghost" data-perm="finance.depenses.creer" data-goto="fin-depenses"><svg><use href="#i-plus"/></svg>Nouvelle dépense</button><button class="btn ghost" data-goto="fin-stock"><svg><use href="#i-box"/></svg>Stock (lecture)</button></div>
+    </div>
+  </div>
+
+  <!-- 5. CONTRÔLES (§10.4) -->
+  <div class="card" data-view="ctrl" data-blk>
+    <div class="ch"><h3>Contrôles — signaux de qualité financière</h3><span class="hint-r">§10.4 · les mêmes signaux alimentent les notifications</span><button class="btn ghost" data-goto="core-notifications"><svg><use href="#i-bell"/></svg>Notifications</button></div>
+    <div class="cb">
+      <div class="statstrip four">
+        <div class="card stat"><div class="lb">Dépenses « Pas sûr »<button class="fx" data-f="Montant payé immédiatement : valeur comprise entre 0 et le montant total de la dépense ; si le montant payé n’est pas connu avec certitude, statut « Pas sûr »." data-c="Carburant véhicule livraison 85 000 · saisie manuelle · montant payé inconnu" data-src="Dépenses du jour · §5.1, §5.2 · notification à 23:00 si non résolue" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></div><div class="v">1</div><div class="sub2">Carburant véhicule livraison 85 000 · bloque uniquement Sous-caisse Livraisons</div></div>
+        <div class="card stat"><div class="lb">Réconciliations ouvertes<button class="fx" data-f="À 23h59, heure de Dakar, les opérations du jour encore non réconciliées sont gelées avec le statut « À réconcilier »." data-c="Caisses : Sous-caisse Marché écart −25 000, Caisse générale à déclarer · Encaissements collectés 27/08 : 3 100 000, réconciliation vers 02:00 · Fournisseurs : Bétail Thiès et Abattoirs Dakar en attente" data-src="Réconciliation · §3.1, §4.8, §5.5, §6.3 · Ventes du jour : Cohérente" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></div><div class="v">3 <span class="hint">circuits sur 4</span></div><div class="sub2">Caisses (1 écart, 1 à déclarer) · Encaissements collectés 27/08 (cette nuit) · Fournisseurs (2 en attente)</div></div>
+        <div class="card stat"><div class="lb">Sources non à jour<button class="fx" data-f="États minimaux : OK, Manquante, Erreur, Non à jour. Une donnée périmée peut être affichée mais ne permet pas une auto-validation." data-c="Ventes Mata OK 20:30 · Bictorys OK 08:12 · Banque BOA OK 08:00 · Stock OK 06:00 · Achat OK 17:00" data-src="§3 Fraîcheur · §6.5 · alerte « Source non à jour » : haute, Admin" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></div><div class="v">Aucune</div><div class="sub2">5 sources OK · Ventes 20:30 · Bictorys 08:12 · BOA 08:00 · Stock 06:00 · Achat 17:00</div></div>
+        <div class="card stat"><div class="lb">Validations en attente<button class="fx" data-f="Le menu affiche un compteur « Validations (n) ». Le détail complet de l’opération est consultable avant toute décision." data-c="VAL-118 transfert 600 000 · VAL-117 ajustement +180 000 (2e validation) · VAL-116 correction Banque BOA −45 000 · VAL-115 désactivation Sous-caisse Abattoir · dont 1 correction post-clôture (VAL-117)" data-src="Écran Validations · §7.3 · vue « À valider » · Hautement sensible" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></div><div class="v">4</div><div class="sub2">1 transfert · 1 ajustement (2e validation) · 1 correction Position externe · 1 désactivation</div></div>
+      </div>
+      <div class="al">
+        <div class="row"><span class="ic bad"><svg><use href="#i-alert"/></svg></span><div class="tx"><b>Dépense « Pas sûr » non résolue</b> — Carburant véhicule livraison 85 000 (saisie manuelle, montant payé incertain). Bloque uniquement le périmètre Sous-caisse Livraisons ; notification à 23:00 au Directeur des Opérations, aux Admins et au Super Admin si non résolue. <button class="linkish" data-goto="fin-depenses">Résoudre</button><small>Dépenses · §5.1 · critique</small></div></div>
+        <div class="row"><span class="ic bad"><svg><use href="#i-scale"/></svg></span><div class="tx"><b>Écart de réconciliation Caisses</b> — Sous-caisse Marché : déclaré 1 250 000 à 21:12 par M. Diop, théorique 1 275 000, écart −25 000. Email envoyé à Admin, DG et Collecteur ; correction éventuelle par Ajustement à double validation. <button class="linkish" data-goto="fin-reconciliation">Investiguer</button><small>Réconciliation · §4.8 · critique, non désactivable</small></div></div>
+        <div class="row"><span class="ic warn"><svg><use href="#i-clipboard"/></svg></span><div class="tx"><b>4 validations en attente</b> — VAL-118 transfert 600 000 BOA → Caisse générale (F. Sarr, validation simple) · VAL-117 ajustement +180 000 Caisse générale (M. Diop, 2e validation requise, 1re O. Seck 19:02) · VAL-116 correction Banque BOA −45 000 (F. Sarr, double validation) · VAL-115 désactivation Sous-caisse Abattoir (F. Sarr). VAL-114 transfert 1 500 000 Caisse générale → Banque BOA via Relais (S. Doucouré) attend un validateur distinct de l’initiateur.<small>Validations · §7.3 · Hautement sensible · aucune auto-validation, y compris pour le Super Admin (§7.2)</small>
+          <div class="actionbar"><button class="btn ghost" data-perm="finance.validations.agir" data-initiator="F. Sarr" data-goto="fin-validations"><svg><use href="#i-check"/></svg>Valider VAL-118</button><button class="btn ghost" data-perm="finance.validations.agir" data-initiator="S. Doucouré" data-goto="fin-validations"><svg><use href="#i-check"/></svg>Valider VAL-114</button><button class="btn ghost" data-goto="fin-validations"><svg><use href="#i-arr"/></svg>Tout traiter</button></div></div></div>
+        <div class="row"><span class="ic warn"><svg><use href="#i-clock"/></svg></span><div class="tx"><b>Relais ancien</b> — « Bictorys → Banque en cours » 350 000, ouvert depuis le 24/08 (3 j, seuil 2 j). Le montant reste compté une seule fois dans la trésorerie totale contrôlée. <button class="linkish" data-goto="fin-comptes">Voir le relais</button><small>Comptes · §4.6 · haute</small></div></div>
+        <div class="row"><span class="ic warn"><svg><use href="#i-flag"/></svg></span><div class="tx"><b>Plafond d’encours dépassé</b> — AGNEAUX : dette 12 400 000 pour un plafond de 10 000 000. Alerte informative, la saisie n’est pas bloquée en V1. <button class="linkish" data-goto="fin-fournisseurs">Fournisseur</button><small>Fournisseurs · §5.4 · informative</small></div></div>
+        <div class="row"><span class="ic warn"><svg><use href="#i-history"/></svg></span><div class="tx"><b>Correction post-clôture en cours</b> — VAL-117 ajustement <span class="amt" data-amt="180000" data-nocur></span> Caisse générale, écart de comptage du 26/08 (journée clôturée 22:14). 2e validation requise, approbation Super Admin (§3.1). Situation recalculée du 26/08 : <span class="amt" data-amt="60790000" data-nocur></span> → <span class="amt" data-amt="60970000" data-nocur></span> (§8.6). <button class="linkish" data-goto="fin-historique">Comparer</button><small>Historique · §3.1, §10.4 · critique, non désactivable</small></div></div>
+        <div class="row"><span class="ic info"><svg><use href="#i-check"/></svg></span><div class="tx"><b>Sans signal</b> — Ajustements inhabituels : aucun (VAL-117 +180 000 sous le seuil unitaire 500 000 ; 1 ajustement sur la journée, seuil 3). Écart de collecte : aucun (26/08 validée 02:04). Écart ventes du jour : aucun.<small>Seuils configurables · Paramètres §17</small></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 6. P&L (§8.3, §8.4) -->
+  <div class="card" data-blk>
+    <div class="ch"><h3>P&amp;L de gestion — cumul du 1er au 27 août 2026</h3><span class="hint-r">Indicateurs de gestion, pas un compte de résultat comptable réglementaire (§8.3) · trois variantes côte à côte, montant puis ratio</span><button class="btn ghost" data-goto="fin-pnl"><svg><use href="#i-chart"/></svg>Détail</button></div>
+    <div class="cb">
+      <div class="statstrip">
+        <div class="card stat"><div class="lb">P&amp;L Global<button class="fx" data-f="P&amp;L Global = CA + ΔS − D − CF" data-c="CA 452 000 000 · ΔS +2 235 000 (stock fin 41 235 000 − stock début 39 000 000) · D 421 500 000 · CF 6 900 000 = max(0 ; 21 700 000 × 27 / 31 − 12 000 000)" data-src="Moteur financier unique · Ventes Mata OK 20:30 · Stock OK 06:00 · Dépenses par date métier · Charges fixes §8.4" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></div><div class="v amt" data-amt="25835000"></div><div class="sub2">5,7 % du CA de la période</div></div>
+        <div class="card stat"><div class="lb">P&amp;L hors Investissements<button class="fx" data-f="P&amp;L hors Investissements = CA + ΔS − (D − DI) − CF = P&amp;L Global + DI" data-c="P&amp;L Global 25 835 000 + DI 18 000 000 (chambre froide 12 000 000 le 12/08 · acompte camion frigorifique 6 000 000 le 20/08)" data-src="Dépenses avec Investissement = true ; flag false par défaut (§8.3)" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></div><div class="v amt" data-amt="43835000"></div><div class="sub2">9,7 % du CA de la période · DI <span class="amt" data-amt="18000000" data-nocur></span></div></div>
+        <div class="card stat"><div class="lb">P&amp;L hors Dépenses spéciales<button class="fx" data-f="P&amp;L hors Dépenses spéciales = CA + ΔS − (D − DS) − CF = P&amp;L Global + DS" data-c="P&amp;L Global 25 835 000 + DS 6 500 000 (indemnités exceptionnelles 4 000 000 le 05/08 · sinistre 2 500 000 le 18/08)" data-src="Dépenses avec Dépense spéciale = true ; flag false par défaut, indépendant du flag Investissement (§8.3)" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></div><div class="v amt" data-amt="32335000"></div><div class="sub2">7,2 % du CA de la période · DS <span class="amt" data-amt="6500000" data-nocur></span></div></div>
+      </div>
+      <div class="grid2b" style="margin-top:0">
+        <div class="brk">
+          <div class="row"><span class="sign p">+</span>CA — Ventes Mata (OK 20:30)<span class="amt" data-amt="452000000" data-nocur></span></div>
+          <div class="row"><span class="sign p">+</span>ΔS — stock fin <span class="amt" data-amt="41235000" data-nocur></span> − stock début <span class="amt" data-amt="39000000" data-nocur></span> (Stock, OK 06:00)<span class="amt" data-amt="2235000" data-nocur></span></div>
+          <div class="row"><span class="sign m">−</span>D — toutes les dépenses de la période selon leur date métier<span class="amt m" data-amt="421500000" data-nocur></span></div>
+          <div class="row"><span class="sign m">−</span>CF — charges fixes complémentaires estimées non encore comptabilisées<span class="amt m" data-amt="6900000" data-nocur></span></div>
+          <div class="row"><span class="sign p">=</span><b>P&amp;L Global</b><span class="amt" data-amt="25835000" data-nocur></span></div>
+        </div>
+        <div>
+          <div class="fcode" style="margin-top:0">P&amp;L Global = CA + ΔS − D − CF<br>P&amp;L hors Investissements = CA + ΔS − (D − DI) − CF = P&amp;L Global + DI<br>P&amp;L hors Dépenses spéciales = CA + ΔS − (D − DS) − CF = P&amp;L Global + DS</div>
+          <div class="fcode">Charge théorique proratisée = Montant mensuel × Jours calendaires applicables / Jours calendaires du mois<br>Charge fixe complémentaire = max(0 ; Charge théorique proratisée − Charge déjà comptabilisée)<br><b>CF = max(0 ; 21 700 000 × 27 / 31 − 12 000 000) = 6 900 000</b></div>
+        </div>
+      </div>
+      <div class="note-strip"><svg><use href="#i-lock"/></svg><span>Snapshot immuable du 26/08 22:14 (auto post-clôture) : P&amp;L Global <span class="amt" data-amt="25105000" data-nocur></span> · Trésorerie totale contrôlée <span class="amt" data-amt="60790000" data-nocur></span>. Le tableau de bord courant est recalculé ; la comparaison snapshot / situation recalculée se fait dans Historique (§8.6). <button class="linkish" data-goto="fin-historique">Ouvrir Historique</button> <button class="linkish" data-goto="fin-charges">Charges fixes</button></span></div>
+    </div>
+  </div>
+
+  <!-- Tiroir : détail d’un compte -->
+  <aside class="drawer" data-ov="fin-dashboard-compte" aria-label="Détail du compte">
+    <div class="dh"><h3 data-dd-nom>Compte</h3><button class="ib" data-close aria-label="Fermer"><svg><use href="#i-x"/></svg></button></div>
+    <div class="db">
+      <div class="hint">Solde toujours calculé ou rattaché à une source externe, jamais saisi (§4.2)</div>
+      <div class="big-amt" data-dd-solde></div>
+      <div class="meta-l"><span class="tag lock" data-dd-type></span><span class="tag lock" data-dd-source></span></div>
+      <div class="mvt"><div class="tx"><b>Fraîcheur et dernier point</b><small data-dd-frais></small></div></div>
+      <div class="mvt"><div class="tx"><b>État</b><small data-dd-etat></small></div></div>
+      <div class="mvt"><div class="tx"><b>Inclus dans la trésorerie disponible</b><small data-dd-incl></small></div></div>
+      <div class="mvt"><div class="tx"><b>Prochaine action</b><small data-dd-action></small></div></div>
+      <div class="note-strip"><svg><use href="#i-shield"/></svg>La consultation détaillée des Comptes est auditée (Hautement sensible, §10.2). Toute correction passe par le compte Ajustement : motif et deux validateurs distincts de l’initiateur et l’un de l’autre (§4.7).</div>
+    </div>
+    <div class="df"><button class="btn ghost" data-goto="fin-comptes"><svg><use href="#i-wallet"/></svg>Ouvrir dans Comptes</button><button class="btn ghost" data-goto="fin-historique"><svg><use href="#i-history"/></svg>Historique</button></div>
+  </aside>
+  <div class="dback" data-ov-back="fin-dashboard-compte"></div>
+</section>
+<script data-screen="fin-dashboard">
+ERP.register('fin-dashboard', function (root, ctx) {
+  var $ = function (s, r) { return (r || root).querySelector(s); };
+  var $$ = function (s, r) { return Array.prototype.slice.call((r || root).querySelectorAll(s)); };
+
+  /* 1. CA de référence → ratios recalculés (§8.2) ; les montants FCFA ne bougent jamais */
+  var sel = $('#fin-dashboard-ca');
+  function pct(v, ca) { return (v / ca * 100).toFixed(1).replace('.', ',') + ' %'; }
+  function applyCa() {
+    var ca = parseInt(sel.value, 10), opt = sel.options[sel.selectedIndex], lbl = opt.getAttribute('data-short');
+    $$('[data-ratio-of]').forEach(function (el) {
+      el.textContent = pct(parseInt(el.getAttribute('data-ratio-of'), 10), ca) + ' du CA de référence · ' + lbl;
+    });
+  }
+  ctx.on(sel, 'change', function () {
+    applyCa();
+    ctx.toast('CA de référence : ' + sel.options[sel.selectedIndex].text + ' — ratios recalculés, montants FCFA inchangés');
+  });
+  applyCa();
+
+  /* 2. Échéancier fournisseurs : filtre par état (§5.6), dépassées toujours en tête */
+  var tb = $('[data-ech-body]'), cnt = $('[data-ech-count]');
+  var A = function (v) { return '<span class="amt" data-amt="' + v + '" data-nocur></span>'; };
+  var TOT = { tous: '8 échéances · total ' + A(23250000) + ' = Dettes fournisseurs', dep: '2 dépassées · ' + A(1950000), proch: '1 prochaine · 02/09/2026 · ' + A(1600000), avenir: '5 à venir · ' + A(19700000) };
+  $$('[data-ech-chips] [data-filter]').forEach(function (c) {
+    ctx.on(c, 'click', function () {
+      $$('[data-ech-chips] [data-filter]').forEach(function (x) { x.classList.toggle('on', x === c); });
+      var f = c.getAttribute('data-filter');
+      ctx.filterRows(tb, 'etat', f);
+      cnt.innerHTML = TOT[f]; ctx.formatAmounts(cnt);
+    });
+  });
+
+  /* 3. Détail par compte : le tiroir se remplit depuis la ligne cliquée, le moteur l’ouvre (data-open) */
+  var dd = $('[data-ov="fin-dashboard-compte"]');
+  ctx.on($('[data-cpt-body]'), 'click', function (e) {
+    var tr = e.target.closest('tr[data-nom]'); if (!tr) return;
+    var d = tr.dataset, v = parseInt(d.solde, 10), blind = !!root.dataset.decl && tr.hasAttribute('data-blind-decl');
+    $('[data-dd-nom]', dd).textContent = d.nom;
+    var s = $('[data-dd-solde]', dd);
+    s.innerHTML = blind ? '<span class="tag lock"><svg><use href="#i-eyeoff"/></svg>Masqué · à déclarer</span>' : ctx.fmt(v) + ' <span class="cur">FCFA</span>';
+    s.classList.toggle('neg', !blind && v < 0);
+    ['type', 'source', 'frais', 'etat', 'incl', 'action'].forEach(function (k) { $('[data-dd-' + k + ']', dd).textContent = d[k] || '—'; });
+    if (blind) $('[data-dd-frais]', dd).textContent = d.fraisBlind;
+  });
+
+  /* 4. Vue par profil : blocs [data-view] masqués avec explication (refus par défaut, FIXTURES §2) */
+  var NOTE = {
+    invest: 'Profil Investisseur (Externe, lecture seule) : périmètre limité aux blocs P&L et Trésorerie agrégée. Fournisseurs, Clients, Activité, Contrôles et le détail par compte sont hors périmètre — refus par défaut, FIXTURES §2.',
+    compta: 'Profil Comptable externe (Externe, accès temporaire) : bloc Contrôles hors périmètre du tableau de bord ; Fournisseurs en lecture (FIXTURES §2). Refus par défaut, aucune écriture possible.'
+  };
+  function applyView(p) {
+    var id = p && p.id, ops = id === 'invest', ctrl = id === 'invest' || id === 'compta', det = id === 'invest';
+    $$('[data-view]').forEach(function (el) {
+      var v = el.getAttribute('data-view');
+      el.hidden = (v === 'ops' && ops) || (v === 'ctrl' && ctrl) || (v === 'detail' && det);
+    });
+    /* Réconciliation en aveugle (§3) : un profil déclarant qui ne valide pas ne voit pas le solde théorique de la caisse « À déclarer » */
+    var decl = ctx.hasPerm('finance.declarations.declarer') && !ctx.hasPerm('finance.reconciliation.valider');
+    root.dataset.decl = decl ? '1' : '';
+    $$('[data-cg-hide],[data-cg-val]').forEach(function (el) { el.hidden = decl; });
+    $('[data-cg-mask]').hidden = !decl;
+    $$('.fx[data-c-blind]').forEach(function (b) { if (!b.dataset.cFull) b.dataset.cFull = b.getAttribute('data-c'); b.setAttribute('data-c', decl ? b.getAttribute('data-c-blind') : b.dataset.cFull); });
+    $('[data-view-note]').hidden = !NOTE[id];
+    $('[data-view-note-tx]').textContent = NOTE[id] || '';
+    if (ctx.drawCharts) requestAnimationFrame(function () { ctx.drawCharts(root); });
+  }
+  applyView(ctx.profile);
+  document.addEventListener('erp:profile', function (e) { applyView(e.detail); });
+
+  /* 5. Export : permission distincte de Consulter (§5.7) ; le moteur désactive le bouton si elle manque */
+  $$('[data-export]').forEach(function (b) {
+    ctx.on(b, 'click', function () {
+      ctx.toast('Export CSV généré — disponible 7 jours puis supprimé, régénérable à la demande (§5.7)');
+    });
+  });
+  ctx.formatAmounts(root);
+  ctx.applyPerms();
+});
+</script>

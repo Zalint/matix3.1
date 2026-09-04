@@ -1,0 +1,231 @@
+<!-- ÉCRAN : P&L ET KPI — Mata Finance §8.1 (neuf indicateurs), §8.2 (CA de référence), §8.3 (trois variantes de P&L), §8.4 (charges fixes) -->
+<section class="scr" data-scr="fin-pnl" data-module="finance" data-perm="finance.pnl.view" data-sens="s" hidden>
+  <style data-screen="fin-pnl">
+    #app [data-scr="fin-pnl"] [data-blk]{margin-top:14px}
+    #app [data-scr="fin-pnl"] .grid2{align-items:start}
+    #app [data-scr="fin-pnl"] .grid2>.card{min-width:0}
+    #app [data-scr="fin-pnl"] .grid2 .tbl-scroll table{min-width:620px}
+    #app [data-scr="fin-pnl"] .pnl-cards .stat .v{font-size:21px;letter-spacing:-.02em}
+    #app [data-scr="fin-pnl"] .pnl-cards .stat.hero .v{color:var(--red)}
+    #app [data-scr="fin-pnl"] .pnl-cards .stat .sub2{font-weight:600;color:var(--ink-2)}
+    #app [data-scr="fin-pnl"] .sym{font-family:'Fira Code',monospace;font-weight:700;font-size:12.5px}
+    #app [data-scr="fin-pnl"] td.num,#app [data-scr="fin-pnl"] th.num{text-align:right;white-space:nowrap}
+    #app [data-scr="fin-pnl"] .ratio-c{font-family:'Fira Code',monospace;font-size:11.5px;font-weight:600;color:var(--ink-2)}
+    #app [data-scr="fin-pnl"] [data-pct-of]{white-space:nowrap}
+    #app [data-scr="fin-pnl"] .kpitbl .lb{display:inline-flex;align-items:center;gap:6px;font-weight:700;white-space:nowrap}
+    #app [data-scr="fin-pnl"] .kpitbl table{min-width:960px}
+    #app [data-scr="fin-pnl"] .drawer .eq{margin:12px 0}
+    #app [data-scr="fin-pnl"] .ch .btn{min-height:30px;padding:5px 11px;font-size:11.5px}
+  </style>
+  <div class="scr-head">
+    <div>
+      <h2>P&amp;L et KPI</h2>
+      <p class="scr-sub">Cumul du 1er au 27 août 2026 · Mata Group · trois variantes du P&amp;L de gestion (§8.3), neuf indicateurs de trésorerie et d’expositions (§8.1) · valeur en FCFA d’abord, ratio sur le CA de référence ensuite (§8.2) · moteur financier unique : mêmes chiffres que le Tableau de bord, les snapshots et les agents IA (§3).</p>
+    </div>
+    <div class="scr-meta">
+      <span class="sens s"><svg><use href="#i-shield"/></svg>Sensible</span>
+      <span class="hint">Écran de lecture, aucune validation ici · les flags Investissement / Dépense spéciale se modifient dans Dépenses selon permissions et clôture (§10.1) ; après clôture, correction post-clôture avec approbation du Super Admin (§3.1) · Exporter distinct de Consulter (§5.7)</span>
+    </div>
+  </div>
+  <div class="deny-note" data-view-note hidden><svg><use href="#i-lock"/></svg><span><b>Vue agrégée.</b> Profil Investisseur (Externe, lecture seule) : agrégats uniquement. Les composantes par compte, fournisseur ou client et le détail des dépenses DI / DS sont hors périmètre — refus par défaut, FIXTURES §2. Formules et sources restent consultables (§3 Explicabilité).</span></div>
+  <div class="note-strip" style="margin:0 0 14px"><svg><use href="#i-info"/></svg><span><b>Indicateur de gestion.</b> Les P&amp;L de Mata Finance sont des indicateurs de gestion. Ils ne remplacent pas un compte de résultat comptable réglementaire. (§8.3)</span></div>
+
+  <div class="actionbar">
+    <div class="fld"><label for="fin-pnl-ca">CA de référence des ratios (§8.2)</label>
+      <select id="fin-pnl-ca" class="inp">
+        <option value="452000000" data-short="août au 27">Mois en cours — août 2026 au 27 : 452 000 000 FCFA</option>
+        <option value="438500000" data-short="juillet">Mois précédent — juillet 2026 : 438 500 000 FCFA</option>
+        <option value="1301200000" data-short="3 derniers mois">3 derniers mois : 1 301 200 000 FCFA</option>
+      </select></div>
+    <div class="sp"></div>
+    <button class="btn ghost" data-goto="fin-charges"><svg><use href="#i-sliders"/></svg>Charges fixes</button>
+    <button class="btn ghost" data-goto="fin-depenses"><svg><use href="#i-receipt"/></svg>Dépenses</button>
+    <button class="btn ghost" data-goto="fin-historique"><svg><use href="#i-history"/></svg>Snapshots</button>
+    <button class="btn ghost" data-goto="fin-visualisation"><svg><use href="#i-chart"/></svg>Visualisation</button>
+    <button class="btn ghost" data-perm="finance.export" data-export><svg><use href="#i-dl"/></svg>Exporter</button>
+  </div>
+  <div class="note-strip" style="margin:0 0 14px"><svg><use href="#i-refresh"/></svg><span><b>Sources et fraîcheur (§3, §6.5)</b> — Ventes Mata <span class="st ok">OK 20:30</span> · Stock <span class="st ok">OK 06:00</span> · Dépenses par date métier <span class="st ok">OK · import Achat 17:00, 5 achats, 0 doublon</span> · Charges fixes <span class="st ok">Configuration à jour</span> — états possibles : OK, Manquante, Erreur, Non à jour ; une source périmée reste affichée avec son horodatage et n’est jamais remplacée par 0.</span></div>
+
+  <!-- 1. TROIS VARIANTES DU P&L (§8.3) : montant puis ratio -->
+  <div class="statstrip pnl-cards">
+    <div class="card stat hero"><div class="lb">P&amp;L Global<button class="fx" data-f="P&amp;L Global = CA + ΔS − D − CF" data-c="CA 452 000 000 + ΔS 2 235 000 − D 421 500 000 − CF 6 900 000 = 25 835 000" data-src="Moteur financier unique · CA : Ventes Mata OK 27/08 20:30 · ΔS : Stock OK 27/08 06:00 · D : Dépenses par date métier, import Achat 17:00 · CF : Charges fixes §8.4, calcul au 27/08" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></div><div class="v amt" data-amt="25835000"></div><div class="sub2" data-ratio-of="25835000">5,7 % du CA de référence · août au 27</div><div class="hint">Inchangé par les variantes et par les flags · snapshot 26/08 22:14 : 25 105 000</div></div>
+    <div class="card stat"><div class="lb">P&amp;L hors Investissements<button class="fx" data-f="P&amp;L hors Investissements = CA + ΔS − (D − DI) − CF = P&amp;L Global + DI" data-c="P&amp;L Global 25 835 000 + DI 18 000 000 = 43 835 000 · DI : chambre froide 12 000 000 (12/08) · acompte camion frigorifique 6 000 000 (20/08)" data-c-agg="P&amp;L Global 25 835 000 + DI 18 000 000 = 43 835 000 · DI : 2 dépenses avec Investissement = true (détail hors périmètre)" data-src="Dépenses avec Investissement = true ; flag false par défaut (§8.3) · journées clôturées · snapshot 26/08 22:14 : 43 105 000" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></div><div class="v amt" data-amt="43835000"></div><div class="sub2" data-ratio-of="43835000">9,7 % du CA de référence · août au 27</div><div class="hint">= P&amp;L Global + DI 18 000 000 · 2 dépenses Investissement = true</div></div>
+    <div class="card stat"><div class="lb">P&amp;L hors Dépenses spéciales<button class="fx" data-f="P&amp;L hors Dépenses spéciales = CA + ΔS − (D − DS) − CF = P&amp;L Global + DS" data-c="P&amp;L Global 25 835 000 + DS 6 500 000 = 32 335 000 · DS : indemnités exceptionnelles 4 000 000 (05/08) · sinistre 2 500 000 (18/08)" data-c-agg="P&amp;L Global 25 835 000 + DS 6 500 000 = 32 335 000 · DS : 2 dépenses avec Dépense spéciale = true (détail hors périmètre)" data-src="Dépenses avec Dépense spéciale = true ; flag false par défaut, indépendant du flag Investissement (§8.3) · journées clôturées · snapshot 26/08 22:14 : 31 605 000" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></div><div class="v amt" data-amt="32335000"></div><div class="sub2" data-ratio-of="32335000">7,2 % du CA de référence · août au 27</div><div class="hint">= P&amp;L Global + DS 6 500 000 · 2 dépenses Dépense spéciale = true</div></div>
+  </div>
+
+  <div class="grid2" style="margin-top:0">
+    <!-- 2. SYMBOLES §8.3 : valeur, source, fraîcheur · DI et DS ouvrent le détail -->
+    <div class="card">
+      <div class="ch"><h3>Symboles du P&amp;L (§8.3)</h3><span class="hint-r">Définitions mot pour mot · cliquer DI ou DS pour le détail des dépenses</span></div>
+      <div class="tbl-scroll"><table>
+        <thead><tr><th>Symbole</th><th>Définition</th><th class="num">Valeur</th><th>Source</th><th>Fraîcheur</th></tr></thead>
+        <tbody>
+          <tr><td class="sym">CA</td><td>Chiffre d’affaires Mata de la période, fourni par Ventes Mata.</td><td class="num"><span class="amt" data-amt="452000000" data-nocur></span></td><td class="hint">Ventes Mata · jamais saisi dans Mata Finance</td><td><span class="st ok"><svg><use href="#i-check"/></svg>OK 27/08 20:30</span></td></tr>
+          <tr><td class="sym">D<button class="fx" data-f="Toutes les dépenses de la période selon leur date métier." data-c="Dépenses du 1er au 27 août par date métier, dont 14 écritures du 27/08 pour 1 862 000 · comprend DI 18 000 000 et DS 6 500 000" data-src="Dépenses · saisies manuelles et API Achat (import idempotent 27/08 17:00, 5 achats, 0 doublon) · flags sans effet sur D" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></td><td>Toutes les dépenses de la période selon leur date métier.</td><td class="num"><span class="amt" data-amt="421500000" data-nocur></span></td><td class="hint">Dépenses · date métier distincte de l’horodatage (§3)</td><td><span class="st ok"><svg><use href="#i-check"/></svg>OK · Achat 17:00</span></td></tr>
+          <tr class="rowlink" data-open="fin-pnl-di" title="Ouvrir le détail des dépenses Investissement"><td class="sym">DI <span class="tag lock"><svg><use href="#i-flag"/></svg>2</span></td><td>Dépenses avec Investissement = true ; flag false par défaut.</td><td class="num"><span class="amt" data-amt="18000000" data-nocur></span></td><td class="hint">Dépenses · flag Investissement</td><td><span class="st ok"><svg><use href="#i-lock"/></svg>Journées clôturées</span></td></tr>
+          <tr class="rowlink" data-open="fin-pnl-ds" title="Ouvrir le détail des dépenses spéciales"><td class="sym">DS <span class="tag lock"><svg><use href="#i-flag"/></svg>2</span></td><td>Dépenses avec Dépense spéciale = true ; flag false par défaut.</td><td class="num"><span class="amt" data-amt="6500000" data-nocur></span></td><td class="hint">Dépenses · flag Dépense spéciale</td><td><span class="st ok"><svg><use href="#i-lock"/></svg>Journées clôturées</span></td></tr>
+          <tr><td class="sym">ΔS<button class="fx" data-f="Valeur financière du stock fin − valeur financière du stock début, fournie par Stock." data-c="Stock fin 41 235 000 − stock début 39 000 000 = +2 235 000 · Abattoir 22 400 000 · Dépôt central 12 835 000 · Points de vente 6 000 000" data-src="Module Stock, seul propriétaire de la valorisation · lecture seule dans Mata Finance · OK 27/08 06:00" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></td><td>Valeur financière du stock fin − valeur financière du stock début, fournie par Stock.</td><td class="num"><span class="amt" data-amt="2235000" data-nocur></span></td><td class="hint">Stock · lecture seule</td><td><span class="st ok"><svg><use href="#i-check"/></svg>OK 27/08 06:00</span></td></tr>
+          <tr><td class="sym">CF<button class="fx" data-f="Charge théorique proratisée = Montant mensuel × Jours calendaires applicables / Jours calendaires du mois. Charge fixe complémentaire = max(0 ; Charge théorique proratisée − Charge déjà comptabilisée)" data-c="Charges actives 21 700 000 × 27 / 31 = 18 900 000 · déjà comptabilisé en dépenses 12 000 000 · CF = max(0 ; 18 900 000 − 12 000 000) = 6 900 000" data-src="Configuration des charges fixes (§8.4) : Salaires 18 600 000 · Loyer 2 500 000 · Gardiennage et sécurité 600 000 · Assurance flotte inactive depuis le 30/06/2026 · jours calendaires, dimanche inclus" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></td><td>Charges fixes complémentaires estimées non encore comptabilisées en dépenses.</td><td class="num"><span class="amt" data-amt="6900000" data-nocur></span></td><td class="hint">Charges fixes · <button class="linkish" data-goto="fin-charges">Configuration</button></td><td><span class="st ok"><svg><use href="#i-check"/></svg>Calcul au 27/08</span></td></tr>
+        </tbody>
+      </table></div>
+      <div class="cb" style="padding-top:10px">
+        <div class="eq"><b>P&amp;L Global</b> = CA + ΔS − D − CF = 452 000 000 + 2 235 000 − 421 500 000 − 6 900 000 = <b>25 835 000</b><br><b>Ratio</b> = P&amp;L Global / CA de référence = 25 835 000 / <span data-ca-amt>452 000 000</span> = <span class="ok" data-pct-of="25835000">5,7 %</span></div>
+      </div>
+    </div>
+    <!-- 3. DÉCOMPOSITION ET CHARGES FIXES (§8.3, §8.4) -->
+    <div class="card">
+      <div class="ch"><h3>Décomposition</h3><span class="hint-r">Une ligne par symbole, signe explicite</span></div>
+      <div class="cb">
+        <div class="brk">
+          <div class="row"><span class="sign p">+</span>CA<span class="amt" data-amt="452000000" data-nocur></span></div>
+          <div class="row"><span class="sign p">+</span>ΔS<span class="amt" data-amt="2235000" data-nocur></span></div>
+          <div class="row"><span class="sign m">−</span>D <span class="hint">dont DI 18 000 000 et DS 6 500 000</span><span class="amt m" data-amt="421500000" data-nocur></span></div>
+          <div class="row"><span class="sign m">−</span>CF<span class="amt m" data-amt="6900000" data-nocur></span></div>
+          <div class="row"><span class="sign p">=</span><b>P&amp;L Global</b><span class="amt" data-amt="25835000" data-nocur></span></div>
+          <div class="row"><span class="sign p">+</span>DI → <b>P&amp;L hors Investissements</b><span class="amt" data-amt="43835000" data-nocur></span></div>
+          <div class="row"><span class="sign p">+</span>DS → <b>P&amp;L hors Dépenses spéciales</b><span class="amt" data-amt="32335000" data-nocur></span></div>
+        </div>
+        <div class="fcode">Charge théorique proratisée = Montant mensuel × Jours calendaires applicables / Jours calendaires du mois<br>Charge fixe complémentaire = max(0 ; Charge théorique proratisée − Charge déjà comptabilisée)<br><b>CF = max(0 ; 21 700 000 × 27 / 31 − 12 000 000) = 6 900 000</b></div>
+        <div class="hint" style="margin:12px 0 4px">Charges fixes actives (§8.4) · prorata en jours calendaires, dimanche inclus</div>
+        <div class="due"><span>Salaires <span class="hint">Personnel · effet 01/07/2026</span></span><span class="amt" data-amt="18600000" data-nocur></span></div>
+        <div class="due"><span>Loyer <span class="hint">Locaux · effet 01/01/2026</span></span><span class="amt" data-amt="2500000" data-nocur></span></div>
+        <div class="due"><span>Gardiennage et sécurité <span class="hint">Services · effet 01/03/2026</span></span><span class="amt" data-amt="600000" data-nocur></span></div>
+        <div class="due"><span>Assurance flotte <span class="hint">Assurances · fin 30/06/2026 · Inactif, exclue du prorata</span></span><span class="st mut">Inactif</span></div>
+        <div class="actionbar" style="margin:12px 0 0"><button class="btn ghost" data-goto="fin-charges"><svg><use href="#i-sliders"/></svg>Configuration des charges fixes</button><button class="btn ghost" data-perm="finance.charges.modifier" data-goto="fin-charges"><svg><use href="#i-plus"/></svg>Modifier une charge</button></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. RÈGLES DES VARIANTES (§8.3, §3.1) -->
+  <div class="card" data-blk>
+    <div class="ch"><h3>Règles des variantes</h3><span class="hint-r">§8.3 · §3.1 · §10.1</span></div>
+    <div class="cb al">
+      <div class="row"><span class="ic info"><svg><use href="#i-check"/></svg></span><div class="tx"><b>P&amp;L Global inchangé par les variantes.</b> Les variantes réintègrent DI ou DS après coup (P&amp;L Global + DI, P&amp;L Global + DS) ; poser ou retirer un flag ne modifie ni D, ni le P&amp;L Global. L’ajustement en cours VAL-117 (+180 000 Caisse générale) ne touche pas non plus le P&amp;L : le compte Ajustement est exclu des agrégats (§4.7).<small>Snapshot 26/08 22:14 : P&amp;L Global 25 105 000 · hors Investissements 43 105 000 · hors Dépenses spéciales 31 605 000 — P&amp;L Global inchangé par la correction en cours (§8.6)</small></div></div>
+      <div class="row"><span class="ic info"><svg><use href="#i-flag"/></svg></span><div class="tx"><b>Flags indépendants et cumulables.</b> Les flags Investissement et Dépense spéciale sont indépendants. Une dépense peut exceptionnellement porter les deux ; chaque variante l’exclut selon son propre flag. Flag false par défaut.<small>Sur la période, aucune des 4 dépenses flaguées ne porte les deux flags : DI ∩ DS = 0</small></div></div>
+      <div class="row"><span class="ic warn"><svg><use href="#i-lock"/></svg></span><div class="tx"><b>Modification d’un flag après clôture = correction post-clôture.</b> Toute modification d’un flag après clôture suit le processus de correction post-clôture : approbation du Super Admin obligatoire, intégrée au workflow plus fort s’il existe (§10.1). Les 4 dépenses DI / DS datent de journées clôturées.<small>Alerte « Correction post-clôture » : email Super Admin, critique, non désactivable (FIXTURES §12)</small></div></div>
+    </div>
+  </div>
+
+  <!-- 5. TENDANCE 30 JOURS -->
+  <div class="card" data-blk>
+    <div class="ch"><h3>P&amp;L Global — 30 derniers jours</h3><span class="hint-r">En millions de FCFA · cumul recalculé chaque jour par le moteur unique · snapshots immuables dans Historique</span><button class="btn ghost" data-goto="fin-historique"><svg><use href="#i-history"/></svg>Comparer aux snapshots</button></div>
+    <div class="cb"><div class="linechart" data-series="pnl" style="height:220px"></div></div>
+  </div>
+
+  <!-- 6. NEUF INDICATEURS §8.1 : FCFA puis ratio, formule sur chacun -->
+  <div class="card kpitbl" data-blk>
+    <div class="ch"><h3>Position de trésorerie et expositions (§8.1)</h3><span class="hint-r">Neuf indicateurs · compte Ajustement exclu · expositions affichées séparément, jamais compensées</span></div>
+    <div class="tbl-scroll"><table>
+      <thead><tr><th>Indicateur</th><th>Définition (§8.1)</th><th class="num">Valeur FCFA</th><th class="num">Ratio / CA de référence</th><th data-view="detail">Composantes</th></tr></thead>
+      <tbody>
+        <tr><td><span class="lb">Trésorerie disponible<button class="fx" data-f="Somme des comptes Trésorerie et Positions externes configurés comme immédiatement disponibles." data-c="Caisse générale 8 450 000 + Sous-caisse Marché 1 275 000 + Sous-caisse Livraisons 640 000 + Banque BOA 45 200 000 + Bictorys 2 890 000 = 58 455 000" data-c-agg="3 comptes Trésorerie + 2 Positions externes = 58 455 000 (détail par compte hors périmètre)" data-src="Moteur financier · CALCULÉ (caisses) · IMPORT CSV 27/08 08:00 (Banque BOA) · SYNCHRONISÉ 27/08 08:12 (Bictorys) · compte Ajustement exclu" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></span></td><td class="hint">Somme des comptes Trésorerie et Positions externes configurés comme immédiatement disponibles.</td><td class="num"><span class="amt" data-amt="58455000" data-nocur></span></td><td class="num ratio-c" data-pct-of="58455000">12,9 %</td><td class="hint" data-view="detail">Caisse générale 8 450 000 · Sous-caisse Marché 1 275 000 · Sous-caisse Livraisons 640 000 · Banque BOA 45 200 000 · Bictorys 2 890 000</td></tr>
+        <tr><td><span class="lb">Trésorerie en transit<button class="fx" data-f="Somme des comptes Relais actifs." data-c="Dépôt en cours (Caisse → Banque) 2 500 000 + Bictorys → Banque en cours 350 000 = 2 850 000" data-c-agg="2 comptes Relais actifs = 2 850 000 (détail hors périmètre)" data-src="Moteur financier · comptes Relais CALCULÉ · relais Bictorys → Banque ouvert depuis 3 j, seuil 2 j (§4.6)" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></span></td><td class="hint">Somme des comptes Relais actifs.</td><td class="num"><span class="amt" data-amt="2850000" data-nocur></span></td><td class="num ratio-c" data-pct-of="2850000">0,6 %</td><td class="hint" data-view="detail">Dépôt en cours (Caisse → Banque) 2 500 000 · Bictorys → Banque en cours 350 000 (relais ancien, 3 j)</td></tr>
+        <tr><td><span class="lb">Trésorerie totale contrôlée<button class="fx" data-f="Trésorerie disponible + Trésorerie en transit." data-c="58 455 000 + 2 850 000 = 61 305 000" data-src="Moteur financier · recalcul continu · snapshot 26/08 22:14 : 60 790 000 · recalculé au 26/08 : 60 970 000 (+180 000, VAL-117 en cours)" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></span></td><td class="hint">Trésorerie disponible + Trésorerie en transit.</td><td class="num"><span class="amt" data-amt="61305000" data-nocur></span></td><td class="num ratio-c" data-pct-of="61305000">13,6 %</td><td class="hint" data-view="detail">58 455 000 + 2 850 000</td></tr>
+        <tr><td><span class="lb">Dettes fournisseurs<button class="fx" data-f="Σ max(− Position fournisseur ; 0)." data-c="AGNEAUX 12 400 000 + MATA VOLAILLE CHAIR 4 300 000 + Bétail Thiès 4 600 000 + MATA VOLAILLE ŒUFS 1 150 000 + Aliments Sénégal 800 000 = 23 250 000" data-c-agg="5 positions fournisseur négatives = 23 250 000 (détail hors périmètre)" data-src="Comptes Fournisseur CALCULÉ · convention de signe §4.3 : négatif = Mata doit · AGNEAUX au-delà du plafond 10 000 000 (§5.4)" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></span></td><td class="hint">Σ max(− Position fournisseur ; 0).</td><td class="num"><span class="amt" data-amt="23250000" data-nocur></span></td><td class="num ratio-c" data-pct-of="23250000">5,1 %</td><td class="hint" data-view="detail">AGNEAUX 12 400 000 · MATA VOLAILLE CHAIR 4 300 000 · Bétail Thiès 4 600 000 · MATA VOLAILLE ŒUFS 1 150 000 · Aliments Sénégal 800 000</td></tr>
+        <tr><td><span class="lb">Avances fournisseurs<button class="fx" data-f="Σ max(Position fournisseur ; 0)." data-c="Abattoirs Dakar +350 000" data-c-agg="1 position fournisseur positive = 350 000 (détail hors périmètre)" data-src="Comptes Fournisseur CALCULÉ · positif = avance de Mata chez le fournisseur (§4.3)" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></span></td><td class="hint">Σ max(Position fournisseur ; 0).</td><td class="num"><span class="amt" data-amt="350000" data-nocur></span></td><td class="num ratio-c" data-noratio title="Exposition marginale : ratio non affiché (FIXTURES §4)">—</td><td class="hint" data-view="detail">Abattoirs Dakar +350 000</td></tr>
+        <tr><td><span class="lb">Créances clients<button class="fx" data-f="Σ max(Position client ; 0)." data-c="MaaS Keur Massar 3 250 000 + MaaS Ouakam 2 870 000 + MaaS Pikine 1 985 000 + Restaurant Le Baobab 2 400 000 + Boucherie des Almadies 1 730 000 + 9 autres MaaS 7 840 000 = 20 075 000" data-c-agg="14 positions client positives = 20 075 000 (détail hors périmètre)" data-src="Comptes Créance client CALCULÉ · positif = le client doit à Mata (§4.3) · ventes issues exclusivement de Ventes Mata (§6.1)" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></span></td><td class="hint">Σ max(Position client ; 0).</td><td class="num"><span class="amt" data-amt="20075000" data-nocur></span></td><td class="num ratio-c" data-pct-of="20075000">4,4 %</td><td class="hint" data-view="detail">MaaS Keur Massar 3 250 000 · MaaS Ouakam 2 870 000 · MaaS Pikine 1 985 000 · Restaurant Le Baobab 2 400 000 · Boucherie des Almadies 1 730 000 · 9 autres MaaS 7 840 000</td></tr>
+        <tr><td><span class="lb">Avances clients<button class="fx" data-f="Σ max(− Position client ; 0)." data-c="Touba Viandes 150 000" data-c-agg="1 position client négative = 150 000 (détail hors périmètre)" data-src="Comptes Créance client CALCULÉ · négatif = avance du client (§4.3)" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></span></td><td class="hint">Σ max(− Position client ; 0).</td><td class="num"><span class="amt" data-amt="150000" data-nocur></span></td><td class="num ratio-c" data-noratio title="Exposition marginale : ratio non affiché (FIXTURES §4)">—</td><td class="hint" data-view="detail">Touba Viandes 150 000</td></tr>
+        <tr><td><span class="lb">Position financière nette<button class="fx" data-f="Trésorerie totale contrôlée + Avances fournisseurs + Créances clients − Dettes fournisseurs − Avances clients." data-c="61 305 000 + 350 000 + 20 075 000 − 23 250 000 − 150 000 = 58 330 000" data-src="Moteur financier · positions bilatérales CALCULÉ (§4.3) · les expositions restent affichées séparément (§8.1)" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></span></td><td class="hint">Trésorerie totale contrôlée + Avances fournisseurs + Créances clients − Dettes fournisseurs − Avances clients.</td><td class="num"><span class="amt" data-amt="58330000" data-nocur></span></td><td class="num ratio-c" data-pct-of="58330000">12,9 %</td><td class="hint" data-view="detail">61 305 000 + 350 000 + 20 075 000 − 23 250 000 − 150 000</td></tr>
+        <tr><td><span class="lb">Trésorerie après fournisseurs<button class="fx" data-f="Trésorerie totale contrôlée − Dettes fournisseurs. Le transit est inclus car il est considéré comme reçu avant le paiement fournisseur." data-c="61 305 000 − 23 250 000 = 38 055 000" data-src="Moteur financier · §8.1, §8.2 · indicateur usuel affiché FCFA puis ratio" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></span></td><td class="hint">Trésorerie totale contrôlée − Dettes fournisseurs. Le transit est inclus car il est considéré comme reçu avant le paiement fournisseur.</td><td class="num"><span class="amt" data-amt="38055000" data-nocur></span></td><td class="num ratio-c" data-pct-of="38055000">8,4 %</td><td class="hint" data-view="detail">61 305 000 − 23 250 000</td></tr>
+      </tbody>
+    </table></div>
+    <div class="cb" style="padding-top:10px">
+      <div class="eq"><b>Trésorerie disponible</b> : 58 455 000 F — <span class="ok" data-pct-of="58455000">12,9 %</span> du CA de référence (<span data-ca-amt>452 000 000</span>, <span data-ca-lbl>Mois en cours — août 2026 au 27 : 452 000 000 FCFA</span>) · présentation §8.2 : valeur économique en FCFA d’abord, ratio ensuite · changer le CA de référence recalcule tous les ratios, jamais les montants</div>
+      <div class="note-strip"><svg><use href="#i-info"/></svg><span>Le solde du compte Ajustement est exclu de ces agrégats. Les montants sont affichés séparément afin qu’une compensation nette ne masque pas les expositions sous-jacentes. (§8.1) · Investigation d’un KPI : valeur → formule → composantes → mouvements → objet métier → source (§10.3, §11.2) : <button class="linkish" data-goto="fin-comptes">Comptes</button> <button class="linkish" data-goto="fin-fournisseurs">Fournisseurs</button> <button class="linkish" data-goto="fin-creances">Créances clients</button></span></div>
+    </div>
+  </div>
+
+  <!-- Tiroir DI : dépenses avec Investissement = true -->
+  <aside class="drawer" data-ov="fin-pnl-di" aria-label="DI — dépenses avec Investissement = true">
+    <div class="dh"><h3>DI — Investissement = true</h3><button class="ib" data-close aria-label="Fermer"><svg><use href="#i-x"/></svg></button></div>
+    <div class="db">
+      <div class="hint">Dépenses avec Investissement = true ; flag false par défaut (§8.3) · période du 1er au 27 août 2026 · date métier</div>
+      <div class="big-amt amt" data-amt="18000000"></div>
+      <div class="meta-l"><span class="tag lock"><svg><use href="#i-flag"/></svg>2 dépenses</span><span class="tag lock"><svg><use href="#i-lock"/></svg>Journées clôturées</span><span class="tag lock"><svg><use href="#i-receipt"/></svg>Incluses dans D</span></div>
+      <div class="mvt"><span class="sign m">−</span><div class="tx"><b>Chambre froide</b><small>Date métier 12/08/2026 · Investissement = true · Dépense spéciale = false · journée clôturée</small></div><span class="amt" data-amt="12000000" data-nocur></span></div>
+      <div class="mvt"><span class="sign m">−</span><div class="tx"><b>Acompte camion frigorifique</b><small>Date métier 20/08/2026 · Investissement = true · Dépense spéciale = false · journée clôturée</small></div><span class="amt" data-amt="6000000" data-nocur></span></div>
+      <div class="eq"><b>P&amp;L hors Investissements</b> = P&amp;L Global + DI<br>25 835 000 + 18 000 000 = <b>43 835 000</b> · <span class="ok" data-pct-of="43835000">9,7 %</span> du CA de référence</div>
+      <div class="note-strip"><svg><use href="#i-alert"/></svg><span>Toute modification d’un flag après clôture suit le processus de correction post-clôture (§8.3) : approbation du Super Admin obligatoire (§3.1, §10.1). Les flags Investissement et Dépense spéciale sont indépendants ; aucune de ces deux dépenses ne porte le flag Dépense spéciale.</span></div>
+    </div>
+    <div class="df"><button class="btn ghost" data-goto="fin-depenses"><svg><use href="#i-receipt"/></svg>Ouvrir dans Dépenses</button><button class="btn pri" data-perm="finance.depenses.modifier" data-flag="Investissement"><svg><use href="#i-flag"/></svg>Modifier le flag</button></div>
+  </aside>
+  <div class="dback" data-ov-back="fin-pnl-di"></div>
+
+  <!-- Tiroir DS : dépenses avec Dépense spéciale = true -->
+  <aside class="drawer" data-ov="fin-pnl-ds" aria-label="DS — dépenses avec Dépense spéciale = true">
+    <div class="dh"><h3>DS — Dépense spéciale = true</h3><button class="ib" data-close aria-label="Fermer"><svg><use href="#i-x"/></svg></button></div>
+    <div class="db">
+      <div class="hint">Dépenses avec Dépense spéciale = true ; flag false par défaut (§8.3) · période du 1er au 27 août 2026 · date métier</div>
+      <div class="big-amt amt" data-amt="6500000"></div>
+      <div class="meta-l"><span class="tag lock"><svg><use href="#i-flag"/></svg>2 dépenses</span><span class="tag lock"><svg><use href="#i-lock"/></svg>Journées clôturées</span><span class="tag lock"><svg><use href="#i-receipt"/></svg>Incluses dans D</span></div>
+      <div class="mvt"><span class="sign m">−</span><div class="tx"><b>Indemnités exceptionnelles</b><small>Date métier 05/08/2026 · Dépense spéciale = true · Investissement = false · journée clôturée</small></div><span class="amt" data-amt="4000000" data-nocur></span></div>
+      <div class="mvt"><span class="sign m">−</span><div class="tx"><b>Sinistre</b><small>Date métier 18/08/2026 · Dépense spéciale = true · Investissement = false · journée clôturée</small></div><span class="amt" data-amt="2500000" data-nocur></span></div>
+      <div class="eq"><b>P&amp;L hors Dépenses spéciales</b> = P&amp;L Global + DS<br>25 835 000 + 6 500 000 = <b>32 335 000</b> · <span class="ok" data-pct-of="32335000">7,2 %</span> du CA de référence</div>
+      <div class="note-strip"><svg><use href="#i-alert"/></svg><span>Toute modification d’un flag après clôture suit le processus de correction post-clôture (§8.3) : approbation du Super Admin obligatoire (§3.1, §10.1). Les flags Investissement et Dépense spéciale sont indépendants ; aucune de ces deux dépenses ne porte le flag Investissement.</span></div>
+    </div>
+    <div class="df"><button class="btn ghost" data-goto="fin-depenses"><svg><use href="#i-receipt"/></svg>Ouvrir dans Dépenses</button><button class="btn pri" data-perm="finance.depenses.modifier" data-flag="Dépense spéciale"><svg><use href="#i-flag"/></svg>Modifier le flag</button></div>
+  </aside>
+  <div class="dback" data-ov-back="fin-pnl-ds"></div>
+</section>
+<script data-screen="fin-pnl">
+ERP.register('fin-pnl', function (root, ctx) {
+  var $ = function (s, r) { return (r || root).querySelector(s); };
+  var $$ = function (s, r) { return Array.prototype.slice.call((r || root).querySelectorAll(s)); };
+
+  /* 1. CA de référence (§8.2) : tous les ratios sont recalculés, les montants FCFA ne bougent jamais */
+  var sel = $('#fin-pnl-ca');
+  function pct(v, ca) { return (v / ca * 100).toFixed(1).replace('.', ',') + ' %'; }
+  function applyCa() {
+    var ca = parseInt(sel.value, 10), opt = sel.options[sel.selectedIndex], lbl = opt.getAttribute('data-short');
+    $$('[data-ratio-of]').forEach(function (el) { el.textContent = pct(parseInt(el.getAttribute('data-ratio-of'), 10), ca) + ' du CA de référence · ' + lbl; });
+    $$('[data-pct-of]').forEach(function (el) { el.textContent = pct(parseInt(el.getAttribute('data-pct-of'), 10), ca); });
+    $$('[data-ca-amt]').forEach(function (el) { el.textContent = ctx.fmt(ca); });
+    $$('[data-ca-lbl]').forEach(function (el) { el.textContent = opt.text; });
+  }
+  ctx.on(sel, 'change', function () {
+    applyCa();
+    ctx.toast('CA de référence : ' + sel.options[sel.selectedIndex].text + ' — ratios recalculés, montants FCFA inchangés (§8.2)');
+  });
+  applyCa();
+
+  /* 2. Vue par profil : l’Investisseur ne voit que les agrégats (FIXTURES §2) ; formules et sources restent visibles */
+  function applyView(p) {
+    var inv = !!p && p.id === 'invest';
+    $$('[data-view="detail"]').forEach(function (el) { el.hidden = inv; });
+    $$('.fx[data-c-agg]').forEach(function (b) {
+      if (!b.dataset.cFull) b.dataset.cFull = b.getAttribute('data-c');
+      b.setAttribute('data-c', inv ? b.dataset.cAgg : b.dataset.cFull);
+    });
+    $$('tr[data-open]').forEach(function (tr) {
+      tr.classList.toggle('denied', inv);
+      tr.title = inv ? 'Profil Investisseur : le détail des dépenses DI / DS est hors périmètre, agrégats uniquement (FIXTURES §2).' : 'Ouvrir le détail des dépenses';
+    });
+    $('[data-view-note]').hidden = !inv;
+    if (ctx.drawCharts) requestAnimationFrame(function () { ctx.drawCharts(root); });
+  }
+  applyView(ctx.profile);
+  document.addEventListener('erp:profile', function (e) { applyView(e.detail); });
+
+  /* 3. Modifier un flag : les 4 dépenses DI / DS datent de journées clôturées → correction post-clôture (§3.1, §8.3) */
+  $$('[data-flag]').forEach(function (b) {
+    ctx.on(b, 'click', function () {
+      if (b.classList.contains('denied')) return;
+      var ov = b.closest('[data-ov]');
+      ctx.close(ov.getAttribute('data-ov'));
+      ctx.toast('Flag « ' + b.getAttribute('data-flag') + ' » : journée clôturée — la modification suit le processus de correction post-clôture, approbation du Super Admin obligatoire (§3.1, §10.1). À réaliser depuis la dépense concernée dans Dépenses.');
+      ctx.go('fin-depenses');
+    });
+  });
+
+  /* 4. Export : permission Exporter distincte de Consulter (§5.7) ; le moteur désactive le bouton si elle manque */
+  $$('[data-export]').forEach(function (b) {
+    ctx.on(b, 'click', function () {
+      if (b.classList.contains('denied')) return;
+      ctx.toast('Export CSV du P&L et des KPI généré (service commun d’export, §9.2) — disponible 7 jours puis supprimé, régénérable à la demande (§5.7)');
+    });
+  });
+
+  ctx.formatAmounts(root);
+  ctx.applyPerms();
+});
+</script>

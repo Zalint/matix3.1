@@ -1,0 +1,259 @@
+<section class="scr" data-scr="fin-depenses" data-module="finance" data-perm="finance.depenses.view" data-sens="s" hidden>
+  <style data-screen="fin-depenses">
+    #app [data-scr="fin-depenses"] td .btn{min-height:28px;padding:4px 10px;font-size:11px;margin:2px 0}
+    #app [data-scr="fin-depenses"] td .encbar{margin-top:4px;min-width:70px;max-width:110px}
+    #app [data-scr="fin-depenses"] .modal label.rline{display:flex;text-transform:none;letter-spacing:0;font-size:12.5px;font-weight:600;margin:0 0 8px}
+    #app [data-scr="fin-depenses"] .modal input[type=checkbox]{width:16px;height:16px;min-height:0;padding:0;accent-color:var(--red);flex:none}
+    #app [data-scr="fin-depenses"] .modal{max-height:calc(100dvh - 36px);overflow-y:auto}
+  </style>
+  <div class="scr-head">
+    <div>
+      <h2>Dépenses</h2>
+      <p class="scr-sub">Enregistrées immédiatement, sans validation préalable, puis contrôlées par la réconciliation et la clôture (§5.2) · montant payé immédiatement compris entre 0 et le montant total, sinon « Pas sûr » (§5.1) · flags Investissement et Dépense spéciale indépendants, faux par défaut (§8.3)</p>
+    </div>
+    <div class="scr-meta">
+      <span class="sens s"><svg><use href="#i-shield"/></svg>Sensible</span>
+      <span class="hint">Aucune validation préalable à la création (§5.2) · modifications selon permissions et clôture (§10.1) · audit de modification · Exporter distinct de Consulter (§5.7)</span>
+    </div>
+  </div>
+
+  <div class="statstrip four">
+    <div class="card stat">
+      <div class="lb">Dépenses du jour<button class="fx" data-f="D = Toutes les dépenses de la période selon leur date métier (§8.3) · ici la journée du 27/08/2026, toutes sources" data-c="Achat bœuf 850 000 · Carburant véhicule livraison 85 000 · Achat volaille 420 000 · Frais d'abattage 150 000 · Entretien chambre froide 95 000 · Achat agneau 262 000 · + 8 autres écritures regroupées" data-src="Mata Finance, propriétaire des dépenses · saisies manuelles + import Achat idempotent (17:00, 5 achats, 0 doublon)" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></div>
+      <div class="v amt" data-amt="1862000" data-stat="total"></div>
+      <div class="sub2"><span data-stat="n">14 écritures</span> · date métier 27/08/2026 · gel « À réconcilier » à 23:59</div>
+    </div>
+    <div class="card stat">
+      <div class="lb">Payé immédiatement<button class="fx" data-f="Montant payé immédiatement : valeur comprise entre 0 et le montant total de la dépense (§5.1) · Σ sur les dépenses du jour dont le montant payé est connu" data-c="Achat volaille 420 000 · Frais d'abattage 150 000 · Achat bœuf 0 · Entretien chambre froide 0 · Achat agneau 0 · Carburant : Manquante (Pas sûr), exclu · Reste à payer (dérivé) = Montant − Montant payé immédiatement : 850 000 + 95 000 + 262 000 = 1 207 000" data-src="Mata Finance · mouvements des comptes de paiement (Trésorerie ou Position externe)" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></div>
+      <div class="v amt" data-amt="570000" data-stat="paye"></div>
+      <div class="sub2">Reste à payer <span class="amt" data-amt="1207000" data-nocur data-stat="reste"></span> FCFA · <span data-stat="nReste">3</span> dates souhaitées au plus tard</div>
+    </div>
+    <div class="card stat">
+      <div class="lb">Dépenses « Pas sûr »<button class="fx" data-f="Si le montant payé n'est pas connu avec certitude, statut « Pas sûr » (§5.1). Une dépense « Pas sûr » bloque uniquement le périmètre financier qu'elle affecte (§5.2)" data-c="Carburant véhicule livraison 85 000 · Manuel · périmètre Sous-caisse Livraisons" data-src="Mata Finance · règle d'alerte « Dépense Pas sûr à 23:00 » (Core, critique) → Directeur des Opérations, Admins, Super Admin" aria-label="Voir la règle"><svg><use href="#i-info"/></svg></button></div>
+      <div class="v" data-stat="pasSur">1</div>
+      <div class="sub2" data-stat="pasSurSub">Carburant véhicule livraison · bloque uniquement Sous-caisse Livraisons · notification à 23:00 si non résolue</div>
+    </div>
+    <div class="card stat">
+      <div class="lb">Depuis Achat (API)<button class="fx" data-f="Toute opération d'interface ou d'import possède un identifiant externe stable ; un événement répété ne crée qu'un seul effet financier (§3). Si l'interface Achat ne renseigne pas le montant payé, la dépense est créée « Pas sûr » par défaut (§5.2)" data-c="5 achats du jour intégrés à 17:00 · 0 doublon · 3 détaillés ci-dessous : Achat bœuf, Achat volaille, Achat agneau" data-src="Interface Achat → Finance (§9) · fraîcheur OK 17:00" aria-label="Voir la règle"><svg><use href="#i-info"/></svg></button></div>
+      <div class="v" data-stat="api">5 / 14</div>
+      <div class="sub2">Import idempotent avant la réconciliation du périmètre · <span data-stat="manuel">9</span> saisies manuelles · montant payé absent ⇒ « Pas sûr », jamais zéro</div>
+    </div>
+  </div>
+
+  <div class="actionbar">
+    <div class="chips">
+      <button class="chip on" data-filter="tous">Toutes</button>
+      <button class="chip" data-filter="pas-sur">Pas sûr</button>
+      <button class="chip" data-filter="invest">Investissement</button>
+      <button class="chip" data-filter="speciale">Dépense spéciale</button>
+      <button class="chip" data-filter="reste">Reste à payer</button>
+    </div>
+    <div class="sp"></div>
+    <button class="btn ghost" data-perm="finance.export" data-export="CSV"><svg><use href="#i-dl"/></svg>Export CSV</button>
+    <button class="btn ghost" data-perm="finance.export" data-export="PDF"><svg><use href="#i-file"/></svg>Export PDF</button>
+    <button class="btn pri" data-perm="finance.depenses.creer" data-open="fin-depenses-nouvelle"><svg><use href="#i-plus"/></svg>Nouvelle dépense</button>
+  </div>
+
+  <div class="card">
+    <div class="ch"><h3>Dépenses du jour — jeudi 27 août 2026</h3><span class="hint-r" data-count>6 détaillées + 8 regroupées · 14 au total</span></div>
+    <div class="tbl-scroll"><table>
+      <thead><tr><th>Désignation</th><th>Fournisseur</th><th>Catégorie</th><th>Montant</th><th>Payé immédiatement</th><th>Pas sûr</th><th>Investissement</th><th>Spéciale</th><th>Source</th><th>Date souhaitée au plus tard</th></tr></thead>
+      <tbody data-rows>
+        <tr data-tags="reste"><td><b>Achat bœuf — lot BV-260827-04</b><div class="hint">Achat → Finance · identifiant externe stable · réf. paiement Caisse générale</div></td><td>AGNEAUX</td><td>Achat bœuf</td><td><span class="amt" data-amt="850000" data-nocur></span></td><td><span class="amt" data-amt="0" data-nocur></span><div class="encbar"><i style="width:0%"></i></div></td><td><span class="hint">non</span></td><td><span class="hint">non</span></td><td><span class="hint">non</span></td><td><span class="tag api"><svg><use href="#i-refresh"/></svg>Achat (API)</span></td><td class="hint">30/09/2026</td></tr>
+        <tr data-tags="pas-sur" data-row="carburant"><td><b>Carburant véhicule livraison</b><div class="hint">Manuel · périmètre Sous-caisse Livraisons</div></td><td>—</td><td>Logistique</td><td><span class="amt" data-amt="85000" data-nocur></span></td><td data-cell="paye"><span class="hint">Manquante · Pas sûr · jamais zéro</span></td><td data-cell="passur"><span class="st warn"><svg><use href="#i-alert"/></svg>oui</span> <button class="btn ghost" data-open="fin-depenses-resoudre" data-perm="finance.depenses.modifier" data-resolve-btn data-row="carburant">Résoudre</button></td><td><span class="hint">non</span></td><td><span class="hint">non</span></td><td><span class="tag lock"><svg><use href="#i-note"/></svg>Manuel</span></td><td class="hint" data-cell="date">—</td></tr>
+        <tr data-tags=""><td><b>Achat volaille</b><div class="hint">Achat → Finance · identifiant externe stable · réf. paiement Banque BOA</div></td><td>MATA VOLAILLE CHAIR</td><td>Achat volaille</td><td><span class="amt" data-amt="420000" data-nocur></span></td><td><span class="amt" data-amt="420000" data-nocur></span><div class="encbar"><i style="width:100%"></i></div></td><td><span class="hint">non</span></td><td><span class="hint">non</span></td><td><span class="hint">non</span></td><td><span class="tag api"><svg><use href="#i-refresh"/></svg>Achat (API)</span></td><td class="hint">—</td></tr>
+        <tr data-tags=""><td><b>Frais d'abattage</b><div class="hint">Manuel · réf. paiement Caisse générale</div></td><td>Abattoirs Dakar</td><td>Abattage</td><td><span class="amt" data-amt="150000" data-nocur></span></td><td><span class="amt" data-amt="150000" data-nocur></span><div class="encbar"><i style="width:100%"></i></div></td><td><span class="hint">non</span></td><td><span class="hint">non</span></td><td><span class="hint">non</span></td><td><span class="tag lock"><svg><use href="#i-note"/></svg>Manuel</span></td><td class="hint">—</td></tr>
+        <tr data-tags="reste"><td><b>Entretien chambre froide</b><div class="hint">Manuel · sans fournisseur</div></td><td>—</td><td>Maintenance</td><td><span class="amt" data-amt="95000" data-nocur></span></td><td><span class="amt" data-amt="0" data-nocur></span><div class="encbar"><i style="width:0%"></i></div></td><td><span class="hint">non</span></td><td><span class="hint">non</span></td><td><span class="hint">non</span></td><td><span class="tag lock"><svg><use href="#i-note"/></svg>Manuel</span></td><td class="hint">05/09/2026</td></tr>
+        <tr data-tags="reste"><td><b>Achat agneau — lot AG-260827-02</b><div class="hint">Achat → Finance · identifiant externe stable · réf. paiement Caisse générale</div></td><td>Bétail Thiès</td><td>Achat agneau</td><td><span class="amt" data-amt="262000" data-nocur></span></td><td><span class="amt" data-amt="0" data-nocur></span><div class="encbar"><i style="width:0%"></i></div></td><td><span class="hint">non</span></td><td><span class="hint">non</span></td><td><span class="hint">non</span></td><td><span class="tag api"><svg><use href="#i-refresh"/></svg>Achat (API)</span></td><td class="hint">12/09/2026</td></tr>
+        <tr data-more><td colspan="10" class="hint">+ 8 autres écritures du jour, regroupées (divers · 6 Manuel, 2 Achat (API)) — détail complet dans l'export CSV / PDF</td></tr>
+        <tr data-empty="pas-sur" hidden><td colspan="10" class="hint">Aucune dépense du jour « Pas sûr » : aucun périmètre bloqué, pas de notification à 23:00.</td></tr>
+        <tr data-empty="invest" hidden><td colspan="10" class="hint">Aucune dépense du jour avec Investissement = vrai. Au mois (DI = <span class="amt" data-amt="18000000" data-nocur></span>) : chambre froide <span class="amt" data-amt="12000000" data-nocur></span> (12/08), acompte camion frigorifique <span class="amt" data-amt="6000000" data-nocur></span> (20/08) — réintégrées par le P&amp;L hors Investissements (§8.3).</td></tr>
+        <tr data-empty="speciale" hidden><td colspan="10" class="hint">Aucune dépense du jour avec Dépense spéciale = vrai. Au mois (DS = <span class="amt" data-amt="6500000" data-nocur></span>) : indemnités exceptionnelles <span class="amt" data-amt="4000000" data-nocur></span> (05/08), sinistre <span class="amt" data-amt="2500000" data-nocur></span> (18/08) — réintégrées par le P&amp;L hors Dépenses spéciales (§8.3).</td></tr>
+        <tr data-empty="reste" hidden><td colspan="10" class="hint">Aucun reste à payer sur les dépenses du jour : aucune échéance créée.</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+
+  <div class="grid2">
+    <div class="card">
+      <div class="ch"><h3>Échéances créées par les dépenses du jour</h3><span class="hint-r">§5.3 · une date souhaitée au plus tard par dépense ou lot impayé</span></div>
+      <div class="cb">
+        <div data-dues>
+          <div class="due"><span><b>Achat bœuf — lot BV-260827-04</b> <span class="hint">AGNEAUX · réf. paiement Caisse générale</span></span><span class="amt" data-amt="850000" data-nocur></span><span class="dt">avant le <b>30/09</b></span></div>
+          <div class="due"><span><b>Achat agneau — lot AG-260827-02</b> <span class="hint">Bétail Thiès · réf. paiement Caisse générale</span></span><span class="amt" data-amt="262000" data-nocur></span><span class="dt">avant le <b>12/09</b></span></div>
+          <div class="due"><span><b>Entretien chambre froide</b> <span class="hint">sans fournisseur · compte payeur à préciser</span></span><span class="amt" data-amt="95000" data-nocur></span><span class="dt">avant le <b>05/09</b></span></div>
+        </div>
+        <div class="hint" style="margin-top:10px">Les paiements sont affectés par défaut aux échéances les plus proches ; une affectation manuelle exceptionnelle reste possible et est auditée (§5.3). Reste à payer du jour : <span class="amt" data-amt="1207000" data-stat="reste2"></span>.</div>
+        <div style="margin-top:10px"><button class="btn ghost" data-goto="fin-fournisseurs"><svg><use href="#i-arr"/></svg>Échéancier fournisseurs (FIFO) et paiement</button></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="ch"><h3>Blocage « Pas sûr » par périmètre</h3><span class="hint-r">§5.2 · bloque uniquement le périmètre affecté</span></div>
+      <div class="cb">
+        <div class="rl">
+          <div class="row" data-block="Sous-caisse Livraisons"><div class="nm">Sous-caisse Livraisons<small data-block-sub>Carburant véhicule livraison · <span class="amt" data-amt="85000" data-nocur></span> FCFA · montant payé inconnu</small></div><span class="st bad" data-block-st><svg><use href="#i-lock"/></svg>Bloqué</span></div>
+          <div class="row" data-block="Caisse générale"><div class="nm">Caisse générale<small data-block-sub>Aucune dépense « Pas sûr » · à déclarer ce soir (Réconciliation des Caisses)</small></div><span class="st ok" data-block-st><svg><use href="#i-check"/></svg>Non bloqué</span></div>
+          <div class="row" data-block="Sous-caisse Marché"><div class="nm">Sous-caisse Marché<small data-block-sub>Aucune dépense « Pas sûr » · écart <span class="amt" data-amt="-25000" data-nocur></span> traité en Réconciliation</small></div><span class="st ok" data-block-st><svg><use href="#i-check"/></svg>Non bloqué</span></div>
+          <div class="row" data-block="Banque BOA"><div class="nm">Banque BOA<small data-block-sub>Aucune dépense « Pas sûr » · import CSV 08:00</small></div><span class="st ok" data-block-st><svg><use href="#i-check"/></svg>Non bloqué</span></div>
+        </div>
+        <div class="hint" style="margin-top:10px">À 23h00, s'il reste au moins une dépense du jour « Pas sûr », une notification est envoyée au Directeur des Opérations, aux Admins concernés et au Super Admin, avec accès à la liste à résoudre (§5.2). Dernier envoi : 26/08 · 23:00.</div>
+        <div style="margin-top:10px"><button class="btn ghost" data-open="fin-depenses-resoudre" data-perm="finance.depenses.modifier" data-resolve-btn><svg><use href="#i-check"/></svg>Résoudre le « Pas sûr » du jour</button></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="note-strip"><svg><use href="#i-info"/></svg><span><b>§5.2 —</b> La création normale d'une dépense ne nécessite pas de validation préalable : elle est enregistrée immédiatement afin de ne pas ralentir l'activité, puis contrôlée par les mécanismes de réconciliation et de clôture. Si l'interface Achat ne renseigne pas le montant payé, la dépense est créée « Pas sûr » par défaut ; une absence d'information ne vaut jamais zéro. <b>§8.3 —</b> Les flags Investissement et Dépense spéciale sont indépendants ; une dépense peut exceptionnellement porter les deux. Toute modification d'un flag après clôture suit le processus de correction post-clôture.</span></div>
+  <div class="note-strip"><svg><use href="#i-shield"/></svg><span><b>Refus par défaut.</b> Consulter, Créer, Modifier et Exporter sont quatre permissions distinctes : le Gestionnaire de caisse crée sur ses caisses sans résoudre ni exporter, le Directeur des Opérations crée et modifie sans exporter, le Comptable externe consulte seulement. Une dépense comptabilisée n'est jamais supprimée : correction par contrepassation tracée (§10.2) ; created_at, updated_at et updated_by sont automatiques, la date métier est distincte (§5.1).</span></div>
+
+  <!-- Modale : nouvelle dépense -->
+  <div class="mback" data-ov="fin-depenses-nouvelle"><div class="modal wide" role="dialog" aria-modal="true" aria-label="Nouvelle dépense">
+    <h3><svg><use href="#i-receipt"/></svg>Nouvelle dépense</h3>
+    <div class="exp">Création immédiate, sans validation préalable (§5.2) ; contrôle par réconciliation et clôture. created_at, updated_at et updated_by sont enregistrés automatiquement ; la date métier est distincte (§5.1).</div>
+    <div class="fld"><label for="fin-depenses-des">Désignation</label><input id="fin-depenses-des" class="inp" data-field="des" placeholder="Désignation de la dépense"></div>
+    <div class="grid2b">
+      <div class="fld"><label for="fin-depenses-fourn">Fournisseur</label><select id="fin-depenses-fourn" class="inp" data-field="fourn"><option value="">— Aucun (dépense sans fournisseur) —</option><option>AGNEAUX</option><option>MATA VOLAILLE CHAIR</option><option>MATA VOLAILLE ŒUFS</option><option>Bétail Thiès</option><option>Abattoirs Dakar</option><option>Aliments Sénégal</option></select><span class="hint" data-ref>Aucun fournisseur · le périmètre affecté est le compte de trésorerie débité</span></div>
+      <div class="fld"><label for="fin-depenses-cat">Catégorie</label><select id="fin-depenses-cat" class="inp" data-field="cat"><option>Achat bœuf</option><option>Achat agneau</option><option>Achat volaille</option><option>Abattage</option><option>Logistique</option><option>Maintenance</option><option>Personnel</option><option>Locaux</option><option>Services</option><option>Assurances</option></select><span class="hint">Configuration financière partagée (§5.2)</span></div>
+    </div>
+    <div class="fld" data-compte-wrap style="margin-top:12px"><label for="fin-depenses-compte">Compte de paiement (dépense sans fournisseur)</label><select id="fin-depenses-compte" class="inp" data-field="compte"><option>Caisse générale</option><option>Sous-caisse Marché</option><option>Sous-caisse Livraisons</option><option>Banque BOA</option></select><span class="hint">Périmètre affecté par un éventuel « Pas sûr » (§5.2)</span></div>
+    <div class="grid2b">
+      <div class="fld"><label for="fin-depenses-montant">Montant (FCFA)</label><input id="fin-depenses-montant" class="inp mono" data-field="montant" inputmode="numeric" placeholder="0"></div>
+      <div class="fld"><label for="fin-depenses-dm">Date métier</label><input id="fin-depenses-dm" class="inp mono" type="date" data-field="dm" value="2026-08-27" min="2026-08-27" max="2026-08-27"><span class="hint">Date métier du jour · une écriture rétroactive suit le workflow de correction post-clôture (§3.1)</span></div>
+    </div>
+    <div data-pay>
+      <div class="fld" style="margin-top:12px"><label for="fin-depenses-paye">Montant payé immédiatement — de 0 au montant total (§5.1)</label>
+        <div class="grid2b"><input id="fin-depenses-paye" class="inp" type="range" min="0" max="0" step="1" value="0" data-range aria-label="Curseur du montant payé immédiatement"><input class="inp mono" data-num inputmode="numeric" value="" placeholder="Montant payé" aria-label="Montant payé immédiatement en FCFA"></div>
+        <span class="hint" data-reste>Reste à payer : 0 FCFA</span></div>
+      <label class="rline"><input type="checkbox" data-passur>Pas sûr<span class="rh">montant payé inconnu · désactive le curseur · jamais zéro</span></label>
+      <div class="fld" data-date-wrap hidden><label for="fin-depenses-date">Date de paiement souhaitée au plus tard — obligatoire dès qu'un montant reste à payer</label><input id="fin-depenses-date" class="inp mono" type="date" data-field="date" min="2026-08-27"></div>
+    </div>
+    <label class="rline"><input type="checkbox" data-field="inv">Investissement<span class="rh">DI · faux par défaut · réintégré par le P&amp;L hors Investissements</span></label>
+    <label class="rline"><input type="checkbox" data-field="spe">Dépense spéciale<span class="rh">DS · faux par défaut · cumulable avec Investissement</span></label>
+    <button class="btn ghost" type="button" data-perm="finance.depenses.creer" data-justif><svg><use href="#i-upload"/></svg><span data-justif-lbl>Ajouter un justificatif</span></button> <span class="hint">Service documentaire commun de l'ERP · conservation indépendante des exports (§5.7)</span>
+    <div class="acts"><button class="btn ghost" data-close>Annuler</button><button class="btn pri" data-perm="finance.depenses.creer" data-submit><svg><use href="#i-check"/></svg>Enregistrer</button></div>
+  </div></div>
+
+  <!-- Tiroir : résolution d'une dépense « Pas sûr » -->
+  <aside class="drawer" data-ov="fin-depenses-resoudre" aria-label="Résoudre une dépense Pas sûr">
+    <div class="dh"><h3>Résoudre « Pas sûr »</h3><button class="ib" data-close aria-label="Fermer"><svg><use href="#i-x"/></svg></button></div>
+    <div class="db">
+      <div class="hint" data-r-sub>Dépense du 27/08/2026 · Manuel · périmètre Sous-caisse Livraisons</div>
+      <b data-r-des>Carburant véhicule livraison</b>
+      <div class="big-amt amt" data-amt="85000" data-r-amt></div>
+      <div class="meta-l"><span class="st warn"><svg><use href="#i-alert"/></svg>Pas sûr</span><span class="tag lock"><svg><use href="#i-note"/></svg>Manuel</span><span class="tag lock"><svg><use href="#i-wallet"/></svg><span data-r-perim>Sous-caisse Livraisons</span></span></div>
+      <div class="note-strip" style="margin:0 0 14px"><svg><use href="#i-lock"/></svg>Bloque uniquement le périmètre <span data-r-perim>Sous-caisse Livraisons</span>. Notification à 23:00 au Directeur des Opérations, aux Admins concernés et au Super Admin si non résolue (§5.2).</div>
+      <div data-pay>
+        <div class="fld"><label for="fin-depenses-rpaye">Montant payé immédiatement — de 0 à <span class="amt" data-amt="85000" data-nocur data-r-max></span></label>
+          <div class="grid2b"><input id="fin-depenses-rpaye" class="inp" type="range" min="0" max="85000" step="1" value="0" data-range aria-label="Curseur du montant payé"><input class="inp mono" data-num inputmode="numeric" value="" placeholder="Montant réellement payé" aria-label="Montant payé en FCFA"></div>
+          <span class="hint" data-reste></span></div>
+        <div class="fld" data-date-wrap style="margin-top:12px"><label for="fin-depenses-rdate">Date de paiement souhaitée au plus tard</label><input id="fin-depenses-rdate" class="inp mono" type="date" data-field="date" min="2026-08-27"></div>
+      </div>
+      <div class="hint" style="margin-top:12px">Modification auditée : auteur, ancienne et nouvelle valeur, horodatage (§10.2). Sans information nouvelle, la dépense reste « Pas sûr » : une absence d'information ne vaut jamais zéro.</div>
+    </div>
+    <div class="df"><button class="btn ghost" data-close>Annuler</button><div class="sp"></div><button class="btn pri" data-perm="finance.depenses.modifier" data-resolve><svg><use href="#i-check"/></svg>Enregistrer le montant payé</button></div>
+  </aside>
+  <div class="dback" data-ov-back="fin-depenses-resoudre"></div>
+</section>
+<script data-screen="fin-depenses">
+ERP.register('fin-depenses', function (root, ctx) {
+  var q = function (s, r) { return (r || root).querySelector(s); };
+  var qa = function (s, r) { return Array.prototype.slice.call((r || root).querySelectorAll(s)); };
+  var tbody = q('[data-rows]'), cur = 'tous', CARB = 'Carburant véhicule livraison';
+  var S = { total: 1862000, n: 14, manuel: 9, api: 5, paye: 570000, reste: 1207000, nReste: 3, unsure: [{ row: 'carburant', des: CARB, montant: 85000, perim: 'Sous-caisse Livraisons' }] };
+  var REF = { 'AGNEAUX': 'Caisse générale', 'MATA VOLAILLE CHAIR': 'Banque BOA', 'MATA VOLAILLE ŒUFS': 'Caisse générale', 'Bétail Thiès': 'Caisse générale', 'Abattoirs Dakar': 'Caisse générale', 'Aliments Sénégal': 'Banque BOA' };
+  function num(el) { return parseInt(String(el.value).replace(/\D/g, ''), 10) || 0; }
+  function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+  function fr(iso) { return iso ? iso.split('-').reverse().join('/') : '—'; }
+  function setAmt(el, v) { el.setAttribute('data-amt', v); delete el.dataset.done; ctx.formatAmounts(el.parentNode); }
+  function payCell(m, p) { var pct = m ? Math.round(p / m * 100) : 0; return '<span class="amt" data-amt="' + p + '" data-nocur></span><div class="encbar"><i class="' + (pct < 100 ? 'hot' : '') + '" style="width:' + pct + '%"></i></div>'; }
+  /* Blocage par périmètre (§5.2) : un « Pas sûr » ne bloque que le compte qu'il affecte */
+  function block(perim, on, txt) {
+    var row = q('[data-block="' + perim + '"]'); if (!row) return; var st = q('[data-block-st]', row);
+    st.className = 'st ' + (on ? 'bad' : 'ok'); st.innerHTML = '<svg><use href="#i-' + (on ? 'lock' : 'check') + '"/></svg>' + (on ? 'Bloqué' : 'Non bloqué'); q('[data-block-sub]', row).textContent = txt;
+  }
+  function stats() {
+    setAmt(q('[data-stat="total"]'), S.total); setAmt(q('[data-stat="paye"]'), S.paye); setAmt(q('[data-stat="reste"]'), S.reste); setAmt(q('[data-stat="reste2"]'), S.reste);
+    q('[data-stat="n"]').textContent = S.n + ' écritures'; q('[data-stat="nReste"]').textContent = S.nReste; q('[data-stat="manuel"]').textContent = S.manuel;
+    q('[data-stat="api"]').textContent = S.api + ' / ' + S.n; q('[data-stat="pasSur"]').textContent = S.unsure.length;
+    q('[data-stat="pasSurSub"]').textContent = S.unsure.length ? S.unsure.map(function (u) { return u.des + ' · bloque uniquement ' + u.perim; }).join(' · ') + ' · notification à 23:00 si non résolue' : 'Aucune dépense « Pas sûr » · aucun périmètre bloqué · pas de notification à 23:00';
+  }
+  /* Curseur 0 → montant, synchronisé avec le champ numérique ; la case « Pas sûr » désactive les deux (§5.1) */
+  function bindPay(box, getMax) {
+    var r = q('[data-range]', box), n = q('[data-num]', box), ps = q('[data-passur]', box), rest = q('[data-reste]', box), dw = q('[data-date-wrap]', box);
+    /* Une absence d'information ne vaut jamais zéro (§5.2) : le montant payé doit être renseigné explicitement (curseur ou champ), ou « Pas sûr » coché */
+    function sync(v, fromRange) {
+      var m = getMax(), unsure = !!(ps && ps.checked), known = fromRange || n.value !== '', left; v = Math.max(0, Math.min(m, v)); left = m - v;
+      r.max = m; r.value = v; if (known) n.value = v; r.disabled = n.disabled = unsure; box.known = known;
+      rest.textContent = unsure ? 'Montant payé inconnu : la dépense sera créée « Pas sûr » (jamais zéro)' : !known ? 'Montant payé non renseigné : 0 n\'est admis que s\'il est certain, sinon cocher « Pas sûr »' : 'Reste à payer : ' + ctx.fmt(left) + ' FCFA' + (left > 0 ? ' · date souhaitée au plus tard obligatoire' : ' · aucune échéance créée');
+      if (dw) dw.hidden = unsure || !known || left <= 0;
+    }
+    ctx.on(r, 'input', function () { sync(+r.value, true); }); ctx.on(n, 'input', function () { sync(num(n)); }); ctx.on(ps, 'change', function () { sync(num(n)); });
+    box.sync = function () { sync(num(n)); }; box.sync(); return box;
+  }
+  /* Filtres Toutes / Pas sûr / Investissement / Dépense spéciale / Reste à payer */
+  function applyFilter(f) {
+    cur = f; var vis = 0;
+    qa('tr', tbody).forEach(function (tr) {
+      if (tr.hasAttribute('data-empty')) return;
+      if (tr.hasAttribute('data-more')) { tr.hidden = f !== 'tous'; return; }
+      var ok = f === 'tous' || (' ' + tr.getAttribute('data-tags') + ' ').indexOf(' ' + f + ' ') >= 0; tr.hidden = !ok; if (ok) vis++;
+    });
+    qa('tr[data-empty]', tbody).forEach(function (tr) { tr.hidden = !(vis === 0 && tr.getAttribute('data-empty') === f); });
+    q('[data-count]').textContent = f === 'tous' ? vis + ' détaillées + 8 regroupées · ' + S.n + ' au total' : vis + ' écriture' + (vis > 1 ? 's' : '') + ' sur ' + S.n;
+  }
+  qa('.chip[data-filter]').forEach(function (c) { ctx.on(c, 'click', function () { qa('.chip[data-filter]').forEach(function (x) { x.classList.toggle('on', x === c); }); applyFilter(c.getAttribute('data-filter')); }); });
+  qa('[data-export]').forEach(function (b) { ctx.on(b, 'click', function () { var vis = qa('tr:not([hidden]):not([data-empty]):not([data-more])', tbody).length + (cur === 'tous' ? 8 : 0); ctx.toast('Export ' + b.getAttribute('data-export') + ' : ' + vis + ' dépenses filtrées · téléchargeable 7 jours puis supprimé, régénérable à la demande (§5.7) · export audité'); }); });
+  /* Nouvelle dépense : création immédiate, ajout en tête du tableau, bandeau et périmètres recalculés */
+  var M = q('[data-ov="fin-depenses-nouvelle"]'), F = function (k) { return q('[data-field="' + k + '"]', M); }, JB = q('[data-justif]', M);
+  var mBox = bindPay(q('[data-pay]', M), function () { return num(F('montant')); });
+  ctx.on(F('montant'), 'input', mBox.sync);
+  ctx.on(F('fourn'), 'change', function () { var v = F('fourn').value; q('[data-compte-wrap]', M).hidden = !!v; q('[data-ref]', M).textContent = v ? 'Compte de paiement de référence : ' + REF[v] + ' (§4.4) · périmètre affecté par un éventuel « Pas sûr »' : 'Aucun fournisseur · le périmètre affecté est le compte de trésorerie débité'; });
+  ctx.on(JB, 'click', function () { var k = (+JB.getAttribute('data-n') || 0) + 1; JB.setAttribute('data-n', k); q('[data-justif-lbl]', JB).textContent = k + ' justificatif' + (k > 1 ? 's' : '') + ' joint' + (k > 1 ? 's' : ''); ctx.toast('Justificatif transmis au service documentaire commun (§5.7) · conservation propre, indépendante des exports'); });
+  function resetForm() {
+    F('des').value = ''; F('montant').value = ''; F('date').value = ''; F('fourn').value = ''; F('compte').selectedIndex = 0; q('[data-compte-wrap]', M).hidden = false; q('[data-num]', M).value = ''; q('[data-passur]', M).checked = F('inv').checked = F('spe').checked = false;
+    JB.removeAttribute('data-n'); q('[data-justif-lbl]', JB).textContent = 'Ajouter un justificatif'; q('[data-ref]', M).textContent = 'Aucun fournisseur · le périmètre affecté est le compte de trésorerie débité'; mBox.sync();
+  }
+  ctx.on(q('[data-submit]', M), 'click', function () {
+    var montant = num(F('montant')), des = F('des').value.trim(), unsure = q('[data-passur]', M).checked, paye = unsure ? 0 : num(q('[data-num]', M)), left = montant - paye, fourn = F('fourn').value, perim = fourn ? REF[fourn] : F('compte').value, rowId = 'dep-' + (S.n + 1);
+    if (!des || montant <= 0) { ctx.toast('Désignation et montant strictement positif sont obligatoires (§5.1)'); return; }
+    if (F('dm').value !== '2026-08-27') { ctx.toast('Date métier ' + fr(F('dm').value) + ' : écriture rétroactive, correction post-clôture avec approbation Super Admin (§3.1) — non ajoutée aux dépenses du jour'); return; }
+    if (!unsure && !mBox.known) { ctx.toast('Indiquer le montant payé immédiatement (0 admis uniquement s\'il est certain) ou cocher « Pas sûr » : une absence d\'information ne vaut jamais zéro (§5.2)'); q('[data-num]', M).focus(); return; }
+    if (!unsure && left > 0 && !F('date').value) { ctx.toast('Un montant reste à payer : la date de paiement souhaitée au plus tard est obligatoire (§5.1)'); F('date').focus(); return; }
+    var tags = [unsure ? 'pas-sur' : '', F('inv').checked ? 'invest' : '', F('spe').checked ? 'speciale' : '', !unsure && left > 0 ? 'reste' : ''].join(' ').trim();
+    var oui = '<span class="st warn"><svg><use href="#i-alert"/></svg>oui</span>', non = '<span class="hint">non</span>', flag = '<span class="st mut"><svg><use href="#i-check"/></svg>oui</span>';
+    var resolveBtn = ' <button class="btn ghost" data-open="fin-depenses-resoudre" data-perm="finance.depenses.modifier" data-resolve-btn data-row="' + rowId + '">Résoudre</button>';
+    tbody.insertAdjacentHTML('afterbegin', '<tr data-tags="' + tags + '" data-row="' + rowId + '"><td><b>' + esc(des) + '</b><div class="hint">' + esc(ctx.profile.short) + ' · créée immédiatement · date métier ' + fr(F('dm').value) + (fourn ? ' · réf. paiement ' + perim : ' · sans fournisseur · ' + perim) + '</div></td><td>' + (fourn ? esc(fourn) : '—') + '</td><td>' + esc(F('cat').value) + '</td><td><span class="amt" data-amt="' + montant + '" data-nocur></span></td><td data-cell="paye">' + (unsure ? '<span class="hint">Manquante · Pas sûr · jamais zéro</span>' : payCell(montant, paye)) + '</td><td data-cell="passur">' + (unsure ? oui + resolveBtn : non) + '</td><td>' + (F('inv').checked ? flag : non) + '</td><td>' + (F('spe').checked ? flag : non) + '</td><td><span class="tag lock"><svg><use href="#i-note"/></svg>Manuel</span></td><td class="hint" data-cell="date">' + (!unsure && left > 0 ? fr(F('date').value) : '—') + '</td></tr>');
+    if (!unsure && left > 0) q('[data-dues]').insertAdjacentHTML('beforeend', '<div class="due"><span><b>' + esc(des) + '</b> <span class="hint">' + (fourn ? esc(fourn) + ' · réf. paiement ' + perim : 'sans fournisseur · compte payeur à préciser') + '</span></span><span class="amt" data-amt="' + left + '" data-nocur></span><span class="dt">avant le <b>' + fr(F('date').value).slice(0, 5) + '</b></span></div>');
+    if (unsure) { S.unsure.push({ row: rowId, des: des, montant: montant, perim: perim }); block(perim, true, S.unsure.filter(function (u) { return u.perim === perim; }).map(function (u) { return u.des; }).join(' · ') + ' · montant payé inconnu'); }
+    else { S.paye += paye; S.reste += left; if (left > 0) S.nReste++; }
+    S.total += montant; S.n++; S.manuel++;
+    ctx.formatAmounts(root); ctx.applyPerms(); stats(); applyFilter(cur); ctx.close('fin-depenses-nouvelle'); resetForm();
+    ctx.toast(unsure ? 'Dépense créée « Pas sûr » : périmètre ' + perim + ' bloqué jusqu’à résolution · notification à 23:00 si non résolue' : 'Dépense enregistrée immédiatement, sans validation préalable — contrôle par réconciliation et clôture (§5.2)');
+  });
+  /* Résolution d'un « Pas sûr » (générique : la fixture Carburant ou une dépense créée à l'écran) : modification auditée */
+  var D = q('[data-ov="fin-depenses-resoudre"]'), dBox = bindPay(q('[data-pay]', D), function () { return +D.dataset.max || 85000; });
+  function fillResolve(row) {
+    var u = S.unsure.filter(function (x) { return x.row === row; })[0] || S.unsure[0]; if (!u) return;
+    D.dataset.row = u.row; D.dataset.max = u.montant; D.dataset.perim = u.perim;
+    q('[data-r-des]', D).textContent = u.des; setAmt(q('[data-r-amt]', D), u.montant); setAmt(q('[data-r-max]', D), u.montant);
+    qa('[data-r-perim]', D).forEach(function (e) { e.textContent = u.perim; }); q('[data-r-sub]', D).textContent = 'Dépense du 27/08/2026 · Manuel · périmètre ' + u.perim;
+    q('[data-num]', D).value = ''; q('[data-field="date"]', D).value = ''; dBox.sync();
+  }
+  ctx.on(root, 'click', function (e) { var b = e.target.closest('[data-resolve-btn]'); if (b && !b.disabled) fillResolve(b.dataset.row || (S.unsure[0] || {}).row); });
+  ctx.on(q('[data-resolve]', D), 'click', function () {
+    if (q('[data-num]', D).value === '') { ctx.toast('Saisir le montant réellement payé (0 admis uniquement s\'il est certain) : sans information, la dépense reste « Pas sûr » (§5.2)'); q('[data-num]', D).focus(); return; }
+    var max = +D.dataset.max, paye = num(q('[data-num]', D)), left = max - paye, date = q('[data-field="date"]', D).value, row = D.dataset.row, perim = D.dataset.perim, u = S.unsure.filter(function (x) { return x.row === row; })[0];
+    if (left > 0 && !date) { ctx.toast('Un montant reste à payer : la date de paiement souhaitée au plus tard est obligatoire (§5.1)'); return; }
+    var tr = q('tr[data-row="' + row + '"]', tbody);
+    q('[data-cell="paye"]', tr).innerHTML = payCell(max, paye); q('[data-cell="passur"]', tr).innerHTML = '<span class="hint">non · résolu par ' + esc(ctx.profile.short) + '</span>';
+    q('[data-cell="date"]', tr).textContent = left > 0 ? fr(date) : '—'; tr.setAttribute('data-tags', left > 0 ? 'reste' : ''); ctx.formatAmounts(tr);
+    if (left > 0) q('[data-dues]').insertAdjacentHTML('beforeend', '<div class="due"><span><b>' + esc(u.des) + '</b> <span class="hint">' + perim + '</span></span><span class="amt" data-amt="' + left + '" data-nocur></span><span class="dt">avant le <b>' + fr(date).slice(0, 5) + '</b></span></div>');
+    S.unsure = S.unsure.filter(function (x) { return x.row !== row; }); S.paye += paye; S.reste += left; if (left > 0) S.nReste++; ctx.formatAmounts(root); stats(); applyFilter(cur);
+    var rest = S.unsure.filter(function (x) { return x.perim === perim; });
+    if (rest.length) block(perim, true, rest.map(function (x) { return x.des; }).join(' · ') + ' · montant payé inconnu'); else block(perim, false, 'Montant payé renseigné : ' + ctx.fmt(paye) + ' FCFA · reste à payer ' + ctx.fmt(left) + ' FCFA · modification auditée');
+    if (!S.unsure.length) qa('[data-resolve-btn]:not([data-row])').forEach(function (b) { b.hidden = true; });
+    ctx.close('fin-depenses-resoudre'); ctx.toast('« Pas sûr » résolu · périmètre ' + perim + (rest.length ? ' encore bloqué par ' + rest.length + ' autre(s) « Pas sûr »' : ' débloqué') + ' · aucune notification à 23:00 pour cette dépense');
+  });
+  fillResolve('carburant');
+  applyFilter('tous'); ctx.formatAmounts(root); ctx.applyPerms();
+});
+</script>

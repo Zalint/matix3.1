@@ -1,0 +1,324 @@
+<!-- ÉCRAN : RÉCONCILIATION (Mata Finance §3.1, §4.8, §5.5, §6.3 à §6.5, §11.3) -->
+<section class="scr" data-scr="fin-reconciliation" data-module="finance" data-perm="finance.reconciliation.view" data-sens="hs" hidden>
+  <style data-screen="fin-reconciliation">
+    #app [data-scr="fin-reconciliation"] .rhead{flex-wrap:wrap}
+    #app [data-scr="fin-reconciliation"] .rhead>div:nth-child(2){flex:1;min-width:220px}
+    #app [data-scr="fin-reconciliation"] .card+.card,#app [data-scr="fin-reconciliation"] .card+.statstrip,#app [data-scr="fin-reconciliation"] .grid2b+.card{margin-top:14px}
+    #app [data-scr="fin-reconciliation"] .ch{flex-wrap:wrap}
+    #app [data-scr="fin-reconciliation"] .declres .k{white-space:normal}
+    #app [data-scr="fin-reconciliation"] .declres .val.sm{font-family:var(--body);font-size:12px;font-weight:700}
+    #app [data-scr="fin-reconciliation"] td .btn{min-height:28px;padding:4px 10px;font-size:11px;margin:2px 0}
+    #app [data-scr="fin-reconciliation"] .cb .actionbar{margin:12px 0 0}
+    #app [data-scr="fin-reconciliation"] .actionbar>.hint{flex:1;min-width:220px}
+    #app [data-scr="fin-reconciliation"] .deny-note{margin:14px 16px}
+    #app [data-scr="fin-reconciliation"] .drawer .fld{margin:14px 0 8px}
+    @media (max-width:640px){#app [data-scr="fin-reconciliation"] .rhead .note{margin-left:0;text-align:left;max-width:none}}
+  </style>
+  <div class="scr-head">
+    <div>
+      <h2>Réconciliation</h2>
+      <p class="scr-sub">4 circuits · jeudi 27 août 2026 · solde toujours calculé, déclaration en aveugle · gel « À réconcilier » à 23:59 GMT · déclenchement automatique vers 02:00 uniquement si les sources sont complètes et à jour</p>
+    </div>
+    <div class="scr-meta">
+      <span class="sens hs"><svg><use href="#i-shield"/></svg>Hautement sensible</span>
+      <span class="hint">Consultation auditée (périmètre Caisses) · aucune auto-validation en cas d'écart ou de source non à jour (§6.3, §6.5) · correction uniquement par Ajustement : motif et deux validateurs distincts (§4.7)</span>
+    </div>
+  </div>
+
+  <!-- Progression de la journée -->
+  <div class="card">
+    <div class="rhead">
+      <div class="ring"><svg viewBox="0 0 64 64" aria-hidden="true"><circle class="bgc" cx="32" cy="32" r="28" fill="none" stroke-width="6"/><circle class="fgc" cx="32" cy="32" r="28" fill="none" stroke-width="6" stroke-linecap="round" stroke-dasharray="88 176" data-ring/></svg><b data-ring-pct>50 %</b></div>
+      <div><h2>Progression de la journée</h2><div class="sub"><b data-perim-done>5</b> périmètres réconciliés sur <b data-perim-total>10</b> périmètres attendus ce jour (déclaration reçue ou mouvement enregistré) · <b data-perim-ecart>1</b> écart · <b data-perim-att>4</b> en attente · <b data-perim-sans>1</b> sans mouvement, non bloquant (§4.8, §5.5)</div></div>
+      <div class="note">Gel « À réconcilier » à <b>23:59</b> GMT (§3.1) · réconciliation automatique vers <b>02:00</b> uniquement si les sources sont complètes et à jour (§6.5) · après clôture, toute correction requiert l'approbation du Super Admin</div>
+    </div>
+    <div class="cb" style="padding-top:0"><div class="prog"><i style="width:50%" data-prog></i></div></div>
+  </div>
+
+  <div class="statstrip four">
+    <div class="card stat"><div class="lb">Réconciliés</div><div class="v"><span data-perim-done>5</span> / <span data-perim-total>10</span></div><div class="sub2">Sous-caisse Livraisons · Ventes du jour · AGNEAUX · MATA VOLAILLE CHAIR · MATA VOLAILLE ŒUFS</div></div>
+    <div class="card stat"><div class="lb">Écart ouvert<button class="fx" data-f="Solde théorique = Dernier solde réconcilié + Somme algébrique des mouvements depuis cette réconciliation · Le gestionnaire saisit en aveugle le solde réellement détenu. Égalité : le compte est réconcilié. Écart : le compte reste « À réconcilier » et l'écart est investigué (§4.8)" data-c="Sous-caisse Marché : 1 250 000 déclaré − 1 275 000 théorique = −25 000" data-src="Déclaration M. Diop 27/08 21:12 · notification 21:15 Admin, DG, Collecteur (email + centre, critique, non désactivable)" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></div><div class="v amt" data-amt="-25000"></div><div class="sub2">Sous-caisse Marché · reste « À réconcilier » · investigation puis Ajustement</div></div>
+    <div class="card stat"><div class="lb">En attente de déclaration</div><div class="v" data-perim-att>4</div><div class="sub2">Caisse générale · Bétail Thiès · Abattoirs Dakar · collecte du 27/08 (vers 02:00)</div></div>
+    <div class="card stat"><div class="lb">Sources</div><div class="v">7 / 7 OK</div><div class="sub2">Ventes 20:30 · Bictorys 08:12 · Banque BOA 08:00 · Stock 06:00 · Achat 17:00 · versements · comptes Créance</div></div>
+  </div>
+
+  <!-- Sources et fraîcheur (§6.5) -->
+  <div class="card">
+    <div class="ch"><h3>Sources et fraîcheur</h3><span class="hint-r">§6.5 · états possibles : <span class="st ok">OK</span> <span class="st mut">Manquante</span> <span class="st bad">Erreur</span> <span class="st warn">Non à jour</span></span></div>
+    <div class="tbl-scroll"><table>
+      <thead><tr><th>Source</th><th>Propriétaire</th><th>État</th><th>Fraîcheur</th><th>Alimente</th><th>Détail</th></tr></thead>
+      <tbody>
+        <tr><td><b>Ventes Mata</b></td><td>Module Ventes</td><td><span class="st ok"><svg><use href="#i-check"/></svg>OK</span></td><td class="hint">27/08 · 20:30</td><td>Ventes du jour · comptes Créance</td><td class="hint">CA du jour <span class="amt" data-amt="6200000" data-nocur></span> · une vente reçue plusieurs fois ne produit qu'un seul effet</td></tr>
+        <tr><td><b>Bictorys</b></td><td>Position externe · SYNCHRONISÉ</td><td><span class="st ok"><svg><use href="#i-check"/></svg>OK</span></td><td class="hint">27/08 · 08:12</td><td>Ventes du jour (Paiements Bictorys) · Comptes</td><td class="hint">Solde disponible <span class="amt" data-amt="2890000" data-nocur></span> · lecture API seule, jamais modifiable à la main</td></tr>
+        <tr><td><b>Banque BOA</b></td><td>Position externe · IMPORT CSV</td><td><span class="st ok"><svg><use href="#i-check"/></svg>OK</span></td><td class="hint">27/08 · 08:00</td><td>Comptes · paiements fournisseurs via BOA</td><td class="hint">14 lignes, 0 doublon · correction −45 000 (frais) en attente de validation</td></tr>
+        <tr><td><b>Stock</b></td><td>Module Stock</td><td><span class="st ok"><svg><use href="#i-check"/></svg>OK</span></td><td class="hint">27/08 · 06:00</td><td>P&amp;L (ΔS) · hors circuits de réconciliation</td><td class="hint">Valeur courante <span class="amt" data-amt="41235000" data-nocur></span></td></tr>
+        <tr><td><b>Achat</b></td><td>Module Achat · API</td><td><span class="st ok"><svg><use href="#i-check"/></svg>OK</span></td><td class="hint">27/08 · 17:00 (import)</td><td>Fournisseurs (dépenses du jour)</td><td class="hint">5 achats intégrés, 0 doublon · import idempotent avant la réconciliation du périmètre (§5.2)</td></tr>
+        <tr><td><b>Flux de versements</b></td><td>Déclarations MaaS</td><td><span class="st ok"><svg><use href="#i-check"/></svg>OK</span></td><td class="hint">27/08 · flux du jour</td><td>Encaissements collectés (Source A) · Ventes du jour (Versements)</td><td class="hint" data-blind="collecteur"><span data-val>Σ déclarations du 27/08 : <span class="amt" data-amt="3100000" data-nocur></span></span><span data-mask hidden class="tag lock"><svg><use href="#i-eyeoff"/></svg>Masqué · déclaration en aveugle</span></td></tr>
+        <tr><td><b>Comptes Créance</b></td><td>Mata Finance · CALCULÉ</td><td><span class="st ok"><svg><use href="#i-check"/></svg>OK</span></td><td class="hint">27/08 · moteur financier</td><td>Ventes du jour (Créances nettes nouvelles, Remboursements à neutraliser)</td><td class="hint">Créances clients <span class="amt" data-amt="20075000" data-nocur></span> · avances clients <span class="amt" data-amt="150000" data-nocur></span></td></tr>
+      </tbody>
+    </table></div>
+    <div class="cb"><div class="note-strip" style="margin-top:0"><svg><use href="#i-info"/></svg>Une source Manquante, En erreur ou Non à jour bloque l'auto-validation mais peut rester visible avec son horodatage (§6.5). Une donnée absente n'est jamais affichée comme 0.</div></div>
+  </div>
+
+  <!-- Circuit 1 : Caisses (§4.8) -->
+  <div class="card" data-circuit="caisses">
+    <div class="ch"><h3>Caisses</h3><span class="st ok"><svg><use href="#i-check"/></svg>1 réconciliée</span><span class="st bad"><svg><use href="#i-alert"/></svg>1 écart</span><span class="st mut"><svg><use href="#i-eyeoff"/></svg>1 à déclarer</span><span class="hint-r">§4.8 · toute Caisse générale, Caisse ou Sous-caisse ayant enregistré au moins un mouvement depuis sa dernière réconciliation doit être réconciliée</span></div>
+    <div data-scope-body>
+      <div class="cb"><div class="fcode" style="margin-top:0">Solde théorique = Dernier solde réconcilié + Somme algébrique des mouvements depuis cette réconciliation</div></div>
+      <div class="tbl-scroll"><table>
+        <thead><tr><th>Compte</th><th>Solde théorique</th><th>Déclaré en aveugle</th><th>Heure</th><th>Écart</th><th>Statut</th><th>Actions</th></tr></thead>
+        <tbody>
+          <tr data-perim="att"><td><b>Caisse générale</b><br><span class="hint">CG · a bougé aujourd'hui · déclarant M. Diop</span></td><td data-blind="caisse"><span data-val><span class="amt" data-amt="8450000" data-nocur></span><button class="fx" data-f="Solde théorique = Dernier solde réconcilié + Somme algébrique des mouvements depuis cette réconciliation" data-c="Dernier solde réconcilié 26/08 : 7 980 000 · mouvements depuis : +470 000 → 8 450 000" data-src="Compte CG · Trésorerie · CALCULÉ · visible uniquement pour les profils qui ne déclarent pas" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></span><span data-mask hidden class="tag lock"><svg><use href="#i-eyeoff"/></svg>Masqué jusqu'à votre déclaration</span></td><td class="hint">En attente</td><td class="hint">—</td><td class="hint">—</td><td><span class="st mut"><svg><use href="#i-eyeoff"/></svg>À déclarer</span></td><td><button class="btn ghost" data-goto="fin-declarations" data-perm="finance.declarations.declarer"><svg><use href="#i-eyeoff"/></svg>Déclarer en aveugle</button></td></tr>
+          <tr data-perim="ecart"><td><b>Sous-caisse Marché</b><br><span class="hint">SCM · a bougé aujourd'hui · déclarant M. Diop</span></td><td><span class="amt" data-amt="1275000" data-nocur></span><button class="fx" data-f="Solde théorique = Dernier solde réconcilié + Somme algébrique des mouvements depuis cette réconciliation" data-c="Dernier solde réconcilié (26/08) + Σ mouvements algébriques du 27/08 = 1 275 000 · détail des mouvements : fiche du compte (Comptes)" data-src="Compte SCM · Trésorerie · CALCULÉ · comparé après la déclaration de 21:12" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></td><td><span class="amt" data-amt="1250000" data-nocur></span></td><td class="hint">21:12</td><td><span class="amt" data-amt="-25000" data-nocur></span></td><td data-st-scm><span class="st bad"><svg><use href="#i-alert"/></svg>Écart · À réconcilier</span></td><td><button class="btn ghost" data-open="fin-reconciliation-invest"><svg><use href="#i-search"/></svg>Investiguer</button> <button class="btn pri" data-perm="finance.ajustements.initier" data-open="fin-reconciliation-ajust"><svg><use href="#i-scale"/></svg>Corriger par Ajustement</button></td></tr>
+          <tr data-perim="ok"><td><b>Sous-caisse Livraisons</b><br><span class="hint">SCL · a bougé aujourd'hui · déclarant F. Sarr</span></td><td><span class="amt" data-amt="640000" data-nocur></span><button class="fx" data-f="Solde théorique = Dernier solde réconcilié + Somme algébrique des mouvements depuis cette réconciliation" data-c="Dernier solde réconcilié (26/08) + Σ mouvements algébriques du 27/08 = 640 000" data-src="Compte SCL · Trésorerie · CALCULÉ · comparé après la déclaration de 20:48" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></td><td><span class="amt" data-amt="640000" data-nocur></span></td><td class="hint">20:48</td><td><span class="amt" data-amt="0" data-nocur></span></td><td><span class="st ok"><svg><use href="#i-check"/></svg>Réconciliée 20:48</span></td><td class="hint">Périmètre clos · clôture événementielle (§3.1)</td></tr>
+        </tbody>
+      </table></div>
+      <div class="cb">
+        <div class="actionbar" style="margin:0"><span class="hint">Égalité : le compte est réconcilié. Écart : le compte reste « À réconcilier » et l'écart est investigué ; une correction éventuelle passe par Ajustement (§4.8, §11.3). S'il n'y a eu aucun mouvement, l'absence d'une nouvelle déclaration n'est pas bloquante.</span><div class="sp"></div><button class="btn pri" data-perm="finance.reconciliation.valider" data-initiator="M. Diop" data-lock-ecart><svg><use href="#i-check"/></svg>Valider la réconciliation</button></div>
+        <div class="hint" data-lock-hint>Désactivé : aucune auto-validation en cas d'écart (Sous-caisse Marché <span class="amt" data-amt="-25000" data-nocur></span>) · un écart ne se valide pas, il s'explique puis se corrige par Ajustement.</div>
+      </div>
+    </div>
+    <div class="deny-note" data-scope-deny hidden><svg><use href="#i-lock"/></svg><span></span></div>
+  </div>
+
+  <div class="grid2b">
+    <!-- Circuit 2 : Encaissements collectés (§6.3) -->
+    <div class="card" data-circuit="collecte">
+      <div class="ch"><h3>Encaissements collectés</h3><span class="st ok"><svg><use href="#i-check"/></svg>Validée 02:04</span><span class="hint-r">§6.3 · circuit MaaS · collecte du 26/08</span></div>
+      <div class="cb" data-scope-body>
+        <div class="fcode" style="margin-top:0">Somme des versements déclarés = Montant déclaré par le collecteur</div>
+        <div class="declres" style="margin-top:12px">
+          <div><div class="k">Source A · Σ 12 déclarations MaaS<button class="fx" data-f="Source A = somme des déclarations individuelles (versements déclarés par chaque MaaS)" data-c="Keur Massar 420 000 · Ouakam 385 000 · Pikine 512 000 · Rufisque 298 000 · Grand Yoff 445 000 · Parcelles 367 000 · Médina 402 000 · Yoff 356 000 · Ngor 489 000 · Thiaroye 315 000 · Guédiawaye 378 000 · HLM 358 000" data-src="Déclarations MaaS du 26/08 · module Déclarations · complètes 12/12" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></div><div class="val amt" data-amt="4725000" data-nocur data-maas-sum></div></div>
+          <div><div class="k">Source B · collecteur A. Ndiaye<button class="fx" data-f="Source B = déclaration indépendante du collecteur" data-c="A. Ndiaye · 4 725 000 · déclaré en aveugle" data-src="Déclarations · Collecteur · collecte du 26/08" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></div><div class="val amt" data-amt="4725000" data-nocur data-maas-b></div></div>
+          <div><div class="k">Écart</div><div class="val ok amt" data-amt="0" data-nocur data-maas-ecart></div></div>
+        </div>
+        <button class="linkish" data-acc="fin-reconciliation-maas" aria-expanded="false" aria-controls="fin-reconciliation-maas"><svg><use href="#i-chevd"/></svg>Voir les 12 déclarations</button>
+        <div class="maas-list" id="fin-reconciliation-maas" hidden>
+          <div class="mrow"><span>Keur Massar</span><span class="amt" data-amt="420000" data-nocur></span></div>
+          <div class="mrow"><span>Ouakam</span><span class="amt" data-amt="385000" data-nocur></span></div>
+          <div class="mrow"><span>Pikine</span><span class="amt" data-amt="512000" data-nocur></span></div>
+          <div class="mrow"><span>Rufisque</span><span class="amt" data-amt="298000" data-nocur></span></div>
+          <div class="mrow"><span>Grand Yoff</span><span class="amt" data-amt="445000" data-nocur></span></div>
+          <div class="mrow"><span>Parcelles</span><span class="amt" data-amt="367000" data-nocur></span></div>
+          <div class="mrow"><span>Médina</span><span class="amt" data-amt="402000" data-nocur></span></div>
+          <div class="mrow"><span>Yoff</span><span class="amt" data-amt="356000" data-nocur></span></div>
+          <div class="mrow"><span>Ngor</span><span class="amt" data-amt="489000" data-nocur></span></div>
+          <div class="mrow"><span>Thiaroye</span><span class="amt" data-amt="315000" data-nocur></span></div>
+          <div class="mrow"><span>Guédiawaye</span><span class="amt" data-amt="378000" data-nocur></span></div>
+          <div class="mrow"><span>HLM</span><span class="amt" data-amt="358000" data-nocur></span></div>
+          <div class="mrow tot"><span>Σ Source A</span><span class="amt" data-amt="4725000" data-nocur data-maas-sum></span></div>
+        </div>
+        <div class="due"><span>Effets à 02:04 · moteur de réconciliation (automatisation, audité)</span><span class="hint">Caisse créditée <span class="amt" data-amt="4725000" data-nocur></span> · remboursements affectés aux 12 comptes clients</span></div>
+        <div class="due"><span>Sources complètes, à jour et égales</span><span class="st ok"><svg><use href="#i-check"/></svg>12 / 12 déclarations · collecteur OK</span></div>
+        <div class="due" style="margin-top:8px"><span><b>Collecte du 27/08</b> · versements du jour</span><span class="st warn"><svg><use href="#i-clock"/></svg>Auto-réconciliation vers 02:00</span></div>
+        <div class="declres" data-perim="att">
+          <div><div class="k">Source A · Σ déclarations MaaS du 27/08</div><div class="val" data-blind="collecteur"><span data-val class="amt" data-amt="3100000" data-nocur></span><span data-mask hidden class="tag lock"><svg><use href="#i-eyeoff"/></svg>Masqué</span></div></div>
+          <div><div class="k">Source B · déclaration du collecteur</div><div class="val sm">En attente · A. Ndiaye</div></div>
+          <div><div class="k">Condition d'auto-validation</div><div class="val sm">Sources complètes, à jour et égales</div></div>
+        </div>
+        <div class="actionbar"><span class="hint">En cas d'écart, aucune auto-validation n'est possible (§6.3) : la collecte reste ouverte et l'écart est notifié à Admin, DG et Collecteur.</span><div class="sp"></div><button class="btn ghost" data-goto="fin-declarations" data-perm="finance.declarations.declarer" data-collecte-declare><svg><use href="#i-eyeoff"/></svg>Déclarer la collecte en aveugle</button></div>
+      </div>
+      <div class="deny-note" data-scope-deny hidden><svg><use href="#i-lock"/></svg><span></span></div>
+    </div>
+
+    <!-- Circuit 3 : Ventes du jour (§6.4) -->
+    <div class="card" data-circuit="ventes">
+      <div class="ch"><h3>Ventes du jour</h3><span class="st ok" data-ventes-st><svg><use href="#i-check"/></svg>Cohérente</span><span class="hint-r">§6.4 · tous les clients, MaaS compris</span></div>
+      <div class="cb" data-scope-body>
+        <div class="eq" data-perim="ok" data-perim-ventes>Ventes Mata du jour = Versements du jour + Paiements Bictorys du jour + Créances nettes nouvelles du jour − Remboursements à neutraliser du jour<br><b>6 200 000</b> = 3 100 000 + 1 250 000 + 2 450 000 − 600 000 → écart <span class="ok" data-ventes-ecart>0</span></div>
+        <div class="brk">
+          <div class="row"><span class="sign p">+</span>Versements du jour<button class="fx" data-f="Versements du jour : encaissements hors Bictorys reçus pendant la journée, qu'ils règlent des ventes du jour, des créances antérieures ou constituent une avance." data-c="Σ versements déclarés le 27/08 = 3 100 000 (Source A de la collecte du 27/08)" data-src="Flux de versements · déclarations MaaS du jour · OK" aria-label="Voir la définition"><svg><use href="#i-info"/></svg></button><span class="amt" data-amt="3100000" data-nocur data-comp="v"></span></div>
+          <div class="row"><span class="sign p">+</span>Paiements Bictorys du jour<button class="fx" data-f="Paiements Bictorys du jour : encaissements via Bictorys, exclus du total Versements afin d'éviter tout double comptage." data-c="Σ transactions Bictorys du 27/08 = 1 250 000 · aucune transaction commune avec Versements" data-src="Bictorys · Position externe SYNCHRONISÉ · OK 08:12 · lecture API seule" aria-label="Voir la définition"><svg><use href="#i-info"/></svg></button><span class="amt" data-amt="1250000" data-nocur data-comp="b"></span></div>
+          <div class="row"><span class="sign p">+</span>Créances nettes nouvelles du jour<button class="fx" data-f="Créances nettes nouvelles du jour : part des ventes du jour restant impayée après prise en compte des règlements associés à ces ventes pendant la même journée." data-c="Ventes du jour 6 200 000 − règlements associés aux ventes du jour 3 750 000 (encaissements 4 350 000 − 600 000 non liés aux ventes du jour) = 2 450 000" data-src="Comptes Créance client · CALCULÉ · ventes reçues de Ventes Mata (100 % en créance) et remboursements du 27/08" aria-label="Voir la définition"><svg><use href="#i-info"/></svg></button><span class="amt" data-amt="2450000" data-nocur data-comp="c"></span></div>
+          <div class="row"><span class="sign m">−</span>Remboursements à neutraliser du jour<button class="fx" data-f="Remboursements à neutraliser du jour : part des encaissements du jour qui ne correspond pas à une vente du jour, notamment le règlement de créances antérieures ou une avance client. Les règlements associés à une vente du jour ne sont pas retranchés une seconde fois." data-c="600 000 · règlements de créances antérieures et avances client reçus le 27/08" data-src="Comptes Créance client · mouvements de remboursement du 27/08 · OK" aria-label="Voir la définition"><svg><use href="#i-info"/></svg></button><span class="amt m" data-amt="600000" data-nocur data-comp="r"></span></div>
+          <div class="row"><span class="sign p">=</span><b>Ventes Mata du jour</b><button class="fx" data-f="Ventes Mata du jour = Versements du jour + Paiements Bictorys du jour + Créances nettes nouvelles du jour − Remboursements à neutraliser du jour" data-c="3 100 000 + 1 250 000 + 2 450 000 − 600 000 = 6 200 000 · CA fourni par Ventes Mata 6 200 000 · écart 0" data-src="Ventes Mata · OK 27/08 20:30 · cumul août au 27 : 452 000 000" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button><span class="amt" data-amt="6200000" data-nocur data-comp="ventes"></span></div>
+        </div>
+        <div class="due"><span>Sources requises (§6.5)</span><span class="hint">Ventes OK 20:30 · Versements OK · Bictorys OK 08:12 · Comptes créance OK</span></div>
+        <div class="note-strip"><svg><use href="#i-alert"/></svg><span><b>Pas de double comptage.</b> Une même transaction ne peut appartenir simultanément à Versements et Paiements Bictorys ; les règlements associés à une vente du jour ne sont pas retranchés une seconde fois. <b>Si écart</b> : chaque composante et l'écart restent visibles et la réconciliation reste ouverte (§6.4).</span></div>
+      </div>
+      <div class="deny-note" data-scope-deny hidden><svg><use href="#i-lock"/></svg><span></span></div>
+    </div>
+  </div>
+
+  <!-- Circuit 4 : Fournisseurs (§5.5) -->
+  <div class="card" data-circuit="fournisseurs">
+    <div class="ch"><h3>Fournisseurs</h3><span class="st ok"><svg><use href="#i-check"/></svg>3 validées</span><span class="st warn"><svg><use href="#i-clock"/></svg>2 en attente</span><span class="st mut"><svg><use href="#i-eyeoff"/></svg>1 sans mouvement</span><span class="hint-r">§5.5 · réconciliation quotidienne · déclaration en aveugle dès qu'au moins un mouvement a affecté le compte</span></div>
+    <div data-scope-body>
+      <div class="cb">
+        <div class="fcode" style="margin-top:0">Position théorique = Dernière position réconciliée + Paiements/avances − Dépenses ± Ajustements validés</div>
+        <div class="actionbar"><div class="chips"><button class="chip on" data-fflt="tous">Tous (6)</button><button class="chip" data-fflt="ok">Validées (3)</button><button class="chip" data-fflt="att">En attente (2)</button><button class="chip" data-fflt="sans">Sans mouvement (1)</button></div><div class="sp"></div><span class="hint">Hypothèse maquette : le déclarant fournisseurs est le Directeur des Opérations (position théorique masquée pour ce profil avant déclaration) · à confirmer, §5.5</span></div>
+      </div>
+      <div class="tbl-scroll"><table>
+        <thead><tr><th>Fournisseur</th><th>Mouvement du jour</th><th>Position théorique</th><th>Déclarée en aveugle</th><th>Écart</th><th>Statut</th><th>Actions</th></tr></thead>
+        <tbody data-fourn-rows>
+          <tr data-etat="ok" data-perim="ok"><td><b>AGNEAUX</b> <span class="hint">F1</span></td><td>Achat bœuf · lot BV-260827-04 · <span class="amt" data-amt="850000" data-nocur></span> <span class="hint">Achat (API)</span></td><td><span class="amt" data-amt="-12400000" data-nocur></span><button class="fx" data-f="Position théorique = Dernière position réconciliée + Paiements/avances − Dépenses ± Ajustements validés" data-c="−11 550 000 + 0 − 850 000 ± 0 = −12 400 000" data-src="Compte F1 · Fournisseur · CALCULÉ · import Achat 27/08 17:00" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></td><td><span class="amt" data-amt="-12400000" data-nocur></span></td><td><span class="amt" data-amt="0" data-nocur></span></td><td><span class="st ok"><svg><use href="#i-check"/></svg>Validée 18:30</span></td><td class="hint">—</td></tr>
+          <tr data-etat="ok" data-perim="ok"><td><b>MATA VOLAILLE CHAIR</b> <span class="hint">F2</span></td><td>Achat volaille · <span class="amt" data-amt="420000" data-nocur></span> payé immédiatement <span class="hint">Achat (API)</span></td><td><span class="amt" data-amt="-4300000" data-nocur></span><button class="fx" data-f="Position théorique = Dernière position réconciliée + Paiements/avances − Dépenses ± Ajustements validés" data-c="−4 300 000 + 420 000 − 420 000 ± 0 = −4 300 000" data-src="Compte F2 · Fournisseur · CALCULÉ · import Achat 27/08 17:00" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></td><td><span class="amt" data-amt="-4300000" data-nocur></span></td><td><span class="amt" data-amt="0" data-nocur></span></td><td><span class="st ok"><svg><use href="#i-check"/></svg>Validée 17:50</span></td><td class="hint">—</td></tr>
+          <tr data-etat="ok" data-perim="ok"><td><b>MATA VOLAILLE ŒUFS</b> <span class="hint">F3</span></td><td class="hint">Aucun mouvement · déclaration reçue et validée</td><td><span class="amt" data-amt="-1150000" data-nocur></span><button class="fx" data-f="Position théorique = Dernière position réconciliée + Paiements/avances − Dépenses ± Ajustements validés" data-c="−1 150 000 + 0 − 0 ± 0 = −1 150 000" data-src="Compte F3 · Fournisseur · CALCULÉ" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></td><td><span class="amt" data-amt="-1150000" data-nocur></span></td><td><span class="amt" data-amt="0" data-nocur></span></td><td><span class="st ok"><svg><use href="#i-check"/></svg>Validée 17:20</span></td><td class="hint">—</td></tr>
+          <tr data-etat="att" data-perim="att"><td><b>Bétail Thiès</b> <span class="hint">F4</span></td><td>Achat agneau · lot AG-260827-02 · <span class="amt" data-amt="262000" data-nocur></span> <span class="hint">Achat (API)</span></td><td data-blind="dirops"><span data-val><span class="amt" data-amt="-4600000" data-nocur></span><button class="fx" data-f="Position théorique = Dernière position réconciliée + Paiements/avances − Dépenses ± Ajustements validés" data-c="−4 338 000 + 0 − 262 000 ± 0 = −4 600 000" data-src="Compte F4 · Fournisseur · CALCULÉ · import Achat 27/08 17:00 · déclaration attendue avant le gel de 23:59" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></span><span data-mask hidden class="tag lock"><svg><use href="#i-eyeoff"/></svg>Masqué jusqu'à votre déclaration</span></td><td class="hint">En attente</td><td class="hint">—</td><td><span class="st warn"><svg><use href="#i-clock"/></svg>En attente</span></td><td><button class="btn ghost" data-goto="fin-declarations" data-perm="finance.declarations.declarer"><svg><use href="#i-eyeoff"/></svg>Déclarer en aveugle</button></td></tr>
+          <tr data-etat="att" data-perim="att"><td><b>Abattoirs Dakar</b> <span class="hint">F5</span></td><td>Frais d'abattage · <span class="amt" data-amt="150000" data-nocur></span> payés immédiatement <span class="hint">Manuel</span></td><td data-blind="dirops"><span data-val><span class="amt" data-amt="350000" data-nocur></span> <span class="hint">avance</span><button class="fx" data-f="Position théorique = Dernière position réconciliée + Paiements/avances − Dépenses ± Ajustements validés" data-c="+350 000 + 150 000 − 150 000 ± 0 = +350 000" data-src="Compte F5 · Fournisseur · CALCULÉ · solde positif = avance de Mata chez le fournisseur (§4.3)" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></span><span data-mask hidden class="tag lock"><svg><use href="#i-eyeoff"/></svg>Masqué jusqu'à votre déclaration</span></td><td class="hint">En attente</td><td class="hint">—</td><td><span class="st warn"><svg><use href="#i-clock"/></svg>En attente</span></td><td><button class="btn ghost" data-goto="fin-declarations" data-perm="finance.declarations.declarer"><svg><use href="#i-eyeoff"/></svg>Déclarer en aveugle</button></td></tr>
+          <tr data-etat="sans" data-perim="sans"><td><b>Aliments Sénégal</b> <span class="hint">F6</span></td><td class="hint">Aucun mouvement depuis la dernière réconciliation</td><td><span class="amt" data-amt="-800000" data-nocur></span><button class="fx" data-f="Position théorique = Dernière position réconciliée + Paiements/avances − Dépenses ± Ajustements validés" data-c="−800 000 + 0 − 0 ± 0 = −800 000" data-src="Compte F6 · Fournisseur · CALCULÉ · sans mouvement" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></td><td class="hint">—</td><td class="hint">—</td><td><span class="st mut"><svg><use href="#i-eyeoff"/></svg>Sans mouvement · non bloquant</span></td><td class="hint">—</td></tr>
+        </tbody>
+      </table></div>
+      <div class="cb"><div class="actionbar" style="margin:0"><span class="hint">Avec mouvement : déclaration quotidienne attendue et comparaison à la position théorique ; sans mouvement : non-déclaration non bloquante (§11.3). Convention de signe §4.3 : négatif = Mata doit ; positif = avance de Mata chez le fournisseur.</span><div class="sp"></div><button class="btn ghost" data-goto="fin-fournisseurs"><svg><use href="#i-arr"/></svg>Écran Fournisseurs</button></div></div>
+    </div>
+    <div class="deny-note" data-scope-deny hidden><svg><use href="#i-lock"/></svg><span></span></div>
+  </div>
+
+  <div class="note-strip"><svg><use href="#i-shield"/></svg><span><b>Refus par défaut et séparation des rôles.</b> Le déclarant ne voit jamais la valeur théorique avant sa déclaration (§3) et ne valide jamais son propre écart. Un écart ne se valide pas : il s'explique, puis se corrige par Ajustement avec motif et deux validateurs distincts de l'initiateur et entre eux (§4.7). Après le gel de 23:59, toute correction suit le workflow post-clôture avec approbation du Super Admin, sans bypass global (§3.1). La consultation du périmètre Caisses est auditée (§10.2).</span></div>
+  <div class="note-strip"><svg><use href="#i-info"/></svg><span><b>Explicabilité.</b> Valeur → formule → composantes → mouvements → objet métier → source (§11.2) : chaque solde théorique et chaque composante de l'équation des ventes porte sa formule, ses composantes chiffrées et sa source. Les valeurs sources utilisées par les réconciliations sont conservées dans l'audit, pas seulement leur statut final (§10.2) ; le moteur de réconciliation y apparaît comme acteur « automatisation » (Auto-validation · Encaissements collectés <span class="amt" data-amt="4725000" data-nocur></span> · 02:04).</span></div>
+
+  <!-- Modale : Corriger par Ajustement (§4.7) -->
+  <div class="mback" data-ov="fin-reconciliation-ajust"><div class="modal wide" role="dialog" aria-modal="true" aria-label="Corriger par Ajustement">
+    <h3><svg><use href="#i-scale"/></svg>Corriger par Ajustement — Sous-caisse Marché</h3>
+    <div class="exp">Tout mouvement vers ou depuis le compte Ajustement exige un motif et deux validations humaines, réalisées par deux validateurs distincts de l'initiateur et distincts entre eux (§4.7). Le solde du compte Ajustement est exclu des agrégats de trésorerie et du P&amp;L ; seul l'effet validé sur le compte cible est pris en compte. Aucun effet définitif avant deux validations (§11.3).</div>
+    <ol class="steps"><li class="on">Initiation</li><li>1re validation</li><li>2e validation</li><li>Effet sur Sous-caisse Marché</li></ol>
+    <div class="grid2b" style="margin-top:0">
+      <div class="fld"><label for="fin-reconciliation-aj-cible">Compte cible</label><input id="fin-reconciliation-aj-cible" class="inp" value="Sous-caisse Marché · Trésorerie · CALCULÉ" readonly></div>
+      <div class="fld"><label for="fin-reconciliation-aj-montant">Montant signé (FCFA)</label><input id="fin-reconciliation-aj-montant" class="inp mono" data-aj-montant inputmode="numeric" value="-25000"></div>
+      <div class="fld"><label for="fin-reconciliation-aj-date">Date métier</label><input id="fin-reconciliation-aj-date" class="inp mono" type="date" value="2026-08-27"></div>
+      <div class="fld"><label for="fin-reconciliation-aj-init">Initiateur</label><input id="fin-reconciliation-aj-init" class="inp" data-aj-init readonly></div>
+    </div>
+    <div class="fld"><label for="fin-reconciliation-aj-motif">Motif (obligatoire)</label><input id="fin-reconciliation-aj-motif" class="inp" data-aj-motif placeholder="Ex. : écart de comptage constaté à la déclaration du 27/08"></div>
+    <div class="declres" data-aj-sum><div><div class="k">Déclaré en aveugle</div><div class="val amt" data-amt="1250000" data-nocur></div></div><div><div class="k">Théorique actuel</div><div class="val amt" data-amt="1275000" data-nocur></div></div><div><div class="k">Théorique après ajustement validé</div><div class="val amt" data-amt="1250000" data-nocur data-aj-apres></div></div></div>
+    <div class="note-strip" data-aj-unusual hidden><svg><use href="#i-alert"/></svg>Montant supérieur au seuil d'ajustement inhabituel (<span class="amt" data-amt="500000" data-nocur></span>) : alerte critique non désactivable vers DG et Super Admin.</div>
+    <div class="acts"><button class="btn ghost" data-close>Annuler</button><button class="btn pri" data-perm="finance.ajustements.initier" data-aj-save><svg><use href="#i-check"/></svg>Soumettre à double validation</button></div>
+  </div></div>
+
+  <!-- Tiroir : Investiguer l'écart (§10.3, §11.2) -->
+  <aside class="drawer" data-ov="fin-reconciliation-invest" aria-label="Investigation de l'écart Sous-caisse Marché">
+    <div class="dh"><h3>Investiguer — Sous-caisse Marché</h3><span class="st bad"><svg><use href="#i-alert"/></svg>Écart</span><button class="ib" data-close aria-label="Fermer"><svg><use href="#i-x"/></svg></button></div>
+    <div class="db">
+      <div class="hint">Écart révélé à la déclaration en aveugle de 21:12 · statut « À réconcilier »</div>
+      <div class="big-amt amt" data-amt="-25000"></div>
+      <div class="meta-l"><span class="tag lock"><svg><use href="#i-user"/></svg>Déclarant M. Diop</span><span class="tag lock"><svg><use href="#i-clock"/></svg>Gel à 23:59</span><span class="sens hs"><svg><use href="#i-shield"/></svg>Hautement sensible</span></div>
+      <div class="declres"><div><div class="k">Déclaré</div><div class="val amt" data-amt="1250000" data-nocur></div></div><div><div class="k">Théorique</div><div class="val amt" data-amt="1275000" data-nocur></div></div><div><div class="k">Écart</div><div class="val bad amt" data-amt="-25000" data-nocur></div></div></div>
+      <div class="fcode">Solde théorique = Dernier solde réconcilié + Somme algébrique des mouvements depuis cette réconciliation</div>
+      <div class="fld"><label>Descente d'explicabilité (§10.3, §11.2)</label></div>
+      <ol class="chain">
+        <li class="hit deny">Valeur <small>écart <span class="amt" data-amt="-25000" data-nocur></span> · À réconcilier</small><span class="res">Constatée</span></li>
+        <li>Formule <small>§4.8 · solde théorique</small></li>
+        <li>Composantes <small>dernier solde réconcilié 26/08 · mouvements du 27/08</small></li>
+        <li>Mouvements <small>fiche du compte Sous-caisse Marché</small><button class="res" data-goto="fin-comptes">Ouvrir</button></li>
+        <li>Objets métier <small>dépenses payées sur Sous-caisse Marché</small><button class="res" data-goto="fin-depenses">Ouvrir</button></li>
+        <li>Source <small>déclaration en aveugle M. Diop 21:12 · audit central</small><button class="res" data-goto="core-audit">Audit</button></li>
+      </ol>
+      <div class="fld"><label>Chronologie</label></div>
+      <div class="tl" data-inv-tl>
+        <div class="ev on"><b>Déclaration en aveugle</b> — <span class="amt" data-amt="1250000" data-nocur></span> · M. Diop<small>27/08 · 21:12 · audit : Modification · Hautement sensible</small></div>
+        <div class="ev on"><b>Écart révélé</b> — <span class="amt" data-amt="-25000" data-nocur></span> · notification critique (email + centre)<small>27/08 · 21:15 · Admin, DG, Collecteur · règle non désactivable</small></div>
+        <div class="ev"><b>Gel « À réconcilier »</b> si non résolu<small>27/08 · 23:59 GMT · correction ultérieure = workflow post-clôture, approbation du Super Admin (§3.1)</small></div>
+      </div>
+      <div class="fld"><label>Historique utile</label></div>
+      <div class="due"><span>VAL-103 · Ajustement <span class="amt" data-amt="-60000" data-nocur></span> Sous-caisse Marché</span><span class="st bad"><svg><use href="#i-x"/></svg>Refusé 21/08</span></div>
+      <div class="hint">Refusé par O. Seck, motif « justificatif manquant » : tout nouvel ajustement doit être justifié et documenté.</div>
+    </div>
+    <div class="df"><button class="btn ghost" data-goto="fin-comptes"><svg><use href="#i-wallet"/></svg>Mouvements du compte</button><div class="sp"></div><button class="btn pri" data-perm="finance.ajustements.initier" data-open="fin-reconciliation-ajust"><svg><use href="#i-scale"/></svg>Corriger par Ajustement</button></div>
+  </aside>
+  <div class="dback" data-ov-back="fin-reconciliation-invest"></div>
+</section>
+<script data-screen="fin-reconciliation">
+ERP.register('fin-reconciliation', function (root, ctx) {
+  var q = function (s, el) { return (el || root).querySelector(s); };
+  var qa = function (s, el) { return Array.prototype.slice.call((el || root).querySelectorAll(s)); };
+  var num = function (v) { return parseInt(String(v == null ? '' : v).replace(/[^\d-]/g, ''), 10) || 0; };
+  var esc = function (s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); };
+  var SCOPE = { caisse: ['caisses'], collecteur: ['collecte'], dirops: ['fournisseurs'] };
+  var LABEL = { caisses: 'Caisses', collecte: 'Encaissements collectés', ventes: 'Ventes du jour', fournisseurs: 'Fournisseurs' };
+  var MOTIF = 'Aucune auto-validation en cas d\'écart (§4.8, §6.3) : Sous-caisse Marché ' + ctx.fmt(-25000) + ' reste « À réconcilier » ; investigation puis correction uniquement par Ajustement.', pending = false;
+  var THEO_SCM = 1275000, SEUIL_INHABITUEL = 500000;
+  function setAmt(el, v) { el.dataset.amt = v; delete el.dataset.done; el.classList.remove('neg'); ctx.formatAmounts(el.parentNode); }
+
+  /* Réconciliation en aveugle (§3) : le déclarant ne voit pas la valeur théorique avant sa déclaration */
+  function applyBlind() {
+    qa('[data-blind]').forEach(function (el) {
+      var m = el.dataset.blind.split(' ').indexOf(ctx.profile.id) >= 0;
+      q('[data-val]', el).hidden = m; q('[data-mask]', el).hidden = !m;
+    });
+  }
+  /* Périmètre de consultation par profil (FIXTURES §2) : circuit hors périmètre fermé mais visible, avec l'explication */
+  function applyScope() {
+    var sc = SCOPE[ctx.profile.id];
+    qa('[data-circuit]').forEach(function (c) {
+      var ok = !sc || sc.indexOf(c.dataset.circuit) >= 0, d = q('[data-scope-deny]', c);
+      q('[data-scope-body]', c).hidden = !ok; d.hidden = ok;
+      if (!ok) q('span', d).innerHTML = '<b>Hors périmètre du profil ' + esc(ctx.profile.profile) + '.</b> Le circuit « ' + LABEL[c.dataset.circuit] + ' » est consultable par les profils habilités (Super Admin, DG Mata) ; votre périmètre de réconciliation se limite à « ' + sc.map(function (k) { return LABEL[k]; }).join(', ') + ' ». Refus par défaut : le bloc est fermé avec son motif, jamais supprimé sans explication.';
+    });
+    /* Source B = déclaration indépendante du collecteur (§6.3) : aucun autre profil ne la remplace */
+    var bc = q('[data-collecte-declare]'), isColl = ctx.profile.id === 'collecteur' || ctx.profile.id === 'sa';
+    if (bc) { bc.disabled = !isColl || bc.disabled; bc.classList.toggle('denied', !isColl); if (!isColl) bc.title = 'Source B : déclaration indépendante du collecteur A. Ndiaye (§6.3) ; votre profil ne la remplace pas.'; }
+    if (pending) lockAjust();
+  }
+  /* Un ajustement déjà en attente sur le même compte bloque toute nouvelle soumission (§4.7, §10.4) */
+  function lockAjust() {
+    qa('[data-open="fin-reconciliation-ajust"]').forEach(function (b) { b.disabled = true; b.classList.add('denied'); b.title = 'Ajustement VAL-119 déjà en attente de double validation sur Sous-caisse Marché (§4.7, §10.4).'; });
+    q('[data-aj-save]').disabled = true;
+  }
+  /* Verrou métier : aucune auto-validation en cas d'écart, quel que soit le profil (s'ajoute au refus par permission du moteur) */
+  function lockEcart() {
+    qa('[data-lock-ecart]').forEach(function (b) {
+      var base = (b.title || '').replace(MOTIF, '').trim();
+      b.disabled = true; b.classList.add('denied'); b.setAttribute('aria-disabled', 'true'); b.title = (base ? base + ' ' : '') + MOTIF;
+    });
+  }
+  qa('[data-lock-ecart]').forEach(function (b) { ctx.on(b, 'click', function (e) { e.preventDefault(); ctx.toast(MOTIF); }); });
+  try { new MutationObserver(lockEcart).observe(root, { attributes: true, attributeFilter: ['hidden'] }); } catch (e) {}
+
+  /* Progression : périmètres ayant bougé (sans mouvement exclu, non bloquant) */
+  function progress() {
+    var c = { ok: 0, ecart: 0, att: 0, sans: 0 };
+    qa('[data-perim]').forEach(function (e) { c[e.dataset.perim] = (c[e.dataset.perim] || 0) + 1; });
+    var total = c.ok + c.ecart + c.att, pct = total ? Math.round(c.ok / total * 100) : 0;
+    var set = function (sel, v) { qa(sel).forEach(function (e) { e.textContent = v; }); };
+    set('[data-perim-done]', c.ok); set('[data-perim-total]', total); set('[data-perim-ecart]', c.ecart); set('[data-perim-att]', c.att); set('[data-perim-sans]', c.sans);
+    q('[data-ring]').setAttribute('stroke-dasharray', Math.round(pct * 1.76) + ' 176');
+    q('[data-ring-pct]').textContent = pct + ' %'; q('[data-prog]').style.width = pct + '%';
+  }
+  /* Ventes du jour (§6.4) : l'équation est recalculée depuis les quatre composantes, jamais saisie */
+  function checkVentes() {
+    var g = function (k) { return num(q('[data-comp="' + k + '"]').dataset.amt); };
+    var ec = g('ventes') - (g('v') + g('b') + g('c') - g('r')), ok = ec === 0;
+    var st = q('[data-ventes-st]'), el = q('[data-ventes-ecart]');
+    el.textContent = ctx.fmt(ec); el.className = ok ? 'ok' : 'bad';
+    st.className = 'st ' + (ok ? 'ok' : 'bad'); st.innerHTML = '<svg><use href="#i-' + (ok ? 'check' : 'alert') + '"/></svg>' + (ok ? 'Cohérente' : 'Écart · réconciliation ouverte');
+    q('[data-perim-ventes]').dataset.perim = ok ? 'ok' : 'ecart';
+  }
+  /* Source A : la somme des 12 déclarations est recalculée depuis les lignes */
+  function sumMaas() {
+    var s = 0; qa('#fin-reconciliation-maas .mrow:not(.tot) .amt').forEach(function (a) { s += num(a.dataset.amt); });
+    qa('[data-maas-sum]').forEach(function (e) { setAmt(e, s); });
+    var b = num(q('[data-maas-b]').dataset.amt), ec = q('[data-maas-ecart]'); setAmt(ec, s - b); ec.classList.toggle('bad', s !== b); ec.classList.toggle('ok', s === b);
+  }
+
+  /* Accordéon des 12 déclarations */
+  qa('[data-acc]').forEach(function (b) { ctx.on(b, 'click', function () {
+    var t = q('#' + b.dataset.acc), open = t.hidden; t.hidden = !open; b.classList.toggle('open', open); b.setAttribute('aria-expanded', String(open));
+    b.lastChild.textContent = open ? 'Masquer les 12 déclarations' : 'Voir les 12 déclarations';
+  }); });
+  /* Filtres fournisseurs */
+  var ftb = q('tbody[data-fourn-rows]');
+  qa('[data-fflt]').forEach(function (b) { ctx.on(b, 'click', function () {
+    qa('[data-fflt]').forEach(function (x) { x.classList.toggle('on', x === b); }); ctx.filterRows(ftb, 'etat', b.dataset.fflt);
+  }); });
+
+  /* Modale Ajustement (§4.7) : motif obligatoire, double validation, aucun effet avant les deux validations */
+  var inpM = q('[data-aj-montant]'), inpMotif = q('[data-aj-motif]');
+  function fillInit() { q('[data-aj-init]').value = ctx.profile.short + ' · ' + ctx.profile.profile; }
+  function ajCompute() { var m = num(inpM.value); setAmt(q('[data-aj-apres]'), THEO_SCM + m); q('[data-aj-unusual]').hidden = Math.abs(m) <= SEUIL_INHABITUEL; }
+  ctx.on(inpM, 'input', ajCompute);
+  qa('.drawer [data-open="fin-reconciliation-ajust"]').forEach(function (b) { ctx.on(b, 'click', function () { if (!b.classList.contains('denied')) ctx.close('fin-reconciliation-invest'); }); });
+  ctx.on(q('[data-aj-save]'), 'click', function () {
+    var m = num(inpM.value), motif = inpMotif.value.trim();
+    if (!m) { ctx.toast('Indiquer un montant d\'ajustement signé, différent de 0 FCFA.'); inpM.focus(); return; }
+    if (!motif) { ctx.toast('Le motif est obligatoire pour tout mouvement vers ou depuis le compte Ajustement (§4.7).'); inpMotif.focus(); return; }
+    q('[data-st-scm]').innerHTML = '<span class="st warn"><svg><use href="#i-clock"/></svg>À réconcilier · ajustement VAL-119 en attente (0/2)</span>';
+    q('[data-lock-hint]').innerHTML = 'Désactivé : l\'écart <span class="amt" data-amt="-25000" data-nocur></span> subsiste jusqu\'à la double validation de l\'ajustement VAL-119 (aucun effet définitif avant deux validations) ; aucune auto-validation en cas d\'écart.'; ctx.formatAmounts(q('[data-lock-hint]'));
+    q('[data-inv-tl]').insertAdjacentHTML('beforeend', '<div class="ev on"><b>Ajustement ' + ctx.fmt(m) + ' soumis</b> — VAL-119 · ' + esc(ctx.profile.short) + ' · motif « ' + esc(motif) + ' »<small>27/08 · maintenant · double validation requise : deux validateurs distincts de l\'initiateur et entre eux (§4.7) · aucun effet avant les deux validations</small></div>');
+    ctx.close('fin-reconciliation-ajust'); ctx.applyPerms(); lockEcart(); pending = true; lockAjust();
+    ctx.toast('Ajustement ' + ctx.fmt(m) + ' FCFA sur Sous-caisse Marché soumis (VAL-119) · motif enregistré · en attente de deux validations distinctes' + (Math.abs(m) > SEUIL_INHABITUEL ? ' · alerte « Ajustement inhabituel » : DG et Super Admin notifiés' : '') + ' · created_at et updated_by automatiques.');
+  });
+
+  document.addEventListener('erp:profile', function () { applyBlind(); applyScope(); lockEcart(); fillInit(); });
+  applyBlind(); applyScope(); checkVentes(); sumMaas(); progress(); fillInit(); ajCompute();
+  ctx.formatAmounts(root); ctx.applyPerms(); applyScope(); lockEcart();
+});
+</script>

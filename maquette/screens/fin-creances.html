@@ -1,0 +1,240 @@
+<!-- ÉCRAN : CRÉANCES CLIENTS (Mata Finance §4.3, §4.5, §6.1 à §6.4) -->
+<section class="scr" data-scr="fin-creances" data-module="finance" data-perm="finance.creances.view" data-sens="s" hidden>
+  <style data-screen="fin-creances">
+    #app [data-scr="fin-creances"] [hidden]{display:none!important}
+    #app [data-scr="fin-creances"] th .fx{vertical-align:middle;margin-left:4px}
+    #app [data-scr="fin-creances"] tfoot td{background:var(--card-2);font-weight:600}
+  </style>
+  <div class="scr-head">
+    <div>
+      <h2>Créances clients</h2>
+      <p class="scr-sub">15 comptes Créance client, chacun relié à un identifiant du Référentiel ERP (§4.5) · position toujours calculée, jamais saisie : Position précédente + Ventes Mata − Encaissements affectés au compte client ± Ajustements validés (§4.3)</p>
+    </div>
+    <div class="scr-meta">
+      <span class="sens s"><svg><use href="#i-shield"/></svg>Sensible</span>
+      <span class="hint">Positions client sensibles : modifications selon permissions et clôture (§10.1) · correction uniquement par Ajustement à double validation (§4.7) · audit de modification</span>
+    </div>
+  </div>
+
+  <!-- Bandeau Mata Group : tous les profils sauf Gérant MaaS -->
+  <div class="statstrip four" data-view="all">
+    <div class="card stat">
+      <div class="lb">Créances clients<button class="fx" data-f="Créances clients = Σ max(Position client ; 0)" data-c="MaaS Keur Massar 3 250 000 · MaaS Ouakam 2 870 000 · MaaS Pikine 1 985 000 · Restaurant Le Baobab 2 400 000 · Boucherie des Almadies 1 730 000 · 9 autres MaaS 7 840 000 · Touba Viandes exclu (position négative)" data-src="Moteur financier · 15 comptes Créance client CALCULÉ · 27/08/2026 · compte Ajustement exclu (§8.1)" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></div>
+      <div class="v amt" data-amt="20075000" data-kpi="cre"></div>
+      <div class="sub2">4,4 % du CA de référence (CA Mata août au 27 : 452 000 000)</div>
+    </div>
+    <div class="card stat">
+      <div class="lb">Avances clients<button class="fx" data-f="Avances clients = Σ max(− Position client ; 0)" data-c="Touba Viandes 150 000 (position −150 000)" data-src="Moteur financier · comptes Créance client CALCULÉ · 27/08/2026" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></div>
+      <div class="v amt" data-amt="150000" data-kpi="adv"></div>
+      <div class="sub2">1 contrepartie · Touba Viandes · absorbée par les ventes futures (§4.3)</div>
+    </div>
+    <div class="card stat">
+      <div class="lb">Ventes du jour<button class="fx" data-f="Ventes Mata du jour = Versements du jour + Paiements Bictorys du jour + Créances nettes nouvelles du jour − Remboursements à neutraliser du jour" data-c="Versements 3 100 000 · Paiements Bictorys 1 250 000 · Créances nettes nouvelles 2 450 000 · Remboursements à neutraliser 600 000" data-src="Ventes Mata · OK 27/08 20:30 · réconciliation des ventes du jour : Cohérente (§6.4)" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></div>
+      <div class="v amt" data-amt="6200000"></div>
+      <div class="sub2">Source Ventes Mata OK 20:30 · réconciliation des ventes du jour Cohérente</div>
+    </div>
+    <div class="card stat">
+      <div class="lb">Versements du jour<button class="fx" data-f="Versements du jour : encaissements hors Bictorys reçus pendant la journée, qu'ils règlent des ventes du jour, des créances antérieures ou constituent une avance" data-c="Versements 3 100 000 (collecte du 27/08, réconciliée vers 02:00) · Paiements Bictorys du jour 1 250 000, comptés à part" data-src="Flux de versements OK · Bictorys OK 27/08 08:12 · une même transaction ne peut appartenir simultanément à Versements et Paiements Bictorys (§6.4)" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></div>
+      <div class="v amt" data-amt="3100000"></div>
+      <div class="sub2">Paiements Bictorys du jour <span class="amt" data-amt="1250000" data-nocur></span> · jamais additionnés aux Versements (§6.4) · dont <span class="amt" data-amt="600000" data-nocur></span> à neutraliser</div>
+    </div>
+  </div>
+
+  <div class="card" data-view="all" style="margin-bottom:14px">
+    <div class="ch"><h3>Réconciliation des ventes du jour</h3><span class="st ok"><svg><use href="#i-check"/></svg>Cohérente</span><span class="hint-r">Sources : Ventes OK 20:30 · Versements OK · Bictorys OK 08:12 · Comptes créance OK · couvre tous les clients, MaaS compris (§6.4)</span></div>
+    <div class="cb"><div class="eq">Ventes Mata du jour <b>6 200 000</b> = Versements du jour <b>3 100 000</b> + Paiements Bictorys du jour <b>1 250 000</b> + Créances nettes nouvelles du jour <b>2 450 000</b> − Remboursements à neutraliser du jour <b>600 000</b> <span class="ok">· écart 0</span></div></div>
+  </div>
+
+  <!-- Bandeau Gérant MaaS (B. Fall) : sa position uniquement -->
+  <div class="statstrip" data-view="maas" hidden>
+    <div class="card stat">
+      <div class="lb">Position MaaS Keur Massar<button class="fx" data-f="Position client = Position précédente + Ventes Mata − Encaissements affectés au compte client ± Ajustements validés" data-c="Position au 26/08 2 850 000 (historique horodaté) · Ventes Mata 27/08 820 000 · Encaissements affectés 420 000 · Ajustements validés 0" data-src="Moteur financier · compte C1 CALCULÉ · entity_id MAAS-KM · 27/08/2026" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></div>
+      <div class="v amt" data-amt="3250000" data-kpi="km"></div>
+      <div class="sub2">Le MaaS doit à Mata (§4.3) · entity_id MAAS-KM (Référentiel ERP)</div>
+    </div>
+    <div class="card stat">
+      <div class="lb">Encaissements collectés</div>
+      <div class="v amt" data-amt="420000"></div>
+      <div class="sub2">Collecte du 26/08 validée 27/08 02:04 · remboursement affecté au compte (§6.3)</div>
+    </div>
+    <div class="card stat">
+      <div class="lb">Ventes du jour</div>
+      <div class="v amt" data-amt="820000"></div>
+      <div class="sub2">Ventes Mata → MaaS Keur Massar · source Ventes Mata OK 20:30</div>
+    </div>
+  </div>
+  <div class="deny-note" data-view="maas" hidden><svg><use href="#i-lock"/></svg><span><b>Refus par défaut hors périmètre.</b> Le profil Gérant MaaS ne consulte que la position de son MaaS (Keur Massar). Les 14 autres contreparties, les filtres par type et les agrégats Mata Group sont masqués. « Accorder une créance », « Générer la facture », « Exporter » et « Voir la réconciliation » restent visibles mais désactivés faute de permission.</span></div>
+
+  <div class="actionbar">
+    <div class="chips" data-view="all">
+      <button class="chip on" data-filter="tous">Tous</button><button class="chip" data-filter="maas">MaaS</button><button class="chip" data-filter="gros">Gros client</button><button class="chip" data-filter="simple">Client simple exceptionnel</button>
+    </div>
+    <div class="sp"></div>
+    <button class="btn ghost" data-perm="finance.reconciliation.view" data-goto="fin-reconciliation"><svg><use href="#i-refresh"/></svg>Voir la réconciliation</button>
+    <button class="btn ghost" data-perm="finance.export" data-act="export"><svg><use href="#i-dl"/></svg>Exporter</button>
+    <button class="btn pri" data-perm="finance.creances.accorder" data-open="fin-creances-accorder"><svg><use href="#i-plus"/></svg>Accorder une créance</button>
+  </div>
+
+  <div class="card">
+    <div class="ch"><h3 data-d="tblh">Positions clients — Mata Group</h3><span class="hint-r" data-d="tblhint">Convention de signe §4.3 : positif = le client doit à Mata · négatif = avance du client</span></div>
+    <div class="tbl-scroll"><table>
+      <thead><tr><th>Contrepartie</th><th>Type</th><th>Position</th><th>Encaissements collectés<button class="fx" data-f="Somme des versements déclarés = Montant déclaré par le collecteur" data-c="Source A : 12 déclarations MaaS = 4 725 000 · Source B : collecteur A. Ndiaye = 4 725 000 · Caisse créditée, remboursements affectés aux comptes clients" data-src="Réconciliation des encaissements collectés (§6.3) · collecte du 26/08 · Validée 27/08 02:04" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></th><th>Ventes du jour</th><th>Contrôle</th></tr></thead>
+      <tbody data-rows>
+        <tr class="rowlink" data-open="fin-creances-fiche" data-type="maas" data-ref="MAAS-KM" data-name="MaaS Keur Massar" data-pos="3250000" data-enc="420000" data-ventes="820000"><td><b>MaaS Keur Massar</b><div class="hint">entity_id MAAS-KM</div></td><td><span class="tag lock">MaaS</span></td><td><span class="amt" data-amt="3250000" data-nocur data-cell="pos"></span></td><td><span class="amt" data-amt="420000" data-nocur></span></td><td><span class="amt" data-amt="820000" data-nocur></span></td><td><span class="st ok"><svg><use href="#i-check"/></svg>Collecte validée 02:04</span></td></tr>
+        <tr class="rowlink" data-open="fin-creances-fiche" data-type="maas" data-ref="MAAS-OUA" data-name="MaaS Ouakam" data-pos="2870000" data-enc="385000" data-ventes="715000"><td><b>MaaS Ouakam</b><div class="hint">entity_id MAAS-OUA</div></td><td><span class="tag lock">MaaS</span></td><td><span class="amt" data-amt="2870000" data-nocur data-cell="pos"></span></td><td><span class="amt" data-amt="385000" data-nocur></span></td><td><span class="amt" data-amt="715000" data-nocur></span></td><td><span class="st ok"><svg><use href="#i-check"/></svg>Collecte validée 02:04</span></td></tr>
+        <tr class="rowlink" data-open="fin-creances-fiche" data-type="maas" data-ref="MAAS-PIK" data-name="MaaS Pikine" data-pos="1985000" data-enc="512000" data-ventes="690000"><td><b>MaaS Pikine</b><div class="hint">entity_id MAAS-PIK</div></td><td><span class="tag lock">MaaS</span></td><td><span class="amt" data-amt="1985000" data-nocur data-cell="pos"></span></td><td><span class="amt" data-amt="512000" data-nocur></span></td><td><span class="amt" data-amt="690000" data-nocur></span></td><td><span class="st ok"><svg><use href="#i-check"/></svg>Collecte validée 02:04</span></td></tr>
+        <tr class="rowlink" data-open="fin-creances-fiche" data-type="gros" data-ref="CLI-004" data-name="Restaurant Le Baobab" data-pos="2400000" data-enc="0" data-ventes="560000"><td><b>Restaurant Le Baobab</b><div class="hint">client_id CLI-004</div></td><td><span class="tag lock">Gros client</span></td><td><span class="amt" data-amt="2400000" data-nocur data-cell="pos"></span></td><td><span class="hint">— hors circuit de collecte</span></td><td><span class="amt" data-amt="560000" data-nocur></span></td><td><span class="st mut"><svg><use href="#i-clock"/></svg>Hors circuit de collecte · contrôle global §6.4</span></td></tr>
+        <tr class="rowlink" data-open="fin-creances-fiche" data-type="gros" data-ref="CLI-005" data-name="Boucherie des Almadies" data-pos="1730000" data-enc="0" data-ventes="410000"><td><b>Boucherie des Almadies</b><div class="hint">client_id CLI-005</div></td><td><span class="tag lock">Gros client</span></td><td><span class="amt" data-amt="1730000" data-nocur data-cell="pos"></span></td><td><span class="hint">— hors circuit de collecte</span></td><td><span class="amt" data-amt="410000" data-nocur></span></td><td><span class="st mut"><svg><use href="#i-clock"/></svg>Hors circuit de collecte · contrôle global §6.4</span></td></tr>
+        <tr class="rowlink" data-open="fin-creances-fiche" data-type="gros" data-ref="CLI-006" data-name="Touba Viandes" data-pos="-150000" data-enc="0" data-ventes="0"><td><b>Touba Viandes</b><div class="hint">client_id CLI-006</div></td><td><span class="tag lock">Gros client</span></td><td><span class="amt" data-amt="-150000" data-nocur data-cell="pos"></span></td><td><span class="hint">— hors circuit de collecte</span></td><td><span class="hint">Aucune vente le 27/08</span></td><td><span class="st warn"><svg><use href="#i-alert"/></svg>Avance client</span></td></tr>
+        <tr class="rowlink" data-open="fin-creances-fiche" data-type="maas" data-ref="MAAS-RUF" data-name="MaaS Rufisque" data-pos="980000" data-enc="298000" data-ventes="330000"><td><b>MaaS Rufisque</b><div class="hint">entity_id MAAS-RUF</div></td><td><span class="tag lock">MaaS</span></td><td><span class="amt" data-amt="980000" data-nocur data-cell="pos"></span></td><td><span class="amt" data-amt="298000" data-nocur></span></td><td><span class="amt" data-amt="330000" data-nocur></span></td><td><span class="st ok"><svg><use href="#i-check"/></svg>Collecte validée 02:04</span></td></tr>
+        <tr class="rowlink" data-open="fin-creances-fiche" data-type="maas" data-ref="MAAS-GYF" data-name="MaaS Grand Yoff" data-pos="1120000" data-enc="445000" data-ventes="415000"><td><b>MaaS Grand Yoff</b><div class="hint">entity_id MAAS-GYF</div></td><td><span class="tag lock">MaaS</span></td><td><span class="amt" data-amt="1120000" data-nocur data-cell="pos"></span></td><td><span class="amt" data-amt="445000" data-nocur></span></td><td><span class="amt" data-amt="415000" data-nocur></span></td><td><span class="st ok"><svg><use href="#i-check"/></svg>Collecte validée 02:04</span></td></tr>
+        <tr class="rowlink" data-open="fin-creances-fiche" data-type="maas" data-ref="MAAS-PAR" data-name="MaaS Parcelles" data-pos="860000" data-enc="367000" data-ventes="305000"><td><b>MaaS Parcelles</b><div class="hint">entity_id MAAS-PAR</div></td><td><span class="tag lock">MaaS</span></td><td><span class="amt" data-amt="860000" data-nocur data-cell="pos"></span></td><td><span class="amt" data-amt="367000" data-nocur></span></td><td><span class="amt" data-amt="305000" data-nocur></span></td><td><span class="st ok"><svg><use href="#i-check"/></svg>Collecte validée 02:04</span></td></tr>
+        <tr class="rowlink" data-open="fin-creances-fiche" data-type="maas" data-ref="MAAS-MED" data-name="MaaS Médina" data-pos="940000" data-enc="402000" data-ventes="360000"><td><b>MaaS Médina</b><div class="hint">entity_id MAAS-MED</div></td><td><span class="tag lock">MaaS</span></td><td><span class="amt" data-amt="940000" data-nocur data-cell="pos"></span></td><td><span class="amt" data-amt="402000" data-nocur></span></td><td><span class="amt" data-amt="360000" data-nocur></span></td><td><span class="st ok"><svg><use href="#i-check"/></svg>Collecte validée 02:04</span></td></tr>
+        <tr class="rowlink" data-open="fin-creances-fiche" data-type="maas" data-ref="MAAS-YOF" data-name="MaaS Yoff" data-pos="780000" data-enc="356000" data-ventes="280000"><td><b>MaaS Yoff</b><div class="hint">entity_id MAAS-YOF</div></td><td><span class="tag lock">MaaS</span></td><td><span class="amt" data-amt="780000" data-nocur data-cell="pos"></span></td><td><span class="amt" data-amt="356000" data-nocur></span></td><td><span class="amt" data-amt="280000" data-nocur></span></td><td><span class="st ok"><svg><use href="#i-check"/></svg>Collecte validée 02:04</span></td></tr>
+        <tr class="rowlink" data-open="fin-creances-fiche" data-type="maas" data-ref="MAAS-NGO" data-name="MaaS Ngor" data-pos="1050000" data-enc="489000" data-ventes="445000"><td><b>MaaS Ngor</b><div class="hint">entity_id MAAS-NGO</div></td><td><span class="tag lock">MaaS</span></td><td><span class="amt" data-amt="1050000" data-nocur data-cell="pos"></span></td><td><span class="amt" data-amt="489000" data-nocur></span></td><td><span class="amt" data-amt="445000" data-nocur></span></td><td><span class="st ok"><svg><use href="#i-check"/></svg>Collecte validée 02:04</span></td></tr>
+        <tr class="rowlink" data-open="fin-creances-fiche" data-type="maas" data-ref="MAAS-THI" data-name="MaaS Thiaroye" data-pos="690000" data-enc="315000" data-ventes="245000"><td><b>MaaS Thiaroye</b><div class="hint">entity_id MAAS-THI</div></td><td><span class="tag lock">MaaS</span></td><td><span class="amt" data-amt="690000" data-nocur data-cell="pos"></span></td><td><span class="amt" data-amt="315000" data-nocur></span></td><td><span class="amt" data-amt="245000" data-nocur></span></td><td><span class="st ok"><svg><use href="#i-check"/></svg>Collecte validée 02:04</span></td></tr>
+        <tr class="rowlink" data-open="fin-creances-fiche" data-type="maas" data-ref="MAAS-GUE" data-name="MaaS Guédiawaye" data-pos="810000" data-enc="378000" data-ventes="320000"><td><b>MaaS Guédiawaye</b><div class="hint">entity_id MAAS-GUE</div></td><td><span class="tag lock">MaaS</span></td><td><span class="amt" data-amt="810000" data-nocur data-cell="pos"></span></td><td><span class="amt" data-amt="378000" data-nocur></span></td><td><span class="amt" data-amt="320000" data-nocur></span></td><td><span class="st ok"><svg><use href="#i-check"/></svg>Collecte validée 02:04</span></td></tr>
+        <tr class="rowlink" data-open="fin-creances-fiche" data-type="maas" data-ref="MAAS-HLM" data-name="MaaS HLM" data-pos="610000" data-enc="358000" data-ventes="305000"><td><b>MaaS HLM</b><div class="hint">entity_id MAAS-HLM</div></td><td><span class="tag lock">MaaS</span></td><td><span class="amt" data-amt="610000" data-nocur data-cell="pos"></span></td><td><span class="amt" data-amt="358000" data-nocur></span></td><td><span class="amt" data-amt="305000" data-nocur></span></td><td><span class="st ok"><svg><use href="#i-check"/></svg>Collecte validée 02:04</span></td></tr>
+        <tr data-empty hidden><td colspan="6"><span class="hint">Aucune contrepartie de catégorie « Client simple exceptionnel » dans le périmètre Mata Group : catégorie prévue en V1 (§4.5), aucun compte Créance de ce type n'a encore été relié au Référentiel ERP.</span></td></tr>
+      </tbody>
+      <tfoot><tr><td><b>Total</b> <span class="hint" data-tot-n>15 contreparties affichées</span></td><td></td><td><span class="amt" data-amt="20075000" data-nocur data-tot="cre"></span><div class="hint">Σ max(Position client ; 0)</div></td><td><span class="amt" data-amt="4725000" data-nocur data-tot="enc"></span><div class="hint" data-d="tothint">Source A = Source B (§6.3)</div></td><td><span class="amt" data-amt="6200000" data-nocur data-tot="ventes"></span><div class="hint">= Ventes Mata du jour (§6.4)</div></td><td></td></tr></tfoot>
+    </table></div>
+  </div>
+  <div class="note-strip" data-view="all"><svg><use href="#i-info"/></svg><span><b>« Encaissements collectés »</b> : remboursements affectés aux comptes clients par la réconciliation des encaissements collectés (§6.3) — collecte du 26/08 validée le 27/08 à 02:04, Source A (12 déclarations MaaS) <span class="amt" data-amt="4725000" data-nocur></span> = Source B (collecteur A. Ndiaye) <span class="amt" data-amt="4725000" data-nocur></span>. <b>« Ventes du jour »</b> : ventes Mata → client reçues par API le 27/08, créance créée à 100 % du montant (§6.1). La collecte du 27/08 (versements du jour <span class="amt" data-amt="3100000" data-nocur></span>) sera réconciliée cette nuit vers 02:00 ; les gros clients sont hors circuit de collecte. <span class="hint">Ventilation par contrepartie des ventes du jour : illustrative, seul le total est fixé par les données communes.</span></span></div>
+  <div class="note-strip"><svg><use href="#i-eyeoff"/></svg><span>Les ventes <b>MaaS → consommateur final</b> sont hors périmètre de Mata Finance (§6.1, §11.1) : la position d'un MaaS ne reflète que les ventes Mata → MaaS et les encaissements collectés. Une vente reçue plusieurs fois ne produit qu'un seul effet financier : identifiant externe stable (§3, Idempotence). Une avance client est absorbée par les ventes futures avant qu'une créance opposée ne se forme (§4.3).</span></div>
+
+  <!-- Tiroir : fiche contrepartie -->
+  <aside class="drawer" data-ov="fin-creances-fiche">
+    <div class="dh"><h3 data-d="name">MaaS Keur Massar</h3><button class="ib" data-close aria-label="Fermer"><svg><use href="#i-x"/></svg></button></div>
+    <div class="db">
+      <div class="meta-l"><span class="tag lock" data-d="type">MaaS</span><span class="tag api"><svg><use href="#i-lock"/></svg>Référentiel ERP</span><span class="hint" data-d="ref">entity_id MAAS-KM</span></div>
+      <div class="hint">Position client · CALCULÉ à partir des ventes, encaissements et ajustements · jamais saisie (§4.1, §4.2)</div>
+      <div class="big-amt amt" data-d="pos" data-amt="3250000"></div>
+      <div data-d="statut"></div>
+      <div class="eq" style="margin-top:12px">Position client = Position précédente + Ventes Mata − Encaissements affectés au compte client ± Ajustements validés<br><span data-d="eqn"></span></div>
+      <div class="brk" style="margin-top:8px">
+        <div class="row"><span class="sign p">=</span>Position précédente <span class="hint">dernière position calculée au 26/08 · historique horodaté (§8.6)</span><span class="amt" data-d="prev" data-amt="0" data-nocur></span></div>
+        <div class="row"><span class="sign p">+</span>Ventes Mata <span class="hint">API Ventes Mata · 27/08</span><span class="amt" data-d="v" data-amt="0" data-nocur></span></div>
+        <div class="row"><span class="sign m">−</span>Encaissements affectés <span class="hint" data-d="encnote"></span><span class="amt" data-d="enc" data-amt="0" data-nocur></span></div>
+        <div class="row"><span class="sign p">±</span>Ajustements validés <span class="hint">aucun · double validation §4.7</span><span class="amt" data-amt="0" data-nocur></span></div>
+      </div>
+      <div class="note-strip" data-d="avance" hidden><svg><use href="#i-info"/></svg><span><b>Avance client</b> : elle provient d'un paiement supérieur à la créance à solder (§6.1) et est <b>consommée automatiquement par les ventes futures</b> avant qu'une créance opposée ne se forme (§4.3).</span></div>
+      <p class="scr-sub" style="margin-top:14px"><b>Dernières ventes reçues par API (Ventes Mata)</b> · chaque vente crée une créance à 100 % de son montant ; identifiant externe stable, un événement répété ne crée qu'un seul effet financier (§3, §6.1, §9)</p>
+      <div data-d="ventes"></div>
+    </div>
+    <div class="df"><button class="btn ghost" data-perm="finance.creances.accorder" data-act="acc-open"><svg><use href="#i-plus"/></svg>Accorder une créance</button><div class="sp"></div><button class="btn pri" data-perm="finance.creances.facturer" data-act="facture"><svg><use href="#i-file"/></svg>Générer la facture</button></div>
+  </aside>
+  <div class="dback" data-ov-back="fin-creances-fiche"></div>
+
+  <!-- Modale : accorder une créance -->
+  <div class="mback" data-ov="fin-creances-accorder"><div class="modal" role="dialog" aria-modal="true" aria-label="Accorder une créance">
+    <h3><svg><use href="#i-plus"/></svg>Accorder une créance (autorisation de crédit)</h3>
+    <div class="exp">La contrepartie est obligatoirement reliée au Référentiel ERP (§4.5). L'accord est une <b>autorisation</b> tracée (plafond, validité, motif, created_at et updated_by automatiques) : la position reste calculée et n'évolue qu'à la réception des ventes par Ventes Mata (§6.1) ; toute correction de position passe par Ajustement à double validation (§4.7). Une avance existante est consommée en premier (§4.3).</div>
+    <div class="fld"><label for="fin-creances-acc-cp">Contrepartie (Référentiel ERP)</label><select id="fin-creances-acc-cp" class="inp"></select></div>
+    <div class="fld" style="margin-top:10px"><label for="fin-creances-acc-mt">Plafond de crédit autorisé (FCFA, sans décimales)</label><input id="fin-creances-acc-mt" class="inp mono" inputmode="numeric" placeholder="0"></div>
+    <div class="fld" style="margin-top:10px"><label for="fin-creances-acc-dt">Valable jusqu'au</label><input id="fin-creances-acc-dt" class="inp mono" type="date" value="2026-09-30"></div>
+    <div class="fld" style="margin-top:10px"><label for="fin-creances-acc-mo">Motif (obligatoire, audité)</label><input id="fin-creances-acc-mo" class="inp" placeholder="Ex. livraison exceptionnelle réglée à 7 jours"></div>
+    <div class="acts"><button class="btn ghost" data-close>Annuler</button><button class="btn pri" data-perm="finance.creances.accorder" data-act="acc-ok"><svg><use href="#i-check"/></svg>Accorder</button></div>
+  </div></div>
+</section>
+<script data-screen="fin-creances">
+ERP.register('fin-creances', function (root, ctx) {
+  var $ = function (s, el) { return (el || root).querySelector(s); };
+  var $$ = function (s, el) { return Array.prototype.slice.call((el || root).querySelectorAll(s)); };
+  var tbody = $('[data-rows]'), emptyRow = $('[data-empty]'), tfoot = $('tfoot'), drawer = $('[data-ov="fin-creances-fiche"]');
+  var sel = $('#fin-creances-acc-cp'), cur = 'tous', isMaas = false, curRef = 'MAAS-KM';
+  var rows = function () { return $$('tr[data-ref]', tbody); };
+  var num = function (tr, k) { return parseInt(tr.getAttribute('data-' + k), 10) || 0; };
+  var fmt = function (n) { return (n < 0 ? '−' : '') + String(Math.abs(n)).replace(/\B(?=(\d{3})+(?!\d))/g, ' '); };
+  var setAmt = function (el, v) { if (el) { el.setAttribute('data-amt', v); el.classList.toggle('neg', v < 0); } };
+  var denied = function (b) { return !b || b.disabled || b.classList.contains('denied') || b.getAttribute('aria-disabled') === 'true'; };
+  var icon = function (n) { return '<svg><use href="#i-' + n + '"/></svg>'; };
+  var mvt = function (id, meta, m) { return '<div class="mvt"><span class="sign ' + (m < 0 ? 'm' : 'p') + '">' + (m < 0 ? '−' : '+') + '</span><div class="tx"><b>' + id + '</b><small>' + meta + '</small></div><span class="amt" data-amt="' + m + '" data-nocur></span></div>'; };
+
+  rows().forEach(function (tr) {
+    var o = document.createElement('option'); o.value = tr.getAttribute('data-ref');
+    o.textContent = tr.getAttribute('data-name') + ' · ' + tr.getAttribute('data-ref'); sel.appendChild(o);
+  });
+
+  function applyFilter() {
+    var n = 0, t = { cre: 0, enc: 0, ventes: 0 };
+    rows().forEach(function (tr) {
+      var ok = (cur === 'tous' || tr.getAttribute('data-type') === cur) && (!isMaas || tr.getAttribute('data-ref') === 'MAAS-KM');
+      tr.hidden = !ok; if (!ok) return;
+      n++; t.cre += Math.max(num(tr, 'pos'), 0); t.enc += num(tr, 'enc'); t.ventes += num(tr, 'ventes');
+    });
+    emptyRow.hidden = n > 0; tfoot.hidden = n === 0;
+    var labels = { maas: 'MaaS', gros: 'Gros client', simple: 'Client simple exceptionnel' };
+    $('span', emptyRow).textContent = isMaas ? 'Aucune ligne dans votre périmètre.' : 'Aucune contrepartie de catégorie « ' + (labels[cur] || cur) + ' » dans le périmètre Mata Group : catégorie prévue en V1 (§4.5), aucun compte Créance de ce type n\'a encore été relié au Référentiel ERP.';
+    Object.keys(t).forEach(function (k) { setAmt($('[data-tot="' + k + '"]'), t[k]); });
+    $('[data-tot-n]').textContent = n + (n > 1 ? ' contreparties affichées' : ' contrepartie affichée');
+    ctx.formatAmounts(tfoot);
+  }
+  function updateKpis() {
+    var cre = 0, adv = 0;
+    rows().forEach(function (tr) { var p = num(tr, 'pos'); cre += Math.max(p, 0); adv += Math.max(-p, 0); });
+    setAmt($('[data-kpi="cre"]'), cre); setAmt($('[data-kpi="adv"]'), adv);
+    setAmt($('[data-kpi="km"]'), num($('tr[data-ref="MAAS-KM"]', tbody), 'pos'));
+    $$('.statstrip').forEach(function (s) { ctx.formatAmounts(s); });
+  }
+  function setView(id) {
+    isMaas = id === 'maas';
+    $$('[data-view]').forEach(function (el) { el.hidden = el.getAttribute('data-view') !== (isMaas ? 'maas' : 'all'); });
+    $('[data-d="tblh"]').textContent = isMaas ? 'Position client — MaaS Keur Massar' : 'Positions clients — Mata Group';
+    $('[data-d="tblhint"]').textContent = isMaas ? 'Votre périmètre : entity_id MAAS-KM · convention de signe §4.3 : positif = le MaaS doit à Mata' : 'Convention de signe §4.3 : positif = le client doit à Mata · négatif = avance du client';
+    var hfx = $('thead .fx'); if (hfx) hfx.hidden = isMaas;
+    $('[data-d="tothint"]').textContent = isMaas ? 'Collecte du 26/08 · votre MaaS' : 'Source A = Source B (§6.3)';
+    if (isMaas) { cur = 'tous'; $$('.chip[data-filter]').forEach(function (x) { x.classList.toggle('on', x.getAttribute('data-filter') === 'tous'); }); }
+    applyFilter();
+  }
+  function ventesHtml(v, maas, code) {
+    if (!v) return mvt('Vente VM-260826-' + code + '-02', 'Ventes Mata · API · 26/08 · 17:45 · créance créée à 100 % (§6.1)', 300000)
+      + mvt('Paiement associé', '26/08 · 17:45 · remboursement soldant la vente ; excédent 150 000 → avance client (§6.1, §6.2)', -450000)
+      + mvt('Vente VM-260825-' + code + '-01', 'Ventes Mata · API · 25/08 · 11:05 · reçue deux fois par l\'API, un seul effet financier (idempotence §3)', 200000)
+      + mvt('Paiement associé', '25/08 · 11:05 · réglée intégralement dans le même flux (§6.1)', -200000);
+    var parts = [Math.round(v * 0.5 / 5000) * 5000, Math.round(v * 0.3 / 5000) * 5000], hours = ['09:40', '13:15', '18:22'];
+    parts.push(v - parts[0] - parts[1]);
+    var pay = maas ? 'règlement par versement déclaré, affecté à la validation de la collecte (§6.3)' : 'aucun paiement associé · règlement attendu, hors circuit de collecte';
+    return parts.map(function (m, i) { return mvt('Vente VM-260827-' + code + '-0' + (i + 1), 'Ventes Mata · API · 27/08 · ' + hours[i] + ' · créance créée à 100 % · ' + pay, m); }).join('');
+  }
+  function fillDrawer(tr) {
+    var name = tr.getAttribute('data-name'), ref = tr.getAttribute('data-ref'), maas = tr.getAttribute('data-type') === 'maas';
+    var pos = num(tr, 'pos'), v = num(tr, 'ventes'), enc = num(tr, 'enc'), prev = pos - v + enc;
+    curRef = ref;
+    $('[data-d="name"]', drawer).textContent = name;
+    $('[data-d="type"]', drawer).textContent = maas ? 'MaaS' : 'Gros client';
+    $('[data-d="ref"]', drawer).textContent = (maas ? 'entity_id ' : 'client_id ') + ref;
+    setAmt($('[data-d="pos"]', drawer), pos); setAmt($('[data-d="prev"]', drawer), prev); setAmt($('[data-d="v"]', drawer), v); setAmt($('[data-d="enc"]', drawer), enc);
+    $('[data-d="eqn"]', drawer).innerHTML = '<b>' + fmt(pos) + '</b> = ' + fmt(prev) + ' + ' + fmt(v) + ' − ' + fmt(enc) + ' ± 0';
+    $('[data-d="encnote"]', drawer).textContent = enc ? 'collecte du 26/08 · affectés le 27/08 à 02:04' : 'aucun remboursement affecté le 27/08';
+    $('[data-d="avance"]', drawer).hidden = pos >= 0;
+    $('[data-d="statut"]', drawer).innerHTML = pos < 0
+      ? '<span class="st warn">' + icon('alert') + 'Avance client · le client dispose d\'une avance chez Mata</span>'
+      : '<span class="st ok">' + icon('check') + 'Créance · le client doit de l\'argent à Mata</span>';
+    $('[data-d="ventes"]', drawer).innerHTML = ventesHtml(v, maas, ref.split('-').pop());
+    ctx.formatAmounts(drawer); ctx.applyPerms();
+  }
+  function accorder(btn) {
+    if (denied(btn)) return;
+    var ref = sel.value, mt = parseInt(($('#fin-creances-acc-mt').value || '').replace(/\D/g, ''), 10), motif = $('#fin-creances-acc-mo').value.trim();
+    if (!mt) { ctx.toast('Montant requis : entier positif en FCFA, sans décimales'); return; }
+    if (!motif) { ctx.toast('Motif obligatoire : toute écriture manuelle est tracée dans l\'audit'); return; }
+    var tr = $('tr[data-ref="' + ref + '"]', tbody), cell = $('td', tr), old = $('[data-acc]', cell), dt = ($('#fin-creances-acc-dt').value || '').split('-').reverse().join('/');
+    if (old) old.remove();
+    cell.insertAdjacentHTML('beforeend', '<div data-acc><span class="st warn">' + icon('note') + 'Crédit autorisé jusqu\'à ' + fmt(mt) + ' · valable jusqu\'au ' + dt + '</span> <span class="hint">' + motif + '</span></div>');
+    ctx.close('fin-creances-accorder'); $('#fin-creances-acc-mt').value = ''; $('#fin-creances-acc-mo').value = '';
+    ctx.toast('Autorisation de créance enregistrée pour ' + tr.getAttribute('data-name') + ' (plafond ' + fmt(mt) + ' FCFA, jusqu\'au ' + dt + ') · la position n\'évolue qu\'à la réception des ventes par Ventes Mata (§6.1) · tracée dans l\'audit');
+  }
+  $$('.chip[data-filter]').forEach(function (c) {
+    ctx.on(c, 'click', function () { $$('.chip[data-filter]').forEach(function (x) { x.classList.toggle('on', x === c); }); cur = c.getAttribute('data-filter'); applyFilter(); });
+  });
+  ctx.on(tbody, 'click', function (e) { var tr = e.target.closest('tr[data-ref]'); if (tr) fillDrawer(tr); });
+  var bF = $('[data-act="facture"]'), bO = $('[data-act="acc-open"]'), bK = $('[data-act="acc-ok"]'), bX = $('[data-act="export"]');
+  ctx.on(bF, 'click', function () { if (denied(bF)) return; ctx.toast('Facture ' + $('[data-d="name"]', drawer).textContent + ' : document généré par le service documentaire commun · disponible 7 jours, régénérable (§5.7, §9.2)'); });
+  ctx.on(bO, 'click', function () { if (denied(bO)) return; sel.value = curRef; ctx.close('fin-creances-fiche'); ctx.open('fin-creances-accorder'); });
+  ctx.on(bK, 'click', function () { accorder(bK); });
+  ctx.on(bX, 'click', function () { if (denied(bX)) return; ctx.toast('Export CSV des positions clients filtrées : service commun d\'export, disponible 7 jours (§9.2) · export audité'); });
+  document.addEventListener('erp:profile', function (e) { setView(e.detail && e.detail.id); });
+  setView(ctx.profile && typeof ctx.profile === 'object' ? ctx.profile.id : ctx.profile);
+});
+</script>

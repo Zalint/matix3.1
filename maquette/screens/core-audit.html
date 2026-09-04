@@ -1,0 +1,317 @@
+<section class="scr" data-scr="core-audit" data-module="core" data-perm="core.audit.view" data-sens="hs" hidden>
+  <style data-screen="core-audit">
+    #app [data-scr="core-audit"] > .card{margin-bottom:14px}
+    #app [data-scr="core-audit"] .st.info{background:var(--red-tint);color:var(--red)}
+    #app [data-scr="core-audit"] .tbl-scroll table{min-width:1060px}
+    #app [data-scr="core-audit"] td:first-child{white-space:nowrap}
+    #app [data-scr="core-audit"] td .sens{font-size:9px;padding:2px 7px}
+    #app [data-scr="core-audit"] td .hint{display:block;margin-top:3px;font-size:10px}
+    #app [data-scr="core-audit"] tr.consult td{opacity:.72}
+    #app [data-scr="core-audit"] tr.hit td{background:var(--red-tint)}
+    #app [data-scr="core-audit"] tr.hit td:first-child{box-shadow:inset 3px 0 0 var(--red)}
+    #app [data-scr="core-audit"] .filters{display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr;gap:12px;align-items:end}
+    #app [data-scr="core-audit"] .k-lbl{font-size:10px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;color:var(--mut);margin:12px 0 4px}
+    #app [data-scr="core-audit"] .k-val{font-size:12.5px;line-height:1.5}
+    #app [data-scr="core-audit"] .drawer .eq,#app [data-scr="core-audit"] .drawer .fcode{margin-top:10px}
+    #app [data-scr="core-audit"] .rline input[type=radio]{flex:none}
+    @media (max-width:960px){#app [data-scr="core-audit"] .filters{grid-template-columns:1fr 1fr}}
+    @media (max-width:640px){#app [data-scr="core-audit"] .filters{grid-template-columns:1fr}}
+  </style>
+  <div class="scr-head">
+    <div>
+      <h2>Audit central</h2>
+      <p class="scr-sub">Journal central de l'ERP : utilisateur ou agent, profil, entité, module, action, objet, ancienne/nouvelle valeur, date et heure, motif, chaîne de validation, source interface/import/IA/automatisation (§5.4) · l'écran Validations sert au travail opérationnel, l'Audit conserve la preuve historique (Finance §7.3)</p>
+    </div>
+    <div class="scr-meta">
+      <span class="sens hs"><svg><use href="#i-shield"/></svg>Hautement sensible</span>
+      <span class="hint">Consultation elle-même auditée (§5.3) · aucune validation : journal en lecture, jamais modifié ni supprimé physiquement (Finance §10.2) · Exporter distinct de Consulter (§3.4)</span>
+    </div>
+  </div>
+  <div class="note-strip" style="margin:0 0 14px"><svg><use href="#i-eye"/></svg><span data-self></span></div>
+
+  <div class="statstrip four">
+    <div class="card stat">
+      <div class="lb">Événements · extrait du 27/08<button class="fx" data-f="Un journal central conserve selon le niveau requis : utilisateur ou agent, profil, entité, module, action, objet, ancienne/nouvelle valeur, date et heure, motif, chaîne de validation, source interface/import/IA/automatisation." data-c="Humain 9 · API 2 · Automatisation 2 · Agent IA 0 · dont le gel du 26/08 à 23:59" data-src="Mata Core §5.4 · journal central, base active · Mata Group · journée en cours" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></div>
+      <div class="v">13</div>
+      <div class="sub2">Mata Finance 10 · Mata Core 3 · immédiatement consultables</div>
+    </div>
+    <div class="card stat">
+      <div class="lb">Modifications<button class="fx" data-f="Les écritures de modification détaillées (créations, corrections, validations, ajustements) restent en base active pendant 24 mois, puis sont archivées intégralement, compressées, sur stockage objet à faible coût jusqu'à l'échéance de conservation de 10 ans." data-c="Déclaration 1 · 1re validation 1 · Propositions de transfert 2 · Imports et synchronisation 3 · Override modèle agent 1 · Attribution de droit 1 · Demande 1 · Auto-validation 1 · Gel 1" data-src="Mata Core technique §11 · conservation cible 10 ans (§5.4)" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></div>
+      <div class="v">12</div>
+      <div class="sub2">détail 24 mois puis archive froide 10 ans</div>
+    </div>
+    <div class="card stat">
+      <div class="lb">Consultations<button class="fx" data-f="Les consultations en lecture seule restent détaillées 90 jours en base active ; au-delà, elles sont archivées à froid lorsque leur conservation détaillée est requise, et peuvent être complétées par des compteurs agrégés (qui a consulté quoi, combien de fois) maintenus en base active." data-c="O. Seck · DG Mata · Historique Caisse générale · 14:05 · Hautement sensible" data-src="Mata Core technique §11 · §5.3 : consultation des données hautement sensibles elle-même auditée" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></div>
+      <div class="v">1</div>
+      <div class="sub2">résumée après 90 jours · compteurs agrégés maintenus en base active</div>
+    </div>
+    <div class="card stat">
+      <div class="lb">Hautement sensible<button class="fx" data-f="Hautement sensible — accès fortement limité ; consultation elle-même auditée ; validation renforcée ; export éventuellement interdit ; restrictions possibles pour Externes et agents IA." data-c="21:12 Déclaration · 19:02 1re validation · 18:05 et 16:42 Propositions de transfert · 14:05 Consultation · 08:12 Synchronisation · 08:00 Import relevé · 02:04 Auto-validation" data-src="Mata Core §5.3 · Finance §10.1" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></div>
+      <div class="v">8</div>
+      <div class="sub2">Sensible 4 · Standard 1 · Externes et agents IA restreints</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="ch"><h3>Rechercher et filtrer</h3><span class="hint-r">§5.4 · « Qui a donné quel droit à qui, quand et sous quel profil ? »</span></div>
+    <div class="cb">
+      <div class="filters">
+        <div class="fld"><label for="core-audit-q">Recherche</label><input id="core-audit-q" class="inp" placeholder="Acteur, action, objet, référence : VAL-117, AG-01, C. Mbaye, Bictorys…"></div>
+        <div class="fld"><label for="core-audit-actor">Type d'acteur</label><select id="core-audit-actor" class="inp" data-flt="actor"><option value="tous">Tous</option><option value="humain">Humain</option><option value="api">API</option><option value="ia">Agent IA</option><option value="auto">Automatisation</option></select></div>
+        <div class="fld"><label for="core-audit-sens">Sensibilité</label><select id="core-audit-sens" class="inp" data-flt="sens"><option value="tous">Toutes</option><option value="hs">Hautement sensible</option><option value="s">Sensible</option><option value="std">Standard</option></select></div>
+        <div class="fld"><label for="core-audit-type">Type</label><select id="core-audit-type" class="inp" data-flt="type"><option value="tous">Tous</option><option value="modif">Modification</option><option value="consult">Consultation</option></select></div>
+      </div>
+      <div class="actionbar" style="margin:12px 0 0">
+        <div class="chips"><button class="chip on" data-filter="tous">Tous les modules</button><button class="chip" data-filter="finance">Mata Finance</button><button class="chip" data-filter="core">Mata Core</button></div>
+        <button class="chip" data-q="qui a donné quel droit à qui ?">Exemple : qui a donné quel droit à qui ?</button>
+        <div class="sp"></div>
+        <button class="btn ghost" data-reset><svg><use href="#i-refresh"/></svg>Réinitialiser</button>
+      </div>
+      <div class="note-strip" data-answer hidden><svg><use href="#i-key"/></svg><span><b>Réponse —</b> S. Doucouré, sous le profil Super Admin, a attribué le profil Comptable externe à C. Mbaye le 27/08 à 11:20 (accès temporaire 01/09 → 30/09). La ligne est mise en avant ci-dessous ; l'origine de chaque autorisation se vérifie dans <button class="linkish" data-goto="core-droits">Droits effectifs</button>.</span></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="ch"><h3>Journal central — Mata Group · 27/08/2026</h3><span class="hint-r" data-count>13 événements sur 13 · base active · 27/08/2026</span></div>
+    <div class="cb" style="padding-bottom:0">
+      <div class="actionbar" style="margin-bottom:10px">
+        <span class="hint">Journée en cours, gel « À réconcilier » à 23:59 · heure de Dakar (GMT) · lignes Consultation atténuées · clic sur une ligne : ancienne/nouvelle valeur, motif, chaîne de validation, source</span>
+        <div class="sp"></div>
+        <button class="btn ghost" data-perm="core.audit.exporter" data-open="core-audit-export"><svg><use href="#i-dl"/></svg>Exporter</button>
+      </div>
+    </div>
+    <div class="tbl-scroll"><table>
+      <thead><tr><th>Heure</th><th>Acteur</th><th>Profil</th><th>Module</th><th>Action</th><th>Type</th><th>Sensibilité</th><th>Objet</th></tr></thead>
+      <tbody data-rows>
+        <tr class="rowlink" data-open="core-audit-fiche" data-mod="finance" data-actor="humain" data-sens="hs" data-type="modif" data-key="decl" data-t="27/08 · 21:12" data-go="fin-reconciliation" data-old="Sous-caisse Marché : « À déclarer » · solde théorique {1275000} masqué au déclarant (réconciliation en aveugle, Finance §3)" data-new="Déclaré {1250000} · théorique {1275000} · écart {-25000} · statut « À réconcilier »" data-motif="— (déclaration en aveugle, sans motif)" data-chain="Déclaration en aveugle par M. Diop|21:12 · le déclarant n'a pas vu la valeur théorique;;Comparaison au solde théorique par le moteur|21:12 · écart {-25000} · aucune auto-réconciliation (Finance §4.8);;Notification « Écart de réconciliation »|21:15 → Admin, DG, Collecteur · critique, non désactivable;;*Correction éventuelle par Ajustement|motif + deux validations humaines, validateurs distincts de l'initiateur et entre eux (Finance §4.7)" data-src="Humain · écran Déclarations · Mata Finance" data-vals="Solde théorique = Dernier solde réconcilié + Somme algébrique des mouvements depuis cette réconciliation = {1275000} · Déclaré {1250000} · Écart {-25000}">
+          <td><b>21:12</b></td><td><b>M. Diop</b></td><td>Gestionnaire de caisse</td><td>Finance</td><td>Déclaration</td>
+          <td><span class="st info"><svg><use href="#i-note"/></svg>Modification</span><span class="hint">détail 24 mois puis archive froide 10 ans</span></td>
+          <td><span class="sens hs">Hautement sensible</span></td>
+          <td>Sous-caisse Marché : déclaré <span class="amt" data-amt="1250000" data-nocur></span> (théorique <span class="amt" data-amt="1275000" data-nocur></span>)</td>
+        </tr>
+        <tr class="rowlink" data-open="core-audit-fiche" data-mod="finance" data-actor="humain" data-sens="hs" data-type="modif" data-key="val" data-t="27/08 · 19:02" data-go="fin-validations" data-old="VAL-117 : En attente · 0 validation sur 2 · Caisse générale inchangée" data-new="VAL-117 : 1re validation O. Seck 19:02 · 2e validation requise · aucun effet définitif avant deux validations (Finance §4.7)" data-motif="écart de comptage du 26/08" data-chain="Ajustement proposé par M. Diop|{180000} sur Caisse générale · motif « écart de comptage du 26/08 »;;1re validation par O. Seck (DG Mata)|19:02 · distinct de l'initiateur;;*2e validation requise|validateur distinct de M. Diop et de O. Seck · le Super Admin ne contourne pas cette règle (§4.2);;*Correction post-clôture|journée du 26/08 clôturée (snapshot 22:14) · approbation du Super Admin, sans bypass global (§5.5)" data-src="Humain · écran Validations · moteur transverse de validation" data-vals="">
+          <td><b>19:02</b></td><td><b>O. Seck</b></td><td>DG Mata</td><td>Finance</td><td>1re validation</td>
+          <td><span class="st info"><svg><use href="#i-note"/></svg>Modification</span><span class="hint">détail 24 mois puis archive froide 10 ans</span></td>
+          <td><span class="sens hs">Hautement sensible</span></td>
+          <td>VAL-117 ajustement +<span class="amt" data-amt="180000" data-nocur></span> Caisse générale</td>
+        </tr>
+        <tr class="rowlink" data-open="core-audit-fiche" data-mod="finance" data-actor="humain" data-sens="hs" data-type="modif" data-key="trf" data-t="27/08 · 18:05" data-go="fin-validations" data-old="— · aucune écriture" data-new="VAL-118 : Transfert {600000} Banque BOA → Caisse générale · En attente · aucun solde modifié avant validation (Finance §7.2)" data-motif="—" data-chain="Proposition par F. Sarr (Directeur des Opérations)|18:05 · Position externe → Trésorerie;;Notification « Validation »|18:05 → validateurs habilités;;*Validation attendue|second utilisateur habilité, distinct de l'initiateur · pas d'auto-validation, y compris pour le Super Admin (Finance §7.2)" data-src="Humain · écran Transferts · Mata Finance" data-vals="">
+          <td><b>18:05</b></td><td><b>F. Sarr</b></td><td>Directeur des Opérations</td><td>Finance</td><td>Proposition transfert</td>
+          <td><span class="st info"><svg><use href="#i-note"/></svg>Modification</span><span class="hint">détail 24 mois puis archive froide 10 ans</span></td>
+          <td><span class="sens hs">Hautement sensible</span></td>
+          <td><span class="amt" data-amt="600000" data-nocur></span> BOA → CG</td>
+        </tr>
+        <tr class="rowlink" data-open="core-audit-fiche" data-mod="finance" data-actor="api" data-sens="s" data-type="modif" data-key="achat" data-t="27/08 · 17:00" data-go="fin-depenses" data-old="5 achats du jour non encore intégrés dans Mata Finance" data-new="5 dépenses créées par identifiant externe, source Achat · 0 doublon · lot BV-260827-04 {850000} AGNEAUX · achat volaille {420000} MATA VOLAILLE CHAIR · lot AG-260827-02 {262000} Bétail Thiès · 2 autres" data-motif="—" data-chain="Import idempotent Achat → Finance|17:00 · une même opération reçue plusieurs fois ne produit qu'un seul effet (§5.2);;Aucune validation préalable|dépense enregistrée immédiatement, puis contrôlée par réconciliation et clôture (Finance §5.2);;*Réconciliation fournisseur|Bétail Thiès et Abattoirs Dakar en attente · AGNEAUX, VOLAILLE CHAIR, ŒUFS validées" data-src="API · interface Achat → Finance · clé API dédiée · identifiant externe" data-vals="Montant payé absent ⇒ dépense « Pas sûr » · fraîcheur Achat : OK (import 17:00)">
+          <td><b>17:00</b></td><td><b>API Achat</b><span class="hint">interface</span></td><td>(interface)</td><td>Finance</td><td>Import idempotent</td>
+          <td><span class="st info"><svg><use href="#i-note"/></svg>Modification</span><span class="hint">détail 24 mois puis archive froide 10 ans</span></td>
+          <td><span class="sens s">Sensible</span></td>
+          <td>5 achats du jour intégrés, 0 doublon</td>
+        </tr>
+        <tr class="rowlink" data-open="core-audit-fiche" data-mod="finance" data-actor="humain" data-sens="hs" data-type="modif" data-key="trf" data-t="27/08 · 16:42" data-go="fin-validations" data-old="— · aucune écriture" data-new="VAL-114 : Transfert {1500000} Caisse générale → Banque BOA via Relais « Dépôt en cours (Caisse → Banque) » · En attente" data-motif="—" data-chain="Proposition par S. Doucouré (Super Admin)|16:42 · Trésorerie → Position externe via Relais;;*Validation attendue|un autre validateur doit agir : l'initiateur ne valide pas, y compris le Super Admin (Finance §7.2)" data-src="Humain · écran Transferts · Mata Finance" data-vals="">
+          <td><b>16:42</b></td><td><b>S. Doucouré</b></td><td>Super Admin</td><td>Finance</td><td>Proposition transfert</td>
+          <td><span class="st info"><svg><use href="#i-note"/></svg>Modification</span><span class="hint">détail 24 mois puis archive froide 10 ans</span></td>
+          <td><span class="sens hs">Hautement sensible</span></td>
+          <td><span class="amt" data-amt="1500000" data-nocur></span> CG → BOA</td>
+        </tr>
+        <tr class="rowlink" data-open="core-audit-fiche" data-mod="core" data-actor="humain" data-sens="s" data-type="modif" data-key="agent" data-t="27/08 · 15:30" data-go="core-agents" data-old="AG-01 Conseiller financier Mata : modèle Économique (routage par défaut)" data-new="Modèle avancé actif jusqu'au 27/08 18:00 · retour automatique au modèle par défaut · plafond {150000} / mois inchangé, consommé {93000} (62 %)" data-motif="—" data-chain="Override demandé par S. Doucouré (Super Admin)|15:30 · pour une période limitée, audité (§7.2);;*Expiration automatique|18:00 · retour au routage économique (technique §10) · plafond applicable sauf relèvement explicite" data-src="Humain · registre des agents IA · Mata Core" data-vals="">
+          <td><b>15:30</b></td><td><b>S. Doucouré</b></td><td>Super Admin</td><td>Core</td><td>Override modèle agent</td>
+          <td><span class="st info"><svg><use href="#i-note"/></svg>Modification</span><span class="hint">détail 24 mois puis archive froide 10 ans</span></td>
+          <td><span class="sens s">Sensible</span></td>
+          <td>AG-01 : modèle avancé jusqu'à 18:00</td>
+        </tr>
+        <tr class="rowlink consult" data-open="core-audit-fiche" data-mod="finance" data-actor="humain" data-sens="hs" data-type="consult" data-key="consult" data-t="27/08 · 14:05" data-go="fin-historique" data-old="—" data-new="— · lecture seule, aucune valeur modifiée" data-motif="—" data-chain="Consultation par O. Seck (DG Mata)|14:05 · Historique Caisse générale · donnée hautement sensible : consultation elle-même auditée (§5.3)" data-src="Humain · écran Historique · Mata Finance" data-vals="">
+          <td><b>14:05</b></td><td><b>O. Seck</b></td><td>DG Mata</td><td>Finance</td><td>Consultation</td>
+          <td><span class="st mut"><svg><use href="#i-eye"/></svg>Consultation</span><span class="hint">résumée après 90 jours</span></td>
+          <td><span class="sens hs">Hautement sensible</span></td>
+          <td>Historique Caisse générale</td>
+        </tr>
+        <tr class="rowlink" data-open="core-audit-fiche" data-mod="core" data-actor="humain" data-sens="s" data-type="modif" data-key="droit" data-t="27/08 · 11:20" data-go="core-droits" data-old="C. Mbaye : catégories Externe — Comptable, Externe — Accès temporaire · aucun profil attribué" data-new="Profil « Comptable externe » · entité Mata Group · accès temporaire 01/09/2026 → 30/09/2026, expiration automatique (§3.2)" data-motif="—" data-chain="Attribution par S. Doucouré sous le profil Super Admin|11:20 · qui a donné quel droit à qui, quand et sous quel profil (§5.4);;Droits effectifs recalculés|au prochain changement de contexte de C. Mbaye · cache invalidé (technique §7);;*Expiration automatique|30/09/2026 · DEM-030 (prolongation jusqu'au 31/12/2026) retournée le 26/08" data-src="Humain · écran Utilisateurs · Mata Core" data-vals="">
+          <td><b>11:20</b></td><td><b>S. Doucouré</b></td><td>Super Admin</td><td>Core</td><td>Attribution de droit</td>
+          <td><span class="st info"><svg><use href="#i-note"/></svg>Modification</span><span class="hint">détail 24 mois puis archive froide 10 ans</span></td>
+          <td><span class="sens s">Sensible</span></td>
+          <td>Profil « Comptable externe » attribué à C. Mbaye, accès temporaire 01/09 → 30/09</td>
+        </tr>
+        <tr class="rowlink" data-open="core-audit-fiche" data-mod="core" data-actor="humain" data-sens="std" data-type="modif" data-key="dem" data-t="27/08 · 09:15" data-go="core-demandes" data-old="—" data-new="DEM-031 : création utilisateur « Khady Sow », commerciale MaaS Ouakam · En attente" data-motif="—" data-chain="Soumise par B. Fall (Gérant MaaS Keur Massar)|09:15 · demande administrative (§4.1);;*Décision Admin / Super Admin|Retournée / Validée / Refusée / Annulée · retours, commentaires, versions et décisions conservés" data-src="Humain · écran Demandes · Mata Core" data-vals="">
+          <td><b>09:15</b></td><td><b>B. Fall</b></td><td>Gérant MaaS</td><td>Core</td><td>Demande</td>
+          <td><span class="st info"><svg><use href="#i-note"/></svg>Modification</span><span class="hint">détail 24 mois puis archive froide 10 ans</span></td>
+          <td><span class="sens std">Standard</span></td>
+          <td>DEM-031 création utilisateur</td>
+        </tr>
+        <tr class="rowlink" data-open="core-audit-fiche" data-mod="finance" data-actor="api" data-sens="hs" data-type="modif" data-key="sync" data-t="27/08 · 08:12" data-go="fin-comptes" data-old="Valeur précédemment reçue conservée avec son horodatage et sa source (Finance §4.9)" data-new="Position externe Bictorys : {2890000} · SYNCHRONISÉ 27/08 08:12 · jamais modifiable à la main" data-motif="—" data-chain="Synchronisation automatique Bictorys → Finance|08:12 · horodatage, fraîcheur, absence de doublon (Finance §9);;Aucune validation|solde disponible en lecture API seule · une correction manuelle passerait par un ajustement validé (Finance §4.2)" data-src="API · interface Bictorys → Finance · clé API dédiée" data-vals="Fraîcheur : OK 08:12 · notification « Synchronisation Bictorys réussie » 08:12">
+          <td><b>08:12</b></td><td><b>API Bictorys</b><span class="hint">interface</span></td><td>(interface)</td><td>Finance</td><td>Synchronisation</td>
+          <td><span class="st info"><svg><use href="#i-note"/></svg>Modification</span><span class="hint">détail 24 mois puis archive froide 10 ans</span></td>
+          <td><span class="sens hs">Hautement sensible</span></td>
+          <td>Position externe Bictorys : <span class="amt" data-amt="2890000" data-nocur></span></td>
+        </tr>
+        <tr class="rowlink" data-open="core-audit-fiche" data-mod="finance" data-actor="humain" data-sens="hs" data-type="modif" data-key="import" data-t="27/08 · 08:00" data-go="fin-import" data-old="Position Banque BOA : dernier import conservé avec son horodatage" data-new="Position Banque BOA {45200000} · 14 lignes importées · 0 doublon · référence bancaire = identifiant" data-motif="—" data-chain="Fichier → Prévisualisation → Contrôles → Validation → Import|08:00 · exécuté par S. Doucouré sous le profil Super Admin (§6.3);;Contrôle d'idempotence|référence bancaire, à défaut empreinte logique : compte, date de valeur, montant, sens, libellé normalisé, occurrence (Finance §4.9);;INC-014 ouvert 08:05|Majeur · référence dupliquée sur 2 lignes du 26/08 · En cours" data-src="Import · CSV relevé BOA · déclenché par S. Doucouré" data-vals="">
+          <td><b>08:00</b></td><td><b>Import CSV</b><span class="hint">déclenché par S. Doucouré</span></td><td>S. Doucouré</td><td>Finance</td><td>Import relevé</td>
+          <td><span class="st info"><svg><use href="#i-note"/></svg>Modification</span><span class="hint">détail 24 mois puis archive froide 10 ans</span></td>
+          <td><span class="sens hs">Hautement sensible</span></td>
+          <td>Banque BOA : 14 lignes</td>
+        </tr>
+        <tr class="rowlink" data-open="core-audit-fiche" data-mod="finance" data-actor="auto" data-sens="hs" data-type="modif" data-key="recon" data-t="27/08 · 02:04" data-go="fin-reconciliation" data-old="Collecte du 26/08 : en attente de réconciliation · Caisse non créditée" data-new="Validée 02:04 · Caisse créditée {4725000} · remboursements affectés aux 12 comptes MaaS" data-motif="—" data-chain="Auto-validation par le moteur de réconciliation|02:04 · sources complètes, à jour et égales (Finance §6.3) · aucun validateur humain;;Notification « Encaissements collectés validés »|02:04 · non critique" data-src="Automatisation · moteur réconciliation · Mata Finance" data-vals="Somme des versements déclarés = Montant déclaré par le collecteur · Source A : 12 déclarations MaaS = {4725000} (Keur Massar {420000} · Ouakam {385000} · Pikine {512000} · Rufisque {298000} · Grand Yoff {445000} · Parcelles {367000} · Médina {402000} · Yoff {356000} · Ngor {489000} · Thiaroye {315000} · Guédiawaye {378000} · HLM {358000}) · Source B : collecteur A. Ndiaye = {4725000}">
+          <td><b>02:04</b></td><td><b>Moteur réconciliation</b><span class="hint">automatisation</span></td><td>(automatisation)</td><td>Finance</td><td>Auto-validation</td>
+          <td><span class="st info"><svg><use href="#i-note"/></svg>Modification</span><span class="hint">détail 24 mois puis archive froide 10 ans</span></td>
+          <td><span class="sens hs">Hautement sensible</span></td>
+          <td>Encaissements collectés <span class="amt" data-amt="4725000" data-nocur></span></td>
+        </tr>
+        <tr class="rowlink" data-open="core-audit-fiche" data-mod="finance" data-actor="auto" data-sens="s" data-type="modif" data-key="gel" data-t="26/08 · 23:59" data-go="fin-reconciliation" data-old="2 opérations du 26/08 non réconciliées à l'heure de gel" data-new="Statut « À réconcilier » · gel à 23:59 heure de Dakar · toute correction rétroactive suit le workflow post-clôture (Finance §3.1)" data-motif="—" data-chain="Filet de sécurité 23:59|Système · heure de gel (Paramètres) · aucune validation humaine;;*Correction post-clôture|approbation du Super Admin, sans bypass global (§5.5)" data-src="Automatisation · planificateur · Mata Finance" data-vals="">
+          <td><b>26/08 · 23:59</b></td><td><b>Système</b><span class="hint">automatisation</span></td><td>(automatisation)</td><td>Finance</td><td>Gel</td>
+          <td><span class="st info"><svg><use href="#i-note"/></svg>Modification</span><span class="hint">détail 24 mois puis archive froide 10 ans</span></td>
+          <td><span class="sens s">Sensible</span></td>
+          <td>2 opérations passées « À réconcilier »</td>
+        </tr>
+        <tr data-empty hidden><td colspan="8"><span class="hint" data-empty-txt></span> <button class="linkish" data-open="core-audit-archive">Demander une archive</button></td></tr>
+      </tbody>
+    </table></div>
+  </div>
+
+  <div class="grid2b" style="margin-top:0">
+    <div class="card">
+      <div class="ch"><h3>Archives froides</h3><span class="hint-r">technique §11 · restauration sous un jour ouvré</span></div>
+      <div class="cb">
+        <div class="rl">
+          <div class="row"><div class="nm">Modifications détaillées<small>créations, corrections, validations, ajustements · 24 mois en base active</small></div><span class="st ok"><svg><use href="#i-check"/></svg>Immédiat</span></div>
+          <div class="row"><div class="nm">Modifications archivées<small>intégrales, compressées, stockage objet à faible coût · jusqu'à l'échéance de conservation de 10 ans · restaurables sous un jour ouvré</small></div><span class="st mut"><svg><use href="#i-clock"/></svg>Sur demande</span></div>
+          <div class="row"><div class="nm">Consultations détaillées<small>90 jours en base active</small></div><span class="st ok"><svg><use href="#i-check"/></svg>Immédiat</span></div>
+          <div class="row"><div class="nm">Consultations au-delà de 90 jours<small>archivées à froid lorsque leur conservation détaillée est requise · compteurs agrégés maintenus</small></div><span class="st mut"><svg><use href="#i-history"/></svg>Résumées</span></div>
+        </div>
+        <div class="actionbar" style="margin:12px 0 0"><span class="hint">Au 27/08/2026 : modifications antérieures au 27/08/2024 et consultations antérieures au 29/05/2026 en archive froide</span><div class="sp"></div><button class="btn pri" data-perm="core.audit.view" data-open="core-audit-archive"><svg><use href="#i-box"/></svg>Demander une archive</button></div>
+        <div class="k-lbl">Demandes de restauration · <span data-arc-count>0</span> en cours</div>
+        <div data-arc-list><span class="hint">Aucune demande en cours · toute archive demandée par un utilisateur autorisé est restaurable sous un jour ouvré, sans être maintenue en permanence dans la base transactionnelle</span></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="ch"><h3>Compteurs agrégés</h3><span class="hint-r">qui a consulté quoi, combien de fois · base active</span></div>
+      <div class="cb">
+        <div class="due"><span>Consultations hautement sensibles du 27/08</span><b>1 · O. Seck · Historique Caisse générale</b></div>
+        <div class="due"><span>Événements par acteur humain</span><b>S. Doucouré 4 · O. Seck 2 · F. Sarr 1 · M. Diop 1 · B. Fall 1</b></div>
+        <div class="due"><span>Par source</span><b>Humain 9 · API 2 · Automatisation 2 · Agent IA 0</b></div>
+        <div class="due"><span>Par module</span><b>Mata Finance 10 · Mata Core 3</b></div>
+        <div class="due"><span>Par sensibilité</span><b>Hautement sensible 8 · Sensible 4 · Standard 1</b></div>
+        <div class="due"><span>Votre consultation de l'Audit central</span><b data-self-row></b></div>
+        <div class="hint" style="margin-top:10px">Agent IA 0 : AG-01 n'est interrogé qu'à la demande explicite d'un utilisateur, aucun écran ne déclenche d'appel en arrière-plan (§7.2) ; l'override de modèle de 15:30 est une action humaine sur AG-01. Les compteurs restent en base active après archivage du détail (technique §11).</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="note-strip"><svg><use href="#i-shield"/></svg><span><b>§5.4 —</b> Conservation cible : 10 ans pour les événements financiers, permissions, validations et sécurité, avec séparation entre stockage actif et archive froide. Les données récentes restent immédiatement consultables ; les données plus anciennes restent retrouvables sur demande. <b>Finance §10.2 —</b> Une opération comptabilisée n'est jamais supprimée physiquement. Toute correction relie l'opération originale à la contrepassation ou à l'ajustement. Valeurs sources utilisées pour les réconciliations conservées, pas seulement leur statut final.</span></div>
+  <div class="note-strip"><svg><use href="#i-lock"/></svg><span><b>Refus par défaut.</b> Le DG Mata consulte l'Audit sans pouvoir exporter (permission core.audit.exporter distincte) ; le Directeur des Opérations, le Gestionnaire de caisse, le Collecteur, le Gérant MaaS, l'Investisseur et le Comptable externe n'accèdent pas à cet écran hautement sensible. Chaque ouverture de cet écran, chaque export et chaque demande d'archive sont eux-mêmes journalisés (§5.3).</span></div>
+
+  <!-- Tiroir : détail d'un événement d'audit -->
+  <aside class="drawer" data-ov="core-audit-fiche" aria-label="Événement d'audit">
+    <div class="dh"><h3>Événement d'audit</h3><button class="ib" data-close aria-label="Fermer"><svg><use href="#i-x"/></svg></button></div>
+    <div class="db">
+      <div class="hint" data-d="head"></div>
+      <b data-d="title"></b>
+      <div class="meta-l" data-d="meta"></div>
+      <div data-d="kv"></div>
+      <div class="k-lbl">Ancienne valeur</div><div class="k-val" data-d="old"></div>
+      <div class="k-lbl">Nouvelle valeur</div><div class="k-val" data-d="new"></div>
+      <div class="fcode" data-d="motif"></div>
+      <div class="k-lbl">Chaîne de validation</div>
+      <div class="tl" data-d="chain"></div>
+      <div class="srcs" data-d="src"></div>
+      <div class="k-lbl" data-d="vals-lbl">Valeurs sources</div><div class="eq" data-d="vals"></div>
+      <div class="note-strip"><svg><use href="#i-history"/></svg><span data-d="ret"></span></div>
+    </div>
+    <div class="df"><button class="btn ghost" data-close>Fermer</button><div class="sp"></div><button class="btn ghost" data-d="go" data-goto="hub"><svg><use href="#i-arr"/></svg><span>Ouvrir l'objet</span></button></div>
+  </aside>
+  <div class="dback" data-ov-back="core-audit-fiche"></div>
+
+  <!-- Modale : export du journal filtré -->
+  <div class="mback" data-ov="core-audit-export"><div class="modal" role="dialog" aria-modal="true" aria-label="Exporter le journal">
+    <h3><svg><use href="#i-dl"/></svg>Exporter le journal filtré</h3>
+    <div class="exp">Consulter et Exporter sont deux permissions différentes (§3.4). Hautement sensible : export contrôlé, éventuellement interdit (§5.3). L'export est lui-même journalisé comme Modification ; l'artefact, régénérable, est conservé 7 jours puis supprimé (Paramètres, technique §8).</div>
+    <div class="row-m"><span>Périmètre</span><b><span data-x="n">13</span> événements filtrés · Mata Group · 27/08/2026</b></div>
+    <label class="rline sel"><input type="radio" name="core-audit-fmt" value="CSV" checked>CSV<span class="rh">colonnes du journal, une ligne par événement</span></label>
+    <label class="rline"><input type="radio" name="core-audit-fmt" value="PDF">PDF<span class="rh">génération légère, sans navigateur headless</span></label>
+    <div class="acts"><button class="btn ghost" data-close>Annuler</button><button class="btn pri" data-perm="core.audit.exporter" data-x="confirm"><svg><use href="#i-dl"/></svg>Exporter</button></div>
+  </div></div>
+
+  <!-- Modale : demande de restauration d'une archive froide -->
+  <div class="mback" data-ov="core-audit-archive"><div class="modal wide" role="dialog" aria-modal="true" aria-label="Demander une archive">
+    <h3><svg><use href="#i-box"/></svg>Demander une archive</h3>
+    <div class="exp">Un outil d'investigation permet de rechercher et restaurer à la demande les archives, sans les maintenir en permanence dans la base transactionnelle. Objectif opérationnel : toute archive demandée par un utilisateur autorisé doit être restaurable sous un jour ouvré (technique §11). La demande est journalisée.</div>
+    <label for="core-audit-arc-per">Période archivée</label>
+    <select id="core-audit-arc-per" class="inp" data-a="per"><option>Consultations détaillées · avril 2026</option><option>Consultations détaillées · mars 2026</option><option>Modifications · 1er semestre 2024</option><option>Modifications · année 2023</option></select>
+    <label for="core-audit-arc-scope" style="margin-top:10px">Périmètre</label>
+    <select id="core-audit-arc-scope" class="inp" data-a="scope"><option>Mata Finance · événements financiers</option><option>Mata Core · permissions et validations</option><option>Sécurité · authentification et accès</option><option>Tous les modules · Mata Group</option></select>
+    <label for="core-audit-arc-motif" style="margin-top:10px">Motif de l'investigation</label>
+    <input id="core-audit-arc-motif" data-a="motif" placeholder="Motif obligatoire, conservé avec la demande">
+    <div class="acts"><button class="btn ghost" data-close>Annuler</button><button class="btn pri" data-perm="core.audit.view" data-a="confirm"><svg><use href="#i-box"/></svg>Demander la restauration</button></div>
+  </div></div>
+</section>
+<script data-screen="core-audit">
+ERP.register('core-audit', function (root, ctx) {
+  var q = function (s, r) { return (r || root).querySelector(s); };
+  var qa = function (s, r) { return Array.prototype.slice.call((r || root).querySelectorAll(s)); };
+  var MOD = { finance: 'Mata Finance', core: 'Mata Core' }, ACT = { humain: 'Humain', api: 'API', ia: 'Agent IA', auto: 'Automatisation' }, ICO = { humain: 'user', api: 'key', ia: 'bot', auto: 'refresh' };
+  var SENS = { hs: 'Hautement sensible', s: 'Sensible', std: 'Standard' };
+  var GO = { 'fin-reconciliation': 'Réconciliation', 'fin-validations': 'Validations', 'fin-depenses': 'Dépenses', 'core-agents': 'Agents IA', 'fin-historique': 'Historique', 'core-droits': 'Droits effectifs', 'core-demandes': 'Demandes', 'fin-comptes': 'Comptes', 'fin-import': 'Import relevé bancaire' };
+  var RET = { modif: 'Modification : détail 24 mois en base active, puis archive froide intégrale et compressée jusqu’à l’échéance de conservation de 10 ans (technique §11) · jamais supprimée physiquement (Finance §10.2).', consult: 'Consultation : détail 90 jours en base active, puis résumée en compteurs agrégés (qui a consulté quoi, combien de fois) ; archivée à froid lorsque sa conservation détaillée est requise (technique §11).' };
+  var EMPTY = { ia: 'Aucun événement d’agent IA le 27/08 : un agent n’est interrogé qu’à la demande explicite d’un utilisateur et chaque requête est tracée (§7.2) ; l’override de modèle de 15:30 est une action humaine sur AG-01.', gen: 'Aucun événement ne correspond dans l’extrait du 27/08 (base active). Les données plus anciennes restent retrouvables sur demande (§5.4).' };
+  var tbody = q('[data-rows]'), rows = qa('tr[data-t]', tbody), empty = q('[data-empty]'), qi = q('#core-audit-q'), F = { mod: 'tous', actor: 'tous', sens: 'tous', type: 'tous' }, arcN = 0;
+  function norm(s) { return String(s).toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, ''); }
+  function tok(s) { return String(s || '—').replace(/\{(-?\d+)\}/g, '<span class="amt" data-amt="$1" data-nocur></span>'); }
+  function now() { var d = new Date(); return '27/08 · ' + ('0' + d.getHours()).slice(-2) + ':' + ('0' + d.getMinutes()).slice(-2); }
+  function typeBadge(t) { return t === 'consult' ? '<span class="st mut"><svg><use href="#i-eye"/></svg>Consultation</span>' : '<span class="st info"><svg><use href="#i-note"/></svg>Modification</span>'; }
+  function tag(actor, txt) { return '<span class="tag ' + (actor === 'api' ? 'api' : 'lock') + '"><svg><use href="#i-' + ICO[actor] + '"/></svg>' + txt + '</span>'; }
+  /* ---- Recherche + filtres combinés (module, type d'acteur, sensibilité, type) · question §5.4 → ligne 11:20 ---- */
+  function apply() {
+    var s = norm(qi.value.trim()), ask = s.indexOf('droit') >= 0, toks = ask ? [] : s.split(/\s+/).filter(function (w) { return w.length >= 3; }), n = 0;
+    rows.forEach(function (tr) {
+      var d = tr.dataset, ok = (F.mod === 'tous' || d.mod === F.mod) && (F.actor === 'tous' || d.actor === F.actor) && (F.sens === 'tous' || d.sens === F.sens) && (F.type === 'tous' || d.type === F.type);
+      if (ok && ask) ok = d.key === 'droit';
+      if (ok && toks.length) { var txt = norm(tr.textContent + ' ' + d.old + ' ' + d.new + ' ' + d.motif + ' ' + d.chain + ' ' + d.src); ok = toks.every(function (w) { return txt.indexOf(w) >= 0; }); }
+      tr.hidden = !ok; tr.classList.toggle('hit', ok && ask); if (ok) n++;
+    });
+    q('[data-answer]').hidden = !ask; empty.hidden = n > 0; q('[data-empty-txt]').textContent = F.actor === 'ia' ? EMPTY.ia : EMPTY.gen;
+    q('[data-count]').textContent = n + ' événement' + (n > 1 ? 's' : '') + ' sur 13 · base active · 27/08/2026'; q('[data-x="n"]').textContent = n;
+  }
+  ctx.on(qi, 'input', apply);
+  qa('select[data-flt]').forEach(function (sel) { ctx.on(sel, 'change', function () { F[sel.getAttribute('data-flt')] = sel.value; apply(); }); });
+  qa('.chip[data-filter]').forEach(function (c) { ctx.on(c, 'click', function () { qa('.chip[data-filter]').forEach(function (x) { x.classList.toggle('on', x === c); }); F.mod = c.getAttribute('data-filter'); apply(); }); });
+  ctx.on(q('[data-q]'), 'click', function (e) { qi.value = e.currentTarget.getAttribute('data-q'); apply(); ctx.toast('Question §5.4 : la ligne 11:20 « Attribution de droit » est mise en avant'); });
+  ctx.on(q('[data-reset]'), 'click', function () { qi.value = ''; F = { mod: 'tous', actor: 'tous', sens: 'tous', type: 'tous' }; qa('select[data-flt]').forEach(function (s) { s.value = 'tous'; }); qa('.chip[data-filter]').forEach(function (x) { x.classList.toggle('on', x.getAttribute('data-filter') === 'tous'); }); apply(); });
+  /* ---- Tiroir : ancienne / nouvelle valeur, motif, chaîne de validation, source, valeurs sources d'une réconciliation ---- */
+  function fill(tr) {
+    var d = tr.dataset, c = tr.cells, D = q('[data-ov="core-audit-fiche"]');
+    q('[data-d="head"]', D).textContent = d.t + ' · Mata Group · ' + MOD[d.mod] + ' · ' + SENS[d.sens];
+    q('[data-d="title"]', D).innerHTML = c[4].textContent + ' — ' + c[7].innerHTML;
+    q('[data-d="meta"]', D).innerHTML = typeBadge(d.type) + '<span class="sens ' + d.sens + '"><svg><use href="#i-shield"/></svg>' + SENS[d.sens] + '</span>' + tag(d.actor, ACT[d.actor]);
+    q('[data-d="kv"]', D).innerHTML = [['Acteur', q('b', c[1]).textContent], ['Profil', c[2].textContent], ['Entité', 'Mata Group'], ['Module', MOD[d.mod]], ['Action', c[4].textContent], ['Date et heure', d.t]].map(function (p) { return '<div class="due"><span>' + p[0] + '</span><b>' + p[1] + '</b></div>'; }).join('');
+    q('[data-d="old"]', D).innerHTML = tok(d.old); q('[data-d="new"]', D).innerHTML = tok(d.new); q('[data-d="motif"]', D).textContent = 'Motif : ' + d.motif;
+    q('[data-d="chain"]', D).innerHTML = d.chain.split(';;').map(function (s) { var p = s.split('|'), pend = p[0].charAt(0) === '*'; return '<div class="ev' + (pend ? '' : ' on') + '"><b>' + (pend ? p[0].slice(1) : p[0]) + '</b><small>' + tok(p[1] || '') + '</small></div>'; }).join('');
+    q('[data-d="src"]', D).innerHTML = tag(d.actor, 'Source : ' + d.src);
+    var v = q('[data-d="vals"]', D); v.hidden = !d.vals; q('[data-d="vals-lbl"]', D).hidden = !d.vals; v.innerHTML = tok(d.vals);
+    q('[data-d="ret"]', D).textContent = RET[d.type];
+    var g = q('[data-d="go"]', D); g.setAttribute('data-goto', d.go); q('span', g).textContent = 'Ouvrir : ' + GO[d.go];
+    ctx.formatAmounts(D);
+  }
+  ctx.on(tbody, 'click', function (e) { var tr = e.target.closest('tr[data-t]'); if (tr) fill(tr); });
+  /* ---- Export (permission distincte de Consulter) ---- */
+  qa('.rline input[name="core-audit-fmt"]').forEach(function (r) { ctx.on(r, 'change', function () { qa('.rline', r.closest('.modal')).forEach(function (l) { l.classList.toggle('sel', q('input', l).checked); }); }); });
+  ctx.on(q('[data-x="confirm"]'), 'click', function () {
+    var fmt = q('input[name="core-audit-fmt"]:checked').value, n = q('[data-x="n"]').textContent;
+    ctx.close('core-audit-export'); ctx.toast('Export ' + fmt + ' : ' + n + ' événements · journalisé (' + ctx.profile.short + ', ' + ctx.profile.profile + ', ' + now() + ') · disponible 7 jours puis supprimé, régénérable');
+  });
+  /* ---- Demande de restauration d'une archive froide : sous un jour ouvré (27/08 jeudi → 28/08/2026) ---- */
+  ctx.on(q('[data-a="confirm"]'), 'click', function () {
+    var per = q('[data-a="per"]').value, sc = q('[data-a="scope"]').value, mo = q('[data-a="motif"]').value.trim();
+    if (!mo) { ctx.toast('Motif obligatoire : la demande d’archive est conservée et journalisée'); q('[data-a="motif"]').focus(); return; }
+    var list = q('[data-arc-list]'); if (!arcN) list.innerHTML = '<div class="rl"></div>'; arcN++;
+    q('.rl', list).insertAdjacentHTML('afterbegin', '<div class="row"><div class="nm">ARC-' + ('0' + arcN).slice(-2) + ' · ' + per + '<small>' + sc + ' · motif « ' + mo.replace(/</g, '&lt;') + ' » · demandée par ' + ctx.profile.short + ' (' + ctx.profile.profile + ') ' + now() + ' · restauration attendue avant le 28/08/2026, un jour ouvré</small></div><span class="st warn"><svg><use href="#i-clock"/></svg>Demandée</span></div>');
+    q('[data-arc-count]').textContent = arcN; q('[data-a="motif"]').value = ''; ctx.close('core-audit-archive');
+    ctx.toast('Demande d’archive ARC-' + ('0' + arcN).slice(-2) + ' enregistrée et journalisée · restauration sous un jour ouvré (technique §11)');
+  });
+  /* ---- La consultation de cet écran est elle-même auditée (§5.3) : bandeau recalculé à chaque changement de profil ---- */
+  function who() {
+    var p = ctx.profile, t = now();
+    q('[data-self]').innerHTML = 'Votre consultation de cet écran est journalisée : <b>' + p.short + ' · ' + p.profile + '</b> · Mata Group · ' + t + ' · Consultation · Hautement sensible · Audit central — détail 90 jours puis résumée en compteur agrégé (§5.3, technique §11).';
+    q('[data-self-row]').textContent = p.short + ' · ' + t + ' · journalisée';
+  }
+  document.addEventListener('erp:profile', who);
+  who(); apply(); ctx.formatAmounts(root); ctx.applyPerms();
+});
+</script>

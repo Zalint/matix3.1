@@ -1,0 +1,322 @@
+<section class="scr" data-scr="fin-transferts" data-module="finance" data-perm="finance.transferts.view" data-sens="hs" hidden>
+  <style data-screen="fin-transferts">
+    #app [data-scr="fin-transferts"] .btn.sm{min-height:28px;padding:4px 10px;font-size:11px}
+    #app [data-scr="fin-transferts"] .acts-cell{display:flex;gap:6px;flex-wrap:wrap}
+    #app [data-scr="fin-transferts"] td .hint{display:block;margin-top:2px}
+    #app [data-scr="fin-transferts"] .rline{margin:12px 0 0}
+    #app [data-scr="fin-transferts"] .rline input[type=checkbox]{width:15px;height:15px;accent-color:var(--red);flex:none}
+    #app [data-scr="fin-transferts"] .eq{margin-top:12px}
+    #app [data-scr="fin-transferts"] .fld .hint{font-size:10.5px;line-height:1.35}
+    #app [data-scr="fin-transferts"] .drawer .tl{margin-top:14px}
+    #app [data-scr="fin-transferts"] .drawer .fcode{margin-top:12px}
+    @media (max-width:640px){#app [data-scr="fin-transferts"] .rline{flex-wrap:wrap}#app [data-scr="fin-transferts"] .rline .rh{margin-left:24px;width:100%}}
+  </style>
+  <div class="scr-head">
+    <div>
+      <h2>Transferts</h2>
+      <p class="scr-sub">Mouvements internes manuels ne relevant d'aucun workflow métier : entre deux comptes de Trésorerie, entre un compte de Trésorerie et une Position externe, ou entre deux Positions externes, sous réserve de compatibilité (§7.1) · initié par un utilisateur autorisé puis validé par un second utilisateur habilité, distinct de l'initiateur (§7.2)</p>
+    </div>
+    <div class="scr-meta">
+      <span class="sens hs"><svg><use href="#i-shield"/></svg>Hautement sensible</span>
+      <span class="hint">Validation simple : un validateur distinct de l'initiateur (§10.1) · pas d'auto-validation, y compris pour le Super Admin (§7.2) · consultation auditée (§10.2)</span>
+    </div>
+  </div>
+
+  <div class="statstrip four">
+    <div class="card stat">
+      <div class="lb">En attente de validation<button class="fx" data-f="Avant validation, aucun solde n'est modifié (§7.2) · Σ montants des transferts au statut « En attente »" data-c="600 000 Banque BOA → Caisse générale (F. Sarr, VAL-118) · 1 500 000 Caisse générale → Banque BOA via Relais (S. Doucouré, VAL-114)" data-src="Mata Finance · écran Validations · moteur transverse de validation Mata Core" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></div>
+      <div class="v amt" data-amt="2100000" data-stat="att"></div>
+      <div class="sub2"><span data-stat="nAtt">2 transferts</span> · aucun solde modifié · un second utilisateur habilité doit agir</div>
+    </div>
+    <div class="card stat">
+      <div class="lb">Validés depuis le 22/08<button class="fx" data-f="Un transfert validé génère atomiquement un débit du compte source et un crédit de même montant sur le compte destination (§7.1) · Σ montants des transferts au statut « Validé »" data-c="3 000 000 Caisse générale → Banque BOA (26/08, O. Seck / S. Doucouré) · 800 000 Banque BOA → Caisse générale (24/08, F. Sarr / O. Seck) · 350 000 Bictorys → Banque BOA via Relais (22/08, S. Doucouré / O. Seck)" data-src="Mata Finance · mouvements des comptes Trésorerie et Position externe · preuve historique dans l'Audit central" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></div>
+      <div class="v amt" data-amt="4150000" data-stat="val"></div>
+      <div class="sub2"><span data-stat="nVal">3 transferts</span> · débit et crédit de même montant · ni dépense, ni revenu, ni encaissement</div>
+    </div>
+    <div class="card stat">
+      <div class="lb">Trésorerie en transit<button class="fx" data-f="Trésorerie en transit = Somme des comptes Relais actifs (§8.1) · Un compte Relais matérialise une somme qui a quitté son origine sans être encore confirmée à destination (§4.6)" data-c="Dépôt en cours (Caisse → Banque) 2 500 000 · Bictorys → Banque en cours 350 000" data-src="Moteur financier · comptes Relais CALCULÉ · seuil relais ancien 2 jours (Paramètres) · Bictorys → Banque en cours : âge 3 j, alerte" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></div>
+      <div class="v amt" data-amt="2850000" data-stat="transit"></div>
+      <div class="sub2" data-stat="transitRatio">0,6 % du CA de référence (452 000 000)</div>
+    </div>
+    <div class="card stat">
+      <div class="lb">Trésorerie totale contrôlée<button class="fx" data-f="Trésorerie totale contrôlée = Trésorerie disponible + Trésorerie en transit (§8.1) · Le montant en Relais n'est compté qu'une seule fois dans la trésorerie totale contrôlée (§4.6)" data-c="Disponible 58 455 000 (Caisse générale 8 450 000 · Sous-caisse Marché 1 275 000 · Sous-caisse Livraisons 640 000 · Banque BOA 45 200 000 · Bictorys 2 890 000) + Transit 2 850 000" data-src="Moteur financier unique · comptes CALCULÉ, IMPORT CSV (Banque BOA 27/08 08:00), SYNCHRONISÉ (Bictorys 27/08 08:12)" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></div>
+      <div class="v amt" data-amt="61305000"></div>
+      <div class="sub2">13,6 % du CA de référence · inchangée par un transfert · P&amp;L non impacté (§7.1)</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="ch"><h3>Déclencher un transfert</h3><span class="hint-r">Initiateur : <b data-me>S. Doucouré · Super Admin</b> · entité Mata Group</span></div>
+    <div class="cb">
+      <div class="formgrid">
+        <div class="fld"><label for="fin-transferts-de">De (compte source)</label>
+          <select id="fin-transferts-de" class="inp" data-f="de">
+            <option value="CG" selected>Caisse générale — Trésorerie</option>
+            <option value="SCM">Sous-caisse Marché — Trésorerie</option>
+            <option value="SCL">Sous-caisse Livraisons — Trésorerie</option>
+            <option value="BOA">Banque BOA — Position externe</option>
+            <option value="BIC">Bictorys — Position externe</option>
+          </select><span class="hint" data-hint="de">Trésorerie · CALCULÉ</span></div>
+        <div class="fld"><label for="fin-transferts-vers">Vers (compte destination)</label>
+          <select id="fin-transferts-vers" class="inp" data-f="vers">
+            <option value="CG">Caisse générale — Trésorerie</option>
+            <option value="SCM">Sous-caisse Marché — Trésorerie</option>
+            <option value="SCL">Sous-caisse Livraisons — Trésorerie</option>
+            <option value="BOA" selected>Banque BOA — Position externe</option>
+            <option value="BIC" disabled>Bictorys — incompatible en destination (SYNCHRONISÉ, lecture API)</option>
+          </select><span class="hint" data-hint="vers">Position externe · IMPORT CSV</span></div>
+        <div class="fld"><label for="fin-transferts-montant">Montant (FCFA)</label><input id="fin-transferts-montant" class="inp mono" data-f="montant" inputmode="numeric" placeholder="0"><span class="hint">Entier, sans décimales (§3)</span></div>
+        <div class="fld"><label for="fin-transferts-motif">Motif</label><input id="fin-transferts-motif" class="inp" data-f="motif" placeholder="Motif visible du validateur avant décision"><span class="hint">Le détail complet de l'opération est consultable avant toute décision (§7.3)</span></div>
+        <button class="btn pri" data-perm="finance.transferts.initier" data-trigger><svg><use href="#i-swap"/></svg>Déclencher</button>
+      </div>
+      <label class="rline"><input type="checkbox" data-f="relay">Destination non confirmée → passage par un compte Relais<span class="rh" data-hint="relay">Crédit direct du compte destination à la validation</span></label>
+      <div class="eq" data-preview></div>
+      <div class="hint" style="margin-top:10px">Listes limitées aux comptes Trésorerie et Position externe de Mata Group (§7.1) : Fournisseurs, Créances clients, Relais et Ajustement ne sont pas proposés, leurs mouvements suivent leurs workflows propres. Aucun transfert manuel inter-entités n'est autorisé en V1 (§2.3, §11.1).</div>
+    </div>
+  </div>
+
+  <div class="actionbar" style="margin-top:14px">
+    <div class="chips">
+      <button class="chip on" data-filter="tous">Tous</button>
+      <button class="chip" data-filter="attente">En attente</button>
+      <button class="chip" data-filter="valide">Validés</button>
+      <button class="chip" data-filter="refuse">Refusés</button>
+      <button class="chip" data-filter="annule">Annulés</button>
+    </div>
+    <div class="sp"></div>
+    <button class="btn ghost" data-perm="finance.export" data-export><svg><use href="#i-dl"/></svg>Export CSV</button>
+    <button class="btn ghost" data-goto="fin-validations"><svg><use href="#i-clipboard"/></svg>Écran Validations</button>
+  </div>
+
+  <div class="card">
+    <div class="ch"><h3>Historique des transferts — Mata Group</h3><span class="hint-r" data-count>6 transferts · 2 en attente</span></div>
+    <div class="tbl-scroll"><table>
+      <thead><tr><th>Date</th><th>De → Vers</th><th>Montant</th><th>Initiateur</th><th>Validateur</th><th>Statut</th><th>Actions</th></tr></thead>
+      <tbody data-rows>
+        <tr class="rowlink" data-open="fin-transferts-fiche" data-st="attente" data-date="27/08 · 18:05" data-de="Banque BOA" data-vers="Caisse générale" data-relay="" data-m="600000" data-init="F. Sarr" data-valid="" data-ref="VAL-118" data-motif="">
+          <td><b>27/08 · 18:05</b><span class="hint">VAL-118</span></td>
+          <td><b>Banque BOA → Caisse générale</b><span class="hint">Position externe → Trésorerie</span></td>
+          <td><span class="amt" data-amt="600000" data-nocur></span></td>
+          <td>F. Sarr</td>
+          <td data-cell="valid"><span class="hint">—</span></td>
+          <td data-cell="st"><span class="st warn"><svg><use href="#i-clock"/></svg>En attente</span></td>
+          <td data-cell="acts"><div class="acts-cell"><button class="btn pri sm" data-act="valider" data-perm="finance.transferts.valider" data-initiator="F. Sarr"><svg><use href="#i-check"/></svg>Valider</button><button class="btn ghost sm" data-act="refuser" data-perm="finance.transferts.valider" data-initiator="F. Sarr"><svg><use href="#i-x"/></svg>Refuser</button></div></td>
+        </tr>
+        <tr class="rowlink" data-open="fin-transferts-fiche" data-st="attente" data-date="27/08 · 16:42" data-de="Caisse générale" data-vers="Banque BOA" data-relay="Dépôt en cours (Caisse → Banque)" data-m="1500000" data-init="S. Doucouré" data-valid="" data-ref="VAL-114" data-motif="">
+          <td><b>27/08 · 16:42</b><span class="hint">VAL-114</span></td>
+          <td><b>Caisse générale → Banque BOA</b><span class="hint">Trésorerie → Position externe · via Relais « Dépôt en cours (Caisse → Banque) »</span></td>
+          <td><span class="amt" data-amt="1500000" data-nocur></span></td>
+          <td>S. Doucouré</td>
+          <td data-cell="valid"><span class="hint">—</span></td>
+          <td data-cell="st"><span class="st warn"><svg><use href="#i-clock"/></svg>En attente</span><span class="hint">Un autre validateur doit agir : l'initiateur ne valide pas</span></td>
+          <td data-cell="acts"><div class="acts-cell"><button class="btn pri sm" data-act="valider" data-perm="finance.transferts.valider" data-initiator="S. Doucouré"><svg><use href="#i-check"/></svg>Valider</button><button class="btn ghost sm" data-act="refuser" data-perm="finance.transferts.valider" data-initiator="S. Doucouré"><svg><use href="#i-x"/></svg>Refuser</button></div></td>
+        </tr>
+        <tr class="rowlink" data-open="fin-transferts-fiche" data-st="valide" data-date="26/08 · 18:10" data-de="Caisse générale" data-vers="Banque BOA" data-relay="" data-m="3000000" data-init="O. Seck" data-valid="S. Doucouré" data-ref="" data-motif="">
+          <td><b>26/08 · 18:10</b></td>
+          <td><b>Caisse générale → Banque BOA</b><span class="hint">Trésorerie → Position externe</span></td>
+          <td><span class="amt" data-amt="3000000" data-nocur></span></td>
+          <td>O. Seck</td>
+          <td data-cell="valid">S. Doucouré</td>
+          <td data-cell="st"><span class="st ok"><svg><use href="#i-check"/></svg>Validé</span><span class="hint">Débit et crédit atomiques</span></td>
+          <td data-cell="acts"><button class="btn ghost sm" data-act="contrepasser" data-perm="finance.transferts.initier"><svg><use href="#i-refresh"/></svg>Contrepasser</button></td>
+        </tr>
+        <tr class="rowlink" data-open="fin-transferts-fiche" data-st="valide" data-date="24/08 · 11:05" data-de="Banque BOA" data-vers="Caisse générale" data-relay="" data-m="800000" data-init="F. Sarr" data-valid="O. Seck" data-ref="" data-motif="">
+          <td><b>24/08 · 11:05</b></td>
+          <td><b>Banque BOA → Caisse générale</b><span class="hint">Position externe → Trésorerie</span></td>
+          <td><span class="amt" data-amt="800000" data-nocur></span></td>
+          <td>F. Sarr</td>
+          <td data-cell="valid">O. Seck</td>
+          <td data-cell="st"><span class="st ok"><svg><use href="#i-check"/></svg>Validé</span><span class="hint">Débit et crédit atomiques</span></td>
+          <td data-cell="acts"><button class="btn ghost sm" data-act="contrepasser" data-perm="finance.transferts.initier"><svg><use href="#i-refresh"/></svg>Contrepasser</button></td>
+        </tr>
+        <tr class="rowlink" data-open="fin-transferts-fiche" data-st="valide" data-date="22/08 · 09:30" data-de="Bictorys" data-vers="Banque BOA" data-relay="Bictorys → Banque en cours" data-m="350000" data-init="S. Doucouré" data-valid="O. Seck" data-ref="" data-motif="">
+          <td><b>22/08 · 09:30</b></td>
+          <td><b>Bictorys → Banque BOA</b><span class="hint">Position externe → Position externe · via Relais « Bictorys → Banque en cours »</span></td>
+          <td><span class="amt" data-amt="350000" data-nocur></span></td>
+          <td>S. Doucouré</td>
+          <td data-cell="valid">O. Seck</td>
+          <td data-cell="st"><span class="st ok"><svg><use href="#i-check"/></svg>Validé</span><span class="hint">Relais encore ouvert · âge 3 j &gt; seuil 2 j · alerte relais ancien</span></td>
+          <td data-cell="acts"><button class="btn ghost sm" data-act="contrepasser" data-perm="finance.transferts.initier"><svg><use href="#i-refresh"/></svg>Contrepasser</button></td>
+        </tr>
+        <tr class="rowlink" data-open="fin-transferts-fiche" data-st="annule" data-date="19/08/2026" data-de="Caisse générale" data-vers="Banque BOA" data-relay="" data-m="200000" data-init="S. Doucouré" data-valid="" data-ref="VAL-098" data-motif="">
+          <td><b>19/08/2026</b><span class="hint">VAL-098</span></td>
+          <td><b>Caisse générale → Banque BOA</b><span class="hint">Trésorerie → Position externe</span></td>
+          <td><span class="amt" data-amt="200000" data-nocur></span></td>
+          <td>S. Doucouré</td>
+          <td data-cell="valid"><span class="hint">—</span></td>
+          <td data-cell="st"><span class="st mut"><svg><use href="#i-x"/></svg>Annulé</span><span class="hint">Par l'initiateur le 19/08 · aucune écriture</span></td>
+          <td data-cell="acts"><span class="hint">—</span></td>
+        </tr>
+      </tbody>
+    </table></div>
+  </div>
+
+  <div class="grid2b">
+    <div class="card">
+      <div class="ch"><h3>Comptes Relais ouverts</h3><span class="hint-r">§4.6 · doivent revenir à zéro après dénouement</span></div>
+      <div class="cb">
+        <div class="rl">
+          <div class="row"><div class="nm">Dépôt en cours (Caisse → Banque)<small>Créé 27/08 07:45 (A. Ndiaye) · âge 0 j · <span class="amt" data-amt="2500000" data-nocur data-relay-amt="REL1"></span> FCFA · dénouement attendu sur le relevé BOA</small></div><span class="st ok"><svg><use href="#i-check"/></svg>Ouvert</span></div>
+          <div class="row"><div class="nm">Bictorys → Banque en cours<small>Créé 24/08 à la validation du transfert du 22/08 · âge 3 j &gt; seuil 2 j · <span class="amt" data-amt="350000" data-nocur data-relay-amt="REL2"></span> FCFA</small></div><span class="st warn"><svg><use href="#i-alert"/></svg>Relais ancien</span></div>
+        </div>
+        <div class="hint" style="margin-top:10px">Un relais n'est comptabilisé qu'en contrepartie d'une sortie effective du compte source ; cette règle est particulièrement importante pour une Position externe afin d'éviter qu'un transfert en cours soit encore présent dans la valeur source et ajouté une seconde fois au Relais (§4.6). Alerte « Relais ouvert au-delà du seuil (2 j) » → Admin.</div>
+        <div style="margin-top:10px"><button class="btn ghost" data-goto="fin-comptes"><svg><use href="#i-wallet"/></svg>Voir les comptes</button></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="ch"><h3>Périmètre du transfert manuel</h3><span class="hint-r">§7.1 · sous réserve de compatibilité</span></div>
+      <div class="cb">
+        <div class="rl">
+          <div class="row"><div class="nm">Trésorerie ↔ Trésorerie<small>Caisse générale, Sous-caisse Marché, Sous-caisse Livraisons · soldes CALCULÉ</small></div><span class="st ok"><svg><use href="#i-check"/></svg>Couvert</span></div>
+          <div class="row"><div class="nm">Trésorerie ↔ Position externe<small>Banque BOA (IMPORT CSV) · Bictorys en source uniquement : solde SYNCHRONISÉ, jamais modifiable à la main (§4.9)</small></div><span class="st ok"><svg><use href="#i-check"/></svg>Couvert</span></div>
+          <div class="row"><div class="nm">Position externe ↔ Position externe<small>Bictorys → Banque BOA via Relais « Bictorys → Banque en cours »</small></div><span class="st ok"><svg><use href="#i-check"/></svg>Couvert</span></div>
+          <div class="row"><div class="nm">Paiements fournisseurs · encaissements clients<small>Workflows propres : Fournisseurs (FIFO, compte de paiement de référence) · Créances clients</small></div><span class="st mut"><svg><use href="#i-lock"/></svg>Workflow propre</span></div>
+          <div class="row"><div class="nm">Ajustements<small>Motif et deux validations humaines distinctes (§4.7) · compte Ajustement exclu des agrégats</small></div><span class="st mut"><svg><use href="#i-lock"/></svg>Workflow propre</span></div>
+          <div class="row"><div class="nm">Transfert entre deux entités<small>Aucun transfert manuel inter-entités en V1 (§7.1, §11.1) · toutes les opérations restent rattachées à Mata Group</small></div><span class="st bad"><svg><use href="#i-x"/></svg>Non autorisé V1</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="note-strip"><svg><use href="#i-info"/></svg><span><b>§7.1 —</b> Un transfert validé génère atomiquement un débit du compte source et un crédit de même montant sur le compte destination. Il n'est ni une dépense, ni un revenu, ni un encaissement client, et n'impacte pas directement le P&amp;L. Si la destination n'est pas encore confirmée, le flux passe par un compte Relais. <b>§7.2 —</b> Il n'existe pas d'auto-validation, y compris pour le Super Admin. Avant validation, aucun solde n'est modifié. Après validation, la correction d'un transfert se fait par contrepassation ; l'opération originale reste visible.</span></div>
+  <div class="note-strip"><svg><use href="#i-shield"/></svg><span><b>Refus par défaut.</b> Initier et Valider sont deux permissions distinctes : le Directeur des Opérations déclenche et contrepasse sans valider ; le DG et le Super Admin valident les transferts d'autrui, jamais les leurs — la ligne VAL-114 de S. Doucouré est refusée au Super Admin lui-même ; le Comptable externe et l'Investisseur n'accèdent pas à cet écran. Toute consultation de cet écran hautement sensible est auditée, toute modification aussi (§10.2).</span></div>
+
+  <!-- Tiroir : détail d'un transfert -->
+  <aside class="drawer" data-ov="fin-transferts-fiche" aria-label="Détail du transfert">
+    <div class="dh"><h3>Détail du transfert</h3><button class="ib" data-close aria-label="Fermer"><svg><use href="#i-x"/></svg></button></div>
+    <div class="db">
+      <div class="hint" data-d="head"></div>
+      <b data-d="route"></b>
+      <div class="big-amt amt" data-d="amt"></div>
+      <div class="meta-l" data-d="meta"></div>
+      <div class="hint">Écritures générées à la validation : débit et crédit atomiques, de même montant (§7.1)</div>
+      <div class="brk" data-d="brk"></div>
+      <div class="fcode" data-d="motif" hidden></div>
+      <div class="tl" data-d="tl"></div>
+      <div class="note-strip"><svg><use href="#i-lock"/></svg>Avant validation, aucun solde n'est modifié (§7.2). Le détail complet de l'opération est consultable avant toute décision ; l'écran Validations sert au travail opérationnel, l'Audit conserve la preuve historique (§7.3).</div>
+    </div>
+    <div class="df"><button class="btn ghost" data-close>Fermer</button><div class="sp"></div><button class="btn ghost" data-d="goval" data-goto="fin-validations"><svg><use href="#i-clipboard"/></svg>Voir dans Validations</button></div>
+  </aside>
+  <div class="dback" data-ov-back="fin-transferts-fiche"></div>
+
+  <!-- Modale : refus d'un transfert en attente -->
+  <div class="mback" data-ov="fin-transferts-refuser"><div class="modal" role="dialog" aria-modal="true" aria-label="Refuser le transfert">
+    <h3><svg><use href="#i-x"/></svg>Refuser le transfert</h3>
+    <div class="exp" data-r="exp"></div>
+    <label for="fin-transferts-refus-motif">Motif du refus</label>
+    <input id="fin-transferts-refus-motif" data-r="motif" placeholder="Motif transmis à l'initiateur et conservé dans l'Audit">
+    <div class="hint" style="margin-top:8px">Aucun solde n'a été modifié : le refus n'entraîne aucune écriture. L'initiateur est notifié ; la décision, son auteur et son motif sont conservés par l'Audit (§10.2).</div>
+    <div class="acts"><button class="btn ghost" data-close>Annuler</button><button class="btn pri" data-perm="finance.transferts.valider" data-r="confirm"><svg><use href="#i-x"/></svg>Confirmer le refus</button></div>
+  </div></div>
+
+  <!-- Modale : contrepassation d'un transfert validé -->
+  <div class="mback" data-ov="fin-transferts-contrepasser"><div class="modal wide" role="dialog" aria-modal="true" aria-label="Contrepasser le transfert">
+    <h3><svg><use href="#i-refresh"/></svg>Contrepasser un transfert validé</h3>
+    <div class="exp">Après validation, la correction d'un transfert se fait par contrepassation ; l'opération originale reste visible (§7.2). La contrepassation est un transfert inverse de même montant, créé « En attente » et soumis à un second validateur distinct de l'initiateur. Toute correction relie l'opération originale à la contrepassation (§10.2).</div>
+    <div class="row-m"><span>Original</span><b data-c="orig"></b></div>
+    <div class="row-m"><span>Contrepassation</span><b data-c="inv"></b></div>
+    <label for="fin-transferts-cp-motif">Motif de la contrepassation</label>
+    <input id="fin-transferts-cp-motif" data-c="motif" placeholder="Motif obligatoire, lié à l'opération originale dans l'Audit">
+    <div class="acts"><button class="btn ghost" data-close>Annuler</button><button class="btn pri" data-perm="finance.transferts.initier" data-c="confirm"><svg><use href="#i-swap"/></svg>Déclencher la contrepassation</button></div>
+  </div></div>
+</section>
+<script data-screen="fin-transferts">
+ERP.register('fin-transferts', function (root, ctx) {
+  var q = function (s, r) { return (r || root).querySelector(s); };
+  var qa = function (s, r) { return Array.prototype.slice.call((r || root).querySelectorAll(s)); };
+  /* Comptes éligibles (FIXTURES §3) : nom, type, source, solde */
+  var ACC = { CG: ['Caisse générale', 'Trésorerie', 'CALCULÉ', 8450000], SCM: ['Sous-caisse Marché', 'Trésorerie', 'CALCULÉ', 1275000], SCL: ['Sous-caisse Livraisons', 'Trésorerie', 'CALCULÉ', 640000], BOA: ['Banque BOA', 'Position externe', 'IMPORT CSV 27/08 08:00', 45200000], BIC: ['Bictorys', 'Position externe', 'SYNCHRONISÉ 27/08 08:12', 2890000] };
+  var RELAY = { 'Dépôt en cours (Caisse → Banque)': 'REL1', 'Bictorys → Banque en cours': 'REL2' };
+  var S = { att: 2100000, nAtt: 2, val: 4150000, nVal: 3, transit: 2850000, n: 6 }, CA = 452000000;
+  var tbody = q('[data-rows]'), cur = 'tous', target = null;
+  function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+  function num(el) { return parseInt(String(el.value).replace(/\D/g, ''), 10) || 0; }
+  function setAmt(el, v, nocur) { el.textContent = ctx.fmt(v); if (!nocur) { var c = document.createElement('span'); c.className = 'cur'; c.textContent = 'FCFA'; el.appendChild(c); } }
+  function me() { return ctx.profile.short; }
+  function now() { var d = new Date(); return '27/08 · ' + ('0' + d.getHours()).slice(-2) + ':' + ('0' + d.getMinutes()).slice(-2); }
+  function relayFor(de, vers) { if (de === 'BIC' && vers === 'BOA') return 'Bictorys → Banque en cours'; if (/^(CG|SCM|SCL)$/.test(de) && vers === 'BOA') return 'Dépôt en cours (Caisse → Banque)'; return ''; }
+  function typeOf(name) { for (var k in ACC) if (ACC[k][0] === name) return ACC[k][1]; return 'Relais'; }
+  function badge(st, extra) { var m = { attente: ['warn', 'clock', 'En attente'], valide: ['ok', 'check', 'Validé'], refuse: ['bad', 'x', 'Refusé'], annule: ['mut', 'x', 'Annulé'] }[st]; return '<span class="st ' + m[0] + '"><svg><use href="#i-' + m[1] + '"/></svg>' + m[2] + '</span>' + (extra ? '<span class="hint">' + extra + '</span>' : ''); }
+  function acts(st, init) {
+    if (st === 'attente') return '<div class="acts-cell"><button class="btn pri sm" data-act="valider" data-perm="finance.transferts.valider" data-initiator="' + esc(init) + '"><svg><use href="#i-check"/></svg>Valider</button><button class="btn ghost sm" data-act="refuser" data-perm="finance.transferts.valider" data-initiator="' + esc(init) + '"><svg><use href="#i-x"/></svg>Refuser</button></div>';
+    if (st === 'valide') return '<button class="btn ghost sm" data-act="contrepasser" data-perm="finance.transferts.initier"><svg><use href="#i-refresh"/></svg>Contrepasser</button>';
+    return '<span class="hint">—</span>';
+  }
+  function rowHtml(o) { return '<tr class="rowlink" data-open="fin-transferts-fiche" data-st="attente" data-date="' + o.date + '" data-de="' + esc(o.de) + '" data-vers="' + esc(o.vers) + '" data-relay="' + esc(o.relay) + '" data-m="' + o.m + '" data-init="' + esc(o.init) + '" data-valid="" data-ref="' + esc(o.ref) + '" data-motif="' + esc(o.motif) + '"><td><b>' + o.date + '</b><span class="hint">' + esc(o.ref) + '</span></td><td><b>' + esc(o.de) + ' → ' + esc(o.vers) + '</b><span class="hint">' + typeOf(o.de) + ' → ' + typeOf(o.vers) + (o.relay ? ' · via Relais « ' + esc(o.relay) + ' »' : '') + '</span></td><td><span class="amt" data-amt="' + o.m + '" data-nocur></span></td><td>' + esc(o.init) + '</td><td data-cell="valid"><span class="hint">—</span></td><td data-cell="st">' + badge('attente') + '</td><td data-cell="acts">' + acts('attente', o.init) + '</td></tr>'; }
+  function ratio(v) { return String(Math.round(v / CA * 1000) / 10).replace('.', ',') + ' % du CA de référence (452 000 000)'; }
+  function stats() {
+    setAmt(q('[data-stat="att"]'), S.att); setAmt(q('[data-stat="val"]'), S.val); setAmt(q('[data-stat="transit"]'), S.transit); q('[data-stat="transitRatio"]').textContent = ratio(S.transit);
+    q('[data-stat="nAtt"]').textContent = S.nAtt + ' transfert' + (S.nAtt > 1 ? 's' : ''); q('[data-stat="nVal"]').textContent = S.nVal + ' transfert' + (S.nVal > 1 ? 's' : '');
+  }
+  function count() { var vis = qa('tr:not([hidden])', tbody).length; q('[data-count]').textContent = cur === 'tous' ? S.n + ' transferts · ' + S.nAtt + ' en attente' : vis + ' sur ' + S.n + ' transferts'; }
+  function filter(f) { cur = f; ctx.filterRows(tbody, 'st', f); count(); }
+  /* ---- Formulaire De / Vers / Montant / Motif / Relais : aperçu des écritures, compatibilité (§7.1, §4.6) ---- */
+  var F = {}; qa('[data-f]').forEach(function (el) { F[el.getAttribute('data-f')] = el; });
+  function hint(k, code) { var a = ACC[code]; q('[data-hint="' + k + '"]').textContent = a[1] + ' · ' + a[2] + ' · solde ' + ctx.fmt(a[3]) + ' FCFA' + (code === 'BIC' ? ' · jamais modifiable à la main (§4.9)' : ''); }
+  function sync() {
+    var de = F.de.value; qa('option', F.vers).forEach(function (o) { o.disabled = o.value === de || o.value === 'BIC'; });
+    if (F.vers.value === de || F.vers.value === 'BIC') F.vers.value = de === 'BOA' ? 'CG' : 'BOA';
+    var vers = F.vers.value, m = num(F.montant), rel = relayFor(de, vers), viaRel = F.relay.checked && rel, A = ACC[de][0], B = ACC[vers][0], mt = m ? ctx.fmt(m) : '…';
+    hint('de', de); hint('vers', vers);
+    q('[data-hint="relay"]').textContent = F.relay.checked ? (rel ? 'Relais : ' + rel : 'Aucun compte Relais configuré pour ce couple de comptes : à créer avant validation (§4.6)') : (de === 'BIC' ? 'Sortie d’une Position externe : le Relais n’est crédité qu’en contrepartie d’une sortie effective (§4.6)' : 'Crédit direct du compte destination à la validation');
+    q('[data-preview]').innerHTML = 'Débit <b>' + A + '</b> <span class="bad">−' + mt + '</span> · Crédit <b>' + (viaRel ? 'Relais « ' + rel + ' »' : B) + '</b> <span class="ok">+' + mt + '</span>' + (viaRel ? ' · puis Relais → <b>' + B + '</b> à la confirmation' : '') + '<br>Atomiques à la validation · avant validation, aucun solde n’est modifié (§7.2) · Trésorerie totale contrôlée inchangée · P&amp;L non impacté (§7.1)' + (m > ACC[de][3] ? '<br><span class="bad">Montant supérieur au solde du compte source (' + ctx.fmt(ACC[de][3]) + ') : à justifier dans le motif</span>' : '');
+  }
+  ['de', 'vers', 'relay'].forEach(function (k) { ctx.on(F[k], 'change', sync); }); ctx.on(F.montant, 'input', sync);
+  ctx.on(q('[data-trigger]'), 'click', function () {
+    var m = num(F.montant), de = F.de.value, vers = F.vers.value, rel = F.relay.checked ? relayFor(de, vers) : '';
+    if (de === vers) { ctx.toast('Compte source et compte destination doivent être distincts'); return; }
+    if (m <= 0) { ctx.toast('Montant entier strictement positif obligatoire (FCFA sans décimales, §3)'); F.montant.focus(); return; }
+    if (!F.motif.value.trim()) { ctx.toast('Motif obligatoire : le validateur consulte le détail complet avant toute décision (§7.3)'); F.motif.focus(); return; }
+    if (F.relay.checked && !rel) { ctx.toast('Aucun compte Relais configuré pour ce couple de comptes : décochez ou faites créer le Relais (§4.6)'); return; }
+    tbody.insertAdjacentHTML('afterbegin', rowHtml({ date: now(), de: ACC[de][0], vers: ACC[vers][0], relay: rel, m: m, init: me(), ref: 'Proposé par ' + me(), motif: F.motif.value.trim() }));
+    S.att += m; S.nAtt++; S.n++; F.montant.value = ''; F.motif.value = ''; F.relay.checked = false; sync();
+    ctx.formatAmounts(tbody); ctx.applyPerms(); stats(); filter(cur);
+    ctx.toast('Transfert déclenché — En attente : aucun solde modifié avant validation par un second utilisateur habilité, distinct de ' + me() + ' (§7.2)');
+  });
+  qa('.chip[data-filter]').forEach(function (c) { ctx.on(c, 'click', function () { qa('.chip[data-filter]').forEach(function (x) { x.classList.toggle('on', x === c); }); filter(c.getAttribute('data-filter')); }); });
+  ctx.on(q('[data-export]'), 'click', function () { ctx.toast('Export CSV : ' + qa('tr:not([hidden])', tbody).length + ' transferts filtrés · disponible 7 jours puis supprimé, régénérable · export audité (§9.2)'); });
+  /* ---- Tiroir : détail complet consultable avant toute décision (§7.3) ---- */
+  function fill(tr) {
+    var d = tr.dataset, m = +d.m, D = q('[data-ov="fin-transferts-fiche"]');
+    var L = function (s, lbl, v) { return '<div class="row"><span class="sign ' + s + '">' + (s === 'p' ? '+' : '−') + '</span>' + lbl + '<span class="amt' + (s === 'm' ? ' m' : '') + '">' + (s === 'p' ? '+' : '−') + ctx.fmt(v) + '</span></div>'; };
+    q('[data-d="head"]', D).textContent = d.date + (d.ref ? ' · ' + d.ref : '') + ' · Mata Group · ' + typeOf(d.de) + ' → ' + typeOf(d.vers);
+    q('[data-d="route"]', D).textContent = d.de + ' → ' + d.vers; setAmt(q('[data-d="amt"]', D), m);
+    q('[data-d="meta"]', D).innerHTML = badge(d.st) + '<span class="sens hs"><svg><use href="#i-shield"/></svg>Hautement sensible</span>' + (d.relay ? '<span class="tag lock"><svg><use href="#i-layers"/></svg>via Relais</span>' : '');
+    q('[data-d="brk"]', D).innerHTML = d.relay ? L('m', 'Débit ' + esc(d.de) + ' <span class="hint">à la validation</span>', m) + L('p', 'Crédit Relais « ' + esc(d.relay) + ' » <span class="hint">à la validation</span>', m) + L('m', 'Débit Relais « ' + esc(d.relay) + ' » <span class="hint">à la confirmation</span>', m) + L('p', 'Crédit ' + esc(d.vers) + ' <span class="hint">à la confirmation</span>', m) : L('m', 'Débit ' + esc(d.de), m) + L('p', 'Crédit ' + esc(d.vers), m);
+    var mo = q('[data-d="motif"]', D); mo.hidden = !d.motif; mo.textContent = 'Motif : ' + d.motif;
+    var ev = '<div class="ev on"><b>Proposé par ' + esc(d.init) + '</b><small>' + d.date + ' · aucun solde modifié</small></div>';
+    ev += d.st === 'attente' ? '<div class="ev"><b>Validation attendue</b><small>Second utilisateur habilité, distinct de l’initiateur · pas d’auto-validation, y compris Super Admin (§7.2)</small></div>' : d.st === 'valide' ? '<div class="ev on"><b>Validé par ' + esc(d.valid) + '</b><small>Débit et crédit générés atomiquement (§7.1)' + (d.relay ? ' · Relais crédité, dénouement à la confirmation' : '') + '</small></div>' : d.st === 'refuse' ? '<div class="ev on"><b>Refusé par ' + esc(d.valid) + '</b><small>Aucune écriture · motif conservé par l’Audit</small></div>' : '<div class="ev on"><b>Annulé par l’initiateur</b><small>Aucune écriture · statut conservé (§7.3)</small></div>';
+    q('[data-d="tl"]', D).innerHTML = ev; q('[data-d="goval"]', D).hidden = d.st !== 'attente';
+  }
+  /* ---- Actions de ligne : Valider (débit + crédit atomiques), Refuser (motif), Contrepasser (motif) ---- */
+  ctx.on(tbody, 'click', function (e) {
+    var b = e.target.closest('button[data-act]'), tr = e.target.closest('tr'); if (!tr) return;
+    if (!b) { fill(tr); return; }
+    e.stopPropagation(); target = tr; var d = tr.dataset, m = +d.m, act = b.getAttribute('data-act');
+    if (act === 'valider') {
+      d.st = 'valide'; d.valid = me(); q('[data-cell="valid"]', tr).textContent = me();
+      q('[data-cell="st"]', tr).innerHTML = badge('valide', d.relay ? 'Relais « ' + esc(d.relay) + ' » crédité · dénouement à la confirmation' : 'Débit et crédit atomiques'); q('[data-cell="acts"]', tr).innerHTML = acts('valide');
+      S.att -= m; S.nAtt--; S.val += m; S.nVal++;
+      if (d.relay) { S.transit += m; var r = q('[data-relay-amt="' + RELAY[d.relay] + '"]'); if (r) { var nv = +r.getAttribute('data-amt') + m; r.setAttribute('data-amt', nv); setAmt(r, nv, true); } }
+      ctx.applyPerms(); stats(); count(); ctx.toast('Transfert validé par ' + me() + ' : débit ' + d.de + ' et crédit ' + (d.relay || d.vers) + ' de ' + ctx.fmt(m) + ' FCFA, atomiques · P&L inchangé (§7.1)');
+    } else if (act === 'refuser') { q('[data-r="exp"]').textContent = 'Transfert ' + d.de + ' → ' + d.vers + ' de ' + ctx.fmt(m) + ' FCFA proposé par ' + d.init + ' (' + d.date + '). Le refus est une décision du validateur, distinct de l’initiateur.'; q('[data-r="motif"]').value = ''; ctx.open('fin-transferts-refuser'); }
+    else { q('[data-c="orig"]').textContent = d.de + ' → ' + d.vers + ' · ' + ctx.fmt(m) + ' FCFA · ' + d.date; q('[data-c="inv"]').textContent = d.vers + ' → ' + d.de + ' · ' + ctx.fmt(m) + ' FCFA · En attente'; q('[data-c="motif"]').value = ''; ctx.open('fin-transferts-contrepasser'); }
+  });
+  ctx.on(q('[data-r="confirm"]'), 'click', function () {
+    var mo = q('[data-r="motif"]').value.trim(); if (!mo) { ctx.toast('Motif du refus obligatoire : il est transmis à l’initiateur et conservé par l’Audit'); return; } if (!target) return;
+    var d = target.dataset; d.st = 'refuse'; d.valid = me(); d.motif = mo; q('[data-cell="valid"]', target).textContent = me(); q('[data-cell="st"]', target).innerHTML = badge('refuse', esc(mo)); q('[data-cell="acts"]', target).innerHTML = acts('refuse');
+    S.att -= +d.m; S.nAtt--; stats(); count(); ctx.close('fin-transferts-refuser'); ctx.toast('Transfert refusé · aucun solde modifié · initiateur ' + d.init + ' notifié · motif conservé par l’Audit (§10.2)');
+  });
+  ctx.on(q('[data-c="confirm"]'), 'click', function () {
+    var mo = q('[data-c="motif"]').value.trim(); if (!mo) { ctx.toast('Motif de la contrepassation obligatoire : il relie l’original à la correction (§10.2)'); return; } if (!target) return;
+    var d = target.dataset, m = +d.m;
+    tbody.insertAdjacentHTML('afterbegin', rowHtml({ date: now(), de: d.vers, vers: d.de, relay: '', m: m, init: me(), ref: 'Contrepassation du transfert du ' + d.date, motif: mo }));
+    q('[data-cell="st"]', target).innerHTML = badge('valide', 'Contrepassation en attente · opération originale conservée (§7.2)'); q('[data-cell="acts"]', target).innerHTML = '<span class="hint">Contrepassation en cours</span>';
+    S.att += m; S.nAtt++; S.n++; ctx.formatAmounts(tbody); ctx.applyPerms(); stats(); filter(cur); ctx.close('fin-transferts-contrepasser');
+    ctx.toast('Contrepassation déclenchée — En attente d’un validateur distinct de ' + me() + ' · l’opération originale reste visible (§7.2)');
+  });
+  function who() { qa('[data-me]').forEach(function (el) { el.textContent = me() + ' · ' + ctx.profile.profile; }); }
+  document.addEventListener('erp:profile', who);
+  who(); sync(); filter('tous'); stats(); ctx.formatAmounts(root); ctx.applyPerms();
+});
+</script>

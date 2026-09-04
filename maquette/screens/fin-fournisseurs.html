@@ -1,0 +1,302 @@
+<section class="scr" data-scr="fin-fournisseurs" data-module="finance" data-perm="finance.fournisseurs.view" data-sens="s" hidden>
+  <style data-screen="fin-fournisseurs">
+    #app [data-scr="fin-fournisseurs"] .due>span:first-child{flex:1}
+    #app [data-scr="fin-fournisseurs"] .due .amt{margin-right:10px}
+    #app [data-scr="fin-fournisseurs"] .enc .foot{margin-top:auto;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+    #app [data-scr="fin-fournisseurs"] .enc .foot .hint2{flex:1;font-size:10.5px;color:var(--mut);min-width:120px}
+    #app [data-scr="fin-fournisseurs"] .enc .cap>span:first-child{display:inline-flex;align-items:center;gap:4px}
+    #app [data-scr="fin-fournisseurs"] .modal .fld{margin-bottom:10px}
+    #app [data-scr="fin-fournisseurs"] .modal label.rline{display:flex;text-transform:none;letter-spacing:0;font-size:12.5px;font-weight:700;margin:10px 0 8px}
+    #app [data-scr="fin-fournisseurs"] .modal input[type=checkbox]{width:15px;height:15px;min-height:auto;padding:0;accent-color:var(--red)}
+    #app [data-scr="fin-fournisseurs"] .fifo-row .lot{flex:1.1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--ink-2)}
+    #app [data-scr="fin-fournisseurs"] .fifo-row .fa{width:auto;display:flex;align-items:center;gap:6px;white-space:nowrap}
+    #app [data-scr="fin-fournisseurs"] .fifo-row .fa input{width:104px;min-height:30px;padding:4px 8px;font-size:11px;text-align:right}
+    #app [data-scr="fin-fournisseurs"] .fifo-row .fa input[readonly]{color:var(--ok);border-style:dashed}
+    @media (max-width:640px){#app [data-scr="fin-fournisseurs"] .fifo-row .lot{display:none}}
+  </style>
+  <div class="scr-head">
+    <div>
+      <h2>Fournisseurs</h2>
+      <p class="scr-sub">6 comptes Fournisseur · position calculée, jamais saisie · paiements affectés par défaut aux échéances les plus proches (FIFO) · plafond d'encours : alerte informative, aucun blocage</p>
+    </div>
+    <div class="scr-meta">
+      <span class="sens s"><svg><use href="#i-shield"/></svg>Sensible</span>
+      <span class="hint">Positions fournisseur : modifications selon permissions et clôture (§10.1) · paiement enregistré sans validation préalable, contrôlé par la réconciliation fournisseur (§5.2, §5.5) · Exporter distinct de Consulter (§5.7)</span>
+    </div>
+  </div>
+
+  <div class="statstrip four">
+    <div class="card stat"><div class="lb">Dettes fournisseurs<button class="fx" data-f="Dettes fournisseurs = Σ max(− Position fournisseur ; 0)" data-c="AGNEAUX 12 400 000 · MATA VOLAILLE CHAIR 4 300 000 · MATA VOLAILLE ŒUFS 1 150 000 · Bétail Thiès 4 600 000 · Aliments Sénégal 800 000" data-src="Moteur financier · 6 comptes Fournisseur CALCULÉ · import Achat 27/08 17:00 (5 achats, 0 doublon)" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></div><div class="v amt" data-amt="23250000" data-kpi="dettes"></div><div class="sub2">5,1 % du CA de référence (août, au 27) · 5 fournisseurs à payer</div></div>
+    <div class="card stat"><div class="lb">Avances fournisseurs<button class="fx" data-f="Avances fournisseurs = Σ max(Position fournisseur ; 0)" data-c="Abattoirs Dakar +350 000" data-src="Moteur financier · compte F5 CALCULÉ · réconciliation du jour en attente" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></div><div class="v amt" data-amt="350000" data-kpi="avances"></div><div class="sub2">Abattoirs Dakar · consommée par les achats futurs avant toute dette (§4.3)</div></div>
+    <div class="card stat"><div class="lb">Échéances dépassées <span class="st bad" data-kpi-depn>2</span><button class="fx" data-f="Échéances dépassées = Σ montant restant des dépenses ou lots impayés dont la date de paiement souhaitée au plus tard est dépassée (§5.3, §5.6)" data-c="MATA VOLAILLE ŒUFS 1 150 000 (25/08/2026, 2 j) · Aliments Sénégal 800 000 (20/08/2026, 7 j)" data-src="Échéancier fournisseurs · date de référence 27/08/2026 · notification Directeur des Opérations 17:30" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></div><div class="v amt" data-amt="1950000" data-kpi="dep"></div><div class="sub2">Affichées en priorité (§5.6) · alerte « Échéance fournisseur dépassée » : haute</div></div>
+    <div class="card stat"><div class="lb">Prochaine échéance<button class="fx" data-f="Prochaine date de paiement due et montant total correspondant (§5.6)" data-c="Bétail Thiès · Lot AG-260820-01 · 1 600 000 · 02/09/2026" data-src="Échéancier fournisseurs · compte de paiement de référence Caisse générale" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></div><div class="v" data-kpi-next>02/09 · <span class="amt" data-amt="1600000" data-nocur></span></div><div class="sub2" data-kpi-next-sub>Bétail Thiès · Lot AG-260820-01 · Caisse générale · dans 6 jours</div></div>
+  </div>
+
+  <div class="actionbar">
+    <div class="chips">
+      <button class="chip on" data-fflt="tous">Tous (6)</button><button class="chip" data-fflt="dette">Dettes (5)</button><button class="chip" data-fflt="avance">Avances (1)</button><button class="chip" data-fflt="over">Plafond dépassé (1)</button><button class="chip" data-fflt="dep">Échéance dépassée (2)</button><button class="chip" data-fflt="att">Réconciliation en attente (2)</button>
+    </div>
+    <div class="sp"></div>
+    <button class="btn ghost" data-perm="finance.export" data-open="fin-fournisseurs-releve"><svg><use href="#i-file"/></svg>Relevé fournisseur PDF</button>
+    <button class="btn pri" data-perm="finance.fournisseurs.payer" data-open="fin-fournisseurs-payer"><svg><use href="#i-coins"/></svg>Payer un fournisseur</button>
+  </div>
+
+  <div class="card">
+    <div class="ch"><h3>Échéances dépassées en priorité</h3><span class="hint-r">§5.6 · 2 dépassées · puis la prochaine date de paiement due</span></div>
+    <div class="cb">
+      <div class="due" data-tranche="T1"><span><b>MATA VOLAILLE ŒUFS</b> · Lot œufs 18/08 <span class="hint">· Caisse générale</span></span><span class="amt" data-amt="1150000" data-nocur></span><span class="dt">au plus tard le <b>25/08</b></span> <span class="st bad"><svg><use href="#i-alert"/></svg>Dépassée (2 j)</span></div>
+      <div class="due" data-tranche="T2"><span><b>Aliments Sénégal</b> · Aliment volaille 05/08 <span class="hint">· Banque BOA</span></span><span class="amt" data-amt="800000" data-nocur></span><span class="dt">au plus tard le <b>20/08</b></span> <span class="st bad"><svg><use href="#i-alert"/></svg>Dépassée (7 j)</span></div>
+      <div class="due" data-next-due><span><b>Bétail Thiès</b> · Lot AG-260820-01 <span class="hint">· Caisse générale</span></span><span class="amt" data-amt="1600000" data-nocur></span><span class="dt">au plus tard le <b>02/09</b></span> <span class="st warn"><svg><use href="#i-clock"/></svg>Prochaine</span></div>
+    </div>
+    <div class="ch">
+      <h3>Échéancier complet</h3>
+      <div class="chips"><button class="chip on" data-eflt="tous">Toutes</button><button class="chip" data-eflt="dep">Dépassées</button><button class="chip" data-eflt="proch">Prochaine</button><button class="chip" data-eflt="avenir">À venir</button></div>
+      <span class="hint-r">8 tranches · total restant <span class="amt" data-amt="23250000" data-nocur data-kpi="tot"></span> = Dettes fournisseurs</span>
+    </div>
+    <div class="tbl-scroll"><table>
+      <thead><tr><th>Fournisseur</th><th>Dépense / lot</th><th>Montant restant</th><th>Date souhaitée au plus tard</th><th>Compte de paiement de référence</th><th>État</th></tr></thead>
+      <tbody data-ech>
+        <tr data-tranche="T1" data-fourn="F3" data-etat="dep" data-lot="Lot œufs 18/08" data-dt="25/08"><td><b>MATA VOLAILLE ŒUFS</b></td><td>Lot œufs 18/08</td><td><span class="amt" data-amt="1150000" data-nocur></span></td><td class="hint">25/08/2026</td><td data-refcell>Caisse générale</td><td data-etatcell><span class="st bad"><svg><use href="#i-alert"/></svg>Dépassée (2 j)</span></td></tr>
+        <tr data-tranche="T2" data-fourn="F6" data-etat="dep" data-lot="Aliment volaille 05/08" data-dt="20/08"><td><b>Aliments Sénégal</b></td><td>Aliment volaille 05/08</td><td><span class="amt" data-amt="800000" data-nocur></span></td><td class="hint">20/08/2026</td><td data-refcell>Banque BOA</td><td data-etatcell><span class="st bad"><svg><use href="#i-alert"/></svg>Dépassée (7 j)</span></td></tr>
+        <tr data-tranche="T3" data-fourn="F4" data-etat="proch" data-lot="Lot AG-260820-01" data-dt="02/09"><td><b>Bétail Thiès</b></td><td>Lot AG-260820-01</td><td><span class="amt" data-amt="1600000" data-nocur></span></td><td class="hint">02/09/2026</td><td data-refcell>Caisse générale</td><td data-etatcell><span class="st warn"><svg><use href="#i-clock"/></svg>Prochaine</span></td></tr>
+        <tr data-tranche="T4" data-fourn="F2" data-etat="avenir" data-lot="Lot 22/08" data-dt="05/09"><td><b>MATA VOLAILLE CHAIR</b></td><td>Lot 22/08</td><td><span class="amt" data-amt="4300000" data-nocur></span></td><td class="hint">05/09/2026</td><td data-refcell>Banque BOA</td><td data-etatcell><span class="st mut"><svg><use href="#i-clock"/></svg>À venir</span></td></tr>
+        <tr data-tranche="T5" data-fourn="F1" data-etat="avenir" data-lot="Lot BV-260810" data-dt="10/09"><td><b>AGNEAUX</b></td><td>Lot BV-260810</td><td><span class="amt" data-amt="2000000" data-nocur></span></td><td class="hint">10/09/2026</td><td data-refcell>Caisse générale</td><td data-etatcell><span class="st mut"><svg><use href="#i-clock"/></svg>À venir</span></td></tr>
+        <tr data-tranche="T6" data-fourn="F4" data-etat="avenir" data-lot="Lot AG-260827-02 (+ antérieurs)" data-dt="12/09"><td><b>Bétail Thiès</b></td><td>Lot AG-260827-02 (+ antérieurs)</td><td><span class="amt" data-amt="3000000" data-nocur></span></td><td class="hint">12/09/2026</td><td data-refcell>Caisse générale</td><td data-etatcell><span class="st mut"><svg><use href="#i-clock"/></svg>À venir</span></td></tr>
+        <tr data-tranche="T7" data-fourn="F1" data-etat="avenir" data-lot="Lot BV-260818" data-dt="14/09"><td><b>AGNEAUX</b></td><td>Lot BV-260818</td><td><span class="amt" data-amt="3000000" data-nocur></span></td><td class="hint">14/09/2026</td><td data-refcell>Caisse générale</td><td data-etatcell><span class="st mut"><svg><use href="#i-clock"/></svg>À venir</span></td></tr>
+        <tr data-tranche="T8" data-fourn="F1" data-etat="avenir" data-lot="Lot BV-260827-04 (+ antérieurs)" data-dt="30/09"><td><b>AGNEAUX</b></td><td>Lot BV-260827-04 (+ antérieurs)</td><td><span class="amt" data-amt="7400000" data-nocur></span></td><td class="hint">30/09/2026</td><td data-refcell>Caisse générale</td><td data-etatcell><span class="st mut"><svg><use href="#i-clock"/></svg>À venir</span></td></tr>
+      </tbody>
+    </table></div>
+  </div>
+
+  <div class="enc-grid">
+    <div class="card enc" data-fourn="F1" data-flt="dette over">
+      <div class="h"><h4>AGNEAUX <span class="hint">F1 · Achat bœuf</span></h4><span class="st bad" data-plst><svg><use href="#i-alert"/></svg>Plafond dépassé</span></div>
+      <div class="cap"><span>Position fournisseur<button class="fx" data-f="Position fournisseur = Position précédente + Paiements/avances − Dépenses ± Ajustements validés" data-c="Dernière position réconciliée (26/08) + Paiements/avances 0 − Dépenses du jour 850 000 (Achat bœuf, lot BV-260827-04, Achat API) ± Ajustements validés 0 → −12 400 000" data-src="Compte F1 · Fournisseur · CALCULÉ · import Achat 27/08 17:00 · réconciliation validée 18:30" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></span><span class="amt" data-amt="-12400000" data-pos></span></div>
+      <div class="cap"><span>Dette / plafond d'encours<button class="fx" data-f="Dette utilisée pour le contrôle du plafond = max(0 ; − Position fournisseur)" data-c="max(0 ; 12 400 000) = 12 400 000 · plafond 10 000 000 · 124 %" data-src="§5.4 · dépassement : alerte informative (15:24, Directeur des Opérations, DG), aucun blocage de la saisie en V1" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></span><span><span class="amt" data-amt="12400000" data-nocur data-enc data-plafond="10000000"></span> / <span class="amt" data-amt="10000000" data-nocur></span> · <b data-pct>124 %</b></span></div>
+      <div class="encbar"><i class="over" style="width:100%"></i></div>
+      <div class="fld"><label for="fin-fournisseurs-ref-F1">Compte de paiement de référence</label><select id="fin-fournisseurs-ref-F1" class="inp" data-ref data-perm="finance.fournisseurs.payer"><option selected>Caisse générale</option><option>Sous-caisse Marché</option><option>Sous-caisse Livraisons</option><option>Banque BOA</option></select><span class="hint">Trésorerie ou Position externe · ne réécrit aucun paiement historique, nouvelles opérations seulement (§4.4)</span></div>
+      <div class="due" data-tranche="T5"><span>Lot BV-260810</span><span class="amt" data-amt="2000000" data-nocur></span><span class="dt">avant le <b>10/09</b></span></div>
+      <div class="due" data-tranche="T7"><span>Lot BV-260818</span><span class="amt" data-amt="3000000" data-nocur></span><span class="dt">avant le <b>14/09</b></span></div>
+      <div class="due" data-tranche="T8"><span>Lot BV-260827-04 (+ antérieurs)</span><span class="amt" data-amt="7400000" data-nocur></span><span class="dt">avant le <b>30/09</b></span></div>
+      <div class="cap"><span>Réconciliation fournisseur du jour<button class="fx" data-f="Position théorique = Dernière position réconciliée + Paiements/avances − Dépenses ± Ajustements validés" data-c="Dernière position réconciliée + 0 − 850 000 ± 0 → −12 400 000 · déclarée en aveugle −12 400 000 · écart 0" data-src="§5.5 · réconciliation quotidienne · validée 18:30" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></span><span class="st ok"><svg><use href="#i-check"/></svg>Validée 18:30</span></div>
+      <div class="foot"><span class="hint2">Plafond dépassé (124 %) : alerte informative à 15:24, aucun blocage de la saisie (§5.4) · 3 tranches FIFO issues d'Achat (API)</span><button class="btn ghost" data-perm="finance.export" data-open="fin-fournisseurs-releve" data-fourn="F1"><svg><use href="#i-file"/></svg>Relevé</button><button class="btn pri" data-perm="finance.fournisseurs.payer" data-open="fin-fournisseurs-payer" data-fourn="F1"><svg><use href="#i-coins"/></svg>Payer</button></div>
+    </div>
+
+    <div class="card enc" data-fourn="F2" data-flt="dette">
+      <div class="h"><h4>MATA VOLAILLE CHAIR <span class="hint">F2 · Achat volaille</span></h4><span class="st ok" data-plst><svg><use href="#i-check"/></svg>Sous plafond</span></div>
+      <div class="cap"><span>Position fournisseur<button class="fx" data-f="Position fournisseur = Position précédente + Paiements/avances − Dépenses ± Ajustements validés" data-c="Position 26/08 −4 300 000 · Paiements/avances 420 000 (payé immédiatement) · Dépenses 420 000 (Achat volaille, Achat API) · Ajustements validés 0 → −4 300 000" data-src="Compte F2 · Fournisseur · CALCULÉ · import Achat 27/08 17:00 · réconciliation validée 17:50" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></span><span class="amt" data-amt="-4300000" data-pos></span></div>
+      <div class="cap"><span>Dette / plafond d'encours<button class="fx" data-f="Dette utilisée pour le contrôle du plafond = max(0 ; − Position fournisseur)" data-c="max(0 ; 4 300 000) = 4 300 000 · plafond 8 000 000 · 54 %" data-src="§5.4" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></span><span><span class="amt" data-amt="4300000" data-nocur data-enc data-plafond="8000000"></span> / <span class="amt" data-amt="8000000" data-nocur></span> · <b data-pct>54 %</b></span></div>
+      <div class="encbar"><i style="width:54%"></i></div>
+      <div class="fld"><label for="fin-fournisseurs-ref-F2">Compte de paiement de référence</label><select id="fin-fournisseurs-ref-F2" class="inp" data-ref data-perm="finance.fournisseurs.payer"><option>Caisse générale</option><option>Sous-caisse Marché</option><option>Sous-caisse Livraisons</option><option selected>Banque BOA</option></select><span class="hint">Trésorerie ou Position externe · ne réécrit aucun paiement historique (§4.4)</span></div>
+      <div class="due" data-tranche="T4"><span>Lot 22/08</span><span class="amt" data-amt="4300000" data-nocur></span><span class="dt">avant le <b>05/09</b></span></div>
+      <div class="cap"><span>Réconciliation fournisseur du jour<button class="fx" data-f="Position théorique = Dernière position réconciliée + Paiements/avances − Dépenses ± Ajustements validés" data-c="−4 300 000 + 420 000 − 420 000 ± 0 = −4 300 000 · déclarée en aveugle −4 300 000 · écart 0" data-src="§5.5 · validée 17:50" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></span><span class="st ok"><svg><use href="#i-check"/></svg>Validée 17:50</span></div>
+      <div class="foot"><span class="hint2">Achat du jour <span class="amt" data-amt="420000" data-nocur></span> payé immédiatement : position inchangée</span><button class="btn ghost" data-perm="finance.export" data-open="fin-fournisseurs-releve" data-fourn="F2"><svg><use href="#i-file"/></svg>Relevé</button><button class="btn pri" data-perm="finance.fournisseurs.payer" data-open="fin-fournisseurs-payer" data-fourn="F2"><svg><use href="#i-coins"/></svg>Payer</button></div>
+    </div>
+
+    <div class="card enc" data-fourn="F3" data-flt="dette dep">
+      <div class="h"><h4>MATA VOLAILLE ŒUFS <span class="hint">F3 · Achat œufs</span></h4><span class="st ok" data-plst><svg><use href="#i-check"/></svg>Sous plafond</span></div>
+      <div class="cap"><span>Position fournisseur<button class="fx" data-f="Position fournisseur = Position précédente + Paiements/avances − Dépenses ± Ajustements validés" data-c="Position 26/08 −1 150 000 · Paiements/avances 0 · Dépenses 0 · Ajustements validés 0 → −1 150 000" data-src="Compte F3 · Fournisseur · CALCULÉ · réconciliation validée 17:20" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></span><span class="amt" data-amt="-1150000" data-pos></span></div>
+      <div class="cap"><span>Dette / plafond d'encours<button class="fx" data-f="Dette utilisée pour le contrôle du plafond = max(0 ; − Position fournisseur)" data-c="max(0 ; 1 150 000) = 1 150 000 · plafond 3 000 000 · 38 %" data-src="§5.4" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></span><span><span class="amt" data-amt="1150000" data-nocur data-enc data-plafond="3000000"></span> / <span class="amt" data-amt="3000000" data-nocur></span> · <b data-pct>38 %</b></span></div>
+      <div class="encbar"><i style="width:38%"></i></div>
+      <div class="fld"><label for="fin-fournisseurs-ref-F3">Compte de paiement de référence</label><select id="fin-fournisseurs-ref-F3" class="inp" data-ref data-perm="finance.fournisseurs.payer"><option selected>Caisse générale</option><option>Sous-caisse Marché</option><option>Sous-caisse Livraisons</option><option>Banque BOA</option></select><span class="hint">Trésorerie ou Position externe · ne réécrit aucun paiement historique (§4.4)</span></div>
+      <div class="due" data-tranche="T1"><span>Lot œufs 18/08 <span class="st bad"><svg><use href="#i-alert"/></svg>Dépassée (2 j)</span></span><span class="amt" data-amt="1150000" data-nocur></span><span class="dt">avant le <b>25/08</b></span></div>
+      <div class="cap"><span>Réconciliation fournisseur du jour<button class="fx" data-f="Position théorique = Dernière position réconciliée + Paiements/avances − Dépenses ± Ajustements validés" data-c="−1 150 000 + 0 − 0 ± 0 = −1 150 000 · déclarée en aveugle −1 150 000 · écart 0" data-src="§5.5 · validée 17:20" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></span><span class="st ok"><svg><use href="#i-check"/></svg>Validée 17:20</span></div>
+      <div class="foot"><span class="hint2">Échéance dépassée depuis 2 jours · notifiée au Directeur des Opérations à 17:30</span><button class="btn ghost" data-perm="finance.export" data-open="fin-fournisseurs-releve" data-fourn="F3"><svg><use href="#i-file"/></svg>Relevé</button><button class="btn pri" data-perm="finance.fournisseurs.payer" data-open="fin-fournisseurs-payer" data-fourn="F3"><svg><use href="#i-coins"/></svg>Payer</button></div>
+    </div>
+
+    <div class="card enc" data-fourn="F4" data-flt="dette att">
+      <div class="h"><h4>Bétail Thiès <span class="hint">F4 · Achat agneau</span></h4><span class="st ok" data-plst><svg><use href="#i-check"/></svg>Sous plafond</span></div>
+      <div class="cap"><span>Position fournisseur<button class="fx" data-f="Position fournisseur = Position précédente + Paiements/avances − Dépenses ± Ajustements validés" data-c="Dernière position réconciliée + Paiements/avances 0 − Dépenses du jour 262 000 (Achat agneau, lot AG-260827-02, Achat API) ± Ajustements validés 0 · résultat visible après la déclaration en aveugle" data-src="Compte F4 · Fournisseur · CALCULÉ · import Achat 27/08 17:00 · réconciliation du jour en attente" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></span><span class="amt" data-amt="-4600000" data-pos></span></div>
+      <div class="cap"><span>Dette / plafond d'encours<button class="fx" data-f="Dette utilisée pour le contrôle du plafond = max(0 ; − Position fournisseur)" data-c="max(0 ; 4 600 000) = 4 600 000 · plafond 6 000 000 · 77 %" data-src="§5.4" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></span><span><span class="amt" data-amt="4600000" data-nocur data-enc data-plafond="6000000"></span> / <span class="amt" data-amt="6000000" data-nocur></span> · <b data-pct>77 %</b></span></div>
+      <div class="encbar"><i class="hot" style="width:77%"></i></div>
+      <div class="fld"><label for="fin-fournisseurs-ref-F4">Compte de paiement de référence</label><select id="fin-fournisseurs-ref-F4" class="inp" data-ref data-perm="finance.fournisseurs.payer"><option selected>Caisse générale</option><option>Sous-caisse Marché</option><option>Sous-caisse Livraisons</option><option>Banque BOA</option></select><span class="hint">Trésorerie ou Position externe · ne réécrit aucun paiement historique (§4.4)</span></div>
+      <div class="due" data-tranche="T3"><span>Lot AG-260820-01 <span class="st warn"><svg><use href="#i-clock"/></svg>Prochaine</span></span><span class="amt" data-amt="1600000" data-nocur></span><span class="dt">avant le <b>02/09</b></span></div>
+      <div class="due" data-tranche="T6"><span>Lot AG-260827-02 (+ antérieurs)</span><span class="amt" data-amt="3000000" data-nocur></span><span class="dt">avant le <b>12/09</b></span></div>
+      <div class="cap"><span>Réconciliation fournisseur du jour<button class="fx" data-f="Position théorique = Dernière position réconciliée + Paiements/avances − Dépenses ± Ajustements validés" data-c="Dernière position réconciliée + 0 − 262 000 ± 0 · résultat masqué jusqu'à la déclaration en aveugle, attendue avant le gel « À réconcilier » de 23:59" data-src="§5.5 · a bougé : achat agneau 262 000 · déclarant autorisé" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></span><span class="st warn"><svg><use href="#i-clock"/></svg>En attente</span></div>
+      <div class="foot"><span class="hint2">A bougé aujourd'hui (achat agneau <span class="amt" data-amt="262000" data-nocur></span>) : déclaration en aveugle requise (§5.5)</span><button class="btn ghost" data-perm="finance.export" data-open="fin-fournisseurs-releve" data-fourn="F4"><svg><use href="#i-file"/></svg>Relevé</button><button class="btn pri" data-perm="finance.fournisseurs.payer" data-open="fin-fournisseurs-payer" data-fourn="F4"><svg><use href="#i-coins"/></svg>Payer</button></div>
+    </div>
+
+    <div class="card enc" data-fourn="F5" data-flt="avance att">
+      <div class="h"><h4>Abattoirs Dakar <span class="hint">F5 · Abattage</span></h4><span class="st ok" data-plst><svg><use href="#i-check"/></svg>Avance chez le fournisseur</span></div>
+      <div class="cap"><span>Position fournisseur<button class="fx" data-f="Position fournisseur = Position précédente + Paiements/avances − Dépenses ± Ajustements validés" data-c="Position 26/08 +350 000 · Paiements/avances 150 000 (payé immédiatement) · Dépenses 150 000 (Frais d'abattage, Manuel) · Ajustements validés 0 → +350 000" data-src="Compte F5 · Fournisseur · CALCULÉ · réconciliation du jour en attente" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></span><span class="amt" data-amt="350000" data-pos></span></div>
+      <div class="cap"><span>Dette / plafond d'encours<button class="fx" data-f="Dette utilisée pour le contrôle du plafond = max(0 ; − Position fournisseur)" data-c="max(0 ; −350 000) = 0 · plafond 2 000 000 · 0 %" data-src="§5.4 · solde positif = avance de Mata chez le fournisseur (§4.3)" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></span><span><span class="amt" data-amt="0" data-nocur data-enc data-plafond="2000000"></span> / <span class="amt" data-amt="2000000" data-nocur></span> · <b data-pct>0 %</b></span></div>
+      <div class="encbar"><i style="width:0%"></i></div>
+      <div class="fld"><label for="fin-fournisseurs-ref-F5">Compte de paiement de référence</label><select id="fin-fournisseurs-ref-F5" class="inp" data-ref data-perm="finance.fournisseurs.payer"><option selected>Caisse générale</option><option>Sous-caisse Marché</option><option>Sous-caisse Livraisons</option><option>Banque BOA</option></select><span class="hint">Trésorerie ou Position externe · ne réécrit aucun paiement historique (§4.4)</span></div>
+      <div class="note-strip" style="margin-top:0"><svg><use href="#i-info"/></svg><span>Avance de <span class="amt" data-amt="350000"></span> chez le fournisseur : consommée automatiquement par les achats futurs avant qu'une dette opposée ne se forme (§4.3). Aucune tranche impayée.</span></div>
+      <div class="cap"><span>Réconciliation fournisseur du jour<button class="fx" data-f="Position théorique = Dernière position réconciliée + Paiements/avances − Dépenses ± Ajustements validés" data-c="Dernière position réconciliée + 150 000 − 150 000 ± 0 · résultat masqué jusqu'à la déclaration en aveugle, attendue avant le gel « À réconcilier » de 23:59" data-src="§5.5 · a bougé : frais d'abattage 150 000 payés immédiatement" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></span><span class="st warn"><svg><use href="#i-clock"/></svg>En attente</span></div>
+      <div class="foot"><span class="hint2">Un paiement augmenterait l'avance (§5.3)</span><button class="btn ghost" data-perm="finance.export" data-open="fin-fournisseurs-releve" data-fourn="F5"><svg><use href="#i-file"/></svg>Relevé</button><button class="btn pri" data-perm="finance.fournisseurs.payer" data-open="fin-fournisseurs-payer" data-fourn="F5"><svg><use href="#i-coins"/></svg>Payer</button></div>
+    </div>
+
+    <div class="card enc" data-fourn="F6" data-flt="dette dep">
+      <div class="h"><h4>Aliments Sénégal <span class="hint">F6 · Aliment volaille</span></h4><span class="st ok" data-plst><svg><use href="#i-check"/></svg>Sous plafond</span></div>
+      <div class="cap"><span>Position fournisseur<button class="fx" data-f="Position fournisseur = Position précédente + Paiements/avances − Dépenses ± Ajustements validés" data-c="Position 26/08 −800 000 · Paiements/avances 0 · Dépenses 0 · Ajustements validés 0 → −800 000" data-src="Compte F6 · Fournisseur · CALCULÉ · aucun mouvement depuis la dernière réconciliation" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></span><span class="amt" data-amt="-800000" data-pos></span></div>
+      <div class="cap"><span>Dette / plafond d'encours<button class="fx" data-f="Dette utilisée pour le contrôle du plafond = max(0 ; − Position fournisseur)" data-c="max(0 ; 800 000) = 800 000 · plafond 1 500 000 · 53 %" data-src="§5.4" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></span><span><span class="amt" data-amt="800000" data-nocur data-enc data-plafond="1500000"></span> / <span class="amt" data-amt="1500000" data-nocur></span> · <b data-pct>53 %</b></span></div>
+      <div class="encbar"><i style="width:53%"></i></div>
+      <div class="fld"><label for="fin-fournisseurs-ref-F6">Compte de paiement de référence</label><select id="fin-fournisseurs-ref-F6" class="inp" data-ref data-perm="finance.fournisseurs.payer"><option>Caisse générale</option><option>Sous-caisse Marché</option><option>Sous-caisse Livraisons</option><option selected>Banque BOA</option></select><span class="hint">Trésorerie ou Position externe · ne réécrit aucun paiement historique (§4.4)</span></div>
+      <div class="due" data-tranche="T2"><span>Aliment volaille 05/08 <span class="st bad"><svg><use href="#i-alert"/></svg>Dépassée (7 j)</span></span><span class="amt" data-amt="800000" data-nocur></span><span class="dt">avant le <b>20/08</b></span></div>
+      <div class="cap"><span>Réconciliation fournisseur du jour<button class="fx" data-f="Position théorique = Dernière position réconciliée + Paiements/avances − Dépenses ± Ajustements validés" data-c="−800 000 + 0 − 0 ± 0 = −800 000 · aucun mouvement depuis la dernière réconciliation : la non-déclaration n'est pas bloquante" data-src="§5.5 · sans mouvement" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></span><span class="st mut"><svg><use href="#i-eyeoff"/></svg>Sans mouvement · non bloquant</span></div>
+      <div class="foot"><span class="hint2">Échéance dépassée depuis 7 jours · paiement depuis Banque BOA</span><button class="btn ghost" data-perm="finance.export" data-open="fin-fournisseurs-releve" data-fourn="F6"><svg><use href="#i-file"/></svg>Relevé</button><button class="btn pri" data-perm="finance.fournisseurs.payer" data-open="fin-fournisseurs-payer" data-fourn="F6"><svg><use href="#i-coins"/></svg>Payer</button></div>
+    </div>
+  </div>
+
+  <div class="note-strip"><svg><use href="#i-building"/></svg><span><b>Identité dans Mata Core.</b> Le fournisseur vit dans le Référentiel ERP ; Mata Finance ne duplique pas son identité. À son activation pour usage financier, le compte Fournisseur est créé et la sélection du compte de paiement de référence est exigée (§5.2). Dernière activation : « Ferme Ndiaye » (DEM-029, validée par S. Doucouré le 25/08), référence Caisse générale : compte créé sans mouvement, non affiché ci-dessus tant qu'il n'a ni position ni échéance.</span></div>
+  <div class="note-strip"><svg><use href="#i-shield"/></svg><span><b>Refus par défaut.</b> Consulter, Payer et Exporter sont trois permissions distinctes : le Directeur des Opérations paie sans exporter, le Comptable externe consulte seulement, l'Investisseur n'accède pas à cet écran. Un paiement est enregistré immédiatement (aucune validation préalable, §5.2) puis contrôlé par la réconciliation fournisseur et la clôture ; created_at, updated_at et updated_by sont automatiques, la date métier est distincte. Le solde n'est jamais saisi : une correction passe par le compte Ajustement (§4.2, §4.7).</span></div>
+
+  <!-- Modale : Payer -->
+  <div class="mback" data-ov="fin-fournisseurs-payer"><div class="modal wide" role="dialog" aria-modal="true" aria-label="Payer un fournisseur">
+    <h3><svg><use href="#i-coins"/></svg>Payer un fournisseur</h3>
+    <div class="exp">Les paiements sont affectés par défaut aux échéances les plus proches ; une affectation manuelle exceptionnelle reste possible et est auditée (§5.3). Le paiement augmente la position fournisseur ; l'excédent devient une avance chez le fournisseur, consommée par les achats futurs (§4.3).</div>
+    <div class="grid2b" style="margin-top:0">
+      <div class="fld"><label for="fin-fournisseurs-pay-f">Fournisseur</label><select id="fin-fournisseurs-pay-f" class="inp" data-pay-fourn><option value="F1">AGNEAUX</option><option value="F2">MATA VOLAILLE CHAIR</option><option value="F3">MATA VOLAILLE ŒUFS</option><option value="F4">Bétail Thiès</option><option value="F5">Abattoirs Dakar</option><option value="F6">Aliments Sénégal</option></select></div>
+      <div class="fld"><label for="fin-fournisseurs-pay-m">Montant payé (FCFA)</label><input id="fin-fournisseurs-pay-m" class="inp mono" data-pay-montant inputmode="numeric" placeholder="0"></div>
+      <div class="fld"><label for="fin-fournisseurs-pay-d">Date métier</label><input id="fin-fournisseurs-pay-d" class="inp mono" type="date" value="2026-08-27" data-pay-date></div>
+      <div class="fld"><label for="fin-fournisseurs-pay-ref">Compte de paiement de référence</label><input id="fin-fournisseurs-pay-ref" class="inp" data-refcur value="Caisse générale" readonly></div>
+    </div>
+    <label>Affectation aux échéances · FIFO : la plus proche d'abord</label>
+    <div data-pay-fifo></div>
+    <label class="rline"><input type="checkbox" data-pay-manuel>Affectation manuelle exceptionnelle<span class="rh" data-pay-audit hidden><span class="st warn"><svg><use href="#i-eye"/></svg>Auditée</span></span></label>
+    <div class="declres" data-pay-sum>
+      <div><div class="k">Affecté aux échéances</div><div class="val amt" data-amt="0" data-nocur data-pay-aff></div></div>
+      <div><div class="k">Excédent → avance</div><div class="val amt" data-amt="0" data-nocur data-pay-exc></div></div>
+      <div><div class="k">Position après paiement</div><div class="val amt" data-amt="-12400000" data-nocur data-pay-new></div></div>
+    </div>
+    <div class="note-strip" data-pay-over hidden><svg><use href="#i-alert"/></svg>L'affectation manuelle dépasse le montant payé : réduire les tranches avant d'enregistrer.</div>
+    <div class="acts"><button class="btn ghost" data-close>Annuler</button><button class="btn pri" data-perm="finance.fournisseurs.payer" data-pay-save><svg><use href="#i-check"/></svg>Enregistrer le paiement</button></div>
+  </div></div>
+
+  <!-- Modale : Relevé fournisseur PDF -->
+  <div class="mback" data-ov="fin-fournisseurs-releve"><div class="modal" role="dialog" aria-modal="true" aria-label="Relevé fournisseur PDF">
+    <h3><svg><use href="#i-file"/></svg>Relevé fournisseur (PDF)</h3>
+    <div class="exp">La permission Exporter est distincte de la permission Consulter (§5.7). Le relevé reste téléchargeable 7 jours puis est supprimé automatiquement ; il peut être régénéré à tout moment. Les justificatifs sources ne sont jamais supprimés avec lui.</div>
+    <div class="fld"><label for="fin-fournisseurs-rel-f">Fournisseur</label><select id="fin-fournisseurs-rel-f" class="inp" data-rel-fourn><option value="F1">AGNEAUX</option><option value="F2">MATA VOLAILLE CHAIR</option><option value="F3">MATA VOLAILLE ŒUFS</option><option value="F4">Bétail Thiès</option><option value="F5">Abattoirs Dakar</option><option value="F6">Aliments Sénégal</option></select></div>
+    <div class="grid2b" style="margin-top:0"><div class="fld"><label for="fin-fournisseurs-rel-du">Du</label><input id="fin-fournisseurs-rel-du" type="date" class="inp mono" value="2026-08-01" data-rel-du></div><div class="fld"><label for="fin-fournisseurs-rel-au">Au</label><input id="fin-fournisseurs-rel-au" type="date" class="inp mono" value="2026-08-27" data-rel-au></div></div>
+    <label class="rline"><input type="checkbox" checked>Position et mouvements de la période<span class="rh">§4.3</span></label>
+    <label class="rline"><input type="checkbox" checked>Échéancier des tranches impayées<span class="rh">§5.3</span></label>
+    <label class="rline"><input type="checkbox">Justificatifs groupés (service documentaire commun)<span class="rh">§5.7</span></label>
+    <div class="acts"><button class="btn ghost" data-close>Annuler</button><button class="btn pri" data-perm="finance.export" data-rel-go><svg><use href="#i-dl"/></svg>Générer le relevé</button></div>
+  </div></div>
+</section>
+<script data-screen="fin-fournisseurs">
+ERP.register('fin-fournisseurs', function (root, ctx) {
+  var q = function (s, el) { return (el || root).querySelector(s); };
+  var qa = function (s, el) { return Array.prototype.slice.call((el || root).querySelectorAll(s)); };
+  var num = function (v) { return parseInt(String(v == null ? '' : v).replace(/[^\d-]/g, ''), 10) || 0; };
+  var fr = function (iso) { return String(iso || '').split('-').reverse().join('/'); };
+  var days = function (dm) { var p = dm.split('/'); return Math.round((new Date(2026, +p[1] - 1, +p[0]) - new Date(2026, 7, 27)) / 864e5); };
+  var ech = q('tbody[data-ech]'), cards = qa('.card[data-fourn]');
+  var selF = q('[data-pay-fourn]'), inpM = q('[data-pay-montant]'), chkMan = q('[data-pay-manuel]'), fifo = q('[data-pay-fifo]');
+  function card(id) { return q('.card[data-fourn="' + id + '"]'); }
+  function nom(id) { return q('h4', card(id)).firstChild.textContent.trim(); }
+  function pos(id) { return num(q('[data-pos]', card(id)).dataset.amt); }
+  function refOf(id) { return q('select[data-ref]', card(id)).value; }
+  function tranches(id) { return qa('tr[data-fourn="' + id + '"]', ech).filter(function (tr) { return num(q('.amt', tr).dataset.amt) > 0; }); }
+  function etatHtml(e) { return e === 'proch' ? '<span class="st warn"><svg><use href="#i-clock"/></svg>Prochaine</span>' : '<span class="st mut"><svg><use href="#i-clock"/></svg>À venir</span>'; }
+
+  /* Filtres : cartes fournisseurs (étiquettes data-flt) et échéancier (data-etat) */
+  qa('[data-fflt]').forEach(function (b) { ctx.on(b, 'click', function () {
+    qa('[data-fflt]').forEach(function (x) { x.classList.toggle('on', x === b); });
+    cards.forEach(function (c) { c.hidden = b.dataset.fflt !== 'tous' && c.dataset.flt.split(' ').indexOf(b.dataset.fflt) < 0; });
+  }); });
+  qa('[data-eflt]').forEach(function (b) { ctx.on(b, 'click', function () {
+    qa('[data-eflt]').forEach(function (x) { x.classList.toggle('on', x === b); });
+    ctx.filterRows(ech, 'etat', b.dataset.eflt);
+  }); });
+
+  /* Compte de paiement de référence (§4.4) : nouvelles opérations seulement, aucun paiement historique réécrit */
+  qa('select[data-ref]').forEach(function (s) { ctx.on(s, 'change', function () {
+    var id = s.closest('[data-fourn]').dataset.fourn;
+    qa('tr[data-fourn="' + id + '"] [data-refcell]', ech).forEach(function (td) { td.textContent = s.value; });
+    if (selF.value === id) q('[data-refcur]').value = s.value;
+    recalc();
+    ctx.toast('Compte de paiement de référence de ' + nom(id) + ' : ' + s.value + '. Aucun paiement historique réécrit ; s\'applique aux nouvelles opérations (§4.4). Modification auditée.');
+  }); });
+
+  /* Agrégats recalculés depuis les positions (jamais saisis) : dettes, avances, dépassées, prochaine échéance, encours/plafond */
+  function recalc() {
+    var det = 0, av = 0, dep = 0, n = 0, tot = 0, next = null, nd = q('[data-next-due]'), kn = q('[data-kpi-next]'), ks = q('[data-kpi-next-sub]');
+    cards.forEach(function (c) {
+      var p = pos(c.dataset.fourn), d = Math.max(0, -p), enc = q('[data-enc]', c), pct = Math.round(d / num(enc.dataset.plafond) * 100), bar = q('.encbar i', c), st = q('[data-plst]', c), lvl = pct > 100 ? 'bad' : 'ok';
+      det += d; av += Math.max(0, p); enc.dataset.amt = d; q('[data-pct]', c).textContent = pct + ' %';
+      bar.style.width = Math.min(100, pct) + '%'; bar.className = pct > 100 ? 'over' : pct >= 75 ? 'hot' : '';
+      st.className = 'st ' + lvl; q('use', st).setAttribute('href', lvl === 'ok' ? '#i-check' : '#i-alert');
+      st.lastChild.textContent = p > 0 ? 'Avance chez le fournisseur' : pct > 100 ? 'Plafond dépassé' : 'Sous plafond';
+    });
+    qa('tr[data-tranche]', ech).forEach(function (tr) {
+      var r = num(q('.amt', tr).dataset.amt), e = tr.dataset.etat; tot += r;
+      if (e === 'dep' && r > 0) { dep += r; n++; }
+      if (r > 0 && (e === 'proch' || e === 'avenir')) { tr.dataset.etat = next ? 'avenir' : 'proch'; if (!next) next = tr; q('[data-etatcell]', tr).innerHTML = etatHtml(tr.dataset.etat); }
+    });
+    if (next) {
+      var r = num(q('.amt', next).dataset.amt), f = q('td b', next).textContent, ref = q('[data-refcell]', next).textContent;
+      nd.hidden = false; nd.innerHTML = '<span><b>' + f + '</b> · ' + next.dataset.lot + ' <span class="hint">· ' + ref + '</span></span><span class="amt" data-amt="' + r + '" data-nocur></span><span class="dt">au plus tard le <b>' + next.dataset.dt + '</b></span> ' + etatHtml('proch');
+      kn.innerHTML = next.dataset.dt + ' · <span class="amt" data-amt="' + r + '" data-nocur></span>'; ks.textContent = f + ' · ' + next.dataset.lot + ' · ' + ref + ' · dans ' + days(next.dataset.dt) + ' jours';
+    } else { nd.hidden = true; kn.textContent = '—'; ks.textContent = 'Aucune échéance à venir : toutes les tranches sont réglées'; }
+    q('[data-kpi="dettes"]').dataset.amt = det; q('[data-kpi="avances"]').dataset.amt = av; q('[data-kpi="dep"]').dataset.amt = dep; q('[data-kpi="tot"]').dataset.amt = tot;
+    qa('[data-kpi-depn]').forEach(function (e) { e.textContent = n; });
+    ctx.formatAmounts(root);
+  }
+
+  /* Modale Payer : tranches lues dans l'échéancier, affectation FIFO calculée en direct (§5.3) */
+  function buildFifo() {
+    var id = selF.value, trs = tranches(id);
+    q('[data-refcur]').value = refOf(id);
+    fifo.innerHTML = trs.length ? trs.map(function (tr) {
+      var r = num(q('.amt', tr).dataset.amt);
+      return '<div class="fifo-row" data-t="' + tr.dataset.tranche + '"><span class="dt2">' + tr.dataset.dt + '</span><span class="lot">' + tr.dataset.lot + '</span><div class="fbar"><i style="width:0%"></i></div><span class="fa"><input class="inp mono" data-aff data-max="' + r + '" value="0" inputmode="numeric" readonly aria-label="Montant affecté à la tranche"> / ' + ctx.fmt(r) + '</span></div>';
+    }).join('') : '<div class="hint">Aucune tranche impayée : tout paiement devient une avance chez ' + nom(id) + ', consommée par les achats futurs (§4.3).</div>';
+    compute();
+  }
+  function compute() {
+    var m = Math.max(0, num(inpM.value)), manual = chkMan.checked, left = m, aff = 0;
+    qa('[data-aff]', fifo).forEach(function (i) {
+      var max = num(i.dataset.max), v;
+      if (!manual) { v = Math.min(left, max); i.value = v; left -= v; }
+      i.readOnly = !manual; v = Math.min(max, Math.max(0, num(i.value))); aff += v;
+      q('.fbar i', i.closest('.fifo-row')).style.width = Math.round(v / max * 100) + '%';
+    });
+    q('[data-pay-aff]').dataset.amt = aff; q('[data-pay-exc]').dataset.amt = Math.max(0, m - aff); q('[data-pay-new]').dataset.amt = pos(selF.value) + m;
+    q('[data-pay-audit]').hidden = !manual; q('[data-pay-over]').hidden = aff <= m;
+    ctx.formatAmounts(q('[data-pay-sum]'));
+  }
+  qa('[data-open="fin-fournisseurs-payer"][data-fourn]').forEach(function (b) { ctx.on(b, 'click', function () {
+    selF.value = b.dataset.fourn; inpM.value = ''; chkMan.checked = false; buildFifo();
+  }); });
+  ctx.on(selF, 'change', buildFifo); ctx.on(inpM, 'input', compute); ctx.on(chkMan, 'change', compute);
+  ctx.on(fifo, 'input', function () { if (chkMan.checked) compute(); });
+  ctx.on(q('[data-pay-save]'), 'click', function () {
+    var id = selF.value, m = num(inpM.value), manual = chkMan.checked, aff = 0, rows = [], left;
+    if (m <= 0) { ctx.toast('Indiquer un montant payé supérieur à 0 FCFA.'); inpM.focus(); return; }
+    qa('[data-aff]', fifo).forEach(function (i) { var max = num(i.dataset.max), v = Math.min(max, Math.max(0, num(i.value))); aff += v; rows.push([i.closest('.fifo-row').dataset.t, v, max]); });
+    if (aff > m) { ctx.toast('Affectation manuelle supérieure au montant payé : corriger avant d\'enregistrer.'); return; }
+    left = m - aff; rows.forEach(function (r) { var add = Math.min(left, r[2] - r[1]); r[1] += add; left -= add; }); /* reste non affecté : FIFO par défaut, puis avance */
+    rows.forEach(function (r) { if (!r[1]) return; qa('[data-tranche="' + r[0] + '"]').forEach(function (el) {
+      var a = q('.amt[data-amt]', el), reste = num(a.dataset.amt) - r[1]; a.dataset.amt = reste;
+      if (reste === 0) { if (el.tagName === 'TR') { el.dataset.etat = 'regle'; q('[data-etatcell]', el).innerHTML = '<span class="st ok"><svg><use href="#i-check"/></svg>Réglée</span>'; } else { el.hidden = true; } }
+    }); });
+    q('[data-pos]', card(id)).dataset.amt = pos(id) + m;
+    recalc(); ctx.applyPerms(); ctx.close('fin-fournisseurs-payer');
+    ctx.toast('Paiement de ' + ctx.fmt(m) + ' FCFA à ' + nom(id) + ' depuis ' + refOf(id) + ' enregistré · affectation ' + (manual ? 'manuelle exceptionnelle, auditée' : 'FIFO, échéance la plus proche d\'abord') + (left > 0 ? ' · excédent ' + ctx.fmt(left) + ' FCFA en avance chez le fournisseur' : '') + ' · date métier ' + fr(q('[data-pay-date]').value) + ' · created_at et updated_by automatiques.');
+  });
+
+  /* Relevé fournisseur PDF (§5.7) : permission Exporter distincte de Consulter */
+  qa('[data-open="fin-fournisseurs-releve"][data-fourn]').forEach(function (b) { ctx.on(b, 'click', function () { q('[data-rel-fourn]').value = b.dataset.fourn; }); });
+  ctx.on(q('[data-rel-go]'), 'click', function () {
+    var s = q('[data-rel-fourn]');
+    ctx.toast('Relevé fournisseur ' + s.options[s.selectedIndex].text + ' du ' + fr(q('[data-rel-du]').value) + ' au ' + fr(q('[data-rel-au]').value) + ' généré en PDF · disponible 7 jours puis supprimé, régénérable à tout moment (§5.7) · export audité.');
+    ctx.close('fin-fournisseurs-releve');
+  });
+
+  /* Réconciliation en aveugle (§3, §5.5) : le déclarant (Directeur des Opérations) ne voit pas la position théorique des comptes encore « En attente » */
+  function blind() {
+    var isDecl = ctx.profile.id === 'dirops';
+    ['F4', 'F5'].forEach(function (id) {
+      var c = card(id), p = q('[data-pos]', c), m = q('[data-mask]', c);
+      if (isDecl && !m) p.insertAdjacentHTML('afterend', '<span class="maskbox" data-mask><svg><use href="#i-lock"/></svg>Position <span class="dots">••••••••</span> masquée jusqu\'à votre déclaration (§5.5)</span>');
+      if (!isDecl && m) m.remove();
+      p.hidden = isDecl; qa('.fx', c).forEach(function (b) { b.hidden = isDecl; });
+    });
+  }
+  document.addEventListener('erp:profile', blind);
+  recalc(); buildFifo(); ctx.applyPerms(); blind();
+});
+</script>
