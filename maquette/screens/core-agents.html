@@ -39,6 +39,7 @@
       <p class="scr-sub">Registre central des agents (§7.2) · deux catégories : Conseiller (consulte, analyse, recommande, simule ; aucune écriture directe) et Exécutant (uniquement les actions explicitement autorisées) · interrogation à la demande explicite d'un utilisateur uniquement · budget mensuel plafond par agent</p>
     </div>
     <div class="scr-meta">
+      <button class="linkish" data-open="help-core-agents"><svg><use href="#i-info"/></svg>Comment ça marche ?</button>
       <span class="sens s"><svg><use href="#i-shield"/></svg>Sensible</span>
       <span class="hint">Sensible : modifications auditées, export contrôlé (§5.3) · aucune validation : budget, override et activation enregistrés sous le profil actif et tracés dans l'Audit central (§5.4) · Test/Recette obligatoire avant Production pour tout agent ayant des droits d'écriture</span>
     </div>
@@ -214,6 +215,22 @@
     <div class="df"><button class="btn ghost" data-goto="core-audit" data-perm="core.audit.view"><svg><use href="#i-history"/></svg>Audit central</button><button class="btn pri" data-open="core-agents-override" data-perm="core.agents.override" data-d="ovbtn"><svg><use href="#i-clock"/></svg>Relever temporairement</button></div>
   </aside>
   <div class="dback" data-ov-back="core-agents-fiche"></div>
+
+  <div class="mback" data-ov="help-core-agents"><div class="modal wide" role="dialog" aria-modal="true" aria-label="Comment ça marche : Agents IA">
+    <h3><svg><use href="#i-info"/></svg>Comment ça marche : Agents IA</h3>
+    <div class="exp">Ce registre centralise tous les agents IA de l'ERP : les profils autorisés (permission core.agents.budget / core.agents.override) y fixent le budget de chaque agent, activent un agent inactif ou relèvent temporairement son modèle ; les autres profils le consultent en lecture.</div>
+    <ul class="help-list">
+      <li><b>Deux catégories d'agents.</b> Conseiller (consulte, recommande, jamais d'écriture directe) et Exécutant (uniquement les actions explicitement autorisées) : le registre compte 2 Conseillers et 1 Exécutant sur 3 agents (§7.2).</li>
+      <li><b>Interrogation à la demande uniquement.</b> Aucun agent n'est appelé automatiquement par un écran (dashboard, rafraîchissement de KPI) : le compteur « Requêtes déclenchées par un écran » reste à 0 (§7.2).</li>
+      <li><b>Budget mensuel plafond.</b> Au-delà de son plafond, un agent cesse de répondre jusqu'au mois suivant ou jusqu'à relèvement explicite. AG-01 a consommé <span class="amt" data-amt="93000" data-nocur></span> sur <span class="amt" data-amt="150000" data-nocur></span> en août, soit 62 % (§7.2).</li>
+      <li><b>Droits effectifs = droits de l'agent ∩ droits du profil utilisateur.</b> La ligne « Droits effectifs pour vous » de chaque carte recalcule ce croisement pour le profil actif ; sensibilité, validation et audit restent applicables (§10.2).</li>
+      <li><b>Override temporaire de modèle.</b> Un utilisateur autorisé force un modèle plus coûteux pour une requête ou une durée limitée ; le retour au modèle par défaut est automatique. 1 override est actif : AG-01, modèle avancé, jusqu'au 27/08 · 18:00 (Technique §10).</li>
+      <li><b>Écriture encadrée.</b> Un agent aux droits d'écriture passe en Test/Recette avant Production, ne modifie pas directement les écritures financières et n'a pas de console SQL utilisateur : AG-02 est en statut Test / Recette (Finance §9.3).</li>
+    </ul>
+    <div class="note-strip"><svg><use href="#i-lock"/></svg>Refus par défaut : « Nouvel agent », le champ budget et le bouton d'override restent visibles mais désactivés avec leur motif si le profil actif n'a pas la permission requise — jamais masqués sans explication.</div>
+    <div class="hint">Sources : Cahier Core §7.2, §10.2 · Technique §10 · Finance §9.3</div>
+    <div class="acts"><button class="btn ghost" data-close>Fermer</button></div>
+  </div></div>
 </section>
 <script data-screen="core-agents">
 ERP.register('core-agents', function (root, ctx) {

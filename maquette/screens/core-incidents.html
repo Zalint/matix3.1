@@ -19,6 +19,7 @@
       <p class="scr-sub">Bouton transverse « Signaler un problème » : le système collecte automatiquement le contexte technique et fonctionnel disponible · Criticité : Mineur / Majeur / Critique · Ouvert → En cours → Résolu → Clos · supervision technique et fonctionnelle (Core §8.2, §8.3)</p>
     </div>
     <div class="scr-meta">
+      <button class="linkish" data-open="help-core-incidents"><svg><use href="#i-info"/></svg>Comment ça marche ?</button>
       <span class="sens std"><svg><use href="#i-shield"/></svg>Standard</span>
       <span class="hint">Aucune validation : changement de statut et maintenance par module sous la permission core.incidents.gerer, audités (§5.4) · un module peut être placé en maintenance sans rendre tout l'ERP indisponible (§8.3)</span>
     </div>
@@ -189,6 +190,22 @@
     <div class="fld" style="margin-bottom:10px" data-k-on><label for="core-incidents-msg">Message affiché aux utilisateurs de Mata Finance</label><input id="core-incidents-msg" class="inp" data-k="msg" value="Mata Finance est momentanément en maintenance. Mata Core reste disponible."></div>
     <div class="fld" data-k-on><label for="core-incidents-dur">Fin prévue</label><select id="core-incidents-dur" class="inp" data-k="dur"><option value="30">dans 30 minutes</option><option value="60">dans 1 heure</option><option value="120">dans 2 heures</option><option value="0">à la levée manuelle</option></select></div>
     <div class="acts"><button class="btn ghost" data-close>Annuler</button><button class="btn pri" data-k="confirm" data-perm="core.incidents.gerer"><svg><use href="#i-check"/></svg><span data-k="confirm-lbl">Placer en maintenance</span></button></div>
+  </div></div>
+
+  <div class="mback" data-ov="help-core-incidents"><div class="modal wide" role="dialog" aria-modal="true" aria-label="Comment ça marche : Incidents">
+    <h3><svg><use href="#i-info"/></svg>Comment ça marche : Incidents</h3>
+    <div class="exp">Cet écran centralise la supervision technique et fonctionnelle de Mata Core et Mata Finance, et le suivi des incidents. Le Super Admin y change les statuts et gère la maintenance ; les autres profils internes (Directeur des Opérations, Gestionnaire de caisse, Collecteur) consultent.</div>
+    <ul class="help-list">
+      <li><b>Services et interfaces</b> — la supervision technique compte les sources à l'état OK : <b>5 / 5</b> ici (Ventes Mata, Bictorys, Banque BOA, Stock, Achat), donc <b>0</b> source périmée (§8.2).</li>
+      <li><b>Réconciliations ouvertes</b> — la supervision fonctionnelle compte les circuits du jour non validés parmi Caisses, Encaissements collectés, Ventes du jour, Fournisseurs : <b>3</b> sur 4 circuits ici (§8.2).</li>
+      <li><b>Dépenses « Pas sûr »</b> — une dépense non résolue bloque uniquement la caisse concernée : « Carburant véhicule livraison » <span class="amt" data-amt="85000" data-nocur></span> bloque le seul périmètre Sous-caisse Livraisons (§8.2).</li>
+      <li><b>Cycle de vie d'un incident</b> — chaque incident porte une criticité Mineur / Majeur / Critique et suit Ouvert → En cours → Résolu → Clos ; les puces comptent <b>3</b> incidents (0 Ouvert, 1 En cours, 1 Résolu, 1 Clos) (§8.3).</li>
+      <li><b>Signaler un problème</b> — disponible sur tous les écrans, ce bouton crée aussitôt un incident au statut Ouvert et remplit seul son contexte (module, écran, profil actif, version) sans ressaisie (§8.3).</li>
+      <li><b>Maintenance par module</b> — placer Mata Finance en maintenance ne rend pas tout l'ERP indisponible : Mata Core (authentification, notifications, Incidents) reste disponible pendant que les écrans Mata Finance affichent le message saisi (§8.3).</li>
+    </ul>
+    <div class="note-strip"><svg><use href="#i-shield"/></svg>Refus par défaut : Gérer (changement de statut, maintenance) est réservé au Super Admin ; les autres profils consultent seulement, une action refusée reste visible avec son motif.</div>
+    <div class="hint">Sources : Cahier Mata Core §8.2, §8.3 · FIXTURES §16</div>
+    <div class="acts"><button class="btn ghost" data-close>Fermer</button></div>
   </div></div>
 </section>
 <script data-screen="core-incidents">

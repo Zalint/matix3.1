@@ -22,6 +22,7 @@
       <p class="scr-sub">Mata Core gère uniquement les paramètres transverses (§6.4) · un paramètre peut être global, global avec override local, ou local · les configurations sensibles sont historisées et, lorsque nécessaire, datées dans le temps · entité active : Mata Group · calcul au 27/08/2026</p>
     </div>
     <div class="scr-meta">
+      <button class="linkish" data-open="help-core-parametres"><svg><use href="#i-info"/></svg>Comment ça marche ?</button>
       <span class="sens s"><svg><use href="#i-shield"/></svg>Sensible</span>
       <span class="hint">Accès restreint, modifications auditées, export contrôlé (§5.3) · consultation sans validation · modification sous la permission core.parametres.modifier, sans second validateur (aucune validation renforcée prévue par le cahier pour un périmètre Sensible) · paramètre sensible : nouvelle version historisée, date d’effet obligatoire (§6.4), ancienne et nouvelle valeur dans l’Audit central (§5.4) · Exporter distinct de Consulter (§3.4)</span>
     </div>
@@ -211,6 +212,21 @@
     </div>
     <div class="df"><button class="btn ghost" data-goto="core-audit" data-perm="core.audit.view"><svg><use href="#i-history"/></svg>Audit central</button><div class="sp"></div><button class="btn pri" data-d-edit data-perm="core.parametres.modifier"><svg><use href="#i-sliders"/></svg>Modifier</button></div>
   </aside><div class="dback" data-ov-back="core-parametres-historique"></div>
+
+  <div class="mback" data-ov="help-core-parametres"><div class="modal wide" role="dialog" aria-modal="true" aria-label="Comment ça marche : Paramètres">
+    <h3><svg><use href="#i-info"/></svg>Comment ça marche : Paramètres</h3>
+    <div class="exp">Paramètres centralise la configuration transverse de Mata Core — devise, sauvegarde, audit, fuseau, heures de gel — commune à tous les modules métier. Tous les profils la consultent ; seul un profil disposant de core.parametres.modifier peut y créer une nouvelle version.</div>
+    <ul class="help-list">
+      <li><b>Trois portées</b> — Global (valeur unique, ex. Devise), Global avec override local (valeur groupe surchargeable par entité, ex. Fuseau) ou Local (propre à l’entité, ex. Heure de gel) ; l’écran compte 10 paramètres transverses, 5 globaux, 3 avec override et 2 locaux (§6.4).</li>
+      <li><b>Sensible = historisé et daté</b> — 7 des 10 paramètres sont sensibles : chaque modification crée une nouvelle version avec date d’effet obligatoire, l’ancienne valeur reste consultable ; exemple, le seuil d’ajustement inhabituel vaut <span class="amt" data-amt="500000" data-nocur></span> FCFA et 3 par jour (§6.4).</li>
+      <li><b>Standard = audité sans historique</b> — les 3 paramètres non sensibles (ex. Conservation des exports, 7 jours) se modifient en place et sont audités, sans version ni date d’effet obligatoire (§6.4).</li>
+      <li><b>Sauvegarde : deux champs réglables</b> — seules la fréquence et la rétention glissante se modifient ici (tous les 3 jours, rétention 30 jours) ; la sauvegarde mensuelle 12 mois et les tests de restauration restent des engagements fixes du cahier, rappelés sur la ligne mais non modifiables sur cet écran (§8.1).</li>
+      <li><b>Conservation de l’audit</b> — les modifications de paramètres restent 24 mois en base active puis 10 ans en archive froide ; les consultations restent détaillées 90 jours puis sont résumées (§11).</li>
+    </ul>
+    <div class="note-strip"><svg><use href="#i-lock"/></svg>Refus par défaut : sans core.parametres.modifier, les valeurs et l’historique restent consultables mais les boutons « Modifier » sont désactivés avec le motif affiché.</div>
+    <div class="hint">Sources : Cahier fonctionnel Mata Core §6.4, §8.1 · Architecture Mata Core §11</div>
+    <div class="acts"><button class="btn ghost" data-close>Fermer</button></div>
+  </div></div>
 </section>
 <script data-screen="core-parametres">
 ERP.register('core-parametres', function (root, ctx) {

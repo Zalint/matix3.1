@@ -21,6 +21,7 @@
       <p class="scr-sub">Règles de notification (Core §6.1) : chaque règle relie un signal de qualité financière (Finance §10.4) ou de supervision (Core §8.2) à un module d'origine, un canal, des destinataires et une criticité · critiques ou configurables · les notifications respectent le profil et les droits</p>
     </div>
     <div class="scr-meta">
+      <button class="linkish" data-open="help-core-alertes"><svg><use href="#i-info"/></svg>Comment ça marche ?</button>
       <span class="sens std"><svg><use href="#i-shield"/></svg>Standard</span>
       <span class="hint">Permissions normales (Core §5.3) · aucune validation : activation, désactivation motivée et création de règle sont enregistrées sous le profil actif, historisées (§6.4) et tracées dans l'Audit central (§5.4) · les règles critiques à destinataires imposés par le cahier ne sont pas désactivables</span>
     </div>
@@ -211,6 +212,22 @@
     </div>
     <div class="fld"><label>Destinataires (profils)</label><div class="dest" data-n="dest"><label><input type="checkbox" value="Super Admin" checked>Super Admin</label><label><input type="checkbox" value="DG">DG</label><label><input type="checkbox" value="Admin">Admin</label><label><input type="checkbox" value="Directeur des Opérations">Directeur des Opérations</label><label><input type="checkbox" value="Collecteur">Collecteur</label><label><input type="checkbox" value="Gestionnaire de caisse">Gestionnaire de caisse</label></div><span class="hint">Chaque destinataire ne reçoit que les signaux de son périmètre et de ses droits (Core §6.1) · Investisseur et Comptable externe : jamais destinataires d'un signal Hautement sensible (Core §5.3)</span></div>
     <div class="acts"><button class="btn ghost" data-close>Annuler</button><button class="btn pri" data-act="new-save" data-perm="core.alertes.modifier"><svg><use href="#i-check"/></svg>Créer la règle (active)</button></div>
+  </div></div>
+
+  <!-- Modale : aide contextuelle -->
+  <div class="mback" data-ov="help-core-alertes"><div class="modal wide" role="dialog" aria-modal="true" aria-label="Comment ça marche : Alertes">
+    <h3><svg><use href="#i-info"/></svg>Comment ça marche : Alertes</h3>
+    <div class="exp">Cet écran configure les règles qui relient un signal de qualité financière ou de supervision à un canal, des destinataires et une criticité. Le Super Admin active, désactive ou crée une règle ; les autres profils la consultent en lecture, dans la limite de leur périmètre.</div>
+    <ul class="help-list">
+      <li><b>Règles actives</b> — chaque signal transverse (écarts, dépenses Pas sûr, sources non à jour…) porte une règle qui respecte le profil et les droits du destinataire, jamais un envoi générique : <b>10</b> règles actives sur 10, dont 8 Mata Finance et 2 Mata Core (§6.1).</li>
+      <li><b>Signaux de qualité financière</b> — le Dashboard et les notifications doivent rendre visibles les signaux de qualité (écarts, dépenses Pas sûr, sources non à jour, ajustements inhabituels, échéances dépassées, corrections post-clôture) ; ceux couverts par une règle sont horodatés dès qu'ils surviennent, comme les <b>4</b> déclenchements du 27/08 — 21:15 Écart de réconciliation, 17:30 Échéance fournisseur dépassée, 15:24 Plafond d'encours dépassé, 12:00 Relais ouvert au-delà du seuil (§10.4).</li>
+      <li><b>Dépense « Pas sûr » à 23:00</b> — s'il reste une dépense du jour « Pas sûr », une notification part à 23:00 vers le Directeur des Opérations, les Admins concernés et le Super Admin, avec accès à la liste à résoudre : ici Carburant véhicule livraison <span class="amt" data-amt="85000" data-nocur></span> (Sous-caisse Livraisons) (§5.2).</li>
+      <li><b>Relais ouvert au-delà du seuil</b> — un solde relais resté ouvert au-delà d'un seuil configurable génère une alerte : « Bictorys → Banque en cours » <span class="amt" data-amt="350000" data-nocur></span>, créé 24/08, âge 3 jours au-dessus du seuil de 2 jours (§4.6).</li>
+      <li><b>Plafond d'encours dépassé</b> — un dépassement du plafond fournisseur déclenche une alerte informative sans bloquer la saisie : AGNEAUX, dette <span class="amt" data-amt="12400000" data-nocur></span> pour un plafond de <span class="amt" data-amt="10000000" data-nocur></span> (§5.4).</li>
+    </ul>
+    <div class="note-strip"><svg><use href="#i-shield"/></svg><b>Refus par défaut.</b> Consulter et modifier sont deux permissions distinctes : le DG consulte les règles, seul le Super Admin les active, les désactive avec motif ou en crée de nouvelles.</div>
+    <div class="hint">Sources : Cahier Mata Core §6.1 · Mata Finance §10.4, §4.6, §5.2, §5.4</div>
+    <div class="acts"><button class="btn ghost" data-close>Fermer</button></div>
   </div></div>
 </section>
 <script data-screen="core-alertes">

@@ -19,6 +19,7 @@
       <p class="scr-sub">Service commun d’import et d’export de l’ERP (§6.3) · Formats selon le besoin : CSV, Excel, PDF · Fichier → Prévisualisation → Contrôles → Validation → Import · Le droit d’export reste distinct du droit de consultation · exports temporaires supprimés après 7 jours, régénérables à tout moment (Technique §8, Finance §5.7) · jeudi 27 août 2026</p>
     </div>
     <div class="scr-meta">
+      <button class="linkish" data-open="help-core-import"><svg><use href="#i-info"/></svg>Comment ça marche ?</button>
       <span class="sens s"><svg><use href="#i-shield"/></svg>Sensible</span>
       <span class="hint">Sensible : accès restreint ; modifications auditées ; export contrôlé (§5.3) · exécution de l’import selon la permission « core.import.executer », sans second validateur · téléchargement, régénération et nouvel export selon « core.export » : Consulter et Exporter sont deux permissions différentes (§3.4)</span>
     </div>
@@ -223,6 +224,20 @@
     <label class="rline"><input type="radio" name="core-import-fmt" value="Excel">Excel<span class="rh">lorsque pertinent (Finance §9.2)</span></label>
     <label class="rline"><input type="radio" name="core-import-fmt" value="PDF">PDF<span class="rh">relevés, rapports · génération légère (Technique §8)</span></label>
     <div class="acts"><button class="btn ghost" data-close>Annuler</button><button class="btn pri" data-generate data-perm="core.export"><svg><use href="#i-dl"/></svg>Générer</button></div>
+  </div></div>
+
+  <div class="mback" data-ov="help-core-import"><div class="modal wide" role="dialog" aria-modal="true" aria-label="Comment ça marche : Import / Export">
+    <h3><svg><use href="#i-info"/></svg>Comment ça marche : Import / Export</h3>
+    <div class="exp">Point d’entrée unique de l’ERP pour faire entrer un référentiel ou un relevé, et pour sortir des documents. Utilisé par les profils autorisés à importer (permission « core.import.executer ») et/ou à exporter (« core.export », « core.audit.exporter » pour l’audit).</div>
+    <ul class="help-list">
+      <li><b>Un seul chemin en 5 étapes</b> — quel que soit le cas d’usage, l’assistant suit toujours Fichier → Prévisualisation → Contrôles → Validation → Import ; sur le fichier fournisseurs, 8 lignes lues donnent 5 lignes importables, 2 rejetées et 1 doublon ignoré (§6.3).</li>
+      <li><b>Objets exportables</b> — le service commun d’export couvre les objets Mata Finance (comptes, mouvements, dépenses, positions fournisseurs/clients — dont les Dettes fournisseurs <span class="amt" data-amt="23250000"></span> — et résultats de contrôle) et Mata Core (entités, utilisateurs, audit) ; Excel n’est proposé que s’il est pertinent, désactivé pour un objet Mata Core (§9.2).</li>
+      <li><b>Exporter ≠ Consulter</b> — ouvrir cet écran demande « core.import.view », mais télécharger, régénérer ou créer un export exige la permission séparée « core.export » ; l’export « Dépenses août » n’embarque pas les justificatifs sources, qui suivent leur propre conservation (§5.7).</li>
+      <li><b>Exports temporaires et régénérables</b> — un export généré est un artefact reproductible à partir des données sources : il est supprimé automatiquement après une durée courte configurable, ici 3 exports disponibles avec le relevé fournisseur AGNEAUX (PDF, position <span class="amt" data-amt="-12400000" data-nocur></span>) supprimé le 03/09/2026 ; les PDF sont produits par une bibliothèque légère, sans navigateur headless (§8).</li>
+    </ul>
+    <div class="note-strip"><svg><use href="#i-lock"/></svg>Consulter et exporter restent deux permissions distinctes sur tout cet écran : ouvrir l’assistant n’autorise pas à télécharger ou régénérer un export, et le Journal d’audit exige en plus sa propre permission « core.audit.exporter ».</div>
+    <div class="hint">Sources : Cahier Mata Core §6.3 · Technique §8 · Cahier Mata Finance §5.7, §9.2</div>
+    <div class="acts"><button class="btn ghost" data-close>Fermer</button></div>
   </div></div>
 </section>
 <script data-screen="core-import">

@@ -7151,6 +7151,7 @@ ERP.register('core-audit', function (root, ctx) {
       <p class="scr-sub">Registre central des agents (§7.2) · deux catégories : Conseiller (consulte, analyse, recommande, simule ; aucune écriture directe) et Exécutant (uniquement les actions explicitement autorisées) · interrogation à la demande explicite d'un utilisateur uniquement · budget mensuel plafond par agent</p>
     </div>
     <div class="scr-meta">
+      <button class="linkish" data-open="help-core-agents"><svg><use href="#i-info"/></svg>Comment ça marche ?</button>
       <span class="sens s"><svg><use href="#i-shield"/></svg>Sensible</span>
       <span class="hint">Sensible : modifications auditées, export contrôlé (§5.3) · aucune validation : budget, override et activation enregistrés sous le profil actif et tracés dans l'Audit central (§5.4) · Test/Recette obligatoire avant Production pour tout agent ayant des droits d'écriture</span>
     </div>
@@ -7326,6 +7327,22 @@ ERP.register('core-audit', function (root, ctx) {
     <div class="df"><button class="btn ghost" data-goto="core-audit" data-perm="core.audit.view"><svg><use href="#i-history"/></svg>Audit central</button><button class="btn pri" data-open="core-agents-override" data-perm="core.agents.override" data-d="ovbtn"><svg><use href="#i-clock"/></svg>Relever temporairement</button></div>
   </aside>
   <div class="dback" data-ov-back="core-agents-fiche"></div>
+
+  <div class="mback" data-ov="help-core-agents"><div class="modal wide" role="dialog" aria-modal="true" aria-label="Comment ça marche : Agents IA">
+    <h3><svg><use href="#i-info"/></svg>Comment ça marche : Agents IA</h3>
+    <div class="exp">Ce registre centralise tous les agents IA de l'ERP : les profils autorisés (permission core.agents.budget / core.agents.override) y fixent le budget de chaque agent, activent un agent inactif ou relèvent temporairement son modèle ; les autres profils le consultent en lecture.</div>
+    <ul class="help-list">
+      <li><b>Deux catégories d'agents.</b> Conseiller (consulte, recommande, jamais d'écriture directe) et Exécutant (uniquement les actions explicitement autorisées) : le registre compte 2 Conseillers et 1 Exécutant sur 3 agents (§7.2).</li>
+      <li><b>Interrogation à la demande uniquement.</b> Aucun agent n'est appelé automatiquement par un écran (dashboard, rafraîchissement de KPI) : le compteur « Requêtes déclenchées par un écran » reste à 0 (§7.2).</li>
+      <li><b>Budget mensuel plafond.</b> Au-delà de son plafond, un agent cesse de répondre jusqu'au mois suivant ou jusqu'à relèvement explicite. AG-01 a consommé <span class="amt" data-amt="93000" data-nocur></span> sur <span class="amt" data-amt="150000" data-nocur></span> en août, soit 62 % (§7.2).</li>
+      <li><b>Droits effectifs = droits de l'agent ∩ droits du profil utilisateur.</b> La ligne « Droits effectifs pour vous » de chaque carte recalcule ce croisement pour le profil actif ; sensibilité, validation et audit restent applicables (§10.2).</li>
+      <li><b>Override temporaire de modèle.</b> Un utilisateur autorisé force un modèle plus coûteux pour une requête ou une durée limitée ; le retour au modèle par défaut est automatique. 1 override est actif : AG-01, modèle avancé, jusqu'au 27/08 · 18:00 (Technique §10).</li>
+      <li><b>Écriture encadrée.</b> Un agent aux droits d'écriture passe en Test/Recette avant Production, ne modifie pas directement les écritures financières et n'a pas de console SQL utilisateur : AG-02 est en statut Test / Recette (Finance §9.3).</li>
+    </ul>
+    <div class="note-strip"><svg><use href="#i-lock"/></svg>Refus par défaut : « Nouvel agent », le champ budget et le bouton d'override restent visibles mais désactivés avec leur motif si le profil actif n'a pas la permission requise — jamais masqués sans explication.</div>
+    <div class="hint">Sources : Cahier Core §7.2, §10.2 · Technique §10 · Finance §9.3</div>
+    <div class="acts"><button class="btn ghost" data-close>Fermer</button></div>
+  </div></div>
 </section>
 <script data-screen="core-agents">
 ERP.register('core-agents', function (root, ctx) {
@@ -7473,6 +7490,7 @@ ERP.register('core-agents', function (root, ctx) {
       <p class="scr-sub">Centre commun de notifications (Core §6.1) : les notifications respectent le profil et les droits ; elles peuvent être critiques ou configurables · Email en V1 ; canaux additionnels prévus ultérieurement (§10.1) · signaux de qualité financière rendus visibles (Finance §10.4)</p>
     </div>
     <div class="scr-meta">
+      <button class="linkish" data-open="help-core-notifications"><svg><use href="#i-info"/></svg>Comment ça marche ?</button>
       <span class="sens std"><svg><use href="#i-shield"/></svg>Standard</span>
       <span class="hint">Standard : permissions normales (§5.3) · aucune validation : le marquage « lu » et les préférences sont personnels, enregistrés sous le profil actif · les critiques ne sont pas désactivables · l'accès à chaque écran cible reste soumis à sa propre permission de consultation</span>
     </div>
@@ -7638,6 +7656,21 @@ ERP.register('core-agents', function (root, ctx) {
     <div class="df"><button class="btn ghost" data-act="toggle"><svg><use href="#i-eye"/></svg>Marquer comme lue</button><button class="btn ghost" data-goto="core-alertes" data-perm="core.alertes.view"><svg><use href="#i-sliders"/></svg>Règle</button><div class="sp"></div><button class="btn pri" data-act="go" data-goto="hub" data-perm="core.notifications.view"><svg><use href="#i-arr"/></svg>Ouvrir</button></div>
   </aside>
   <div class="dback" data-ov-back="core-notifications-detail"></div>
+
+  <div class="mback" data-ov="help-core-notifications"><div class="modal wide" role="dialog" aria-modal="true" aria-label="Comment ça marche : Notifications">
+    <h3><svg><use href="#i-info"/></svg>Comment ça marche : Notifications</h3>
+    <div class="exp">Centre commun de notifications de l'ERP : boîte de réception, préférences d'alerte et canaux. Tous les profils l'utilisent, du Super Admin au Gérant MaaS, chacun ne voyant que son périmètre.</div>
+    <ul class="help-list">
+      <li><b>Filtrage par profil et droits</b> — chaque ligne porte un périmètre : l'écart <span class="amt" data-amt="-25000" data-nocur></span> sur Sous-caisse Marché n'apparaît que pour Super Admin, DG, Collecteur et Gestionnaire de caisse, jamais pour les autres profils (§6.1).</li>
+      <li><b>Critique ou configurable</b> — une critique reste toujours envoyée : dans Préférences, l'interrupteur « Ajustement inhabituel (&gt; <span class="amt" data-amt="500000" data-nocur></span>) » est verrouillé et coché en permanence, alors qu'une règle non critique comme « Échéance fournisseur dépassée » se désactive (§6.1).</li>
+      <li><b>Marquage « lu » personnel</b> — « Tout marquer comme lu » ne change que votre statut de lecture : une notification critique reste dans la boîte de tout destinataire concerné même après lecture (§6.1).</li>
+      <li><b>Email en V1</b> — la carte « Canal V1 » affiche Email + centre ; WhatsApp et SMS apparaissent dans Canaux mais restent grisés, prévus ultérieurement (§10.1).</li>
+      <li><b>Signaux de qualité financière</b> — les alertes Fournisseurs et Comptes reprennent les signaux du Dashboard financier : un plafond d'encours dépassé (AGNEAUX 12,4 M / 10 M) reste informatif, une échéance dépassée comme ŒUFS <span class="amt" data-amt="1150000" data-nocur></span> reste critique (§10.4).</li>
+    </ul>
+    <div class="note-strip"><svg><use href="#i-lock"/></svg>Refus par défaut : le détail d'une notification ouvre l'écran cible seulement si votre profil en a la permission ; sinon le refus est affiché avec son motif, jamais masqué.</div>
+    <div class="hint">Sources : Cahier Mata Core §6.1, §10.1 · Cahier Mata Finance §10.4</div>
+    <div class="acts"><button class="btn ghost" data-close>Fermer</button></div>
+  </div></div>
 </section>
 <script data-screen="core-notifications">
 ERP.register('core-notifications', function (root, ctx) {
@@ -7728,6 +7761,7 @@ ERP.register('core-notifications', function (root, ctx) {
       <p class="scr-sub">Règles de notification (Core §6.1) : chaque règle relie un signal de qualité financière (Finance §10.4) ou de supervision (Core §8.2) à un module d'origine, un canal, des destinataires et une criticité · critiques ou configurables · les notifications respectent le profil et les droits</p>
     </div>
     <div class="scr-meta">
+      <button class="linkish" data-open="help-core-alertes"><svg><use href="#i-info"/></svg>Comment ça marche ?</button>
       <span class="sens std"><svg><use href="#i-shield"/></svg>Standard</span>
       <span class="hint">Permissions normales (Core §5.3) · aucune validation : activation, désactivation motivée et création de règle sont enregistrées sous le profil actif, historisées (§6.4) et tracées dans l'Audit central (§5.4) · les règles critiques à destinataires imposés par le cahier ne sont pas désactivables</span>
     </div>
@@ -7919,6 +7953,22 @@ ERP.register('core-notifications', function (root, ctx) {
     <div class="fld"><label>Destinataires (profils)</label><div class="dest" data-n="dest"><label><input type="checkbox" value="Super Admin" checked>Super Admin</label><label><input type="checkbox" value="DG">DG</label><label><input type="checkbox" value="Admin">Admin</label><label><input type="checkbox" value="Directeur des Opérations">Directeur des Opérations</label><label><input type="checkbox" value="Collecteur">Collecteur</label><label><input type="checkbox" value="Gestionnaire de caisse">Gestionnaire de caisse</label></div><span class="hint">Chaque destinataire ne reçoit que les signaux de son périmètre et de ses droits (Core §6.1) · Investisseur et Comptable externe : jamais destinataires d'un signal Hautement sensible (Core §5.3)</span></div>
     <div class="acts"><button class="btn ghost" data-close>Annuler</button><button class="btn pri" data-act="new-save" data-perm="core.alertes.modifier"><svg><use href="#i-check"/></svg>Créer la règle (active)</button></div>
   </div></div>
+
+  <!-- Modale : aide contextuelle -->
+  <div class="mback" data-ov="help-core-alertes"><div class="modal wide" role="dialog" aria-modal="true" aria-label="Comment ça marche : Alertes">
+    <h3><svg><use href="#i-info"/></svg>Comment ça marche : Alertes</h3>
+    <div class="exp">Cet écran configure les règles qui relient un signal de qualité financière ou de supervision à un canal, des destinataires et une criticité. Le Super Admin active, désactive ou crée une règle ; les autres profils la consultent en lecture, dans la limite de leur périmètre.</div>
+    <ul class="help-list">
+      <li><b>Règles actives</b> — chaque signal transverse (écarts, dépenses Pas sûr, sources non à jour…) porte une règle qui respecte le profil et les droits du destinataire, jamais un envoi générique : <b>10</b> règles actives sur 10, dont 8 Mata Finance et 2 Mata Core (§6.1).</li>
+      <li><b>Signaux de qualité financière</b> — le Dashboard et les notifications doivent rendre visibles les signaux de qualité (écarts, dépenses Pas sûr, sources non à jour, ajustements inhabituels, échéances dépassées, corrections post-clôture) ; ceux couverts par une règle sont horodatés dès qu'ils surviennent, comme les <b>4</b> déclenchements du 27/08 — 21:15 Écart de réconciliation, 17:30 Échéance fournisseur dépassée, 15:24 Plafond d'encours dépassé, 12:00 Relais ouvert au-delà du seuil (§10.4).</li>
+      <li><b>Dépense « Pas sûr » à 23:00</b> — s'il reste une dépense du jour « Pas sûr », une notification part à 23:00 vers le Directeur des Opérations, les Admins concernés et le Super Admin, avec accès à la liste à résoudre : ici Carburant véhicule livraison <span class="amt" data-amt="85000" data-nocur></span> (Sous-caisse Livraisons) (§5.2).</li>
+      <li><b>Relais ouvert au-delà du seuil</b> — un solde relais resté ouvert au-delà d'un seuil configurable génère une alerte : « Bictorys → Banque en cours » <span class="amt" data-amt="350000" data-nocur></span>, créé 24/08, âge 3 jours au-dessus du seuil de 2 jours (§4.6).</li>
+      <li><b>Plafond d'encours dépassé</b> — un dépassement du plafond fournisseur déclenche une alerte informative sans bloquer la saisie : AGNEAUX, dette <span class="amt" data-amt="12400000" data-nocur></span> pour un plafond de <span class="amt" data-amt="10000000" data-nocur></span> (§5.4).</li>
+    </ul>
+    <div class="note-strip"><svg><use href="#i-shield"/></svg><b>Refus par défaut.</b> Consulter et modifier sont deux permissions distinctes : le DG consulte les règles, seul le Super Admin les active, les désactive avec motif ou en crée de nouvelles.</div>
+    <div class="hint">Sources : Cahier Mata Core §6.1 · Mata Finance §10.4, §4.6, §5.2, §5.4</div>
+    <div class="acts"><button class="btn ghost" data-close>Fermer</button></div>
+  </div></div>
 </section>
 <script data-screen="core-alertes">
 ERP.register('core-alertes', function (root, ctx) {
@@ -8032,6 +8082,7 @@ ERP.register('core-alertes', function (root, ctx) {
       <p class="scr-sub">Service commun d’import et d’export de l’ERP (§6.3) · Formats selon le besoin : CSV, Excel, PDF · Fichier → Prévisualisation → Contrôles → Validation → Import · Le droit d’export reste distinct du droit de consultation · exports temporaires supprimés après 7 jours, régénérables à tout moment (Technique §8, Finance §5.7) · jeudi 27 août 2026</p>
     </div>
     <div class="scr-meta">
+      <button class="linkish" data-open="help-core-import"><svg><use href="#i-info"/></svg>Comment ça marche ?</button>
       <span class="sens s"><svg><use href="#i-shield"/></svg>Sensible</span>
       <span class="hint">Sensible : accès restreint ; modifications auditées ; export contrôlé (§5.3) · exécution de l’import selon la permission « core.import.executer », sans second validateur · téléchargement, régénération et nouvel export selon « core.export » : Consulter et Exporter sont deux permissions différentes (§3.4)</span>
     </div>
@@ -8237,6 +8288,20 @@ ERP.register('core-alertes', function (root, ctx) {
     <label class="rline"><input type="radio" name="core-import-fmt" value="PDF">PDF<span class="rh">relevés, rapports · génération légère (Technique §8)</span></label>
     <div class="acts"><button class="btn ghost" data-close>Annuler</button><button class="btn pri" data-generate data-perm="core.export"><svg><use href="#i-dl"/></svg>Générer</button></div>
   </div></div>
+
+  <div class="mback" data-ov="help-core-import"><div class="modal wide" role="dialog" aria-modal="true" aria-label="Comment ça marche : Import / Export">
+    <h3><svg><use href="#i-info"/></svg>Comment ça marche : Import / Export</h3>
+    <div class="exp">Point d’entrée unique de l’ERP pour faire entrer un référentiel ou un relevé, et pour sortir des documents. Utilisé par les profils autorisés à importer (permission « core.import.executer ») et/ou à exporter (« core.export », « core.audit.exporter » pour l’audit).</div>
+    <ul class="help-list">
+      <li><b>Un seul chemin en 5 étapes</b> — quel que soit le cas d’usage, l’assistant suit toujours Fichier → Prévisualisation → Contrôles → Validation → Import ; sur le fichier fournisseurs, 8 lignes lues donnent 5 lignes importables, 2 rejetées et 1 doublon ignoré (§6.3).</li>
+      <li><b>Objets exportables</b> — le service commun d’export couvre les objets Mata Finance (comptes, mouvements, dépenses, positions fournisseurs/clients — dont les Dettes fournisseurs <span class="amt" data-amt="23250000"></span> — et résultats de contrôle) et Mata Core (entités, utilisateurs, audit) ; Excel n’est proposé que s’il est pertinent, désactivé pour un objet Mata Core (§9.2).</li>
+      <li><b>Exporter ≠ Consulter</b> — ouvrir cet écran demande « core.import.view », mais télécharger, régénérer ou créer un export exige la permission séparée « core.export » ; l’export « Dépenses août » n’embarque pas les justificatifs sources, qui suivent leur propre conservation (§5.7).</li>
+      <li><b>Exports temporaires et régénérables</b> — un export généré est un artefact reproductible à partir des données sources : il est supprimé automatiquement après une durée courte configurable, ici 3 exports disponibles avec le relevé fournisseur AGNEAUX (PDF, position <span class="amt" data-amt="-12400000" data-nocur></span>) supprimé le 03/09/2026 ; les PDF sont produits par une bibliothèque légère, sans navigateur headless (§8).</li>
+    </ul>
+    <div class="note-strip"><svg><use href="#i-lock"/></svg>Consulter et exporter restent deux permissions distinctes sur tout cet écran : ouvrir l’assistant n’autorise pas à télécharger ou régénérer un export, et le Journal d’audit exige en plus sa propre permission « core.audit.exporter ».</div>
+    <div class="hint">Sources : Cahier Mata Core §6.3 · Technique §8 · Cahier Mata Finance §5.7, §9.2</div>
+    <div class="acts"><button class="btn ghost" data-close>Fermer</button></div>
+  </div></div>
 </section>
 <script data-screen="core-import">
 ERP.register('core-import', function (root, ctx) {
@@ -8374,6 +8439,7 @@ ERP.register('core-import', function (root, ctx) {
       <p class="scr-sub">Mata Core gère uniquement les paramètres transverses (§6.4) · un paramètre peut être global, global avec override local, ou local · les configurations sensibles sont historisées et, lorsque nécessaire, datées dans le temps · entité active : Mata Group · calcul au 27/08/2026</p>
     </div>
     <div class="scr-meta">
+      <button class="linkish" data-open="help-core-parametres"><svg><use href="#i-info"/></svg>Comment ça marche ?</button>
       <span class="sens s"><svg><use href="#i-shield"/></svg>Sensible</span>
       <span class="hint">Accès restreint, modifications auditées, export contrôlé (§5.3) · consultation sans validation · modification sous la permission core.parametres.modifier, sans second validateur (aucune validation renforcée prévue par le cahier pour un périmètre Sensible) · paramètre sensible : nouvelle version historisée, date d’effet obligatoire (§6.4), ancienne et nouvelle valeur dans l’Audit central (§5.4) · Exporter distinct de Consulter (§3.4)</span>
     </div>
@@ -8563,6 +8629,21 @@ ERP.register('core-import', function (root, ctx) {
     </div>
     <div class="df"><button class="btn ghost" data-goto="core-audit" data-perm="core.audit.view"><svg><use href="#i-history"/></svg>Audit central</button><div class="sp"></div><button class="btn pri" data-d-edit data-perm="core.parametres.modifier"><svg><use href="#i-sliders"/></svg>Modifier</button></div>
   </aside><div class="dback" data-ov-back="core-parametres-historique"></div>
+
+  <div class="mback" data-ov="help-core-parametres"><div class="modal wide" role="dialog" aria-modal="true" aria-label="Comment ça marche : Paramètres">
+    <h3><svg><use href="#i-info"/></svg>Comment ça marche : Paramètres</h3>
+    <div class="exp">Paramètres centralise la configuration transverse de Mata Core — devise, sauvegarde, audit, fuseau, heures de gel — commune à tous les modules métier. Tous les profils la consultent ; seul un profil disposant de core.parametres.modifier peut y créer une nouvelle version.</div>
+    <ul class="help-list">
+      <li><b>Trois portées</b> — Global (valeur unique, ex. Devise), Global avec override local (valeur groupe surchargeable par entité, ex. Fuseau) ou Local (propre à l’entité, ex. Heure de gel) ; l’écran compte 10 paramètres transverses, 5 globaux, 3 avec override et 2 locaux (§6.4).</li>
+      <li><b>Sensible = historisé et daté</b> — 7 des 10 paramètres sont sensibles : chaque modification crée une nouvelle version avec date d’effet obligatoire, l’ancienne valeur reste consultable ; exemple, le seuil d’ajustement inhabituel vaut <span class="amt" data-amt="500000" data-nocur></span> FCFA et 3 par jour (§6.4).</li>
+      <li><b>Standard = audité sans historique</b> — les 3 paramètres non sensibles (ex. Conservation des exports, 7 jours) se modifient en place et sont audités, sans version ni date d’effet obligatoire (§6.4).</li>
+      <li><b>Sauvegarde : deux champs réglables</b> — seules la fréquence et la rétention glissante se modifient ici (tous les 3 jours, rétention 30 jours) ; la sauvegarde mensuelle 12 mois et les tests de restauration restent des engagements fixes du cahier, rappelés sur la ligne mais non modifiables sur cet écran (§8.1).</li>
+      <li><b>Conservation de l’audit</b> — les modifications de paramètres restent 24 mois en base active puis 10 ans en archive froide ; les consultations restent détaillées 90 jours puis sont résumées (§11).</li>
+    </ul>
+    <div class="note-strip"><svg><use href="#i-lock"/></svg>Refus par défaut : sans core.parametres.modifier, les valeurs et l’historique restent consultables mais les boutons « Modifier » sont désactivés avec le motif affiché.</div>
+    <div class="hint">Sources : Cahier fonctionnel Mata Core §6.4, §8.1 · Architecture Mata Core §11</div>
+    <div class="acts"><button class="btn ghost" data-close>Fermer</button></div>
+  </div></div>
 </section>
 <script data-screen="core-parametres">
 ERP.register('core-parametres', function (root, ctx) {
@@ -8673,6 +8754,7 @@ ERP.register('core-parametres', function (root, ctx) {
       <p class="scr-sub">Bouton transverse « Signaler un problème » : le système collecte automatiquement le contexte technique et fonctionnel disponible · Criticité : Mineur / Majeur / Critique · Ouvert → En cours → Résolu → Clos · supervision technique et fonctionnelle (Core §8.2, §8.3)</p>
     </div>
     <div class="scr-meta">
+      <button class="linkish" data-open="help-core-incidents"><svg><use href="#i-info"/></svg>Comment ça marche ?</button>
       <span class="sens std"><svg><use href="#i-shield"/></svg>Standard</span>
       <span class="hint">Aucune validation : changement de statut et maintenance par module sous la permission core.incidents.gerer, audités (§5.4) · un module peut être placé en maintenance sans rendre tout l'ERP indisponible (§8.3)</span>
     </div>
@@ -8843,6 +8925,22 @@ ERP.register('core-parametres', function (root, ctx) {
     <div class="fld" style="margin-bottom:10px" data-k-on><label for="core-incidents-msg">Message affiché aux utilisateurs de Mata Finance</label><input id="core-incidents-msg" class="inp" data-k="msg" value="Mata Finance est momentanément en maintenance. Mata Core reste disponible."></div>
     <div class="fld" data-k-on><label for="core-incidents-dur">Fin prévue</label><select id="core-incidents-dur" class="inp" data-k="dur"><option value="30">dans 30 minutes</option><option value="60">dans 1 heure</option><option value="120">dans 2 heures</option><option value="0">à la levée manuelle</option></select></div>
     <div class="acts"><button class="btn ghost" data-close>Annuler</button><button class="btn pri" data-k="confirm" data-perm="core.incidents.gerer"><svg><use href="#i-check"/></svg><span data-k="confirm-lbl">Placer en maintenance</span></button></div>
+  </div></div>
+
+  <div class="mback" data-ov="help-core-incidents"><div class="modal wide" role="dialog" aria-modal="true" aria-label="Comment ça marche : Incidents">
+    <h3><svg><use href="#i-info"/></svg>Comment ça marche : Incidents</h3>
+    <div class="exp">Cet écran centralise la supervision technique et fonctionnelle de Mata Core et Mata Finance, et le suivi des incidents. Le Super Admin y change les statuts et gère la maintenance ; les autres profils internes (Directeur des Opérations, Gestionnaire de caisse, Collecteur) consultent.</div>
+    <ul class="help-list">
+      <li><b>Services et interfaces</b> — la supervision technique compte les sources à l'état OK : <b>5 / 5</b> ici (Ventes Mata, Bictorys, Banque BOA, Stock, Achat), donc <b>0</b> source périmée (§8.2).</li>
+      <li><b>Réconciliations ouvertes</b> — la supervision fonctionnelle compte les circuits du jour non validés parmi Caisses, Encaissements collectés, Ventes du jour, Fournisseurs : <b>3</b> sur 4 circuits ici (§8.2).</li>
+      <li><b>Dépenses « Pas sûr »</b> — une dépense non résolue bloque uniquement la caisse concernée : « Carburant véhicule livraison » <span class="amt" data-amt="85000" data-nocur></span> bloque le seul périmètre Sous-caisse Livraisons (§8.2).</li>
+      <li><b>Cycle de vie d'un incident</b> — chaque incident porte une criticité Mineur / Majeur / Critique et suit Ouvert → En cours → Résolu → Clos ; les puces comptent <b>3</b> incidents (0 Ouvert, 1 En cours, 1 Résolu, 1 Clos) (§8.3).</li>
+      <li><b>Signaler un problème</b> — disponible sur tous les écrans, ce bouton crée aussitôt un incident au statut Ouvert et remplit seul son contexte (module, écran, profil actif, version) sans ressaisie (§8.3).</li>
+      <li><b>Maintenance par module</b> — placer Mata Finance en maintenance ne rend pas tout l'ERP indisponible : Mata Core (authentification, notifications, Incidents) reste disponible pendant que les écrans Mata Finance affichent le message saisi (§8.3).</li>
+    </ul>
+    <div class="note-strip"><svg><use href="#i-shield"/></svg>Refus par défaut : Gérer (changement de statut, maintenance) est réservé au Super Admin ; les autres profils consultent seulement, une action refusée reste visible avec son motif.</div>
+    <div class="hint">Sources : Cahier Mata Core §8.2, §8.3 · FIXTURES §16</div>
+    <div class="acts"><button class="btn ghost" data-close>Fermer</button></div>
   </div></div>
 </section>
 <script data-screen="core-incidents">

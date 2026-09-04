@@ -34,6 +34,7 @@
       <p class="scr-sub">Centre commun de notifications (Core §6.1) : les notifications respectent le profil et les droits ; elles peuvent être critiques ou configurables · Email en V1 ; canaux additionnels prévus ultérieurement (§10.1) · signaux de qualité financière rendus visibles (Finance §10.4)</p>
     </div>
     <div class="scr-meta">
+      <button class="linkish" data-open="help-core-notifications"><svg><use href="#i-info"/></svg>Comment ça marche ?</button>
       <span class="sens std"><svg><use href="#i-shield"/></svg>Standard</span>
       <span class="hint">Standard : permissions normales (§5.3) · aucune validation : le marquage « lu » et les préférences sont personnels, enregistrés sous le profil actif · les critiques ne sont pas désactivables · l'accès à chaque écran cible reste soumis à sa propre permission de consultation</span>
     </div>
@@ -199,6 +200,21 @@
     <div class="df"><button class="btn ghost" data-act="toggle"><svg><use href="#i-eye"/></svg>Marquer comme lue</button><button class="btn ghost" data-goto="core-alertes" data-perm="core.alertes.view"><svg><use href="#i-sliders"/></svg>Règle</button><div class="sp"></div><button class="btn pri" data-act="go" data-goto="hub" data-perm="core.notifications.view"><svg><use href="#i-arr"/></svg>Ouvrir</button></div>
   </aside>
   <div class="dback" data-ov-back="core-notifications-detail"></div>
+
+  <div class="mback" data-ov="help-core-notifications"><div class="modal wide" role="dialog" aria-modal="true" aria-label="Comment ça marche : Notifications">
+    <h3><svg><use href="#i-info"/></svg>Comment ça marche : Notifications</h3>
+    <div class="exp">Centre commun de notifications de l'ERP : boîte de réception, préférences d'alerte et canaux. Tous les profils l'utilisent, du Super Admin au Gérant MaaS, chacun ne voyant que son périmètre.</div>
+    <ul class="help-list">
+      <li><b>Filtrage par profil et droits</b> — chaque ligne porte un périmètre : l'écart <span class="amt" data-amt="-25000" data-nocur></span> sur Sous-caisse Marché n'apparaît que pour Super Admin, DG, Collecteur et Gestionnaire de caisse, jamais pour les autres profils (§6.1).</li>
+      <li><b>Critique ou configurable</b> — une critique reste toujours envoyée : dans Préférences, l'interrupteur « Ajustement inhabituel (&gt; <span class="amt" data-amt="500000" data-nocur></span>) » est verrouillé et coché en permanence, alors qu'une règle non critique comme « Échéance fournisseur dépassée » se désactive (§6.1).</li>
+      <li><b>Marquage « lu » personnel</b> — « Tout marquer comme lu » ne change que votre statut de lecture : une notification critique reste dans la boîte de tout destinataire concerné même après lecture (§6.1).</li>
+      <li><b>Email en V1</b> — la carte « Canal V1 » affiche Email + centre ; WhatsApp et SMS apparaissent dans Canaux mais restent grisés, prévus ultérieurement (§10.1).</li>
+      <li><b>Signaux de qualité financière</b> — les alertes Fournisseurs et Comptes reprennent les signaux du Dashboard financier : un plafond d'encours dépassé (AGNEAUX 12,4 M / 10 M) reste informatif, une échéance dépassée comme ŒUFS <span class="amt" data-amt="1150000" data-nocur></span> reste critique (§10.4).</li>
+    </ul>
+    <div class="note-strip"><svg><use href="#i-lock"/></svg>Refus par défaut : le détail d'une notification ouvre l'écran cible seulement si votre profil en a la permission ; sinon le refus est affiché avec son motif, jamais masqué.</div>
+    <div class="hint">Sources : Cahier Mata Core §6.1, §10.1 · Cahier Mata Finance §10.4</div>
+    <div class="acts"><button class="btn ghost" data-close>Fermer</button></div>
+  </div></div>
 </section>
 <script data-screen="core-notifications">
 ERP.register('core-notifications', function (root, ctx) {
