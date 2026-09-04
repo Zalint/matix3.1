@@ -31,7 +31,7 @@
 
   <div class="statstrip four">
     <div class="card stat">
-      <div class="lb">Événements · extrait du 27/08<button class="fx" data-f="Un journal central conserve selon le niveau requis : utilisateur ou agent, profil, entité, module, action, objet, ancienne/nouvelle valeur, date et heure, motif, chaîne de validation, source interface/import/IA/automatisation." data-c="Humain 9 · API 2 · Automatisation 2 · Agent IA 0 · dont le gel du 26/08 à 23:59" data-src="Mata Core §5.4 · journal central, base active · Mata Group · journée en cours" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></div>
+      <div class="lb">Événements · extrait du 27/08 à 21:12<button class="fx" data-f="Un journal central conserve selon le niveau requis : utilisateur ou agent, profil, entité, module, action, objet, ancienne/nouvelle valeur, date et heure, motif, chaîne de validation, source interface/import/IA/automatisation." data-c="Humain 9 · API 2 · Automatisation 2 · Agent IA 0 · dont le gel du 26/08 à 23:59" data-src="Mata Core §5.4 · journal central, base active · Mata Group · journée en cours" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></div>
       <div class="v">13</div>
       <div class="sub2">Mata Finance 10 · Mata Core 3 · immédiatement consultables</div>
     </div>
@@ -43,7 +43,7 @@
     <div class="card stat">
       <div class="lb">Consultations<button class="fx" data-f="Les consultations en lecture seule restent détaillées 90 jours en base active ; au-delà, elles sont archivées à froid lorsque leur conservation détaillée est requise, et peuvent être complétées par des compteurs agrégés (qui a consulté quoi, combien de fois) maintenus en base active." data-c="O. Seck · DG Mata · Historique Caisse générale · 14:05 · Hautement sensible" data-src="Mata Core technique §11 · §5.3 : consultation des données hautement sensibles elle-même auditée" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></div>
       <div class="v">1</div>
-      <div class="sub2">résumée après 90 jours · compteurs agrégés maintenus en base active</div>
+      <div class="sub2">résumée après 90 jours · hors votre consultation en cours (ligne « Votre consultation » ci-dessous)</div>
     </div>
     <div class="card stat">
       <div class="lb">Hautement sensible<button class="fx" data-f="Hautement sensible — accès fortement limité ; consultation elle-même auditée ; validation renforcée ; export éventuellement interdit ; restrictions possibles pour Externes et agents IA." data-c="21:12 Déclaration · 19:02 1re validation · 18:05 et 16:42 Propositions de transfert · 14:05 Consultation · 08:12 Synchronisation · 08:00 Import relevé · 02:04 Auto-validation" data-src="Mata Core §5.3 · Finance §10.1" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></div>
@@ -176,7 +176,7 @@
           <div class="row"><div class="nm">Consultations détaillées<small>90 jours en base active</small></div><span class="st ok"><svg><use href="#i-check"/></svg>Immédiat</span></div>
           <div class="row"><div class="nm">Consultations au-delà de 90 jours<small>archivées à froid lorsque leur conservation détaillée est requise · compteurs agrégés maintenus</small></div><span class="st mut"><svg><use href="#i-history"/></svg>Résumées</span></div>
         </div>
-        <div class="actionbar" style="margin:12px 0 0"><span class="hint">Au 27/08/2026 : modifications antérieures au 27/08/2024 et consultations antérieures au 29/05/2026 en archive froide</span><div class="sp"></div><button class="btn pri" data-perm="core.audit.view" data-open="core-audit-archive"><svg><use href="#i-box"/></svg>Demander une archive</button></div>
+        <div class="actionbar" style="margin:12px 0 0"><span class="hint">Au 27/08/2026 : modifications antérieures au 27/08/2024 et consultations antérieures au 29/05/2026 en archive froide</span><div class="sp"></div><button class="btn pri" data-open="core-audit-archive"><svg><use href="#i-box"/></svg>Demander une archive</button></div>
         <div class="k-lbl">Demandes de restauration · <span data-arc-count>0</span> en cours</div>
         <div data-arc-list><span class="hint">Aucune demande en cours · toute archive demandée par un utilisateur autorisé est restaurable sous un jour ouvré, sans être maintenue en permanence dans la base transactionnelle</span></div>
       </div>
@@ -184,7 +184,7 @@
     <div class="card">
       <div class="ch"><h3>Compteurs agrégés</h3><span class="hint-r">qui a consulté quoi, combien de fois · base active</span></div>
       <div class="cb">
-        <div class="due"><span>Consultations hautement sensibles du 27/08</span><b>1 · O. Seck · Historique Caisse générale</b></div>
+        <div class="due"><span>Consultations hautement sensibles du 27/08 (extrait 21:12)</span><b>1 · O. Seck · Historique Caisse générale</b></div>
         <div class="due"><span>Événements par acteur humain</span><b>S. Doucouré 4 · O. Seck 2 · F. Sarr 1 · M. Diop 1 · B. Fall 1</b></div>
         <div class="due"><span>Par source</span><b>Humain 9 · API 2 · Automatisation 2 · Agent IA 0</b></div>
         <div class="due"><span>Par module</span><b>Mata Finance 10 · Mata Core 3</b></div>
@@ -196,7 +196,7 @@
   </div>
 
   <div class="note-strip"><svg><use href="#i-shield"/></svg><span><b>§5.4 —</b> Conservation cible : 10 ans pour les événements financiers, permissions, validations et sécurité, avec séparation entre stockage actif et archive froide. Les données récentes restent immédiatement consultables ; les données plus anciennes restent retrouvables sur demande. <b>Finance §10.2 —</b> Une opération comptabilisée n'est jamais supprimée physiquement. Toute correction relie l'opération originale à la contrepassation ou à l'ajustement. Valeurs sources utilisées pour les réconciliations conservées, pas seulement leur statut final.</span></div>
-  <div class="note-strip"><svg><use href="#i-lock"/></svg><span><b>Refus par défaut.</b> Le DG Mata consulte l'Audit sans pouvoir exporter (permission core.audit.exporter distincte) ; le Directeur des Opérations, le Gestionnaire de caisse, le Collecteur, le Gérant MaaS, l'Investisseur et le Comptable externe n'accèdent pas à cet écran hautement sensible. Chaque ouverture de cet écran, chaque export et chaque demande d'archive sont eux-mêmes journalisés (§5.3).</span></div>
+  <div class="note-strip"><svg><use href="#i-lock"/></svg><span><b>Refus par défaut.</b> Le DG Mata consulte l'Audit ; l'export du journal, hautement sensible, exige la permission distincte core.audit.exporter, ici réservée au Super Admin (§5.3 : export éventuellement interdit) ; le Directeur des Opérations, le Gestionnaire de caisse, le Collecteur, le Gérant MaaS, l'Investisseur et le Comptable externe n'accèdent pas à cet écran hautement sensible. Chaque ouverture de cet écran, chaque export et chaque demande d'archive sont eux-mêmes journalisés (§5.3).</span></div>
 
   <!-- Tiroir : détail d'un événement d'audit -->
   <aside class="drawer" data-ov="core-audit-fiche" aria-label="Événement d'audit">
@@ -222,7 +222,7 @@
   <!-- Modale : export du journal filtré -->
   <div class="mback" data-ov="core-audit-export"><div class="modal" role="dialog" aria-modal="true" aria-label="Exporter le journal">
     <h3><svg><use href="#i-dl"/></svg>Exporter le journal filtré</h3>
-    <div class="exp">Consulter et Exporter sont deux permissions différentes (§3.4). Hautement sensible : export contrôlé, éventuellement interdit (§5.3). L'export est lui-même journalisé comme Modification ; l'artefact, régénérable, est conservé 7 jours puis supprimé (Paramètres, technique §8).</div>
+    <div class="exp">Consulter et Exporter sont deux permissions différentes (§3.4). Hautement sensible : export contrôlé, éventuellement interdit (§5.3). L'export est lui-même journalisé (§5.3 : export contrôlé) ; l'artefact, régénérable, est conservé 7 jours puis supprimé (Paramètres, technique §8).</div>
     <div class="row-m"><span>Périmètre</span><b><span data-x="n">13</span> événements filtrés · Mata Group · 27/08/2026</b></div>
     <label class="rline sel"><input type="radio" name="core-audit-fmt" value="CSV" checked>CSV<span class="rh">colonnes du journal, une ligne par événement</span></label>
     <label class="rline"><input type="radio" name="core-audit-fmt" value="PDF">PDF<span class="rh">génération légère, sans navigateur headless</span></label>
@@ -239,7 +239,7 @@
     <select id="core-audit-arc-scope" class="inp" data-a="scope"><option>Mata Finance · événements financiers</option><option>Mata Core · permissions et validations</option><option>Sécurité · authentification et accès</option><option>Tous les modules · Mata Group</option></select>
     <label for="core-audit-arc-motif" style="margin-top:10px">Motif de l'investigation</label>
     <input id="core-audit-arc-motif" data-a="motif" placeholder="Motif obligatoire, conservé avec la demande">
-    <div class="acts"><button class="btn ghost" data-close>Annuler</button><button class="btn pri" data-perm="core.audit.view" data-a="confirm"><svg><use href="#i-box"/></svg>Demander la restauration</button></div>
+    <div class="acts"><button class="btn ghost" data-close>Annuler</button><button class="btn pri" data-a="confirm"><svg><use href="#i-box"/></svg>Demander la restauration</button></div>
   </div></div>
 </section>
 <script data-screen="core-audit">
@@ -259,7 +259,7 @@ ERP.register('core-audit', function (root, ctx) {
   function tag(actor, txt) { return '<span class="tag ' + (actor === 'api' ? 'api' : 'lock') + '"><svg><use href="#i-' + ICO[actor] + '"/></svg>' + txt + '</span>'; }
   /* ---- Recherche + filtres combinés (module, type d'acteur, sensibilité, type) · question §5.4 → ligne 11:20 ---- */
   function apply() {
-    var s = norm(qi.value.trim()), ask = s.indexOf('droit') >= 0, toks = ask ? [] : s.split(/\s+/).filter(function (w) { return w.length >= 3; }), n = 0;
+    var s = norm(qi.value.trim()), ask = /qui a donne quel droit/.test(s), min = s.split(/\s+/).length === 1 ? 2 : 3, toks = ask ? [] : s.split(/\s+/).filter(function (w) { return w.length >= min; }), n = 0;
     rows.forEach(function (tr) {
       var d = tr.dataset, ok = (F.mod === 'tous' || d.mod === F.mod) && (F.actor === 'tous' || d.actor === F.actor) && (F.sens === 'tous' || d.sens === F.sens) && (F.type === 'tous' || d.type === F.type);
       if (ok && ask) ok = d.key === 'droit';

@@ -3,30 +3,22 @@
     #app [data-scr="core-droits"] .formgrid{grid-template-columns:1.1fr 1.1fr 1.5fr .9fr 1.3fr auto}
     @media (max-width:1180px){#app [data-scr="core-droits"] .formgrid{grid-template-columns:1fr 1fr}}
     @media (max-width:640px){#app [data-scr="core-droits"] .formgrid{grid-template-columns:1fr}}
-    #app [data-scr="core-droits"] .kv{display:flex;justify-content:space-between;gap:12px;font-size:12px;padding:6px 0;border-bottom:1px dashed var(--line)}
-    #app [data-scr="core-droits"] .kv:last-of-type{border-bottom:none}
-    #app [data-scr="core-droits"] .kv b{text-align:right;font-weight:600;max-width:62%}
-    #app [data-scr="core-droits"] .verdict{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:12px 14px;border-radius:10px;border:1.5px solid var(--line);margin-bottom:12px;font-size:12px}
-    #app [data-scr="core-droits"] .verdict.allow{border-color:var(--ok);background:var(--ok-bg)}
-    #app [data-scr="core-droits"] .verdict.deny{border-color:var(--bad);background:var(--bad-bg)}
-    #app [data-scr="core-droits"] .verdict .big{font-family:var(--head);font-size:15px;font-weight:600;display:block}
-    #app [data-scr="core-droits"] .verdict>div{flex:1;min-width:220px;line-height:1.45}
+    #app [data-scr="core-droits"] .cb .row-m{display:flex;justify-content:space-between;gap:12px;font-size:12px;padding:6px 0;border-bottom:1px dashed var(--line)}
+    #app [data-scr="core-droits"] .cb .row-m b{text-align:right;font-weight:600;max-width:62%}
+    #app [data-scr="core-droits"] .cb>.fld{margin-top:14px}
     #app [data-scr="core-droits"] .grid2>.card,#app [data-scr="core-droits"] .grid2b>.card{min-width:0}
     #app [data-scr="core-droits"] .ch{flex-wrap:wrap}
     #app [data-scr="core-droits"] .chain li>div{flex:1;min-width:0}
     #app [data-scr="core-droits"] .chain li small{display:block;margin-top:2px;line-height:1.4;white-space:normal}
     #app [data-scr="core-droits"] .chain li .res{white-space:nowrap}
-    #app [data-scr="core-droits"] .st.info{background:var(--red-tint);color:var(--red)}
-    #app [data-scr="core-droits"] .code{font-family:'Fira Code',monospace;font-size:11.5px}
     #app [data-scr="core-droits"] .modal .rline{display:flex;text-transform:none;font-size:12.5px;font-weight:600;letter-spacing:0;color:var(--ink);margin-bottom:8px}
     #app [data-scr="core-droits"] .modal .rline .rh{font-weight:500;color:var(--mut);font-size:11px;margin-left:auto;text-align:right}
     #app [data-scr="core-droits"] .modal select.inp,#app [data-scr="core-droits"] .modal input.inp{font-family:var(--body);font-size:13px;margin-bottom:12px}
-    #app [data-scr="core-droits"] h4{font-family:var(--head);font-size:11.5px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-2);margin:14px 0 6px}
   </style>
   <div class="scr-head">
     <div>
       <h2>Droits effectifs</h2>
-      <p class="scr-sub">Sélectionner un utilisateur et un profil, puis expliquer l'origine de chaque autorisation ou interdiction (§3.5) · chaîne de résolution à 7 niveaux, le premier niveau décisif l'emporte · un seul profil actif à la fois, droits jamais additionnés entre profils (§3.3)</p>
+      <p class="scr-sub">Sélectionner un utilisateur et un profil, puis expliquer l'origine de chaque autorisation ou interdiction (§3.5) · chaîne de résolution à 7 niveaux, le premier niveau décisif l'emporte · un seul profil actif à la fois, droits jamais additionnés implicitement entre profils (§3.3)</p>
     </div>
     <div class="scr-meta">
       <span class="sens s"><svg><use href="#i-shield"/></svg>Sensible</span>
@@ -43,9 +35,9 @@
       <div class="sub2">Interdiction explicite → Override utilisateur → Override contexte → Permission rôle → Règle catégorie → Règle globale → Refus par défaut (§3.5)</div>
     </div>
     <div class="card stat">
-      <div class="lb">Exceptions en vigueur<button class="fx" data-f="Σ exceptions actives = overrides utilisateur + overrides contexte + interdictions explicites (enregistrées ou dérivées de la séparation initiateur/validateur et des désactivations) + accès temporaires" data-c="Override contexte 1 (B. Fall, MaaS Keur Massar) · Interdictions explicites 3 (S. Doucouré sur VAL-114, O. Seck sur VAL-117, M. Gueye désactivé) · Accès temporaire 1 (C. Mbaye, 01/09 → 30/09) · Overrides utilisateur 0" data-src="Mata Core · registre des droits, lu à l'instant (Technique §7) · Audit central du 27/08" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></div>
+      <div class="lb">Exceptions enregistrées<button class="fx" data-fxc="exc" data-f="Une exception peut autoriser ou interdire spécifiquement une action pour un utilisateur ou un périmètre, éventuellement pour une durée limitée (§3.5)" data-c="Override contexte 1 (B. Fall, MaaS Keur Massar) · Overrides utilisateur 0 · Interdictions explicites : 0 enregistrée, 10 dérivées par le moteur, dont 3 listées dans le tableau (S. Doucouré sur VAL-114, O. Seck sur VAL-117, M. Gueye désactivé) · Accès temporaire 1 (C. Mbaye, 01/09 → 30/09, non commencé au 27/08)" data-src="Mata Core · registre des droits, lu à l'instant (Technique §7) · Audit central du 27/08 · comptage maquette, hors formule du cahier" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></div>
       <div class="v" data-stat="exc">5</div>
-      <div class="sub2">toutes auditées · une interdiction explicite de sécurité invalide le cache immédiatement</div>
+      <div class="sub2">lignes du tableau « Exceptions et interdictions » · toutes auditées · une interdiction explicite de sécurité invalide le cache immédiatement</div>
     </div>
     <div class="card stat">
       <div class="lb">Comptes et profils</div>
@@ -60,7 +52,7 @@
   </div>
 
   <div class="card">
-    <div class="ch"><h3>Qui peut faire quoi, et pourquoi</h3><span class="hint-r">Connecté : <b data-me>S. Doucouré · Super Admin</b> · consultation des droits d'un tiers, auditée</span></div>
+    <div class="ch"><h3>Qui peut faire quoi, et pourquoi</h3><span class="hint-r">Connecté : <b data-me>S. Doucouré · Super Admin</b> · consultation des droits d'un tiers · modifications auditées (§5.3)</span></div>
     <div class="cb">
       <div class="formgrid">
         <div class="fld"><label for="core-droits-user">Utilisateur</label>
@@ -68,11 +60,11 @@
             <option value="u1">Saliou Doucouré · Interne</option><option value="u2">Ousmane Seck · Interne</option><option value="u3">Fatou Sarr · Interne</option><option value="u4">Moussa Diop · Interne</option><option value="u5">Abdou Ndiaye · Interne</option><option value="u6">Ibrahima Kane · Externe</option><option value="u7">Coumba Mbaye · Externe, temporaire</option><option value="u8">Babacar Fall · Externe, MaaS</option><option value="u9">Mamadou Gueye · Désactivé</option>
           </select></div>
         <div class="fld"><label for="core-droits-profil">Profil (selon l'utilisateur)</label><select id="core-droits-profil" class="inp" data-q="profil"></select></div>
-        <div class="fld"><label for="core-droits-action">Action (permission)</label><select id="core-droits-action" class="inp code" data-q="action"></select></div>
+        <div class="fld"><label for="core-droits-action">Action (permission)</label><select id="core-droits-action" class="inp mono" data-q="action"></select></div>
         <div class="fld"><label for="core-droits-entite">Entité</label>
           <select id="core-droits-entite" class="inp" data-q="entite"><option value="MG">Mata Group · Active</option><option value="MLC">MLC · à migrer</option><option value="MV">Mata Volaille · à migrer</option><option value="KB">Keur Bally · à activer</option><option value="MAAS-KM">MaaS Keur Massar · à activer</option><option value="MAAS-OU">MaaS Ouakam · à activer</option></select></div>
         <div class="fld"><label for="core-droits-objet">Objet concerné (facultatif)</label>
-          <select id="core-droits-objet" class="inp" data-q="objet"><option value="">Aucun</option><option value="VAL-118">VAL-118 · Transfert 600 000 BOA → CG · init. F. Sarr</option><option value="VAL-117">VAL-117 · Ajustement +180 000 CG · init. M. Diop · 1re validation O. Seck</option><option value="VAL-116">VAL-116 · Correction BOA −45 000 · init. F. Sarr</option><option value="VAL-114">VAL-114 · Transfert 1 500 000 CG → BOA · init. S. Doucouré</option><option value="DEM-031">DEM-031 · Création utilisateur · init. B. Fall</option><option value="DEM-030">DEM-030 · Prolongation C. Mbaye · init. F. Sarr</option></select></div>
+          <select id="core-droits-objet" class="inp" data-q="objet"><option value="">Aucun</option><option value="VAL-118">VAL-118 · Transfert BOA → CG · init. F. Sarr</option><option value="VAL-117">VAL-117 · Ajustement CG · init. M. Diop · 1re validation O. Seck</option><option value="VAL-116">VAL-116 · Correction BOA · init. F. Sarr</option><option value="VAL-115">VAL-115 · Désactivation Sous-caisse Abattoir · init. F. Sarr</option><option value="VAL-114">VAL-114 · Transfert CG → BOA · init. S. Doucouré</option><option value="DEM-031">DEM-031 · Création utilisateur · init. B. Fall</option><option value="DEM-030">DEM-030 · Prolongation C. Mbaye · init. F. Sarr</option></select></div>
         <button class="btn pri" data-run><svg><use href="#i-search"/></svg>Expliquer</button>
       </div>
       <div class="actionbar" style="margin:12px 0 0">
@@ -97,7 +89,7 @@
     <div class="card">
       <div class="ch"><h3>Chaîne de résolution</h3><span class="hint-r" data-r="sub">évaluée à l'ouverture</span></div>
       <div class="cb">
-        <div class="verdict" data-r="verdict"><span class="st mut">Calcul</span><div><b class="big">Évaluation à l'ouverture</b>la chaîne complète est lue à l'instant</div></div>
+        <div class="note-strip" style="margin:0 0 12px" data-r="verdict"><svg><use href="#i-refresh"/></svg><span><b>Évaluation à l'ouverture</b> · la chaîne complète est lue à l'instant</span></div>
         <ol class="chain" data-r="chain">
           <li class="skip"><div><b>Interdiction explicite</b><small>évaluée à l'ouverture</small></div></li><li class="skip"><div><b>Override utilisateur</b></div></li><li class="skip"><div><b>Override contexte</b></div></li><li class="skip"><div><b>Permission rôle</b></div></li><li class="skip"><div><b>Règle catégorie</b></div></li><li class="skip"><div><b>Règle globale</b></div></li><li class="skip"><div><b>Refus par défaut</b></div></li>
         </ol>
@@ -107,22 +99,22 @@
     <div class="card">
       <div class="ch"><h3>Contexte évalué</h3><span class="hint-r">lu à l'instant, hors cache</span></div>
       <div class="cb">
-        <div class="kv"><span>Utilisateur</span><b data-k="user">—</b></div>
-        <div class="kv"><span>Catégorie(s)</span><b data-k="cat">—</b></div>
-        <div class="kv"><span>Profil évalué</span><b data-k="prof">—</b></div>
-        <div class="kv"><span>Statut du compte</span><b data-k="st">—</b></div>
-        <div class="kv"><span>Entité</span><b data-k="ent">—</b></div>
-        <div class="kv"><span>Action</span><b class="code" data-k="act">—</b></div>
-        <div class="kv"><span>Sensibilité de l'action</span><b data-k="sens">—</b></div>
-        <div class="kv"><span>Niveau de validation</span><b data-k="val">—</b></div>
-        <div class="kv"><span>Objet</span><b data-k="obj">—</b></div>
-        <h4>Qui a donné quel droit à qui, quand et sous quel profil ? (§5.4)</h4>
-        <div class="fcode" data-k="audit">—</div>
-        <h4>Sources lues pour ce calcul</h4>
-        <div class="kv"><span>Interdictions explicites</span><b>table lue à l'instant · 3 dérivées, 0 enregistrée</b></div>
-        <div class="kv"><span>Overrides utilisateur / contexte</span><b data-k="ovs">lus à l'instant · 0 / 1</b></div>
-        <div class="kv"><span>Permissions de rôle</span><b data-k="role">—</b></div>
-        <div class="kv"><span>Règles de catégorie et globales</span><b>Interne / Externe (§3.2) · scoping entity_id (Technique §3)</b></div>
+        <div class="row-m"><span>Utilisateur</span><b data-k="user">—</b></div>
+        <div class="row-m"><span>Catégorie(s)</span><b data-k="cat">—</b></div>
+        <div class="row-m"><span>Profil évalué</span><b data-k="prof">—</b></div>
+        <div class="row-m"><span>Statut du compte</span><b data-k="st">—</b></div>
+        <div class="row-m"><span>Entité</span><b data-k="ent">—</b></div>
+        <div class="row-m"><span>Action</span><b data-k="act">—</b></div>
+        <div class="row-m"><span>Sensibilité de l'action</span><b data-k="sens">—</b></div>
+        <div class="row-m"><span>Niveau de validation</span><b data-k="val">—</b></div>
+        <div class="row-m"><span>Objet</span><b><span data-k="obj">—</span> <span class="amt" data-k-amt data-nocur hidden></span></b></div>
+        <div class="fld"><label>Qui a donné quel droit à qui, quand et sous quel profil ? (§5.4)</label><div class="fcode" data-k="audit">—</div></div>
+        <div class="fld"><label>Sources lues pour ce calcul</label>
+          <div class="row-m"><span>Interdictions explicites</span><b data-k="bans">table lue à l'instant</b></div>
+          <div class="row-m"><span>Overrides utilisateur / contexte</span><b data-k="ovs">lus à l'instant · 0 / 1</b></div>
+          <div class="row-m"><span>Permissions de rôle</span><b data-k="role">—</b></div>
+          <div class="row-m"><span>Règles de catégorie et globales</span><b>Interne / Externe (§3.2) · scoping entity_id (Technique §3)</b></div>
+        </div>
         <div class="actionbar" style="margin:12px 0 0"><button class="btn ghost sm" data-goto="core-audit"><svg><use href="#i-history"/></svg>Preuve dans l'Audit central</button><button class="btn ghost sm" data-goto="core-profils"><svg><use href="#i-users"/></svg>Profils et rôles</button></div>
       </div>
     </div>
@@ -137,15 +129,15 @@
       </table></div>
     </div>
     <div class="card">
-      <div class="ch"><h3>Exceptions et interdictions en vigueur</h3><span class="hint-r"><div class="chips"><button class="chip on" data-filter="tous">Toutes</button><button class="chip" data-filter="sel">Utilisateur sélectionné</button></div></span></div>
+      <div class="ch"><h3>Exceptions et interdictions enregistrées</h3><div class="hint-r"><div class="chips"><button class="chip on" data-filter="tous">Toutes</button><button class="chip" data-filter="sel">Utilisateur sélectionné</button></div></div></div>
       <div class="tbl-scroll"><table>
         <thead><tr><th>Niveau</th><th>Bénéficiaire</th><th>Action</th><th>Périmètre</th><th>Sens</th><th>Origine / motif</th><th>Validité</th><th></th></tr></thead>
         <tbody data-x="rows">
-          <tr data-user="u8" data-qs="u8|0|finance.creances.view|MAAS-KM|"><td><span class="st info">Override contexte</span></td><td><b>B. Fall</b><div class="hint">Gérant MaaS Keur Massar</div></td><td class="code">finance.creances.view</td><td>MaaS Keur Massar</td><td><span class="st ok"><svg><use href="#i-check"/></svg>Autoriser</span></td><td>Créances : sa position MaaS Keur Massar uniquement</td><td>Sans date de fin</td><td><button class="btn ghost sm" data-explain><svg><use href="#i-eye"/></svg>Expliquer</button></td></tr>
-          <tr data-user="u7" data-qs="u7|0|finance.comptes.view|MG|"><td><span class="st warn">Accès temporaire</span></td><td><b>C. Mbaye</b><div class="hint">Comptable externe</div></td><td class="code">profil Comptable externe</td><td>Mata Group</td><td><span class="st ok"><svg><use href="#i-check"/></svg>Autoriser</span></td><td>Attribué par S. Doucouré sous le profil Super Admin, 27/08 · 11:20 (Audit central)</td><td>01/09/2026 → 30/09/2026 · expire automatiquement (§3.2)</td><td><button class="btn ghost sm" data-explain><svg><use href="#i-eye"/></svg>Expliquer</button></td></tr>
-          <tr data-user="u1" data-qs="u1|0|finance.transferts.valider|MG|VAL-114"><td><span class="st bad">Interdiction explicite</span></td><td><b>S. Doucouré</b><div class="hint">Super Admin Mata Group</div></td><td class="code">finance.transferts.valider</td><td>VAL-114</td><td><span class="st bad"><svg><use href="#i-x"/></svg>Interdire</span></td><td>Séparation initiateur / validateur (§4.2) · le Super Admin ne contourne pas cette règle</td><td>Tant que VAL-114 est En attente</td><td><button class="btn ghost sm" data-explain><svg><use href="#i-eye"/></svg>Expliquer</button></td></tr>
-          <tr data-user="u2" data-qs="u2|0|finance.validations.agir|MG|VAL-117"><td><span class="st bad">Interdiction explicite</span></td><td><b>O. Seck</b><div class="hint">DG Mata</div></td><td class="code">finance.validations.agir</td><td>VAL-117 · 2e validation</td><td><span class="st bad"><svg><use href="#i-x"/></svg>Interdire</span></td><td>1re validation donnée le 27/08 · 19:02 · les deux validateurs sont distincts entre eux (§4.2)</td><td>Tant que VAL-117 est En attente</td><td><button class="btn ghost sm" data-explain><svg><use href="#i-eye"/></svg>Expliquer</button></td></tr>
-          <tr data-user="u9" data-qs="u9|0|finance.depenses.creer|MG|"><td><span class="st bad">Interdiction explicite</span></td><td><b>M. Gueye</b><div class="hint">Administrateur Mata Finance</div></td><td class="code">toutes actions</td><td>Toutes entités</td><td><span class="st bad"><svg><use href="#i-x"/></svg>Interdire</span></td><td>Compte désactivé le 30/06/2026, jamais supprimé (§3.1) · cache invalidé immédiatement (Technique §7)</td><td>Permanente</td><td><button class="btn ghost sm" data-explain><svg><use href="#i-eye"/></svg>Expliquer</button></td></tr>
+          <tr data-user="u8" data-qs="u8|0|finance.creances.view|MAAS-KM|"><td><span class="st mut">Override contexte</span></td><td><b>B. Fall</b><div class="hint">Gérant MaaS Keur Massar</div></td><td>finance.creances.view</td><td>MaaS Keur Massar</td><td><span class="st ok"><svg><use href="#i-check"/></svg>Autoriser</span></td><td>Restriction de périmètre : sa position MaaS Keur Massar uniquement (FIXTURES §2)</td><td>Sans date de fin</td><td><button class="btn ghost sm" data-explain><svg><use href="#i-eye"/></svg>Expliquer</button></td></tr>
+          <tr data-user="u7" data-qs="u7|0|finance.comptes.view|MG|"><td><span class="st warn">Accès temporaire</span></td><td><b>C. Mbaye</b><div class="hint">Comptable externe</div></td><td>profil Comptable externe</td><td>Mata Group</td><td><span class="st ok"><svg><use href="#i-check"/></svg>Autoriser</span></td><td>Attribué par S. Doucouré sous le profil Super Admin, 27/08 · 11:20 (Audit central)</td><td>01/09/2026 → 30/09/2026 · non commencé au 27/08 · expire automatiquement (§3.2)</td><td><button class="btn ghost sm" data-explain><svg><use href="#i-eye"/></svg>Expliquer</button></td></tr>
+          <tr data-user="u1" data-qs="u1|0|finance.transferts.valider|MG|VAL-114"><td><span class="st bad">Interdiction explicite</span></td><td><b>S. Doucouré</b><div class="hint">Super Admin Mata Group</div></td><td>finance.transferts.valider</td><td>VAL-114</td><td><span class="st bad"><svg><use href="#i-x"/></svg>Interdire</span></td><td>Séparation initiateur / validateur (§4.2) · le Super Admin ne contourne pas cette règle</td><td>Tant que VAL-114 est En attente</td><td><button class="btn ghost sm" data-explain><svg><use href="#i-eye"/></svg>Expliquer</button></td></tr>
+          <tr data-user="u2" data-qs="u2|0|finance.validations.agir|MG|VAL-117"><td><span class="st bad">Interdiction explicite</span></td><td><b>O. Seck</b><div class="hint">DG Mata</div></td><td>finance.validations.agir</td><td>VAL-117 · 2e validation</td><td><span class="st bad"><svg><use href="#i-x"/></svg>Interdire</span></td><td>1re validation donnée le 27/08 · 19:02 · les deux validateurs sont distincts entre eux (§4.2)</td><td>Tant que VAL-117 est En attente</td><td><button class="btn ghost sm" data-explain><svg><use href="#i-eye"/></svg>Expliquer</button></td></tr>
+          <tr data-user="u9" data-qs="u9|0|finance.depenses.creer|MG|"><td><span class="st bad">Interdiction explicite</span></td><td><b>M. Gueye</b><div class="hint">Administrateur Mata Finance</div></td><td>toutes actions</td><td>Toutes entités</td><td><span class="st bad"><svg><use href="#i-x"/></svg>Interdire</span></td><td>Compte désactivé le 30/06/2026, jamais supprimé (§3.1) · cache invalidé immédiatement (Technique §7)</td><td>Permanente</td><td><button class="btn ghost sm" data-explain><svg><use href="#i-eye"/></svg>Expliquer</button></td></tr>
         </tbody>
       </table></div>
     </div>
@@ -155,7 +147,7 @@
     <h3><svg><use href="#i-key"/></svg>Nouvelle exception</h3>
     <div class="exp">Une exception autorise ou interdit spécifiquement une action pour un utilisateur ou un périmètre, éventuellement pour une durée limitée (§3.5). Enregistrée sous le profil actif et auditée (§5.4) ; le cache de session du bénéficiaire est invalidé à la prochaine modification pertinente, immédiatement pour une interdiction explicite de sécurité (Technique §7).</div>
     <div class="row-m"><span>Bénéficiaire (utilisateur sélectionné)</span><b data-x="who">—</b></div>
-    <label for="core-droits-x-action">Action</label><select id="core-droits-x-action" class="inp code" data-x="action"></select>
+    <label for="core-droits-x-action">Action</label><select id="core-droits-x-action" class="inp mono" data-x="action"></select>
     <label>Sens</label>
     <label class="rline"><input type="radio" name="core-droits-sens" value="allow" checked>Autoriser<span class="rh">override, niveau 2 ou 3</span></label>
     <label class="rline"><input type="radio" name="core-droits-sens" value="deny">Interdire<span class="rh">override, niveau 2 ou 3</span></label>
@@ -169,7 +161,7 @@
 <script data-screen="core-droits">
 ERP.register('core-droits', function (root, ctx) {
   var q = function (s, r) { return (r || root).querySelector(s); }, qa = function (s, r) { return Array.prototype.slice.call((r || root).querySelectorAll(s)); };
-  var VF = 'finance.*.view', CB = ['core.notifications.view', 'core.incidents.view'], clock = 21 * 60 + 30, cur = null, meMode = false, flt = 'tous';
+  var VF = 'finance.*.view', CB = ['core.notifications.view', 'core.incidents.view'], clock = 21 * 60 + 30, cur = null, meMode = false, flt = 'tous', REF = '2026-08-27';
   var U = {
     u1: { n: 'Saliou Doucouré', s: 'S. Doucouré', cat: 'Interne — Employé', st: 'Actif', prof: [{ p: 'Super Admin Mata Group', ent: 'MG', perms: ['core.*', 'finance.*'], scope: 'Mata Group, tout · jamais sa propre demande' }, { p: 'Directeur financier MLC', ent: 'MLC', perms: [], scope: '—', off: 'entité MLC à migrer, profil non activable' }] },
     u2: { n: 'Ousmane Seck', s: 'O. Seck', cat: 'Interne — Employé', st: 'Actif', prof: [{ p: 'DG Mata', ent: 'MG', perms: ['core.entites.view', 'core.utilisateurs.view', 'core.demandes.view', 'core.demandes.valider', 'core.audit.view', 'core.agents.view', 'core.notifications.view', 'core.alertes.view', 'core.incidents.view', VF, 'finance.transferts.initier', 'finance.transferts.valider', 'finance.validations.agir', 'finance.ajustements.valider', 'finance.reconciliation.valider', 'finance.comptes.desactiver', 'finance.export', 'core.export'], scope: 'Mata Group · Finance en lecture, transferts et validations' }] },
@@ -177,13 +169,13 @@ ERP.register('core-droits', function (root, ctx) {
     u4: { n: 'Moussa Diop', s: 'M. Diop', cat: 'Interne — Employé', st: 'Actif', prof: [{ p: 'Gestionnaire de caisse', ent: 'MG', perms: CB.concat(['finance.declarations.view', 'finance.declarations.declarer', 'finance.comptes.view', 'finance.depenses.view', 'finance.depenses.creer', 'finance.reconciliation.view']), scope: 'ses caisses : Caisse générale, Sous-caisse Marché' }] },
     u5: { n: 'Abdou Ndiaye', s: 'A. Ndiaye', cat: 'Interne — Employé', st: 'Actif', prof: [{ p: 'Collecteur', ent: 'MG', perms: CB.concat(['finance.declarations.view', 'finance.declarations.declarer', 'finance.reconciliation.view']), scope: 'collecte et Encaissements collectés, lecture' }] },
     u6: { n: 'Ibrahima Kane', s: 'I. Kane', cat: 'Externe — Investisseur', st: 'Actif', prof: [{ p: 'Investisseur', ent: 'MG', perms: ['core.notifications.view', 'finance.dashboard.view', 'finance.pnl.view', 'finance.historique.view'], scope: 'agrégats P&L et Trésorerie, lecture seule' }] },
-    u7: { n: 'Coumba Mbaye', s: 'C. Mbaye', cat: 'Externe — Comptable · Externe — Accès temporaire (01/09/2026 → 30/09/2026)', st: 'Actif · expire le 30/09/2026', prof: [{ p: 'Comptable externe', ent: 'MG', perms: ['core.notifications.view', 'finance.comptes.view', 'finance.depenses.view', 'finance.fournisseurs.view', 'finance.pnl.view', 'finance.historique.view'], scope: 'périmètre financier autorisé, lecture seule' }] },
-    u8: { n: 'Babacar Fall', s: 'B. Fall', cat: 'Externe — MaaS', st: 'Actif', prof: [{ p: 'Gérant MaaS Keur Massar', ent: 'MAAS-KM', perms: ['core.notifications.view', 'core.demandes.view', 'core.demandes.initier', 'finance.declarations.view', 'finance.declarations.declarer'], scope: 'MaaS Keur Massar : Demandes, versements de son MaaS' }] },
+    u7: { n: 'Coumba Mbaye', s: 'C. Mbaye', cat: 'Externe — Comptable · Externe — Accès temporaire (01/09/2026 → 30/09/2026)', st: 'Actif · expire le 30/09/2026', win: ['2026-09-01', '2026-09-30'], prof: [{ p: 'Comptable externe', ent: 'MG', perms: ['core.notifications.view', 'finance.comptes.view', 'finance.depenses.view', 'finance.fournisseurs.view', 'finance.pnl.view', 'finance.historique.view'], scope: 'périmètre financier autorisé, lecture seule' }] },
+    u8: { n: 'Babacar Fall', s: 'B. Fall', cat: 'Externe — MaaS', st: 'Actif', prof: [{ p: 'Gérant MaaS Keur Massar', ent: 'MAAS-KM', perms: ['core.notifications.view', 'core.demandes.view', 'core.demandes.initier', 'finance.creances.view', 'finance.declarations.view', 'finance.declarations.declarer'], scope: 'MaaS Keur Massar : Demandes, Créances de sa position, versements de son MaaS' }] },
     u9: { n: 'Mamadou Gueye', s: 'M. Gueye', cat: 'Interne — Employé', st: 'Désactivé le 30/06/2026', prof: [{ p: 'Administrateur Mata Finance', ent: 'MG', perms: ['finance.*'], scope: 'droits gelés à la désactivation' }] }
   };
   var EN = { MG: 'Mata Group · Active', MLC: 'MLC · à migrer', MV: 'Mata Volaille · à migrer', KB: 'Keur Bally · à activer', 'MAAS-KM': 'MaaS Keur Massar · à activer', 'MAAS-OU': 'MaaS Ouakam · à activer' };
-  var OBJ = { 'VAL-118': { t: 'Transfert 600 000 BOA → Caisse générale', init: 'F. Sarr', done: [] }, 'VAL-117': { t: 'Ajustement +180 000 Caisse générale', init: 'M. Diop', done: ['O. Seck'] }, 'VAL-116': { t: 'Correction Banque BOA −45 000', init: 'F. Sarr', done: [] }, 'VAL-114': { t: 'Transfert 1 500 000 Caisse générale → Banque BOA', init: 'S. Doucouré', done: [] }, 'DEM-031': { t: 'Création utilisateur « Khady Sow »', init: 'B. Fall', done: [] }, 'DEM-030': { t: 'Prolongation Comptable externe C. Mbaye', init: 'F. Sarr', done: [] } };
-  var OV = [{ lvl: 3, u: 'u8', a: 'finance.creances.view', ent: 'MAAS-KM', sens: 'allow', why: 'Créances : sa position MaaS Keur Massar uniquement', end: '' }];
+  var OBJ = { 'VAL-118': { t: 'Transfert Banque BOA → Caisse générale', m: 600000, init: 'F. Sarr', done: [] }, 'VAL-117': { t: 'Ajustement à la hausse Caisse générale, écart de comptage du 26/08', m: 180000, init: 'M. Diop', done: ['O. Seck'] }, 'VAL-116': { t: 'Correction Banque BOA, frais bancaires non importés', m: -45000, init: 'F. Sarr', done: [] }, 'VAL-115': { t: 'Désactivation Sous-caisse Abattoir', init: 'F. Sarr', done: [] }, 'VAL-114': { t: 'Transfert Caisse générale → Banque BOA (via Relais Dépôt en cours)', m: 1500000, init: 'S. Doucouré', done: [] }, 'DEM-031': { t: 'Création utilisateur « Khady Sow »', init: 'B. Fall', done: [] }, 'DEM-030': { t: 'Prolongation Comptable externe C. Mbaye', init: 'F. Sarr', done: [] } };
+  var OV = [{ lvl: 3, u: 'u8', a: 'finance.creances.view', ent: 'MAAS-KM', sens: 'allow', why: 'restriction de périmètre : sa position MaaS Keur Massar uniquement (FIXTURES §2)', end: '' }];
   var VIEWS = 'dashboard comptes depenses fournisseurs creances reconciliation declarations transferts validations pnl charges visualisation historique stock import'.split(' ').map(function (x) { return 'finance.' + x + '.view'; }).concat('entites utilisateurs profils droits demandes audit agents notifications alertes import parametres incidents'.split(' ').map(function (x) { return 'core.' + x + '.view'; }));
   var ACTS = 'finance.comptes.creer finance.comptes.desactiver finance.comptes.corriger finance.depenses.creer finance.depenses.modifier finance.fournisseurs.payer finance.creances.accorder finance.creances.facturer finance.declarations.declarer finance.reconciliation.valider finance.transferts.initier finance.transferts.valider finance.ajustements.initier finance.ajustements.valider finance.validations.agir finance.charges.modifier finance.historique.snapshot finance.import.executer finance.export core.entites.activer core.utilisateurs.creer core.utilisateurs.modifier core.profils.attribuer core.droits.override core.demandes.initier core.demandes.valider core.audit.exporter core.agents.budget core.agents.override core.alertes.modifier core.import.executer core.parametres.modifier core.incidents.gerer core.export'.split(' ');
   var SC = { a: ['u3', 0, 'finance.depenses.creer', 'MG', ''], b: ['u7', 0, 'finance.export', 'MG', ''], c: ['u6', 0, 'finance.comptes.view', 'MG', ''], d: ['u1', 0, 'finance.transferts.valider', 'MG', 'VAL-114'], e: ['u8', 0, 'finance.creances.view', 'MAAS-KM', ''], f: ['u9', 0, 'finance.depenses.creer', 'MG', ''], g: ['u1', 1, 'finance.comptes.view', 'MLC', ''] };
@@ -197,6 +189,8 @@ ERP.register('core-droits', function (root, ctx) {
   function enN(e) { return EN[e].split(' · ')[0]; }
   function now() { var m = clock++; return '27/08 · ' + ('0' + Math.floor(m / 60)).slice(-2) + ':' + ('0' + m % 60).slice(-2); }
   function fmtD(iso) { return iso ? iso.split('-').reverse().join('/') : ''; }
+  function inWin(uid) { var w = U[uid].win; return !w || (REF >= w[0] && REF <= w[1]); }
+  function winTxt(uid) { var w = U[uid].win; return 'accès temporaire ' + fmtD(w[0]) + ' → ' + fmtD(w[1]); }
   function ovTxt(x, lbl) { return lbl + ' « ' + (x.sens === 'allow' ? 'autoriser' : 'interdire') + ' » : ' + x.why + (x.end ? ' · jusqu’au ' + fmtD(x.end) : ' · sans date de fin') + (x.by ? ' · enregistrée par ' + x.by : ''); }
   function resolve(uid, pi, a, ent, oid) {
     var u = U[uid], p = u.prof[pi], o = OBJ[oid] && (oid.indexOf('DEM-') === 0) === (a.indexOf('core.') === 0) ? OBJ[oid] : null, L = [], dec = null, isVal = /\.(valider|agir)$/.test(a), isView = /\.view$/.test(a), isExp = /\.export$/.test(a), ext = u.cat.indexOf('Externe') === 0, sens = sensOf(a), c = u.cat.split(' · ')[0];
@@ -204,25 +198,27 @@ ERP.register('core-droits', function (root, ctx) {
     function add(n, v, t) { var after = !!dec; if (after) t = (n === 'Refus par défaut' ? 'Non atteint : la chaîne s’est arrêtée au niveau ' + dec.i + ' (' + dec.n + ')' : 'Non déterminant (décision au niveau ' + dec.i + ') · ' + t); L.push({ n: n, c: after || !v ? 'skip' : 'hit ' + v, t: t, r: after ? 'Sans effet' : (v ? (v === 'allow' ? 'Autorisé' : 'Refusé') : 'Passe') }); if (!after && v) dec = { i: L.length, n: n, ok: v === 'allow', t: t }; }
     var b = OV.filter(function (x) { return x.lvl === 1 && x.u === uid && x.a === a && (!x.ent || x.ent === ent); })[0], d1 = null, t1;
     if (u.st.indexOf('Désactivé') === 0) { d1 = 'deny'; t1 = 'Compte ' + u.st.toLowerCase() + ' : interdiction explicite de sécurité, compte jamais supprimé (§3.1) · le cache de session est invalidé immédiatement (Technique §7)'; }
+    else if (!inWin(uid)) { d1 = 'deny'; t1 = winTxt(uid).replace(/^a/, 'A') + (REF < u.win[0] ? ' non commencé' : ' expiré') + ' au ' + fmtD(REF) + ' : refus · un accès temporaire possède une date de début et de fin et expire automatiquement (§3.2)'; }
     else if (o && isVal && o.init === u.s) { d1 = 'deny'; t1 = 'Séparation des responsabilités : ' + u.s + ' est l’initiateur de ' + oid + ' (' + o.t + ') et ne valide jamais sa propre opération · le Super Admin ne contourne pas cette règle (§4.2, §10.2)'; }
     else if (o && isVal && o.done.indexOf(u.s) >= 0) { d1 = 'deny'; t1 = 'Double validation : ' + u.s + ' a déjà donné la 1re validation de ' + oid + ' (' + o.t + ') · les deux validateurs sont distincts entre eux (§4.2)'; }
     else if (b) { d1 = 'deny'; t1 = 'Interdiction explicite de sécurité enregistrée : ' + b.why + (b.end ? ' · jusqu’au ' + fmtD(b.end) : '') + ' · enregistrée par ' + b.by + ' · cache invalidé immédiatement (Technique §7)'; }
-    else t1 = 'Aucune interdiction explicite pour ' + u.s + ' sur ' + a + (o ? ' · ' + oid + ' : ' + u.s + ' n’en est ni l’initiateur ni un validateur' : '');
+    else t1 = 'Aucune interdiction explicite pour ' + u.s + ' sur ' + a + (o ? ' · ' + oid + ' : ' + u.s + ' n’en est ni l’initiateur ni un validateur' : '') + (u.win ? ' · ' + winTxt(uid) + ' en cours' : '');
     add('Interdiction explicite', d1, t1);
     var x2 = OV.filter(function (x) { return x.lvl === 2 && x.u === uid && x.a === a; })[0];
     add('Override utilisateur', x2 ? x2.sens : null, x2 ? ovTxt(x2, 'Exception utilisateur') : 'Aucune exception propre à ' + u.s + ' sur ' + a + (uid === 'u3' && a === 'finance.export' ? ' · DEM-028 « permission temporaire Exporter dépenses » refusée par O. Seck le 24/08 : aucune exception créée (§4.1)' : ''));
     var x3 = OV.filter(function (x) { return x.lvl === 3 && x.u === uid && x.a === a && x.ent === ent; })[0];
     add('Override contexte', x3 ? x3.sens : null, x3 ? ovTxt(x3, 'Exception de périmètre ' + enN(ent)) : 'Aucune exception liée au périmètre ' + enN(ent) + ' (entité, MaaS, module) pour ' + u.s + ' sur ' + a);
-    add('Permission rôle', has && entOk ? 'allow' : null, p.off ? 'Profil « ' + p.p + ' » : ' + p.off + ' · aucune permission de rôle évaluable' : (has ? (entOk ? a + ' est accordée par le rôle « ' + p.p + ' » · périmètre : ' + p.scope + (sens === 'hs' ? ' · Hautement sensible : consultation elle-même auditée (§5.3)' : '') : 'Permission présente dans le rôle « ' + p.p + ' » pour ' + enN(p.ent) + ', sans effet sur ' + enN(ent) + ' : pas d’héritage automatique vers les sous-entités (§3.4)') : a + ' est absente des permissions du rôle « ' + p.p + ' »' + (isExp ? ' · Consulter et Exporter sont deux permissions différentes (§3.4)' : '') + (u.prof.length > 1 ? ' · les droits des autres profils ne sont jamais additionnés (§3.3)' : '')));
+    add('Permission rôle', has && entOk ? 'allow' : null, p.off ? 'Profil « ' + p.p + ' » : ' + p.off + ' · aucune permission de rôle évaluable' : (has ? (entOk ? a + ' est accordée par le rôle « ' + p.p + ' » · périmètre : ' + p.scope + (u.win ? ' · ' + winTxt(uid) + ', expire automatiquement (§3.2)' : '') + (sens === 'hs' ? ' · Hautement sensible : consultation elle-même auditée (§5.3)' : '') : 'Permission présente dans le rôle « ' + p.p + ' » pour ' + enN(p.ent) + ', sans effet sur ' + enN(ent) + ' : pas d’héritage automatique vers les sous-entités (§3.4)') : a + ' est absente des permissions du rôle « ' + p.p + ' »' + (isExp ? ' · Consulter et Exporter sont deux permissions différentes (§3.4)' : '') + (u.prof.length > 1 ? ' · les droits des autres profils ne sont jamais additionnés implicitement (§3.3)' : '')));
     var d5 = null, t5;
     if (!ext) t5 = 'Catégorie Interne — Employé : aucune règle de catégorie ne restreint ni n’accorde ' + a;
     else if (isExp) { d5 = 'deny'; t5 = c + ' : export interdit aux Externes · Sensible : export contrôlé ; Hautement sensible : export éventuellement interdit (§5.3) · Exporter est distinct de Consulter (§3.4)'; }
-    else if (!isView) { d5 = 'deny'; t5 = c === 'Externe — Investisseur' ? 'Investisseur limité à la lecture (§3.2)' : c + ' : aucune écriture hors permissions de rôle explicites · certaines informations interdites à tous les Externes (§3.2)'; }
-    else if (sens === 'hs' || c === 'Externe — Investisseur') { d5 = 'deny'; t5 = (c === 'Externe — Investisseur' ? 'Investisseur limité à la lecture des agrégats (§3.2) · ' : '') + (sens === 'hs' ? 'Hautement sensible : restrictions pour Externes (§5.3) · ' : '') + 'certaines informations interdites à tous les Externes (§3.2)'; }
+    else if (!isView && c === 'Externe — Investisseur') { d5 = 'deny'; t5 = 'Investisseur limité à la lecture (§3.2)'; }
+    else if (!isView && c === 'Externe — Comptable') { d5 = 'deny'; t5 = 'Comptable externe limité au périmètre financier autorisé (§3.2)'; }
+    else if (isView && (sens === 'hs' || c === 'Externe — Investisseur')) { d5 = 'deny'; t5 = (c === 'Externe — Investisseur' ? 'Investisseur limité à la lecture (§3.2) · agrégats P&L et Trésorerie (FIXTURES §2) · ' : '') + (sens === 'hs' ? 'Hautement sensible : restrictions possibles pour Externes et agents IA (§5.3) · ' : '') + 'certaines informations interdites à tous les Externes (§3.2)'; }
     else if (c === 'Externe — MaaS' && !entOk) { d5 = 'deny'; t5 = 'Gérant MaaS limité à son périmètre MaaS Keur Massar : ' + enN(ent) + ' n’en fait pas partie (§3.2, §3.4)'; }
-    else t5 = c + ' : aucune règle de catégorie n’accorde ' + a + ' hors du périmètre financier autorisé (§3.2)';
+    else t5 = c + ' : aucune règle de catégorie n’accorde ni ne restreint ' + a + ' (§3.2)';
     add('Règle catégorie', d5, t5);
-    add('Règle globale', !entActive || !entOk ? 'deny' : null, !entActive ? EN[ent] + ' : toute requête sans contexte d’entité actif est refusée par défaut · scoping central par entity_id (Technique §3)' : (!entOk ? 'Le profil « ' + p.p + ' » agit sur ' + enN(p.ent) + ' · pas d’héritage automatique vers toutes les sous-entités (§3.4) · scoping central par entity_id (Technique §3)' : 'Règles globales sans effet : Consulter ≠ Exporter (§3.4) · droits jamais additionnés entre profils (§3.3) · scoping central par entity_id (Technique §3)'));
+    add('Règle globale', !entActive || !entOk ? 'deny' : null, !entActive ? EN[ent] + ' : toute requête sans contexte d’entité actif est refusée par défaut · scoping central par entity_id (Technique §3)' : (!entOk ? 'Le profil « ' + p.p + ' » agit sur ' + enN(p.ent) + ' · pas d’héritage automatique vers toutes les sous-entités (§3.4) · scoping central par entity_id (Technique §3)' : 'Règles globales sans effet : Consulter ≠ Exporter (§3.4) · droits jamais additionnés implicitement entre profils (§3.3) · scoping central par entity_id (Technique §3)'));
     add('Refus par défaut', 'deny', 'Toute action non explicitement autorisée est refusée (§10.2) · aucun niveau précédent n’a accordé ' + a);
     return { L: L, d: dec, u: u, p: p, o: o, sens: sens };
   }
@@ -230,17 +226,20 @@ ERP.register('core-droits', function (root, ctx) {
   function readQ() { return [q('[data-q="user"]').value, +q('[data-q="profil"]').value, q('[data-q="action"]').value, q('[data-q="entite"]').value, q('[data-q="objet"]').value]; }
   function setQ(s) { q('[data-q="user"]').value = s[0]; fillProf(s[0]); q('[data-q="profil"]').value = s[1]; q('[data-q="action"]').value = s[2]; q('[data-q="entite"]').value = s[3]; q('[data-q="objet"]').value = s[4]; }
   function run() {
-    var s = readQ(), R = resolve(s[0], s[1], s[2], s[3], s[4]), d = R.d, t = now(), uid = s[0]; cur = s;
-    q('[data-r="verdict"]').className = 'verdict ' + (d.ok ? 'allow' : 'deny');
-    q('[data-r="verdict"]').innerHTML = '<span class="st ' + (d.ok ? 'ok' : 'bad') + '"><svg><use href="#i-' + (d.ok ? 'check' : 'x') + '"/></svg>' + (d.ok ? 'Autorisé' : 'Refusé') + '</span><div><b class="big">' + esc(R.u.s) + ' · ' + esc(s[2]) + ' · ' + esc(enN(s[3])) + (s[4] ? ' · ' + s[4] : '') + '</b>décidé au niveau ' + d.i + ' · <b>' + d.n + '</b> · ' + esc(d.t) + '</div>';
+    var s = readQ(), R = resolve(s[0], s[1], s[2], s[3], s[4]), d = R.d, t = now(), uid = s[0], vd = q('[data-r="verdict"]'), am = q('[data-k-amt]'); cur = s;
+    vd.className = d.ok ? 'note-strip' : 'deny-note';
+    vd.innerHTML = '<svg><use href="#i-' + (d.ok ? 'check' : 'lock') + '"/></svg><span><b>' + (d.ok ? 'Autorisé' : 'Refusé') + '</b> · ' + esc(R.u.s) + ' · ' + esc(s[2]) + ' · ' + esc(enN(s[3])) + (s[4] ? ' · ' + s[4] : '') + ' · décidé au niveau ' + d.i + ' (' + d.n + ') : ' + esc(d.t) + '</span>';
     q('[data-r="chain"]').innerHTML = R.L.map(function (l) { return '<li class="' + l.c + '"><div><b>' + l.n + '</b><small>' + esc(l.t) + '</small></div><span class="res">' + l.r + '</span></li>'; }).join('');
     q('[data-r="sub"]').textContent = 'recalcul complet ' + t + ' · sans cache'; q('[data-stat="last"]').textContent = t;
     q('[data-r="ui"]').textContent = d.ok ? 'Dans l’interface, l’action est disponible sous le profil « ' + R.p.p + ' », dans le périmètre ' + R.p.scope + ' ; toute écriture reste soumise à sa validation et auditée (§4.2, §5.4).' : 'Dans l’interface, l’action reste visible et désactivée avec cette explication ; elle n’est jamais masquée sans motif (§10.2, refus par défaut).';
-    var K = { user: R.u.n + ' (' + uid + ')', cat: R.u.cat, prof: R.p.p + ' · ' + enN(R.p.ent), st: R.u.st, ent: EN[s[3]], act: s[2], sens: { hs: 'Hautement sensible', s: 'Sensible', std: 'Standard' }[R.sens], val: valOf(s[2]), obj: R.o ? s[4] + ' · ' + R.o.t + ' · initiateur ' + R.o.init + (R.o.done.length ? ' · 1re validation ' + R.o.done.join(', ') : '') : (s[4] ? s[4] + ' · sans incidence sur ' + s[2] : 'aucun'), role: '« ' + R.p.p + ' » · ' + (R.p.off ? 'non activable' : R.p.perms.length + ' permission(s) ou motif(s)'), ovs: 'lus à l’instant · ' + OV.filter(function (x) { return x.lvl === 2; }).length + ' / ' + OV.filter(function (x) { return x.lvl === 3; }).length };
+    var der = Object.keys(OBJ).reduce(function (n, k) { return n + 1 + OBJ[k].done.length; }, 0) + Object.keys(U).filter(function (k) { return U[k].st.indexOf('Désactivé') === 0 || !inWin(k); }).length, rec = OV.filter(function (x) { return x.lvl === 1; }).length, n2 = OV.filter(function (x) { return x.lvl === 2; }).length, n3 = OV.filter(function (x) { return x.lvl === 3; }).length;
+    var K = { user: R.u.n + ' (' + uid + ')', cat: R.u.cat, prof: R.p.p + ' · ' + enN(R.p.ent), st: R.u.st, ent: EN[s[3]], act: s[2], sens: { hs: 'Hautement sensible', s: 'Sensible', std: 'Standard' }[R.sens], val: valOf(s[2]), obj: R.o ? s[4] + ' · ' + R.o.t + ' · initiateur ' + R.o.init + (R.o.done.length ? ' · 1re validation ' + R.o.done.join(', ') : '') : (s[4] ? s[4] + ' · sans incidence sur ' + s[2] : 'aucun'), role: '« ' + R.p.p + ' » · ' + (R.p.off ? 'non activable' : R.p.perms.length + ' permission(s) ou motif(s)'), ovs: 'lus à l’instant · ' + n2 + ' / ' + n3, bans: 'table lue à l’instant · ' + der + ' dérivées (initiateur ou validateur déjà intervenu d’un objet ouvert, compte désactivé, accès temporaire hors fenêtre) · ' + rec + ' enregistrée' + (rec > 1 ? 's' : '') };
     Object.keys(K).forEach(function (k) { q('[data-k="' + k + '"]').textContent = K[k]; });
+    am.hidden = !(R.o && R.o.m); if (!am.hidden) { am.setAttribute('data-amt', R.o.m); ctx.formatAmounts(am.parentNode); }
+    q('[data-fxc="exc"]').setAttribute('data-c', 'Override contexte ' + n3 + ' · Overrides utilisateur ' + n2 + ' · Interdictions explicites : ' + rec + ' enregistrée(s), ' + der + ' dérivées par le moteur, dont ' + (3 + rec) + ' listées dans le tableau (S. Doucouré sur VAL-114, O. Seck sur VAL-117, M. Gueye désactivé) · Accès temporaire 1 (C. Mbaye, 01/09 → 30/09, non commencé au 27/08)');
     var mine = OV.filter(function (x) { return x.u === uid && x.by; }).map(function (x) { return x.by + ', sous le profil ' + x.byP + ', a enregistré l’exception « ' + (x.sens === 'allow' ? 'autoriser' : 'interdire') + ' ' + x.a + ' » pour ' + R.u.s + ' le ' + x.at + '.'; });
     q('[data-k="audit"]').textContent = (uid === 'u7' ? 'S. Doucouré, sous le profil Super Admin, a attribué le profil Comptable externe à C. Mbaye le 27/08 à 11:20 (accès temporaire 01/09 → 30/09).' : 'Attribution du profil « ' + R.p.p + ' » à ' + R.u.s + ' antérieure au journal du 27/08 · retrouvable dans l’Audit central (permissions conservées 10 ans, §5.4).') + (mine.length ? ' ' + mine.join(' ') : '');
-    q('[data-s="rows"]').innerHTML = KEY.map(function (a) { var r = resolve(uid, s[1], a, s[3], s[4]).d; return '<tr><td class="code">' + a + '</td><td><span class="st ' + (r.ok ? 'ok' : 'bad') + '"><svg><use href="#i-' + (r.ok ? 'check' : 'x') + '"/></svg>' + (r.ok ? 'Autorisé' : 'Refusé') + '</span></td><td><b>' + r.i + '</b> · ' + r.n + '</td><td class="hint" title="' + esc(r.t) + '">' + esc(r.t.length > 96 ? r.t.slice(0, 95) + '…' : r.t) + '</td></tr>'; }).join('');
+    q('[data-s="rows"]').innerHTML = KEY.map(function (a) { var r = resolve(uid, s[1], a, s[3], s[4]).d; return '<tr><td>' + a + '</td><td><span class="st ' + (r.ok ? 'ok' : 'bad') + '"><svg><use href="#i-' + (r.ok ? 'check' : 'x') + '"/></svg>' + (r.ok ? 'Autorisé' : 'Refusé') + '</span></td><td><b>' + r.i + '</b> · ' + r.n + '</td><td class="hint" title="' + esc(r.t) + '">' + esc(r.t.length > 96 ? r.t.slice(0, 95) + '…' : r.t) + '</td></tr>'; }).join('');
     q('[data-s="sub"]').textContent = KEY.length + ' actions clés · ' + R.p.p + ' · ' + enN(s[3]) + (s[4] ? ' · objet ' + s[4] : '');
     q('[data-x="who"]').textContent = R.u.n + ' · ' + R.p.p; ctx.filterRows(q('[data-x="rows"]'), 'user', flt === 'tous' ? 'tous' : uid);
   }
@@ -249,7 +248,7 @@ ERP.register('core-droits', function (root, ctx) {
     if (!why) { ctx.toast('Le motif est obligatoire : l’exception est auditée (§5.4)'); q('[data-x="why"]').focus(); return; }
     var x = { lvl: lvl, u: cur[0], a: a, ent: ent, sens: sens === 'ban' ? 'deny' : sens, why: why, end: end, by: ctx.profile.short, byP: ctx.profile.profile, at: now() }; OV.push(x);
     var lb = ['', 'Interdiction explicite', 'Override utilisateur', 'Override contexte'][lvl], tr = document.createElement('tr'); tr.setAttribute('data-user', x.u); tr.setAttribute('data-qs', [x.u, cur[1], a, ent || cur[3], ''].join('|'));
-    tr.innerHTML = '<td><span class="st ' + (lvl === 1 ? 'bad' : 'info') + '">' + lb + '</span></td><td><b>' + esc(u.s) + '</b><div class="hint">' + esc(u.prof[cur[1]].p) + '</div></td><td class="code">' + a + '</td><td>' + (ent ? enN(ent) : 'Toutes ses entités') + '</td><td><span class="st ' + (x.sens === 'allow' ? 'ok' : 'bad') + '"><svg><use href="#i-' + (x.sens === 'allow' ? 'check' : 'x') + '"/></svg>' + (x.sens === 'allow' ? 'Autoriser' : 'Interdire') + '</span></td><td>' + esc(why) + ' · par ' + esc(x.by) + ' (' + esc(x.byP) + '), ' + x.at + '</td><td>' + (end ? 'Jusqu’au ' + fmtD(end) + ' · expire automatiquement' : 'Sans date de fin') + '</td><td><button class="btn ghost sm" data-explain><svg><use href="#i-eye"/></svg>Expliquer</button></td>';
+    tr.innerHTML = '<td><span class="st ' + (lvl === 1 ? 'bad' : 'mut') + '">' + lb + '</span></td><td><b>' + esc(u.s) + '</b><div class="hint">' + esc(u.prof[cur[1]].p) + '</div></td><td>' + a + '</td><td>' + (ent ? enN(ent) : 'Toutes ses entités') + '</td><td><span class="st ' + (x.sens === 'allow' ? 'ok' : 'bad') + '"><svg><use href="#i-' + (x.sens === 'allow' ? 'check' : 'x') + '"/></svg>' + (x.sens === 'allow' ? 'Autoriser' : 'Interdire') + '</span></td><td>' + esc(why) + ' · par ' + esc(x.by) + ' (' + esc(x.byP) + '), ' + x.at + '</td><td>' + (end ? 'Jusqu’au ' + fmtD(end) + ' · expire automatiquement' : 'Sans date de fin') + '</td><td><button class="btn ghost sm" data-explain><svg><use href="#i-eye"/></svg>Expliquer</button></td>';
     q('[data-x="rows"]').appendChild(tr); q('[data-stat="exc"]').textContent = qa('tr[data-user]', q('[data-x="rows"]')).length;
     q('[data-x="why"]').value = ''; q('[data-x="end"]').value = ''; ctx.close('core-droits-exception'); ctx.applyPerms();
     ctx.toast(lb + ' enregistrée pour ' + u.s + ' sous le profil ' + ctx.profile.profile + ' · auditée · cache de session ' + (lvl === 1 ? 'invalidé immédiatement' : 'invalidé à la prochaine lecture') + ' (Technique §7)'); run();
