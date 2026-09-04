@@ -21,6 +21,7 @@
       <p class="scr-sub">Configuration par entité — Mata Group · nom, montant mensuel, date d’effet, date de fin éventuelle, catégorie de rattachement et statut actif/inactif (§8.4) · alimente CF, charges fixes complémentaires estimées non encore comptabilisées en dépenses, du P&amp;L Global (§8.3) · prorata en jours calendaires, dimanche inclus · calcul au 27/08/2026.</p>
     </div>
     <div class="scr-meta">
+      <button class="linkish" data-open="help-fin-charges"><svg><use href="#i-info"/></svg>Comment ça marche ?</button>
       <span class="sens s"><svg><use href="#i-shield"/></svg>Sensible</span>
       <span class="hint">Modification selon la permission finance.charges.modifier, sans second validateur exigé par le cahier · configuration sensible : historisée, datée, auditée (Core §5.3, §6.4) · l’original n’est jamais écrasé (Core §5.5) · Exporter distinct de Consulter</span>
     </div>
@@ -119,6 +120,21 @@
     <div class="eq" data-m-preview>Au 27/08/2026 : <b>—</b> jours calendaires applicables · Charge théorique proratisée <b>—</b> · date d’effet manquante</div>
     <div class="note-strip" style="margin-top:12px"><svg><use href="#i-alert"/></svg><span>Une date d’effet antérieure au 27/08/2026 modifie le CF recalculé des journées déjà clôturées ; les snapshots restent immuables et se comparent dans Historique (§8.6).</span></div>
     <div class="acts"><button class="btn ghost" data-close>Annuler</button><button class="btn pri" data-perm="finance.charges.modifier" data-submit><svg><use href="#i-check"/></svg>Enregistrer</button></div>
+  </div></div>
+
+  <div class="mback" data-ov="help-fin-charges"><div class="modal wide" role="dialog" aria-modal="true" aria-label="Comment ça marche : Charges fixes">
+    <h3><svg><use href="#i-info"/></svg>Comment ça marche : Charges fixes</h3>
+    <div class="exp">Cet écran configure, par entité, les charges fixes mensuelles de Mata Group (salaires, loyer, gardiennage…) et calcule la part encore due sur la période en cours. Il est utilisé par la Direction financière et les profils habilités à le modifier ; les autres profils le consultent en lecture seule.</div>
+    <ul class="help-list">
+      <li><b>Charge théorique proratisée</b> — chaque charge active compte au prorata des jours du mois écoulés : au 27 août (27 jours sur 31, dimanche inclus), les <span class="amt" data-amt="21700000" data-nocur></span> FCFA de charges actives donnent <span class="amt" data-amt="18900000" data-nocur></span> FCFA de charge théorique (§8.4).</li>
+      <li><b>Charge fixe complémentaire (CF)</b> — c'est la part de la charge théorique qui n'est pas encore passée en dépense : max(0 ; <span class="amt" data-amt="18900000" data-nocur></span> − <span class="amt" data-amt="12000000" data-nocur></span>) = <span class="amt" data-amt="6900000" data-nocur></span> FCFA, le montant injecté dans le P&amp;L Global (§8.4).</li>
+      <li><b>Statut Inactif et date de fin</b> — une charge inactive ou dont la date de fin est dépassée sort du calcul, sans être supprimée : Assurance flotte (<span class="amt" data-amt="350000" data-nocur></span> FCFA, fin 30/06/2026) affiche 0 jour sur 31 et « Exclue du prorata » (§8.4).</li>
+      <li><b>Charge déjà comptabilisée</b> — le moteur retrouve, dans les Dépenses par date métier, ce qui est déjà enregistré depuis le 1er août sous la catégorie de chaque charge active (Personnel, Locaux, Services) : <span class="amt" data-amt="12000000" data-nocur></span> FCFA, à déduire pour ne jamais compter deux fois la même charge — règle d'appariement encore à confirmer par le panel (§8.4).</li>
+      <li><b>Versions datées, jamais écrasées</b> — chaque enregistrement crée une nouvelle version : la Version 2 est en vigueur depuis le 01/07/2026, la Version 1 (configuration initiale) reste consultable depuis le 01/01/2025 (§6.4).</li>
+    </ul>
+    <div class="note-strip"><svg><use href="#i-shield"/></svg>Modifier une charge fixe ne demande qu'un seul validateur : la permission finance.charges.modifier suffit, sans second acteur. Sans elle, l'écran reste consultable mais les boutons Ajouter et Modifier sont désactivés avec leur motif — refus par défaut.</div>
+    <div class="hint">Sources : Cahier Mata Finance §8.4 · Core §6.4 · FIXTURES §5</div>
+    <div class="acts"><button class="btn ghost" data-close>Fermer</button></div>
   </div></div>
 </section>
 <script data-screen="fin-charges">

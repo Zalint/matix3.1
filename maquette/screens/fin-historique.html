@@ -28,6 +28,7 @@
       <p class="scr-sub">Snapshots financiers de Mata Group · à la clôture, un snapshot immuable et unique par date et entité fige les principaux P&amp;L/KPI tels qu’ils étaient connus (§8.6) · agrégats seulement : trois variantes du P&amp;L, KPI de trésorerie, quelques totaux — jamais le détail des mouvements ni des soldes par compte, qui reste accessible via l’historique horodaté (Architecture §13) · même moteur financier que le Tableau de bord et les agents IA (§9, Core §7.1).</p>
     </div>
     <div class="scr-meta">
+      <button class="linkish" data-open="help-fin-historique"><svg><use href="#i-info"/></svg>Comment ça marche ?</button>
       <span class="sens s"><svg><use href="#i-shield"/></svg>Sensible</span>
       <span class="hint">Aucune validation ici : un snapshot ne crée aucune écriture financière · snapshot manuel sur permission dédiée, motif obligatoire, audit de modification · une correction post-clôture suit le workflow d’approbation du Super Admin, par contrepassation tracée (§3.1, Core §5.5)</span>
     </div>
@@ -168,6 +169,22 @@
       <div class="row">Créances clients<span class="amt" data-amt="20075000" data-nocur></span></div>
     </div>
     <div class="acts"><button class="btn ghost" data-close>Annuler</button><button class="btn pri" data-perm="finance.historique.snapshot" data-snap-create><svg><use href="#i-lock"/></svg>Figer le snapshot</button></div>
+  </div></div>
+
+  <!-- MODALE : AIDE CONTEXTUELLE -->
+  <div class="mback" data-ov="help-fin-historique"><div class="modal wide" role="dialog" aria-modal="true" aria-label="Comment ça marche : Historique">
+    <h3><svg><use href="#i-info"/></svg>Comment ça marche : Historique</h3>
+    <div class="exp">Cet écran regroupe les snapshots figés à chaque clôture de Mata Group et les compare à la situation recalculée aujourd’hui. Direction et contrôle financier s’en servent pour retracer l’historique sans toucher aux écritures ; les profils externes (investisseur, comptable) le consultent en lecture seule.</div>
+    <ul class="help-list">
+      <li><b>Immuable et unique par date</b> — un snapshot est figé pour toujours et il ne peut y en avoir qu’un par date et entité : celui du 26/08/2026 22:14 fixe le P&amp;L Global à <span class="amt" data-amt="25105000" data-nocur></span> FCFA. Une fois le snapshot manuel du jour créé, retenter « Snapshot manuel » le même 27/08/2026 est bloqué avec le motif « Unicité par date et entité » (§8.6).</li>
+      <li><b>Agrégats seulement, jamais le détail</b> — le snapshot garde les 3 variantes du P&amp;L et les KPI de trésorerie, comme la Trésorerie totale contrôlée figée à <span class="amt" data-amt="60790000" data-nocur></span> FCFA, mais jamais le détail des mouvements ni les soldes par compte : ceux-ci restent dans l’historique horodaté (Architecture §13).</li>
+      <li><b>Une correction ne réécrit jamais le figé</b> — le snapshot du 26/08 reste à <span class="amt" data-amt="60790000" data-nocur></span> FCFA même après l’ajustement VAL-117 ; la situation recalculée passe à <span class="amt" data-amt="60970000" data-nocur></span> FCFA et l’écart de +<span class="amt" data-amt="180000" data-nocur></span> FCFA s’affiche dans Comparer, sans toucher au snapshot original (§8.6).</li>
+      <li><b>Deux validations distinctes, aucun bypass</b> — la correction VAL-117 a reçu sa première validation d’O. Seck le 27/08 à 19:02 ; seule une approbation du Super Admin peut apporter la seconde, même lui ne peut pas valider ses propres opérations (Core §5.5).</li>
+      <li><b>Snapshot manuel : motif obligatoire, aucune validation</b> — il ne crée aucune écriture financière, donc pas de validation à obtenir, seulement un motif audité : celui du 24/08/2026 18:30, « avant correction du transfert 24/08 », fige un P&amp;L Global de <span class="amt" data-amt="23900000" data-nocur></span> FCFA (§8.6).</li>
+    </ul>
+    <div class="note-strip"><svg><use href="#i-lock"/></svg><span><b>Refus par défaut.</b> Un profil externe (investisseur, comptable) consulte les snapshots et leur comparaison, mais le snapshot manuel et la correction post-clôture restent hors de portée sans autorisation explicite.</span></div>
+    <div class="hint">Sources : Cahier Mata Finance §8.6 · Core §5.5 · Architecture §13</div>
+    <div class="acts"><button class="btn ghost" data-close>Fermer</button></div>
   </div></div>
 </section>
 <script data-screen="fin-historique">

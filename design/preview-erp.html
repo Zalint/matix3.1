@@ -2990,6 +2990,7 @@ ERP.register('fin-declarations', function (root, ctx) {
       <p class="scr-sub">Mouvements internes manuels ne relevant d'aucun workflow métier : entre deux comptes de Trésorerie, entre un compte de Trésorerie et une Position externe, ou entre deux Positions externes, sous réserve de compatibilité (§7.1) · initié par un utilisateur autorisé puis validé par un second utilisateur habilité, distinct de l'initiateur (§7.2)</p>
     </div>
     <div class="scr-meta">
+      <button class="linkish" data-open="help-fin-transferts"><svg><use href="#i-info"/></svg>Comment ça marche ?</button>
       <span class="sens hs"><svg><use href="#i-shield"/></svg>Hautement sensible</span>
       <span class="hint">Validation simple : un validateur distinct de l'initiateur (§10.1) · pas d'auto-validation, y compris pour le Super Admin (§7.2) · consultation auditée (§10.2)</span>
     </div>
@@ -3191,6 +3192,22 @@ ERP.register('fin-declarations', function (root, ctx) {
     <label for="fin-transferts-cp-motif">Motif de la contrepassation</label>
     <input id="fin-transferts-cp-motif" data-c="motif" placeholder="Motif obligatoire, lié à l'opération originale dans l'Audit">
     <div class="acts"><button class="btn ghost" data-close>Annuler</button><button class="btn pri" data-perm="finance.transferts.initier" data-c="confirm"><svg><use href="#i-swap"/></svg>Déclencher la contrepassation</button></div>
+  </div></div>
+
+  <!-- Modale d'aide contextuelle -->
+  <div class="mback" data-ov="help-fin-transferts"><div class="modal wide" role="dialog" aria-modal="true" aria-label="Comment ça marche : Transferts">
+    <h3><svg><use href="#i-info"/></svg>Comment ça marche : Transferts</h3>
+    <div class="exp">Écran de déclenchement et de validation des transferts manuels entre comptes de Trésorerie et Positions externes de Mata Group. Un utilisateur habilité initie le transfert, un second utilisateur habilité et distinct le valide.</div>
+    <ul class="help-list">
+      <li><b>Ce qu'on transfère ici</b> — uniquement les mouvements entre comptes de Trésorerie ou Position externe, comme les <span class="amt" data-amt="600000" data-nocur></span> FCFA Banque BOA → Caisse générale (VAL-118) ; fournisseurs, créances, Relais et Ajustements suivent leurs propres workflows (§7.1).</li>
+      <li><b>Rien ne bouge avant validation</b> — les <span class="amt" data-amt="2100000" data-nocur></span> FCFA « En attente de validation » n'ont modifié aucun solde : débit et crédit ne sont créés qu'à la validation par un second utilisateur (§7.2).</li>
+      <li><b>Le Relais pour une destination pas encore confirmée</b> — une fois validé, le transfert de <span class="amt" data-amt="1500000" data-nocur></span> FCFA Caisse générale → Banque BOA sera crédité au Relais « Dépôt en cours », qui détient déjà <span class="amt" data-amt="2500000" data-nocur></span> FCFA en attente de confirmation sur le relevé bancaire ; les deux Relais actifs totalisent <span class="amt" data-amt="2850000" data-nocur></span> FCFA de trésorerie en transit (§4.6).</li>
+      <li><b>L'initiateur ne valide jamais sa propre demande</b> — sur la ligne VAL-114 (<span class="amt" data-amt="1500000" data-nocur></span> FCFA), Valider reste désactivé pour S. Doucouré, qui a lui-même déclenché ce transfert, même en tant que Super Admin (§7.2).</li>
+      <li><b>Corriger un transfert déjà validé</b> — le transfert de <span class="amt" data-amt="3000000" data-nocur></span> FCFA Caisse générale → Banque BOA du 26/08 ne se modifie pas : « Contrepasser » crée un transfert inverse soumis à un nouveau validateur, et l'original reste visible (§7.2).</li>
+    </ul>
+    <div class="note-strip"><svg><use href="#i-shield"/></svg>Comme les Comptes, un transfert est hautement sensible : il exige un validateur distinct de l'initiateur, jamais une auto-validation (§10.1).</div>
+    <div class="hint">Sources : Cahier Mata Finance §4.6, §7.1, §7.2, §10.1 · FIXTURES §9</div>
+    <div class="acts"><button class="btn ghost" data-close>Fermer</button></div>
   </div></div>
 </section>
 <script data-screen="fin-transferts">
@@ -3552,6 +3569,23 @@ ERP.register('fin-transferts', function (root, ctx) {
     <div class="fld"><label for="fin-validations-motif" data-m="motif-lbl">Motif</label><textarea id="fin-validations-motif" class="inp" data-m="motif" rows="3" placeholder="Saisir le motif"></textarea><span class="hint">Conservé dans l'Audit central avec la décision, l'acteur et le profil actif (§10.2)</span></div>
     <div class="acts"><button class="btn ghost" data-close>Annuler</button><button class="btn pri" data-m="confirm" data-val=""><svg><use href="#i-check"/></svg><span data-m="confirm-lbl">Confirmer</span></button></div>
   </div></div>
+
+  <!-- Aide contextuelle -->
+  <div class="mback" data-ov="help-fin-validations"><div class="modal wide" role="dialog" aria-modal="true" aria-label="Comment ça marche : Validations">
+    <h3><svg><use href="#i-info"/></svg>Comment ça marche : Validations</h3>
+    <div class="exp">Cet écran centralise les décisions financières en attente pour les profils habilités à valider (Super Admin, DG, DirOps...) ; les autres profils y suivent seulement leurs propres demandes.</div>
+    <ul class="help-list">
+      <li><b>Écran unique de validation</b> — regroupe transferts, ajustements, corrections de Position externe et désactivations sensibles ; ici, 4 demandes sont « À valider », dont 2 en double validation (§7.3).</li>
+      <li><b>Niveau selon le type d'opération</b> — un transfert comme VAL-118 (<span class="amt" data-amt="600000" data-nocur></span> FCFA, Banque BOA → Caisse générale) ne demande qu'une validation simple ; une désactivation comme VAL-115 (Sous-caisse Abattoir) suit la même règle, par un second acteur habilité (§10.1).</li>
+      <li><b>Ajustement : motif et double validation</b> — VAL-117 (+<span class="amt" data-amt="180000" data-nocur></span> FCFA sur Caisse générale) exige un motif et deux validateurs distincts de l'initiateur et l'un de l'autre ; O. Seck a donné la 1re validation le 27/08 à 19:02, la barre de progression affiche 1/2 (§4.7).</li>
+      <li><b>Correction de Position externe, même règle</b> — VAL-116 (Banque BOA, <span class="amt" data-amt="-45000" data-nocur></span> FCFA) est hautement sensible et suit la même double validation, encore à 0/2 (§10.1).</li>
+      <li><b>L'initiateur ne valide jamais sa propre opération</b> — F. Sarr a proposé VAL-118. Connecté sous son identité, impossible de cliquer sur Valider ou Refuser cette ligne : la règle vaut pour tous les profils, y compris le Super Admin, qui ne valide jamais une demande qu'il a lui-même initiée (Core §4.2).</li>
+      <li><b>« Mes demandes » suit vos propres statuts</b> — les 4 demandes de l'utilisateur connecté se répartissent en 1 En attente, 1 Validée, 1 Refusée, 1 Annulée (§7.3).</li>
+    </ul>
+    <div class="note-strip"><svg><use href="#i-shield"/></svg>En double validation, les deux validateurs doivent être distincts entre eux : sur VAL-117, O. Seck a donné la 1re validation, il ne peut pas donner la 2e (§4.7).</div>
+    <div class="hint">Sources : Cahier Mata Finance §4.7, §7.3, §10.1 · Cahier Mata Core §4.2</div>
+    <div class="acts"><button class="btn ghost" data-close>Fermer</button></div>
+  </div></div>
 </section>
 <script data-screen="fin-validations">
 ERP.register('fin-validations', function (root, ctx) {
@@ -3839,6 +3873,24 @@ ERP.register('fin-validations', function (root, ctx) {
     <div class="df"><button class="btn ghost" data-goto="fin-depenses"><svg><use href="#i-receipt"/></svg>Ouvrir dans Dépenses</button><button class="btn pri" data-perm="finance.depenses.modifier" data-flag="Dépense spéciale"><svg><use href="#i-flag"/></svg>Modifier le flag</button></div>
   </aside>
   <div class="dback" data-ov-back="fin-pnl-ds"></div>
+
+  <!-- Aide d'écran -->
+  <div class="mback" data-ov="help-fin-pnl"><div class="modal wide" role="dialog" aria-modal="true" aria-label="Comment ça marche : P&amp;L et KPI">
+    <h3><svg><use href="#i-info"/></svg>Comment ça marche : P&amp;L et KPI</h3>
+    <div class="exp">Cet écran affiche les trois variantes du P&amp;L de gestion et les neuf indicateurs de trésorerie du mois, avec les mêmes chiffres que le Tableau de bord et les snapshots. Il sert à la Direction, à la Comptabilité et aux profils autorisés à consulter le pilotage financier ; l'Investisseur y voit les agrégats mais pas le détail par compte, fournisseur ou client.</div>
+    <ul class="help-list">
+      <li><b>P&amp;L Global</b> — toujours calculé, jamais saisi : CA + ΔS − D − CF = <span class="amt" data-amt="452000000" data-nocur></span> + <span class="amt" data-amt="2235000" data-nocur></span> − <span class="amt" data-amt="421500000" data-nocur></span> − <span class="amt" data-amt="6900000" data-nocur></span> = <span class="amt" data-amt="25835000" data-nocur></span> (§8.3).</li>
+      <li><b>Valeur en FCFA puis ratio</b> — chaque indicateur affiche d'abord le montant, puis le ratio sur le CA de référence choisi en haut d'écran ; changer ce CA (<span class="amt" data-amt="452000000" data-nocur></span> pour août au 27) recalcule les ratios, jamais les montants (§8.2).</li>
+      <li><b>Variantes DI et DS</b> — elles réintègrent après coup les dépenses flaguées, sans toucher à D ni au P&amp;L Global : P&amp;L hors Investissements = P&amp;L Global + DI = <span class="amt" data-amt="25835000" data-nocur></span> + <span class="amt" data-amt="18000000" data-nocur></span> = <span class="amt" data-amt="43835000" data-nocur></span>, flags indépendants et false par défaut (§8.3).</li>
+      <li><b>Charges fixes (CF)</b> — prorata en jours calendaires puis retrait de ce qui est déjà comptabilisé : <span class="amt" data-amt="21700000" data-nocur></span> × 27/31 = <span class="amt" data-amt="18900000" data-nocur></span> − <span class="amt" data-amt="12000000" data-nocur></span> déjà en dépenses = CF <span class="amt" data-amt="6900000" data-nocur></span>, jamais négatif (§8.4).</li>
+      <li><b>Trésorerie disponible</b> — somme des comptes Caisse, Banque et Bictorys marqués immédiatement disponibles ; les comptes Relais et le compte Ajustement en sont toujours exclus : <span class="amt" data-amt="58455000" data-nocur></span> F, soit 12,9 % du CA de référence (§8.1).</li>
+      <li><b>Position financière nette</b> — assemble la trésorerie totale contrôlée et les positions fournisseurs/clients sans jamais compenser dettes et avances : <span class="amt" data-amt="61305000" data-nocur></span> + <span class="amt" data-amt="350000" data-nocur></span> + <span class="amt" data-amt="20075000" data-nocur></span> − <span class="amt" data-amt="23250000" data-nocur></span> − <span class="amt" data-amt="150000" data-nocur></span> = <span class="amt" data-amt="58330000" data-nocur></span> (§8.1).</li>
+      <li><b>Snapshot figé</b> — le P&amp;L Global recalculé (<span class="amt" data-amt="25835000" data-nocur></span>) diffère du snapshot du 26/08 (<span class="amt" data-amt="25105000" data-nocur></span>) : le snapshot ne bouge pas après coup, les formules restent centralisées pour rester reproductibles (§11.2).</li>
+    </ul>
+    <div class="note-strip"><svg><use href="#i-shield"/></svg>Refus par défaut : un profil sans permission de consultation (ex. Investisseur) voit l'agrégat mais pas son détail — la ligne bascule sur « Hors périmètre » au lieu d'être masquée sans explication.</div>
+    <div class="hint">Sources : Cahier Mata Finance §8.1, §8.2, §8.3, §8.4, §11.2</div>
+    <div class="acts"><button class="btn ghost" data-close>Fermer</button></div>
+  </div></div>
 </section>
 <script data-screen="fin-pnl">
 ERP.register('fin-pnl', function (root, ctx) {
@@ -3940,6 +3992,7 @@ ERP.register('fin-pnl', function (root, ctx) {
       <p class="scr-sub">Configuration par entité — Mata Group · nom, montant mensuel, date d’effet, date de fin éventuelle, catégorie de rattachement et statut actif/inactif (§8.4) · alimente CF, charges fixes complémentaires estimées non encore comptabilisées en dépenses, du P&amp;L Global (§8.3) · prorata en jours calendaires, dimanche inclus · calcul au 27/08/2026.</p>
     </div>
     <div class="scr-meta">
+      <button class="linkish" data-open="help-fin-charges"><svg><use href="#i-info"/></svg>Comment ça marche ?</button>
       <span class="sens s"><svg><use href="#i-shield"/></svg>Sensible</span>
       <span class="hint">Modification selon la permission finance.charges.modifier, sans second validateur exigé par le cahier · configuration sensible : historisée, datée, auditée (Core §5.3, §6.4) · l’original n’est jamais écrasé (Core §5.5) · Exporter distinct de Consulter</span>
     </div>
@@ -4038,6 +4091,21 @@ ERP.register('fin-pnl', function (root, ctx) {
     <div class="eq" data-m-preview>Au 27/08/2026 : <b>—</b> jours calendaires applicables · Charge théorique proratisée <b>—</b> · date d’effet manquante</div>
     <div class="note-strip" style="margin-top:12px"><svg><use href="#i-alert"/></svg><span>Une date d’effet antérieure au 27/08/2026 modifie le CF recalculé des journées déjà clôturées ; les snapshots restent immuables et se comparent dans Historique (§8.6).</span></div>
     <div class="acts"><button class="btn ghost" data-close>Annuler</button><button class="btn pri" data-perm="finance.charges.modifier" data-submit><svg><use href="#i-check"/></svg>Enregistrer</button></div>
+  </div></div>
+
+  <div class="mback" data-ov="help-fin-charges"><div class="modal wide" role="dialog" aria-modal="true" aria-label="Comment ça marche : Charges fixes">
+    <h3><svg><use href="#i-info"/></svg>Comment ça marche : Charges fixes</h3>
+    <div class="exp">Cet écran configure, par entité, les charges fixes mensuelles de Mata Group (salaires, loyer, gardiennage…) et calcule la part encore due sur la période en cours. Il est utilisé par la Direction financière et les profils habilités à le modifier ; les autres profils le consultent en lecture seule.</div>
+    <ul class="help-list">
+      <li><b>Charge théorique proratisée</b> — chaque charge active compte au prorata des jours du mois écoulés : au 27 août (27 jours sur 31, dimanche inclus), les <span class="amt" data-amt="21700000" data-nocur></span> FCFA de charges actives donnent <span class="amt" data-amt="18900000" data-nocur></span> FCFA de charge théorique (§8.4).</li>
+      <li><b>Charge fixe complémentaire (CF)</b> — c'est la part de la charge théorique qui n'est pas encore passée en dépense : max(0 ; <span class="amt" data-amt="18900000" data-nocur></span> − <span class="amt" data-amt="12000000" data-nocur></span>) = <span class="amt" data-amt="6900000" data-nocur></span> FCFA, le montant injecté dans le P&amp;L Global (§8.4).</li>
+      <li><b>Statut Inactif et date de fin</b> — une charge inactive ou dont la date de fin est dépassée sort du calcul, sans être supprimée : Assurance flotte (<span class="amt" data-amt="350000" data-nocur></span> FCFA, fin 30/06/2026) affiche 0 jour sur 31 et « Exclue du prorata » (§8.4).</li>
+      <li><b>Charge déjà comptabilisée</b> — le moteur retrouve, dans les Dépenses par date métier, ce qui est déjà enregistré depuis le 1er août sous la catégorie de chaque charge active (Personnel, Locaux, Services) : <span class="amt" data-amt="12000000" data-nocur></span> FCFA, à déduire pour ne jamais compter deux fois la même charge — règle d'appariement encore à confirmer par le panel (§8.4).</li>
+      <li><b>Versions datées, jamais écrasées</b> — chaque enregistrement crée une nouvelle version : la Version 2 est en vigueur depuis le 01/07/2026, la Version 1 (configuration initiale) reste consultable depuis le 01/01/2025 (§6.4).</li>
+    </ul>
+    <div class="note-strip"><svg><use href="#i-shield"/></svg>Modifier une charge fixe ne demande qu'un seul validateur : la permission finance.charges.modifier suffit, sans second acteur. Sans elle, l'écran reste consultable mais les boutons Ajouter et Modifier sont désactivés avec leur motif — refus par défaut.</div>
+    <div class="hint">Sources : Cahier Mata Finance §8.4 · Core §6.4 · FIXTURES §5</div>
+    <div class="acts"><button class="btn ghost" data-close>Fermer</button></div>
   </div></div>
 </section>
 <script data-screen="fin-charges">
@@ -4160,6 +4228,7 @@ ERP.register('fin-charges', function (root, ctx) {
       <p class="scr-sub">Six séries du moteur financier unique sur 30 jours (29/07 → 27/08/2026) · Mata Group · même échelle en millions de FCFA · positions en trait plein, cumuls en pointillé · chaque valeur du 27/08 redescend vers sa formule, ses composantes, ses mouvements et sa source (§10.3, Core §7.1).</p>
     </div>
     <div class="scr-meta">
+      <button class="linkish" data-open="help-fin-visualisation"><svg><use href="#i-info"/></svg>Comment ça marche ?</button>
       <span class="sens s"><svg><use href="#i-shield"/></svg>Sensible</span>
       <span class="hint">Écran de lecture, aucune validation ici · aucun recalcul local : les valeurs sont celles du moteur financier, affichées sans être recréées (Core §7.1) · Exporter distinct de Consulter (§5.7)</span>
     </div>
@@ -4289,6 +4358,21 @@ ERP.register('fin-charges', function (root, ctx) {
     <div class="df"><button class="btn ghost" data-ch-alt data-goto="fin-historique" data-perm="finance.historique.view"><svg><use href="#i-history"/></svg><span>Snapshots</span></button><button class="btn pri" data-ch-goto data-goto="fin-comptes" data-perm="finance.comptes.view"><svg><use href="#i-arr"/></svg><span>Descendre au détail · Comptes</span></button></div>
   </aside>
   <div class="dback" data-ov-back="fin-visualisation-chaine"></div>
+
+  <div class="mback" data-ov="help-fin-visualisation"><div class="modal wide" role="dialog" aria-modal="true" aria-label="Comment ça marche : Visualisation">
+    <h3><svg><use href="#i-info"/></svg>Comment ça marche : Visualisation</h3>
+    <div class="exp">Cet écran affiche six séries du moteur financier unique sur 30 jours pour suivre trésorerie, fournisseurs, clients et P&amp;L sans recalcul local. Les profils autorisés en consultation financière s’en servent pour surveiller les positions et remonter jusqu’à leur source.</div>
+    <ul class="help-list">
+      <li><b>Rien n’est recalculé ici</b> — les six séries et leurs valeurs viennent telles quelles du moteur financier, comme le Super Dashboard affiche le P&amp;L de Finance sans recréer sa formule ; ex. : Trésorerie totale contrôlée affiche <span class="amt" data-amt="61305000" data-nocur></span> FCFA, calculée ailleurs (Core §7.1).</li>
+      <li><b>FCFA d’abord, ratio ensuite</b> — chaque valeur montre le montant puis son ratio au CA de référence, comme sur le Dashboard financier ; ex. : Dettes fournisseurs <span class="amt" data-amt="23250000" data-nocur></span> FCFA, soit 5,1 % du CA (§8.5).</li>
+      <li><b>Le bouton (i) sur chaque valeur</b> — affiche formule, composantes chiffrées et source au survol ou au tap ; ex. : P&amp;L Global <span class="amt" data-amt="25835000" data-nocur></span> FCFA = CA + ΔS − D − CF (Core §7.1).</li>
+      <li><b>« Chaîne §10.3 »</b> — ouvre les six étapes d’investigation d’une série (Valeur → Formule → Composantes → Mouvements → Objet métier → Source), sans jamais passer par la base de données ; ex. : la chaîne de Créances clients détaille les <span class="amt" data-amt="20075000" data-nocur></span> FCFA jusqu’aux 12 MaaS et 3 gros clients (§10.3).</li>
+      <li><b>« Descendre au détail »</b> — renvoie vers l’écran propriétaire de la donnée pour investiguer plus loin ; ex. : depuis Trésorerie totale contrôlée (<span class="amt" data-amt="61305000" data-nocur></span> FCFA), le bouton mène à Comptes (§10.3).</li>
+    </ul>
+    <div class="note-strip"><svg><use href="#i-shield"/></svg>Refus par défaut : les boutons « Descendre au détail » restent visibles mais se désactivent si le profil actif n’a pas la permission de consulter l’écran cible.</div>
+    <div class="hint">Sources : Cahier Mata Finance §8.5, §10.3 · Mata Core §7.1</div>
+    <div class="acts"><button class="btn ghost" data-close>Fermer</button></div>
+  </div></div>
 </section>
 <script data-screen="fin-visualisation">
 ERP.register('fin-visualisation', function (root, ctx) {
@@ -4420,6 +4504,7 @@ ERP.register('fin-visualisation', function (root, ctx) {
       <p class="scr-sub">Snapshots financiers de Mata Group · à la clôture, un snapshot immuable et unique par date et entité fige les principaux P&amp;L/KPI tels qu’ils étaient connus (§8.6) · agrégats seulement : trois variantes du P&amp;L, KPI de trésorerie, quelques totaux — jamais le détail des mouvements ni des soldes par compte, qui reste accessible via l’historique horodaté (Architecture §13) · même moteur financier que le Tableau de bord et les agents IA (§9, Core §7.1).</p>
     </div>
     <div class="scr-meta">
+      <button class="linkish" data-open="help-fin-historique"><svg><use href="#i-info"/></svg>Comment ça marche ?</button>
       <span class="sens s"><svg><use href="#i-shield"/></svg>Sensible</span>
       <span class="hint">Aucune validation ici : un snapshot ne crée aucune écriture financière · snapshot manuel sur permission dédiée, motif obligatoire, audit de modification · une correction post-clôture suit le workflow d’approbation du Super Admin, par contrepassation tracée (§3.1, Core §5.5)</span>
     </div>
@@ -4561,6 +4646,22 @@ ERP.register('fin-visualisation', function (root, ctx) {
     </div>
     <div class="acts"><button class="btn ghost" data-close>Annuler</button><button class="btn pri" data-perm="finance.historique.snapshot" data-snap-create><svg><use href="#i-lock"/></svg>Figer le snapshot</button></div>
   </div></div>
+
+  <!-- MODALE : AIDE CONTEXTUELLE -->
+  <div class="mback" data-ov="help-fin-historique"><div class="modal wide" role="dialog" aria-modal="true" aria-label="Comment ça marche : Historique">
+    <h3><svg><use href="#i-info"/></svg>Comment ça marche : Historique</h3>
+    <div class="exp">Cet écran regroupe les snapshots figés à chaque clôture de Mata Group et les compare à la situation recalculée aujourd’hui. Direction et contrôle financier s’en servent pour retracer l’historique sans toucher aux écritures ; les profils externes (investisseur, comptable) le consultent en lecture seule.</div>
+    <ul class="help-list">
+      <li><b>Immuable et unique par date</b> — un snapshot est figé pour toujours et il ne peut y en avoir qu’un par date et entité : celui du 26/08/2026 22:14 fixe le P&amp;L Global à <span class="amt" data-amt="25105000" data-nocur></span> FCFA. Une fois le snapshot manuel du jour créé, retenter « Snapshot manuel » le même 27/08/2026 est bloqué avec le motif « Unicité par date et entité » (§8.6).</li>
+      <li><b>Agrégats seulement, jamais le détail</b> — le snapshot garde les 3 variantes du P&amp;L et les KPI de trésorerie, comme la Trésorerie totale contrôlée figée à <span class="amt" data-amt="60790000" data-nocur></span> FCFA, mais jamais le détail des mouvements ni les soldes par compte : ceux-ci restent dans l’historique horodaté (Architecture §13).</li>
+      <li><b>Une correction ne réécrit jamais le figé</b> — le snapshot du 26/08 reste à <span class="amt" data-amt="60790000" data-nocur></span> FCFA même après l’ajustement VAL-117 ; la situation recalculée passe à <span class="amt" data-amt="60970000" data-nocur></span> FCFA et l’écart de +<span class="amt" data-amt="180000" data-nocur></span> FCFA s’affiche dans Comparer, sans toucher au snapshot original (§8.6).</li>
+      <li><b>Deux validations distinctes, aucun bypass</b> — la correction VAL-117 a reçu sa première validation d’O. Seck le 27/08 à 19:02 ; seule une approbation du Super Admin peut apporter la seconde, même lui ne peut pas valider ses propres opérations (Core §5.5).</li>
+      <li><b>Snapshot manuel : motif obligatoire, aucune validation</b> — il ne crée aucune écriture financière, donc pas de validation à obtenir, seulement un motif audité : celui du 24/08/2026 18:30, « avant correction du transfert 24/08 », fige un P&amp;L Global de <span class="amt" data-amt="23900000" data-nocur></span> FCFA (§8.6).</li>
+    </ul>
+    <div class="note-strip"><svg><use href="#i-lock"/></svg><span><b>Refus par défaut.</b> Un profil externe (investisseur, comptable) consulte les snapshots et leur comparaison, mais le snapshot manuel et la correction post-clôture restent hors de portée sans autorisation explicite.</span></div>
+    <div class="hint">Sources : Cahier Mata Finance §8.6 · Core §5.5 · Architecture §13</div>
+    <div class="acts"><button class="btn ghost" data-close>Fermer</button></div>
+  </div></div>
 </section>
 <script data-screen="fin-historique">
 ERP.register('fin-historique', function (root, ctx) {
@@ -4677,6 +4778,7 @@ ERP.register('fin-historique', function (root, ctx) {
       <p class="scr-sub">Quantités et valorisation de stock : module propriétaire Stock ; usage dans Mata Finance : fourniture de la valeur financière nécessaire au P&amp;L (§2.2). Entité Mata Group · période du 1er au 27 août 2026 · ΔS entre dans les trois variantes du P&amp;L de gestion (§8.3) · lecture par interface contrôlée, aucune ressaisie (§2.2, §9).</p>
     </div>
     <div class="scr-meta">
+      <button class="linkish" data-open="help-fin-stock"><svg><use href="#i-info"/></svg>Comment ça marche ?</button>
       <span class="sens std"><svg><use href="#i-shield"/></svg>Standard</span>
       <span class="hint">Écran de lecture seule : aucune écriture, aucune validation · gestion physique et valorisation du stock hors périmètre V1, propriété du module Stock (§11.1) · consultation non soumise à l’audit de consultation renforcé réservé aux données hautement sensibles (§10.2 ; Core §5.3)</span>
     </div>
@@ -4826,6 +4928,21 @@ ERP.register('fin-historique', function (root, ctx) {
     <div class="df"><button class="btn ghost" data-close>Fermer</button><span class="soon-wrap" data-soon title="Module Stock : bientôt disponible dans l’ERP Mata"><button class="btn ghost" disabled aria-disabled="true"><svg><use href="#i-box"/></svg>Ouvrir dans Stock<span class="tag lock">Bientôt</span></button></span></div>
   </aside>
   <div class="dback" data-ov-back="fin-stock-site"></div>
+
+  <!-- Aide contextuelle -->
+  <div class="mback" data-ov="help-fin-stock"><div class="modal wide" role="dialog" aria-modal="true" aria-label="Comment ça marche : Stock (lecture)">
+    <h3><svg><use href="#i-info"/></svg>Comment ça marche : Stock (lecture)</h3>
+    <div class="exp">Cet écran affiche la valeur financière du stock lue depuis le module Stock et son entrée dans le P&amp;L de gestion ; en lecture seule, il est ouvert à tout profil autorisé à consulter Mata Finance, sans action d’écriture possible.</div>
+    <ul class="help-list">
+      <li><b>ΔS, la seule grandeur transmise</b> — Stock envoie une valeur financière de début et de fin de période ; ΔS = fin − début = <span class="amt" data-amt="41235000" data-nocur></span> − <span class="amt" data-amt="39000000" data-nocur></span> = +<span class="amt" data-amt="2235000" data-nocur></span> (§8.3).</li>
+      <li><b>Répartition par site</b> — la valeur financière du stock fin se ventile par site, sans aucune quantité, prix ou décote : ces données restent propriété du module Stock (§2.2). Abattoir <span class="amt" data-amt="22400000" data-nocur></span>, Dépôt central <span class="amt" data-amt="12835000" data-nocur></span>, Points de vente <span class="amt" data-amt="6000000" data-nocur></span>.</li>
+      <li><b>ΔS dans le P&amp;L</b> — la même ΔS entre dans les trois variantes du P&amp;L de gestion : P&amp;L Global = CA + ΔS − D − CF = <span class="amt" data-amt="452000000" data-nocur></span> + <span class="amt" data-amt="2235000" data-nocur></span> − <span class="amt" data-amt="421500000" data-nocur></span> − <span class="amt" data-amt="6900000" data-nocur></span> = <span class="amt" data-amt="25835000" data-nocur></span> (§8.3).</li>
+      <li><b>Contrat Stock → Finance</b> — Stock reste propriétaire de la valorisation et fournit une donnée datée et fraîche ; la valeur fin affichée est datée du 27/08/2026, lue le 27/08 06:00 (§9).</li>
+      <li><b>« Ouvrir le module Stock » désactivé</b> — la gestion physique et la valorisation du stock restent hors périmètre V1 de Mata Finance, propriété du module Stock (§11.1).</li>
+    </ul>
+    <div class="hint">Sources : Cahier Mata Finance §2.2, §8.3, §9, §11.1 · FIXTURES §15</div>
+    <div class="acts"><button class="btn ghost" data-close>Fermer</button></div>
+  </div></div>
 </section>
 <script data-screen="fin-stock">
 ERP.register('fin-stock', function (root, ctx) {

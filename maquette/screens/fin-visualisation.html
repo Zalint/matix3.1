@@ -19,6 +19,7 @@
       <p class="scr-sub">Six séries du moteur financier unique sur 30 jours (29/07 → 27/08/2026) · Mata Group · même échelle en millions de FCFA · positions en trait plein, cumuls en pointillé · chaque valeur du 27/08 redescend vers sa formule, ses composantes, ses mouvements et sa source (§10.3, Core §7.1).</p>
     </div>
     <div class="scr-meta">
+      <button class="linkish" data-open="help-fin-visualisation"><svg><use href="#i-info"/></svg>Comment ça marche ?</button>
       <span class="sens s"><svg><use href="#i-shield"/></svg>Sensible</span>
       <span class="hint">Écran de lecture, aucune validation ici · aucun recalcul local : les valeurs sont celles du moteur financier, affichées sans être recréées (Core §7.1) · Exporter distinct de Consulter (§5.7)</span>
     </div>
@@ -148,6 +149,21 @@
     <div class="df"><button class="btn ghost" data-ch-alt data-goto="fin-historique" data-perm="finance.historique.view"><svg><use href="#i-history"/></svg><span>Snapshots</span></button><button class="btn pri" data-ch-goto data-goto="fin-comptes" data-perm="finance.comptes.view"><svg><use href="#i-arr"/></svg><span>Descendre au détail · Comptes</span></button></div>
   </aside>
   <div class="dback" data-ov-back="fin-visualisation-chaine"></div>
+
+  <div class="mback" data-ov="help-fin-visualisation"><div class="modal wide" role="dialog" aria-modal="true" aria-label="Comment ça marche : Visualisation">
+    <h3><svg><use href="#i-info"/></svg>Comment ça marche : Visualisation</h3>
+    <div class="exp">Cet écran affiche six séries du moteur financier unique sur 30 jours pour suivre trésorerie, fournisseurs, clients et P&amp;L sans recalcul local. Les profils autorisés en consultation financière s’en servent pour surveiller les positions et remonter jusqu’à leur source.</div>
+    <ul class="help-list">
+      <li><b>Rien n’est recalculé ici</b> — les six séries et leurs valeurs viennent telles quelles du moteur financier, comme le Super Dashboard affiche le P&amp;L de Finance sans recréer sa formule ; ex. : Trésorerie totale contrôlée affiche <span class="amt" data-amt="61305000" data-nocur></span> FCFA, calculée ailleurs (Core §7.1).</li>
+      <li><b>FCFA d’abord, ratio ensuite</b> — chaque valeur montre le montant puis son ratio au CA de référence, comme sur le Dashboard financier ; ex. : Dettes fournisseurs <span class="amt" data-amt="23250000" data-nocur></span> FCFA, soit 5,1 % du CA (§8.5).</li>
+      <li><b>Le bouton (i) sur chaque valeur</b> — affiche formule, composantes chiffrées et source au survol ou au tap ; ex. : P&amp;L Global <span class="amt" data-amt="25835000" data-nocur></span> FCFA = CA + ΔS − D − CF (Core §7.1).</li>
+      <li><b>« Chaîne §10.3 »</b> — ouvre les six étapes d’investigation d’une série (Valeur → Formule → Composantes → Mouvements → Objet métier → Source), sans jamais passer par la base de données ; ex. : la chaîne de Créances clients détaille les <span class="amt" data-amt="20075000" data-nocur></span> FCFA jusqu’aux 12 MaaS et 3 gros clients (§10.3).</li>
+      <li><b>« Descendre au détail »</b> — renvoie vers l’écran propriétaire de la donnée pour investiguer plus loin ; ex. : depuis Trésorerie totale contrôlée (<span class="amt" data-amt="61305000" data-nocur></span> FCFA), le bouton mène à Comptes (§10.3).</li>
+    </ul>
+    <div class="note-strip"><svg><use href="#i-shield"/></svg>Refus par défaut : les boutons « Descendre au détail » restent visibles mais se désactivent si le profil actif n’a pas la permission de consulter l’écran cible.</div>
+    <div class="hint">Sources : Cahier Mata Finance §8.5, §10.3 · Mata Core §7.1</div>
+    <div class="acts"><button class="btn ghost" data-close>Fermer</button></div>
+  </div></div>
 </section>
 <script data-screen="fin-visualisation">
 ERP.register('fin-visualisation', function (root, ctx) {

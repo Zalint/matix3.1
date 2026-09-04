@@ -169,6 +169,24 @@
     <div class="df"><button class="btn ghost" data-goto="fin-depenses"><svg><use href="#i-receipt"/></svg>Ouvrir dans Dépenses</button><button class="btn pri" data-perm="finance.depenses.modifier" data-flag="Dépense spéciale"><svg><use href="#i-flag"/></svg>Modifier le flag</button></div>
   </aside>
   <div class="dback" data-ov-back="fin-pnl-ds"></div>
+
+  <!-- Aide d'écran -->
+  <div class="mback" data-ov="help-fin-pnl"><div class="modal wide" role="dialog" aria-modal="true" aria-label="Comment ça marche : P&amp;L et KPI">
+    <h3><svg><use href="#i-info"/></svg>Comment ça marche : P&amp;L et KPI</h3>
+    <div class="exp">Cet écran affiche les trois variantes du P&amp;L de gestion et les neuf indicateurs de trésorerie du mois, avec les mêmes chiffres que le Tableau de bord et les snapshots. Il sert à la Direction, à la Comptabilité et aux profils autorisés à consulter le pilotage financier ; l'Investisseur y voit les agrégats mais pas le détail par compte, fournisseur ou client.</div>
+    <ul class="help-list">
+      <li><b>P&amp;L Global</b> — toujours calculé, jamais saisi : CA + ΔS − D − CF = <span class="amt" data-amt="452000000" data-nocur></span> + <span class="amt" data-amt="2235000" data-nocur></span> − <span class="amt" data-amt="421500000" data-nocur></span> − <span class="amt" data-amt="6900000" data-nocur></span> = <span class="amt" data-amt="25835000" data-nocur></span> (§8.3).</li>
+      <li><b>Valeur en FCFA puis ratio</b> — chaque indicateur affiche d'abord le montant, puis le ratio sur le CA de référence choisi en haut d'écran ; changer ce CA (<span class="amt" data-amt="452000000" data-nocur></span> pour août au 27) recalcule les ratios, jamais les montants (§8.2).</li>
+      <li><b>Variantes DI et DS</b> — elles réintègrent après coup les dépenses flaguées, sans toucher à D ni au P&amp;L Global : P&amp;L hors Investissements = P&amp;L Global + DI = <span class="amt" data-amt="25835000" data-nocur></span> + <span class="amt" data-amt="18000000" data-nocur></span> = <span class="amt" data-amt="43835000" data-nocur></span>, flags indépendants et false par défaut (§8.3).</li>
+      <li><b>Charges fixes (CF)</b> — prorata en jours calendaires puis retrait de ce qui est déjà comptabilisé : <span class="amt" data-amt="21700000" data-nocur></span> × 27/31 = <span class="amt" data-amt="18900000" data-nocur></span> − <span class="amt" data-amt="12000000" data-nocur></span> déjà en dépenses = CF <span class="amt" data-amt="6900000" data-nocur></span>, jamais négatif (§8.4).</li>
+      <li><b>Trésorerie disponible</b> — somme des comptes Caisse, Banque et Bictorys marqués immédiatement disponibles ; les comptes Relais et le compte Ajustement en sont toujours exclus : <span class="amt" data-amt="58455000" data-nocur></span> F, soit 12,9 % du CA de référence (§8.1).</li>
+      <li><b>Position financière nette</b> — assemble la trésorerie totale contrôlée et les positions fournisseurs/clients sans jamais compenser dettes et avances : <span class="amt" data-amt="61305000" data-nocur></span> + <span class="amt" data-amt="350000" data-nocur></span> + <span class="amt" data-amt="20075000" data-nocur></span> − <span class="amt" data-amt="23250000" data-nocur></span> − <span class="amt" data-amt="150000" data-nocur></span> = <span class="amt" data-amt="58330000" data-nocur></span> (§8.1).</li>
+      <li><b>Snapshot figé</b> — le P&amp;L Global recalculé (<span class="amt" data-amt="25835000" data-nocur></span>) diffère du snapshot du 26/08 (<span class="amt" data-amt="25105000" data-nocur></span>) : le snapshot ne bouge pas après coup, les formules restent centralisées pour rester reproductibles (§11.2).</li>
+    </ul>
+    <div class="note-strip"><svg><use href="#i-shield"/></svg>Refus par défaut : un profil sans permission de consultation (ex. Investisseur) voit l'agrégat mais pas son détail — la ligne bascule sur « Hors périmètre » au lieu d'être masquée sans explication.</div>
+    <div class="hint">Sources : Cahier Mata Finance §8.1, §8.2, §8.3, §8.4, §11.2</div>
+    <div class="acts"><button class="btn ghost" data-close>Fermer</button></div>
+  </div></div>
 </section>
 <script data-screen="fin-pnl">
 ERP.register('fin-pnl', function (root, ctx) {

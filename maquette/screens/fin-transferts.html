@@ -16,6 +16,7 @@
       <p class="scr-sub">Mouvements internes manuels ne relevant d'aucun workflow métier : entre deux comptes de Trésorerie, entre un compte de Trésorerie et une Position externe, ou entre deux Positions externes, sous réserve de compatibilité (§7.1) · initié par un utilisateur autorisé puis validé par un second utilisateur habilité, distinct de l'initiateur (§7.2)</p>
     </div>
     <div class="scr-meta">
+      <button class="linkish" data-open="help-fin-transferts"><svg><use href="#i-info"/></svg>Comment ça marche ?</button>
       <span class="sens hs"><svg><use href="#i-shield"/></svg>Hautement sensible</span>
       <span class="hint">Validation simple : un validateur distinct de l'initiateur (§10.1) · pas d'auto-validation, y compris pour le Super Admin (§7.2) · consultation auditée (§10.2)</span>
     </div>
@@ -217,6 +218,22 @@
     <label for="fin-transferts-cp-motif">Motif de la contrepassation</label>
     <input id="fin-transferts-cp-motif" data-c="motif" placeholder="Motif obligatoire, lié à l'opération originale dans l'Audit">
     <div class="acts"><button class="btn ghost" data-close>Annuler</button><button class="btn pri" data-perm="finance.transferts.initier" data-c="confirm"><svg><use href="#i-swap"/></svg>Déclencher la contrepassation</button></div>
+  </div></div>
+
+  <!-- Modale d'aide contextuelle -->
+  <div class="mback" data-ov="help-fin-transferts"><div class="modal wide" role="dialog" aria-modal="true" aria-label="Comment ça marche : Transferts">
+    <h3><svg><use href="#i-info"/></svg>Comment ça marche : Transferts</h3>
+    <div class="exp">Écran de déclenchement et de validation des transferts manuels entre comptes de Trésorerie et Positions externes de Mata Group. Un utilisateur habilité initie le transfert, un second utilisateur habilité et distinct le valide.</div>
+    <ul class="help-list">
+      <li><b>Ce qu'on transfère ici</b> — uniquement les mouvements entre comptes de Trésorerie ou Position externe, comme les <span class="amt" data-amt="600000" data-nocur></span> FCFA Banque BOA → Caisse générale (VAL-118) ; fournisseurs, créances, Relais et Ajustements suivent leurs propres workflows (§7.1).</li>
+      <li><b>Rien ne bouge avant validation</b> — les <span class="amt" data-amt="2100000" data-nocur></span> FCFA « En attente de validation » n'ont modifié aucun solde : débit et crédit ne sont créés qu'à la validation par un second utilisateur (§7.2).</li>
+      <li><b>Le Relais pour une destination pas encore confirmée</b> — une fois validé, le transfert de <span class="amt" data-amt="1500000" data-nocur></span> FCFA Caisse générale → Banque BOA sera crédité au Relais « Dépôt en cours », qui détient déjà <span class="amt" data-amt="2500000" data-nocur></span> FCFA en attente de confirmation sur le relevé bancaire ; les deux Relais actifs totalisent <span class="amt" data-amt="2850000" data-nocur></span> FCFA de trésorerie en transit (§4.6).</li>
+      <li><b>L'initiateur ne valide jamais sa propre demande</b> — sur la ligne VAL-114 (<span class="amt" data-amt="1500000" data-nocur></span> FCFA), Valider reste désactivé pour S. Doucouré, qui a lui-même déclenché ce transfert, même en tant que Super Admin (§7.2).</li>
+      <li><b>Corriger un transfert déjà validé</b> — le transfert de <span class="amt" data-amt="3000000" data-nocur></span> FCFA Caisse générale → Banque BOA du 26/08 ne se modifie pas : « Contrepasser » crée un transfert inverse soumis à un nouveau validateur, et l'original reste visible (§7.2).</li>
+    </ul>
+    <div class="note-strip"><svg><use href="#i-shield"/></svg>Comme les Comptes, un transfert est hautement sensible : il exige un validateur distinct de l'initiateur, jamais une auto-validation (§10.1).</div>
+    <div class="hint">Sources : Cahier Mata Finance §4.6, §7.1, §7.2, §10.1 · FIXTURES §9</div>
+    <div class="acts"><button class="btn ghost" data-close>Fermer</button></div>
   </div></div>
 </section>
 <script data-screen="fin-transferts">

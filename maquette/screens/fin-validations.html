@@ -255,6 +255,23 @@
     <div class="fld"><label for="fin-validations-motif" data-m="motif-lbl">Motif</label><textarea id="fin-validations-motif" class="inp" data-m="motif" rows="3" placeholder="Saisir le motif"></textarea><span class="hint">Conservé dans l'Audit central avec la décision, l'acteur et le profil actif (§10.2)</span></div>
     <div class="acts"><button class="btn ghost" data-close>Annuler</button><button class="btn pri" data-m="confirm" data-val=""><svg><use href="#i-check"/></svg><span data-m="confirm-lbl">Confirmer</span></button></div>
   </div></div>
+
+  <!-- Aide contextuelle -->
+  <div class="mback" data-ov="help-fin-validations"><div class="modal wide" role="dialog" aria-modal="true" aria-label="Comment ça marche : Validations">
+    <h3><svg><use href="#i-info"/></svg>Comment ça marche : Validations</h3>
+    <div class="exp">Cet écran centralise les décisions financières en attente pour les profils habilités à valider (Super Admin, DG, DirOps...) ; les autres profils y suivent seulement leurs propres demandes.</div>
+    <ul class="help-list">
+      <li><b>Écran unique de validation</b> — regroupe transferts, ajustements, corrections de Position externe et désactivations sensibles ; ici, 4 demandes sont « À valider », dont 2 en double validation (§7.3).</li>
+      <li><b>Niveau selon le type d'opération</b> — un transfert comme VAL-118 (<span class="amt" data-amt="600000" data-nocur></span> FCFA, Banque BOA → Caisse générale) ne demande qu'une validation simple ; une désactivation comme VAL-115 (Sous-caisse Abattoir) suit la même règle, par un second acteur habilité (§10.1).</li>
+      <li><b>Ajustement : motif et double validation</b> — VAL-117 (+<span class="amt" data-amt="180000" data-nocur></span> FCFA sur Caisse générale) exige un motif et deux validateurs distincts de l'initiateur et l'un de l'autre ; O. Seck a donné la 1re validation le 27/08 à 19:02, la barre de progression affiche 1/2 (§4.7).</li>
+      <li><b>Correction de Position externe, même règle</b> — VAL-116 (Banque BOA, <span class="amt" data-amt="-45000" data-nocur></span> FCFA) est hautement sensible et suit la même double validation, encore à 0/2 (§10.1).</li>
+      <li><b>L'initiateur ne valide jamais sa propre opération</b> — F. Sarr a proposé VAL-118. Connecté sous son identité, impossible de cliquer sur Valider ou Refuser cette ligne : la règle vaut pour tous les profils, y compris le Super Admin, qui ne valide jamais une demande qu'il a lui-même initiée (Core §4.2).</li>
+      <li><b>« Mes demandes » suit vos propres statuts</b> — les 4 demandes de l'utilisateur connecté se répartissent en 1 En attente, 1 Validée, 1 Refusée, 1 Annulée (§7.3).</li>
+    </ul>
+    <div class="note-strip"><svg><use href="#i-shield"/></svg>En double validation, les deux validateurs doivent être distincts entre eux : sur VAL-117, O. Seck a donné la 1re validation, il ne peut pas donner la 2e (§4.7).</div>
+    <div class="hint">Sources : Cahier Mata Finance §4.7, §7.3, §10.1 · Cahier Mata Core §4.2</div>
+    <div class="acts"><button class="btn ghost" data-close>Fermer</button></div>
+  </div></div>
 </section>
 <script data-screen="fin-validations">
 ERP.register('fin-validations', function (root, ctx) {

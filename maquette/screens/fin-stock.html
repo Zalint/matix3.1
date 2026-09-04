@@ -24,6 +24,7 @@
       <p class="scr-sub">Quantités et valorisation de stock : module propriétaire Stock ; usage dans Mata Finance : fourniture de la valeur financière nécessaire au P&amp;L (§2.2). Entité Mata Group · période du 1er au 27 août 2026 · ΔS entre dans les trois variantes du P&amp;L de gestion (§8.3) · lecture par interface contrôlée, aucune ressaisie (§2.2, §9).</p>
     </div>
     <div class="scr-meta">
+      <button class="linkish" data-open="help-fin-stock"><svg><use href="#i-info"/></svg>Comment ça marche ?</button>
       <span class="sens std"><svg><use href="#i-shield"/></svg>Standard</span>
       <span class="hint">Écran de lecture seule : aucune écriture, aucune validation · gestion physique et valorisation du stock hors périmètre V1, propriété du module Stock (§11.1) · consultation non soumise à l’audit de consultation renforcé réservé aux données hautement sensibles (§10.2 ; Core §5.3)</span>
     </div>
@@ -173,6 +174,21 @@
     <div class="df"><button class="btn ghost" data-close>Fermer</button><span class="soon-wrap" data-soon title="Module Stock : bientôt disponible dans l’ERP Mata"><button class="btn ghost" disabled aria-disabled="true"><svg><use href="#i-box"/></svg>Ouvrir dans Stock<span class="tag lock">Bientôt</span></button></span></div>
   </aside>
   <div class="dback" data-ov-back="fin-stock-site"></div>
+
+  <!-- Aide contextuelle -->
+  <div class="mback" data-ov="help-fin-stock"><div class="modal wide" role="dialog" aria-modal="true" aria-label="Comment ça marche : Stock (lecture)">
+    <h3><svg><use href="#i-info"/></svg>Comment ça marche : Stock (lecture)</h3>
+    <div class="exp">Cet écran affiche la valeur financière du stock lue depuis le module Stock et son entrée dans le P&amp;L de gestion ; en lecture seule, il est ouvert à tout profil autorisé à consulter Mata Finance, sans action d’écriture possible.</div>
+    <ul class="help-list">
+      <li><b>ΔS, la seule grandeur transmise</b> — Stock envoie une valeur financière de début et de fin de période ; ΔS = fin − début = <span class="amt" data-amt="41235000" data-nocur></span> − <span class="amt" data-amt="39000000" data-nocur></span> = +<span class="amt" data-amt="2235000" data-nocur></span> (§8.3).</li>
+      <li><b>Répartition par site</b> — la valeur financière du stock fin se ventile par site, sans aucune quantité, prix ou décote : ces données restent propriété du module Stock (§2.2). Abattoir <span class="amt" data-amt="22400000" data-nocur></span>, Dépôt central <span class="amt" data-amt="12835000" data-nocur></span>, Points de vente <span class="amt" data-amt="6000000" data-nocur></span>.</li>
+      <li><b>ΔS dans le P&amp;L</b> — la même ΔS entre dans les trois variantes du P&amp;L de gestion : P&amp;L Global = CA + ΔS − D − CF = <span class="amt" data-amt="452000000" data-nocur></span> + <span class="amt" data-amt="2235000" data-nocur></span> − <span class="amt" data-amt="421500000" data-nocur></span> − <span class="amt" data-amt="6900000" data-nocur></span> = <span class="amt" data-amt="25835000" data-nocur></span> (§8.3).</li>
+      <li><b>Contrat Stock → Finance</b> — Stock reste propriétaire de la valorisation et fournit une donnée datée et fraîche ; la valeur fin affichée est datée du 27/08/2026, lue le 27/08 06:00 (§9).</li>
+      <li><b>« Ouvrir le module Stock » désactivé</b> — la gestion physique et la valorisation du stock restent hors périmètre V1 de Mata Finance, propriété du module Stock (§11.1).</li>
+    </ul>
+    <div class="hint">Sources : Cahier Mata Finance §2.2, §8.3, §9, §11.1 · FIXTURES §15</div>
+    <div class="acts"><button class="btn ghost" data-close>Fermer</button></div>
+  </div></div>
 </section>
 <script data-screen="fin-stock">
 ERP.register('fin-stock', function (root, ctx) {
