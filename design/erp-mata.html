@@ -3749,6 +3749,1218 @@ ERP.register('fin-pnl', function (root, ctx) {
 });
 </script>
 
+<!-- fin-charges -->
+<!-- ÉCRAN : CHARGES FIXES — Mata Finance §8.4 (configuration par entité, prorata calendaire, charge fixe complémentaire CF), §8.3 (CF dans le P&L Global) · Mata Core §6.4 (configurations sensibles historisées et datées), §5.5 (l'original reste accessible) -->
+<section class="scr" data-scr="fin-charges" data-module="finance" data-perm="finance.charges.view" data-sens="s" hidden>
+  <style data-screen="fin-charges">
+    #app [data-scr="fin-charges"] [data-blk]{margin-top:14px}
+    #app [data-scr="fin-charges"] .grid2{align-items:start}
+    #app [data-scr="fin-charges"] .grid2>.card{min-width:0}
+    #app [data-scr="fin-charges"] .cfg table{min-width:980px}
+    #app [data-scr="fin-charges"] td.num,#app [data-scr="fin-charges"] th.num{text-align:right;white-space:nowrap}
+    #app [data-scr="fin-charges"] .mono{font-family:'Fira Code',monospace;font-size:12px;white-space:nowrap}
+    #app [data-scr="fin-charges"] tfoot td{font-weight:700;border-top:2px solid var(--line-2)}
+    #app [data-scr="fin-charges"] td .btn,#app [data-scr="fin-charges"] .ch .btn{min-height:28px;padding:4px 10px;font-size:11.5px}
+    #app [data-scr="fin-charges"] .stat .v{font-size:21px;letter-spacing:-.02em}
+    #app [data-scr="fin-charges"] .stat.hero .v{color:var(--red)}
+    #app [data-scr="fin-charges"] .stat .sub2{font-weight:600;color:var(--ink-2)}
+    #app [data-scr="fin-charges"] .modal .grid2b{gap:12px;margin-top:12px}
+    #app [data-scr="fin-charges"] .modal .fld+.fld{margin-top:12px}
+    #app [data-scr="fin-charges"] .modal .eq{margin-top:12px}
+  </style>
+  <div class="scr-head">
+    <div>
+      <h2>Charges fixes</h2>
+      <p class="scr-sub">Configuration par entité — Mata Group · nom, montant mensuel, date d’effet, date de fin éventuelle, catégorie de rattachement et statut actif/inactif (§8.4) · alimente CF, charges fixes complémentaires estimées non encore comptabilisées en dépenses, du P&amp;L Global (§8.3) · prorata en jours calendaires, dimanche inclus · calcul au 27/08/2026.</p>
+    </div>
+    <div class="scr-meta">
+      <span class="sens s"><svg><use href="#i-shield"/></svg>Sensible</span>
+      <span class="hint">Modification selon la permission finance.charges.modifier, sans second validateur exigé par le cahier · configuration sensible : historisée, datée, auditée (Core §5.3, §6.4) · l’original n’est jamais écrasé (Core §5.5) · Exporter distinct de Consulter</span>
+    </div>
+  </div>
+  <div class="deny-note" data-view="readonly" hidden><svg><use href="#i-lock"/></svg><span><b>Lecture seule.</b> Profil <span data-t="prof">DG Mata</span> : la permission finance.charges.modifier n’est pas accordée — refus par défaut (Core §3.4). Les boutons Ajouter et Modifier restent visibles, désactivés avec le motif ; formules, composantes et versions restent consultables (§3 Explicabilité).</span></div>
+  <div class="note-strip" style="margin:0 0 14px"><svg><use href="#i-refresh"/></svg><span><b>Sources et fraîcheur (§3)</b> — Configuration des charges fixes <span class="st ok"><svg><use href="#i-check"/></svg>Version 2 en vigueur depuis le 01/07/2026</span> · Charge déjà comptabilisée : Dépenses par date métier <span class="st ok"><svg><use href="#i-check"/></svg>OK · import Achat 17:00</span> · Ventes Mata et Stock (P&amp;L) <span class="st ok"><svg><use href="#i-check"/></svg>OK 20:30 · 06:00</span> — états possibles : OK, Manquante, Erreur, Non à jour ; une donnée manquante n’est jamais affichée comme 0.</span></div>
+
+  <div class="actionbar">
+    <span class="tag lock"><svg><use href="#i-building"/></svg>Entité : Mata Group</span>
+    <span class="tag lock"><svg><use href="#i-clock"/></svg>Calcul au 27/08/2026 · 31 jours calendaires en août</span>
+    <div class="sp"></div>
+    <button class="btn ghost" data-goto="fin-pnl"><svg><use href="#i-chart"/></svg>Retour au P&amp;L et KPI</button>
+    <button class="btn ghost" data-goto="fin-depenses"><svg><use href="#i-receipt"/></svg>Dépenses</button>
+    <button class="btn ghost" data-perm="finance.export" data-export><svg><use href="#i-dl"/></svg>Exporter</button>
+    <button class="btn pri" data-perm="finance.charges.modifier" data-open="fin-charges-form" data-add><svg><use href="#i-plus"/></svg>Ajouter une charge</button>
+  </div>
+
+  <!-- 1. CARTE DE CALCUL EN BANDEAU : montant mensuel actif → théorique proratisée → déjà comptabilisée → CF (§8.4) -->
+  <div class="statstrip four">
+    <div class="card stat"><div class="lb">Charges fixes actives — montant mensuel<button class="fx" data-fx="actif" data-f="Somme des montants mensuels des charges fixes au statut actif de l’entité (configuration §8.4)" data-c="Salaires 18 600 000 + Loyer 2 500 000 + Gardiennage et sécurité 600 000 = 21 700 000 · Assurance flotte 350 000 exclue (Inactif, fin 30/06/2026)" data-src="Configuration des charges fixes · Mata Group · version 2 en vigueur depuis le 01/07/2026" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></div><div class="v amt" data-amt="21700000" data-t="actif"></div><div class="sub2"><span data-t="nact">3 charges actives</span> · <span data-t="pcta">4,8 %</span> du CA de référence · août au 27</div></div>
+    <div class="card stat"><div class="lb">Charge théorique proratisée au 27/08<button class="fx" data-fx="theo" data-f="Charge théorique proratisée = Montant mensuel × Jours calendaires applicables / Jours calendaires du mois" data-c="21 700 000 × 27 / 31 = 18 900 000 · Salaires 16 200 000 · Loyer 2 177 419 · Gardiennage et sécurité 522 581" data-src="Configuration des charges fixes · jours calendaires du 1er au 27 août, dimanche inclus, sur 31 jours (§8.4) · arrondi au FCFA par charge" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></div><div class="v amt" data-amt="18900000" data-t="theo"></div><div class="sub2"><span data-t="fdays">27 / 31</span> jours calendaires applicables · dimanche inclus</div></div>
+    <div class="card stat"><div class="lb">Charge déjà comptabilisée<button class="fx" data-f="Charge déjà comptabilisée = charges fixes déjà enregistrées comme dépenses sur la période, par date métier" data-c="Dépenses du 1er au 27 août rattachées aux catégories des charges actives (Personnel, Locaux, Services) : 12 000 000" data-src="Dépenses · date métier · rattachement par catégorie de rattachement (§8.4) · import Achat 17:00 sans effet (aucune charge fixe)" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></div><div class="v amt" data-amt="12000000"></div><div class="sub2">Dépenses par date métier · <button class="linkish" data-goto="fin-depenses">Voir dans Dépenses</button></div></div>
+    <div class="card stat hero"><div class="lb">Charge fixe complémentaire (CF)<button class="fx" data-fx="cf" data-f="Charge fixe complémentaire = max(0 ; Charge théorique proratisée − Charge déjà comptabilisée)" data-c="max(0 ; 18 900 000 − 12 000 000) = 6 900 000" data-src="Moteur financier unique · injectée dans P&amp;L Global = CA + ΔS − D − CF (§8.3) · calcul au 27/08/2026 · mêmes chiffres que le Tableau de bord et les snapshots (§3)" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></div><div class="v amt" data-amt="6900000" data-t="cf"></div><div class="sub2"><span data-t="pct">1,5 %</span> du CA de référence · août au 27 · <button class="linkish" data-goto="fin-pnl">P&amp;L Global</button></div></div>
+  </div>
+
+  <div class="grid2" style="margin-top:0">
+    <!-- 2. TABLEAU DE CONFIGURATION PAR ENTITÉ (§8.4) -->
+    <div class="card cfg">
+      <div class="ch"><h3>Configuration — Mata Group</h3><span class="hint-r"><span data-t="shown">4 charges affichées</span> · par entité : MLC, Mata Volaille et Keur Bally à migrer ou à activer, non sélectionnables</span></div>
+      <div class="cb" style="padding-bottom:6px"><div class="chips"><button class="chip on" data-filter="tous">Toutes</button><button class="chip" data-filter="actif">Actif</button><button class="chip" data-filter="inactif">Inactif</button></div></div>
+      <div class="tbl-scroll"><table>
+        <thead><tr><th>Nom</th><th class="num">Montant mensuel</th><th>Date d’effet</th><th>Date de fin</th><th>Catégorie de rattachement</th><th>Statut</th><th class="num">Jours applicables</th><th class="num">Charge théorique proratisée</th><th></th></tr></thead>
+        <tbody data-rows>
+          <tr data-id="c1" data-nom="Salaires" data-montant="18600000" data-effet="2026-07-01" data-fin="" data-cat="Personnel" data-statut="actif" data-note="Ajoutée dans la version 2 · effet 01/07/2026"><td><b>Salaires</b><div class="hint">Ajoutée dans la version 2 · effet 01/07/2026</div></td><td class="num"><span class="amt" data-amt="18600000" data-nocur></span></td><td class="mono">01/07/2026</td><td class="mono">—</td><td>Personnel</td><td><span class="st ok"><svg><use href="#i-check"/></svg>Actif</span></td><td class="num mono">27 / 31</td><td class="num"><span class="amt" data-amt="16200000" data-nocur></span></td><td><button class="btn ghost" data-perm="finance.charges.modifier" data-edit="c1"><svg><use href="#i-sliders"/></svg>Modifier</button></td></tr>
+          <tr data-id="c2" data-nom="Loyer" data-montant="2500000" data-effet="2026-01-01" data-fin="" data-cat="Locaux" data-statut="actif" data-note="Présente depuis la version 1"><td><b>Loyer</b><div class="hint">Présente depuis la version 1</div></td><td class="num"><span class="amt" data-amt="2500000" data-nocur></span></td><td class="mono">01/01/2026</td><td class="mono">—</td><td>Locaux</td><td><span class="st ok"><svg><use href="#i-check"/></svg>Actif</span></td><td class="num mono">27 / 31</td><td class="num"><span class="amt" data-amt="2177419" data-nocur></span></td><td><button class="btn ghost" data-perm="finance.charges.modifier" data-edit="c2"><svg><use href="#i-sliders"/></svg>Modifier</button></td></tr>
+          <tr data-id="c3" data-nom="Gardiennage et sécurité" data-montant="600000" data-effet="2026-03-01" data-fin="" data-cat="Services" data-statut="actif" data-note="Ajoutée dans la version 1 · effet 01/03/2026"><td><b>Gardiennage et sécurité</b><div class="hint">Ajoutée dans la version 1 · effet 01/03/2026</div></td><td class="num"><span class="amt" data-amt="600000" data-nocur></span></td><td class="mono">01/03/2026</td><td class="mono">—</td><td>Services</td><td><span class="st ok"><svg><use href="#i-check"/></svg>Actif</span></td><td class="num mono">27 / 31</td><td class="num"><span class="amt" data-amt="522581" data-nocur></span></td><td><button class="btn ghost" data-perm="finance.charges.modifier" data-edit="c3"><svg><use href="#i-sliders"/></svg>Modifier</button></td></tr>
+          <tr data-id="c4" data-nom="Assurance flotte" data-montant="350000" data-effet="2025-01-01" data-fin="2026-06-30" data-cat="Assurances" data-statut="inactif" data-note="Date de fin posée dans la version 2 · conservée, jamais supprimée"><td><b>Assurance flotte</b><div class="hint">Date de fin posée dans la version 2 · conservée, jamais supprimée</div></td><td class="num"><span class="amt" data-amt="350000" data-nocur></span></td><td class="mono">01/01/2025</td><td class="mono">30/06/2026</td><td>Assurances</td><td><span class="st mut"><svg><use href="#i-clock"/></svg>Inactif</span></td><td class="num mono">0 / 31</td><td class="num"><span class="hint">Exclue du prorata</span></td><td><button class="btn ghost" data-perm="finance.charges.modifier" data-edit="c4"><svg><use href="#i-sliders"/></svg>Modifier</button></td></tr>
+        </tbody>
+        <tfoot><tr><td>Total des charges actives</td><td class="num"><span class="amt" data-amt="21700000" data-nocur data-t="factif"></span></td><td colspan="4" class="hint">Montant mensuel actif × jours applicables / 31 · arrondi au FCFA par charge · statut Inactif ou date de fin dépassée = 0 jour</td><td class="num mono" data-t="fdays2">27 / 31</td><td class="num"><span class="amt" data-amt="18900000" data-nocur data-t="ftheo"></span></td><td></td></tr></tfoot>
+      </table></div>
+      <div class="cb" style="padding-top:8px"><div class="note-strip"><svg><use href="#i-info"/></svg><span>Une charge n’est jamais supprimée : elle reçoit une date de fin ou le statut Inactif et reste dans l’historique (Core §5.5). La catégorie de rattachement sert à reconnaître la charge déjà comptabilisée en dépenses (§8.4). Dates ISO 8601 en base, affichées au format 27/08/2026.</span></div></div>
+    </div>
+
+    <!-- 3. CARTE DE CALCUL (§8.4) : formules mot pour mot, équation chiffrée, effet sur le P&L Global -->
+    <div class="card">
+      <div class="ch"><h3>Calcul au 27/08/2026</h3><span class="hint-r">§8.4 · recalculé par le moteur financier unique à chaque enregistrement</span></div>
+      <div class="cb">
+        <div class="fcode">Charge théorique proratisée = Montant mensuel × Jours calendaires applicables / Jours calendaires du mois<br>Charge fixe complémentaire = max(0 ; Charge théorique proratisée − Charge déjà comptabilisée)</div>
+        <div class="eq" style="margin:12px 0"><b>Charge théorique proratisée</b> = <span data-t="eq1">21 700 000 × 27 / 31 = <b>18 900 000</b></span><br><b>Charge fixe complémentaire</b> = <span data-t="eq2">max(0 ; 18 900 000 − 12 000 000) = <b>6 900 000</b></span></div>
+        <div class="brk" data-brk>
+          <div class="row"><span class="sign p">+</span>Salaires <span class="hint">27 j / 31</span><span class="amt" data-amt="16200000" data-nocur></span></div>
+          <div class="row"><span class="sign p">+</span>Loyer <span class="hint">27 j / 31</span><span class="amt" data-amt="2177419" data-nocur></span></div>
+          <div class="row"><span class="sign p">+</span>Gardiennage et sécurité <span class="hint">27 j / 31</span><span class="amt" data-amt="522581" data-nocur></span></div>
+          <div class="row"><span class="sign p">=</span><b>Charge théorique proratisée</b><span class="amt" data-amt="18900000" data-nocur></span></div>
+          <div class="row"><span class="sign m">−</span>Charge déjà comptabilisée<span class="amt m" data-amt="12000000" data-nocur></span></div>
+          <div class="row"><span class="sign p">=</span><b>Charge fixe complémentaire (CF)</b><span class="amt" data-amt="6900000" data-nocur></span></div>
+        </div>
+        <div class="note-strip" style="margin-top:12px"><svg><use href="#i-info"/></svg><span>Le prorata utilise les jours calendaires, dimanche inclus. Cette mécanique permet un P&amp;L courant sans compter deux fois une charge fixe déjà enregistrée comme dépense. (§8.4)</span></div>
+        <div class="hint" style="margin:12px 0 6px">Effet sur le P&amp;L de gestion (§8.3) · CA, ΔS et D inchangés par cet écran</div>
+        <div class="eq"><b>P&amp;L Global</b> = CA + ΔS − D − CF = <span data-t="eq3">452 000 000 + 2 235 000 − 421 500 000 − 6 900 000 = <b>25 835 000</b></span></div>
+        <div class="due" style="margin-top:10px"><span><b>P&amp;L Global recalculé</b> <span class="hint">moteur unique · Tableau de bord, P&amp;L, snapshots, agents IA</span></span><span class="amt" data-amt="25835000" data-nocur data-t="pnl"></span></div>
+        <div class="due"><span>Snapshot 26/08 22:14 <span class="hint">immuable, jamais réécrit (§8.6)</span></span><span class="amt" data-amt="25105000" data-nocur></span></div>
+        <div class="actionbar" style="margin:12px 0 0"><button class="btn ghost" data-goto="fin-pnl"><svg><use href="#i-chart"/></svg>P&amp;L et KPI</button><button class="btn ghost" data-goto="fin-historique"><svg><use href="#i-history"/></svg>Snapshots</button></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. HISTORISATION : configurations sensibles historisées et datées (Core §6.4), original accessible (Core §5.5) -->
+  <div class="card" data-blk>
+    <div class="ch"><h3>Historisation de la configuration</h3><span class="hint-r"><span data-t="nver">2 versions</span> · configurations sensibles historisées et datées dans le temps (Core §6.4) · chaque enregistrement crée la version suivante</span><button class="btn ghost" data-goto="core-audit"><svg><use href="#i-history"/></svg>Journal d’audit</button></div>
+    <div class="cb">
+      <div class="tl" data-versions>
+        <div class="ev on"><b>Version 2 — en vigueur · date d’effet 01/07/2026</b><small>S. Doucouré · Super Admin · Mata Group · Salaires ajoutée : <span class="amt" data-amt="18600000" data-nocur></span> mensuel, Personnel, effet 01/07/2026 · Assurance flotte : date de fin 30/06/2026, statut Inactif · montant mensuel actif <span class="amt" data-amt="21700000" data-nocur></span></small></div>
+        <div class="ev"><b>Version 1 — date d’effet 01/03/2026</b><small>S. Doucouré · Super Admin · Mata Group · Gardiennage et sécurité ajoutée : <span class="amt" data-amt="600000" data-nocur></span> mensuel, Services, effet 01/03/2026 · Loyer <span class="amt" data-amt="2500000" data-nocur></span> (Locaux, effet 01/01/2026) et Assurance flotte <span class="amt" data-amt="350000" data-nocur></span> (Assurances, effet 01/01/2025) actives · montant mensuel actif <span class="amt" data-amt="3450000" data-nocur></span></small></div>
+      </div>
+      <div class="note-strip"><svg><use href="#i-lock"/></svg><span>Une version n’est jamais écrasée : l’enregistrement crée la version suivante, datée par sa date d’effet ; created_at, updated_at et updated_by sont automatiques (§3). Ancienne et nouvelle valeur, acteur, profil, entité et motif sont inscrits au journal d’audit central (Core §5.4). Les snapshots des journées clôturées restent immuables ; la situation recalculée se compare dans Historique (§8.6).</span></div>
+    </div>
+  </div>
+
+  <!-- Modale Ajouter / Modifier (§8.4) : date d'effet obligatoire, aperçu du prorata, version datée -->
+  <div class="mback" data-ov="fin-charges-form"><div class="modal wide" role="dialog" aria-modal="true" aria-label="Charge fixe">
+    <h3><svg><use href="#i-sliders"/></svg><span data-m-title>Ajouter une charge fixe</span></h3>
+    <div class="exp">Entité Mata Group. Nom, montant mensuel, date d’effet, date de fin éventuelle, catégorie de rattachement et statut actif/inactif (§8.4). L’enregistrement crée une nouvelle version datée ; la précédente reste consultable (Core §5.5, §6.4). Modification auditée : acteur, profil, ancienne et nouvelle valeur, motif (Core §5.4).</div>
+    <div class="fld"><label for="fin-charges-nom">Nom</label><input id="fin-charges-nom" class="inp" data-field="nom" placeholder="Nom de la charge fixe"></div>
+    <div class="grid2b">
+      <div class="fld"><label for="fin-charges-montant">Montant mensuel (FCFA, sans décimales)</label><input id="fin-charges-montant" class="inp mono" data-field="montant" inputmode="numeric" placeholder="0"></div>
+      <div class="fld"><label for="fin-charges-cat">Catégorie de rattachement</label><select id="fin-charges-cat" class="inp" data-field="cat"><option>Personnel</option><option>Locaux</option><option>Services</option><option>Assurances</option><option>Logistique</option><option>Maintenance</option></select><span class="hint">Reconnaît la charge déjà comptabilisée en dépenses (§8.4)</span></div>
+    </div>
+    <div class="grid2b">
+      <div class="fld"><label for="fin-charges-effet">Date d’effet — obligatoire</label><input id="fin-charges-effet" class="inp mono" type="date" data-field="effet" required><span class="hint">ISO 8601 · premier jour calendaire applicable</span></div>
+      <div class="fld"><label for="fin-charges-fin">Date de fin éventuelle</label><input id="fin-charges-fin" class="inp mono" type="date" data-field="fin"><span class="hint">Dernier jour applicable · vide = sans fin</span></div>
+    </div>
+    <label class="rline" style="margin-top:12px"><input type="radio" name="fin-charges-statut" value="actif" checked>Actif<span class="rh">entre dans le prorata et dans CF</span></label>
+    <label class="rline"><input type="radio" name="fin-charges-statut" value="inactif">Inactif<span class="rh">conservée dans l’historique, exclue du calcul</span></label>
+    <div class="fld" style="margin-top:12px"><label for="fin-charges-motif">Motif (journal d’audit)</label><input id="fin-charges-motif" class="inp" data-field="motif" placeholder="Motif de la création ou de la modification"></div>
+    <div class="eq" data-m-preview>Au 27/08/2026 : <b>0 / 31</b> jours calendaires applicables · Charge théorique proratisée <b>0</b> · date d’effet manquante</div>
+    <div class="note-strip" style="margin-top:12px"><svg><use href="#i-alert"/></svg><span>Une date d’effet antérieure au 27/08/2026 modifie le CF recalculé des journées déjà clôturées ; les snapshots restent immuables et se comparent dans Historique (§8.6).</span></div>
+    <div class="acts"><button class="btn ghost" data-close>Annuler</button><button class="btn pri" data-perm="finance.charges.modifier" data-submit><svg><use href="#i-check"/></svg>Enregistrer</button></div>
+  </div></div>
+</section>
+<script data-screen="fin-charges">
+ERP.register('fin-charges', function (root, ctx) {
+  var q = function (s, r) { return (r || root).querySelector(s); }, qa = function (s, r) { return Array.prototype.slice.call((r || root).querySelectorAll(s)); };
+  /* Constantes de calcul (FIXTURES §5) : date de calcul 27/08/2026, 31 jours calendaires, charge déjà comptabilisée 12 000 000, CA + ΔS − D = 32 735 000 */
+  var CALC = '2026-08-27', M0 = '2026-08-01', DIM = 31, DEJA = 12000000, CA = 452000000, BASE = 452000000 + 2235000 - 421500000;
+  var tbody = q('[data-rows]'), M = q('[data-ov="fin-charges-form"]'), F = function (k) { return q('[data-field="' + k + '"]', M); };
+  var S = { ver: 2, cf: 6900000, editing: null }, cur = 'tous';
+  var esc = function (s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); };
+  var fr = function (iso) { return iso ? iso.slice(8, 10) + '/' + iso.slice(5, 7) + '/' + iso.slice(0, 4) : '—'; };
+  var pct = function (v) { return (v / CA * 100).toFixed(1).replace('.', ',') + ' %'; };
+  var utc = function (iso) { return Date.UTC(+iso.slice(0, 4), +iso.slice(5, 7) - 1, +iso.slice(8, 10)); };
+  function setAmt(el, v) { if (!el) return; el.setAttribute('data-amt', v); delete el.dataset.done; el.textContent = ''; el.classList.remove('neg'); ctx.formatAmounts(el.parentNode); }
+  /* Jours calendaires applicables, dimanche inclus : du 1er août à la date de calcul, bornés par la date d'effet et la date de fin ; Inactif = 0 (§8.4) */
+  function days(r) { if (r.statut !== 'actif') return 0; var a = r.effet > M0 ? r.effet : M0, b = r.fin && r.fin < CALC ? r.fin : CALC; return a > b ? 0 : Math.round((utc(b) - utc(a)) / 864e5) + 1; }
+  var theo = function (r) { return Math.round(r.montant * days(r) / DIM); };
+  function read(tr) { var d = tr.dataset; return { id: d.id, nom: d.nom, montant: +d.montant, effet: d.effet, fin: d.fin || '', cat: d.cat, statut: d.statut, note: d.note }; }
+  function rowHtml(r) {
+    var j = days(r), st = r.statut === 'actif' ? '<span class="st ok"><svg><use href="#i-check"/></svg>Actif</span>' : '<span class="st mut"><svg><use href="#i-clock"/></svg>Inactif</span>';
+    return '<td><b>' + esc(r.nom) + '</b><div class="hint">' + esc(r.note) + '</div></td><td class="num"><span class="amt" data-amt="' + r.montant + '" data-nocur></span></td><td class="mono">' + fr(r.effet) + '</td><td class="mono">' + fr(r.fin) + '</td><td>' + esc(r.cat) + '</td><td>' + st + '</td><td class="num mono">' + j + ' / ' + DIM + '</td><td class="num">' + (j ? '<span class="amt" data-amt="' + theo(r) + '" data-nocur></span>' : '<span class="hint">Exclue du prorata</span>') + '</td><td><button class="btn ghost" data-perm="finance.charges.modifier" data-edit="' + r.id + '"><svg><use href="#i-sliders"/></svg>Modifier</button></td>';
+  }
+  function render(tr, r) { ['id', 'nom', 'montant', 'effet', 'fin', 'cat', 'statut', 'note'].forEach(function (k) { tr.dataset[k] = r[k]; }); tr.innerHTML = rowHtml(r); ctx.formatAmounts(tr); }
+  /* Totaux, équations, composantes des infobulles et effet sur le P&L Global : un seul calcul pour tout l'écran (§3 Moteur unique) */
+  function totals() {
+    var rows = qa('tr[data-id]', tbody).map(read), act = rows.filter(function (r) { return r.statut === 'actif'; });
+    var mens = act.reduce(function (s, r) { return s + r.montant; }, 0), th = rows.reduce(function (s, r) { return s + theo(r); }, 0), cf = Math.max(0, th - DEJA);
+    var js = act.map(days).filter(function (j) { return j > 0; }), uni = js.length > 0 && js.every(function (j) { return j === js[0]; }), jl = uni ? js[0] + ' / ' + DIM : 'variable';
+    S.cf = cf;
+    setAmt(q('[data-t="actif"]'), mens); setAmt(q('[data-t="theo"]'), th); setAmt(q('[data-t="cf"]'), cf); setAmt(q('[data-t="pnl"]'), BASE - cf); setAmt(q('[data-t="factif"]'), mens); setAmt(q('[data-t="ftheo"]'), th);
+    q('[data-t="nact"]').textContent = act.length + ' charge' + (act.length > 1 ? 's' : '') + ' active' + (act.length > 1 ? 's' : ''); q('[data-t="pct"]').textContent = pct(cf); q('[data-t="pcta"]').textContent = pct(mens);
+    q('[data-t="fdays"]').textContent = jl; q('[data-t="fdays2"]').textContent = jl;
+    var prod = uni ? ctx.fmt(mens) + ' × ' + js[0] + ' / ' + DIM : 'Σ (Montant mensuel × jours applicables / ' + DIM + ')';
+    q('[data-t="eq1"]').innerHTML = prod + ' = <b>' + ctx.fmt(th) + '</b>'; q('[data-t="eq2"]').innerHTML = 'max(0 ; ' + ctx.fmt(th) + ' − ' + ctx.fmt(DEJA) + ') = <b>' + ctx.fmt(cf) + '</b>';
+    q('[data-t="eq3"]').innerHTML = ctx.fmt(CA) + ' + 2 235 000 − 421 500 000 − ' + ctx.fmt(cf) + ' = <b>' + ctx.fmt(BASE - cf) + '</b>';
+    q('[data-brk]').innerHTML = act.map(function (r) { return '<div class="row"><span class="sign p">+</span>' + esc(r.nom) + ' <span class="hint">' + days(r) + ' j / ' + DIM + '</span><span class="amt" data-amt="' + theo(r) + '" data-nocur></span></div>'; }).join('') + '<div class="row"><span class="sign p">=</span><b>Charge théorique proratisée</b><span class="amt" data-amt="' + th + '" data-nocur></span></div><div class="row"><span class="sign m">−</span>Charge déjà comptabilisée<span class="amt m" data-amt="' + DEJA + '" data-nocur></span></div><div class="row"><span class="sign p">=</span><b>Charge fixe complémentaire (CF)</b><span class="amt" data-amt="' + cf + '" data-nocur></span></div>';
+    ctx.formatAmounts(q('[data-brk]'));
+    q('[data-fx="actif"]').setAttribute('data-c', act.map(function (r) { return r.nom + ' ' + ctx.fmt(r.montant); }).join(' + ') + ' = ' + ctx.fmt(mens) + ' · ' + (rows.length - act.length) + ' charge(s) Inactif exclue(s)');
+    q('[data-fx="theo"]').setAttribute('data-c', prod + ' = ' + ctx.fmt(th) + ' · ' + act.map(function (r) { return r.nom + ' ' + ctx.fmt(theo(r)); }).join(' · '));
+    q('[data-fx="cf"]').setAttribute('data-c', 'max(0 ; ' + ctx.fmt(th) + ' − ' + ctx.fmt(DEJA) + ') = ' + ctx.fmt(cf));
+  }
+  /* Filtre par statut */
+  function applyFilter(v) { cur = v; ctx.filterRows(tbody, 'statut', v); qa('.chip[data-filter]').forEach(function (c) { c.classList.toggle('on', c.getAttribute('data-filter') === v); }); var n = qa('tr[data-id]', tbody).filter(function (t) { return !t.hidden; }).length; q('[data-t="shown"]').textContent = n + ' charge' + (n > 1 ? 's' : '') + ' affichée' + (n > 1 ? 's' : ''); }
+  qa('.chip[data-filter]').forEach(function (c) { ctx.on(c, 'click', function () { applyFilter(c.getAttribute('data-filter')); }); });
+  /* Modale : lecture du formulaire, aperçu du prorata en direct, remplissage en ajout ou en modification */
+  var stat = function () { return q('input[name="fin-charges-statut"]:checked', M).value; };
+  function form() { return { nom: F('nom').value.trim(), montant: F('montant').value.replace(/\s/g, ''), effet: F('effet').value, fin: F('fin').value, cat: F('cat').value, statut: stat() }; }
+  function preview() { var f = form(), r = { montant: +f.montant || 0, effet: f.effet || CALC, fin: f.fin, statut: f.statut }, j = f.effet ? days(r) : 0; q('[data-m-preview]', M).innerHTML = 'Au 27/08/2026 : <b>' + j + ' / ' + DIM + '</b> jours calendaires applicables · Charge théorique proratisée <b>' + ctx.fmt(j ? theo(r) : 0) + '</b>' + (f.effet ? '' : ' · date d’effet manquante'); }
+  ['nom', 'montant', 'effet', 'fin', 'cat'].forEach(function (k) { ctx.on(F(k), 'input', preview); ctx.on(F(k), 'change', preview); });
+  qa('input[name="fin-charges-statut"]', M).forEach(function (x) { ctx.on(x, 'change', preview); });
+  function fill(r) {
+    S.editing = r ? r.id : null; q('[data-m-title]', M).textContent = r ? 'Modifier une charge fixe — ' + r.nom : 'Ajouter une charge fixe';
+    F('nom').value = r ? r.nom : ''; F('montant').value = r ? r.montant : ''; F('effet').value = r ? r.effet : ''; F('fin').value = r ? r.fin : ''; F('cat').value = r ? r.cat : 'Personnel'; F('motif').value = '';
+    qa('input[name="fin-charges-statut"]', M).forEach(function (x) { x.checked = x.value === (r ? r.statut : 'actif'); }); preview();
+  }
+  ctx.on(q('[data-add]'), 'click', function () { if (!q('[data-add]').classList.contains('denied')) fill(null); });
+  ctx.on(tbody, 'click', function (e) { var b = e.target.closest('[data-edit]'); if (!b || b.classList.contains('denied')) return; fill(read(q('tr[data-id="' + b.getAttribute('data-edit') + '"]', tbody))); ctx.open('fin-charges-form'); });
+  /* Enregistrer : contrôles (date d'effet obligatoire), nouvelle version datée, recalcul, audit */
+  ctx.on(q('[data-submit]', M), 'click', function () {
+    var f = form(), n = +f.montant;
+    if (!f.nom) { ctx.toast('Le nom de la charge fixe est obligatoire (§8.4)'); F('nom').focus(); return; }
+    if (!/^\d+$/.test(f.montant) || n <= 0) { ctx.toast('Montant mensuel : entier strictement positif en FCFA, sans décimales (§3)'); F('montant').focus(); return; }
+    if (!f.effet) { ctx.toast('La date d’effet est obligatoire (§8.4) — format ISO 8601, jamais de texte libre'); F('effet').focus(); return; }
+    if (f.fin && f.fin < f.effet) { ctx.toast('La date de fin ne peut pas précéder la date d’effet'); F('fin').focus(); return; }
+    var before = S.cf, tr = S.editing ? q('tr[data-id="' + S.editing + '"]', tbody) : document.createElement('tr'), old = S.editing ? read(tr) : null, motif = F('motif').value.trim();
+    S.ver++;
+    var r = { id: S.editing || 'c' + (qa('tr[data-id]', tbody).length + 1), nom: f.nom, montant: n, effet: f.effet, fin: f.fin, cat: f.cat, statut: f.statut, note: (old ? 'Modifiée' : 'Ajoutée') + ' dans la version ' + S.ver + ' · 27/08/2026 · ' + ctx.profile.short };
+    render(tr, r); if (!old) tbody.appendChild(tr);
+    totals(); ctx.applyPerms(); applyFilter(cur);
+    qa('.ev.on', q('[data-versions]')).forEach(function (e) { e.classList.remove('on'); });
+    /* Ancienne et nouvelle valeur de chaque champ modifié (Core §5.4) */
+    var LB = { nom: 'nom', montant: 'montant mensuel', statut: 'statut', effet: 'date d’effet', fin: 'date de fin', cat: 'catégorie' };
+    var diff = old ? Object.keys(LB).filter(function (k) { return String(old[k]) !== String(r[k]); }).map(function (k) { var v = function (x) { return k === 'montant' ? ctx.fmt(x) : (k === 'effet' || k === 'fin' ? fr(x) : esc(x)); }; return LB[k] + ' ' + v(old[k]) + ' → ' + v(r[k]); }) : [];
+    var chg = old ? (diff.length ? ' modifiée : ' + diff.join(', ') : ' réenregistrée sans changement de valeur') : ' ajoutée : ' + ctx.fmt(r.montant) + ' mensuel, ' + esc(r.cat) + ', ' + r.statut + (r.fin ? ', fin ' + fr(r.fin) : '');
+    q('[data-versions]').insertAdjacentHTML('afterbegin', '<div class="ev on"><b>Version ' + S.ver + ' — en vigueur · enregistrée le 27/08/2026 · date d’effet ' + fr(r.effet) + '</b><small>' + esc(ctx.profile.short + ' · ' + ctx.profile.profile) + ' · Mata Group · ' + esc(r.nom) + chg + (motif ? ' · motif « ' + esc(motif) + ' »' : ' · sans motif') + ' · CF ' + ctx.fmt(before) + ' → ' + ctx.fmt(S.cf) + '</small></div>');
+    q('[data-t="nver"]').textContent = S.ver + ' versions';
+    ctx.close('fin-charges-form');
+    ctx.toast('Version ' + S.ver + ' enregistrée, la précédente reste consultable (Core §5.5) · modification auditée · CF recalculée ' + ctx.fmt(before) + ' → ' + ctx.fmt(S.cf) + ' FCFA, P&L Global recalculé par le moteur unique (§3)');
+  });
+  /* Vue par profil : lecture seule expliquée quand finance.charges.modifier manque (refus par défaut) */
+  function applyView(p) { q('[data-view="readonly"]').hidden = ctx.hasPerm('finance.charges.modifier'); q('[data-t="prof"]').textContent = p.profile + ' (' + p.short + ')'; }
+  applyView(ctx.profile); document.addEventListener('erp:profile', function (e) { applyView(e.detail); });
+  ctx.on(q('[data-export]'), 'click', function () { if (!q('[data-export]').classList.contains('denied')) ctx.toast('Export CSV de la configuration des charges fixes et de ses versions (service commun, Core §6.3) · conservé 7 jours · droit d’export distinct du droit de consultation'); });
+  /* Initialisation : les lignes statiques sont recalculées par le même code que les lignes ajoutées */
+  qa('tr[data-id]', tbody).forEach(function (tr) { render(tr, read(tr)); });
+  totals(); applyFilter('tous');
+  ctx.formatAmounts(root);
+  ctx.applyPerms();
+});
+</script>
+
+<!-- fin-visualisation -->
+<!-- ÉCRAN : VISUALISATION — Mata Finance §8.5 (dashboard financier), §8.1/§8.3 (définitions des séries), §8.2 (FCFA puis ratio), §10.3 (explicabilité) ; Mata Core §7.1 (valeur → formule → composantes → source) -->
+<section class="scr" data-scr="fin-visualisation" data-module="finance" data-perm="finance.visualisation.view" data-sens="s" hidden>
+  <style data-screen="fin-visualisation">
+    #app [data-scr="fin-visualisation"] .ch{flex-wrap:wrap}
+    #app [data-scr="fin-visualisation"] .legend{flex-wrap:wrap;gap:8px 18px;margin-bottom:12px}
+    #app [data-scr="fin-visualisation"] .sw{display:inline-block;width:14px;height:3px;border-radius:2px;flex:none}
+    #app [data-scr="fin-visualisation"] .sw.dash{background:repeating-linear-gradient(90deg,currentColor 0 4px,transparent 4px 7px)}
+    #app [data-scr="fin-visualisation"] td.num,#app [data-scr="fin-visualisation"] th.num{text-align:right;white-space:nowrap}
+    #app [data-scr="fin-visualisation"] .ratio-c{font-family:'Fira Code',monospace;font-size:11.5px;font-weight:600;color:var(--ink-2)}
+    #app [data-scr="fin-visualisation"] .lb{display:inline-flex;align-items:center;gap:8px;font-weight:700;white-space:nowrap}
+    #app [data-scr="fin-visualisation"] .vals table{min-width:1080px}
+    #app [data-scr="fin-visualisation"] td .btn,#app [data-scr="fin-visualisation"] .ch .btn{min-height:30px;padding:5px 10px;font-size:11.5px}
+    #app [data-scr="fin-visualisation"] td .st{border:none;cursor:pointer}
+    #app [data-scr="fin-visualisation"] .tl small{display:block;color:var(--mut);line-height:1.55;margin-top:2px}
+    #app [data-scr="fin-visualisation"] .drawer .steps{margin:0 0 10px}
+  </style>
+  <div class="scr-head">
+    <div>
+      <h2>Visualisation</h2>
+      <p class="scr-sub">Six séries du moteur financier unique sur 30 jours (29/07 → 27/08/2026) · Mata Group · même échelle en millions de FCFA · positions en trait plein, cumuls en pointillé · chaque valeur du 27/08 redescend vers sa formule, ses composantes, ses mouvements et sa source (§10.3, Core §7.1).</p>
+    </div>
+    <div class="scr-meta">
+      <span class="sens s"><svg><use href="#i-shield"/></svg>Sensible</span>
+      <span class="hint">Écran de lecture, aucune validation ici · aucun recalcul local : les valeurs sont celles du moteur financier, affichées sans être recréées (Core §7.1) · Exporter distinct de Consulter (§5.7)</span>
+    </div>
+  </div>
+  <div class="note-strip" style="margin:0 0 14px"><svg><use href="#i-refresh"/></svg><span><b>Sources et fraîcheur (§3, §6.5)</b> — Ventes Mata <span class="st ok">OK 20:30</span> · Bictorys <span class="st ok">OK 08:12</span> · Banque BOA <span class="st ok">OK 08:00</span> · Stock <span class="st ok">OK 06:00</span> · Achat <span class="st ok">OK · import 17:00, 5 achats intégrés</span> — une source périmée reste affichée avec son horodatage et n’est jamais remplacée par 0 ; le compte Ajustement est exclu de toutes les séries (§8.1).</span></div>
+
+  <div class="actionbar">
+    <div class="chips" data-presets>
+      <button class="chip on" data-preset="positions">Positions (défaut)</button>
+      <button class="chip" data-preset="cumuls">Cumuls</button>
+      <button class="chip" data-preset="tout">Les six séries</button>
+    </div>
+    <div class="fld"><label for="fin-visualisation-ca">CA de référence des ratios (§8.2)</label>
+      <select id="fin-visualisation-ca" class="inp">
+        <option value="452000000" data-short="août au 27">Mois en cours — août 2026 au 27 : 452 000 000 FCFA</option>
+        <option value="438500000" data-short="juillet">Mois précédent — juillet 2026 : 438 500 000 FCFA</option>
+        <option value="1301200000" data-short="3 derniers mois">3 derniers mois : 1 301 200 000 FCFA</option>
+      </select></div>
+    <div class="sp"></div>
+    <button class="btn ghost" data-goto="fin-dashboard"><svg><use href="#i-dash"/></svg>Tableau de bord</button>
+    <button class="btn ghost" data-goto="fin-pnl"><svg><use href="#i-scale"/></svg>P&amp;L et KPI</button>
+    <button class="btn ghost" data-goto="fin-historique"><svg><use href="#i-history"/></svg>Snapshots</button>
+    <button class="btn ghost" data-perm="finance.export" data-export><svg><use href="#i-dl"/></svg>Exporter les séries</button>
+  </div>
+
+  <!-- 1. GRAPHIQUE UNIQUE : six séries, même échelle, dessiné par le moteur commun -->
+  <div class="card">
+    <div class="ch"><h3>Six séries — 30 derniers jours</h3><span class="hint-r">29/07 → 27/08/2026 · millions de FCFA · survol ou tap : valeurs du jour · <b data-count>3 séries affichées</b></span></div>
+    <div class="cb">
+      <div class="legend" aria-label="Séries affichées">
+        <label><input type="checkbox" data-series-toggle="treso" checked><span class="sw" style="background:var(--d1)"></span>Trésorerie totale contrôlée</label>
+        <label><input type="checkbox" data-series-toggle="dettes" checked><span class="sw" style="background:var(--d2)"></span>Dettes fournisseurs</label>
+        <label><input type="checkbox" data-series-toggle="creances" checked><span class="sw" style="background:var(--d3)"></span>Créances clients</label>
+        <label><input type="checkbox" data-series-toggle="pnl"><span class="sw dash" style="color:var(--d1)"></span>P&amp;L Global (cumul)</label>
+        <label><input type="checkbox" data-series-toggle="ventes"><span class="sw dash" style="color:var(--d2)"></span>Ventes Mata — CA (cumul)</label>
+        <label><input type="checkbox" data-series-toggle="burn"><span class="sw dash" style="color:var(--d3)"></span>Cash burn — dépenses D (cumul)</label>
+      </div>
+      <div class="multichart" data-series="treso,dettes,creances" style="height:280px"></div>
+      <div class="note-strip" data-scale-note hidden><svg><use href="#i-alert"/></svg><span><b>Même échelle.</b> L’axe suit le maximum des séries cochées : avec les cumuls Ventes Mata ou dépenses D (≈ 450 M), les positions comprises entre 20 M et 61 M s’aplatissent. Décocher les cumuls pour relire les positions ; les valeurs exactes restent lisibles au survol et dans le tableau.</span></div>
+      <div class="note-strip"><svg><use href="#i-info"/></svg><span><b>Lecture.</b> Trait plein = position calculée au jour (Trésorerie totale contrôlée, Dettes fournisseurs, Créances clients, §8.1). Pointillé = cumul de la période (P&amp;L Global, CA fourni par Ventes Mata, dépenses D par date métier, §8.3). Palette CVD validée : rouge, bleu, ocre ; deux traits partagent une couleur uniquement s’ils diffèrent par le style de trait.</span></div>
+    </div>
+  </div>
+
+  <!-- 2. DERNIÈRES VALEURS (27/08) : FCFA puis ratio, formule sur chaque valeur, descente vers l'écran propriétaire -->
+  <div class="card vals" style="margin-top:14px">
+    <div class="ch"><h3>Dernières valeurs — 27/08/2026</h3><span class="hint-r">Valeur en FCFA d’abord, ratio ensuite (§8.2) · formule, composantes et source sur chaque valeur (Core §7.1) · « Descendre au détail » ouvre l’écran propriétaire (§10.3)</span></div>
+    <div class="tbl-scroll"><table>
+      <thead><tr><th>Série</th><th>Définition (§8.1, §8.3)</th><th class="num">Valeur au 27/08 (FCFA)</th><th class="num">Ratio / CA de référence (<span data-ca-short>août au 27</span>)</th><th>Sur le graphique</th><th>Écran propriétaire</th><th>Actions</th></tr></thead>
+      <tbody>
+        <tr data-serie="treso"><td><span class="lb"><span class="sw" style="background:var(--d1)"></span>Trésorerie totale contrôlée<button class="fx" data-f="Trésorerie disponible + Trésorerie en transit." data-c="58 455 000 + 2 850 000 = 61 305 000 · Disponible : Caisse générale 8 450 000 · Sous-caisse Marché 1 275 000 · Sous-caisse Livraisons 640 000 · Banque BOA 45 200 000 · Bictorys 2 890 000 · Transit : Dépôt en cours (Caisse → Banque) 2 500 000 · Bictorys → Banque en cours 350 000" data-src="Moteur financier · CALCULÉ (caisses, relais) · IMPORT CSV 27/08 08:00 (Banque BOA) · SYNCHRONISÉ 27/08 08:12 (Bictorys) · compte Ajustement exclu (§8.1) · snapshot 26/08 22:14 : 60 790 000" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></span></td><td class="hint">Trésorerie disponible + Trésorerie en transit.</td><td class="num"><span class="amt" data-amt="61305000" data-nocur></span><div class="hint">61,3 M sur le graphique</div></td><td class="num ratio-c" data-pct-of="61305000">13,6 %</td><td><button class="st ok" data-chart-toggle="treso"><svg><use href="#i-eye"/></svg>Affichée</button></td><td class="hint">Comptes · Trésorerie, Positions externes, Relais <span class="sens hs" style="margin-left:4px"><svg><use href="#i-shield"/></svg>Hautement sensible</span></td><td><div class="actionbar" style="margin:0;gap:6px;flex-wrap:nowrap"><button class="btn ghost" data-open="fin-visualisation-chaine" data-serie="treso"><svg><use href="#i-layers"/></svg>Chaîne §10.3</button><button class="btn ghost" data-goto="fin-comptes" data-perm="finance.comptes.view"><svg><use href="#i-arr"/></svg>Descendre au détail</button></div></td></tr>
+        <tr data-serie="dettes"><td><span class="lb"><span class="sw" style="background:var(--d2)"></span>Dettes fournisseurs<button class="fx" data-f="Σ max(− Position fournisseur ; 0)." data-c="AGNEAUX 12 400 000 + MATA VOLAILLE CHAIR 4 300 000 + Bétail Thiès 4 600 000 + MATA VOLAILLE ŒUFS 1 150 000 + Aliments Sénégal 800 000 = 23 250 000 · Abattoirs Dakar +350 000 exclu (Avances fournisseurs)" data-src="Comptes Fournisseur CALCULÉ · convention de signe §4.3 : négatif = Mata doit · import Achat idempotent 27/08 17:00 · snapshot 26/08 22:14 : 23 100 000" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></span></td><td class="hint">Σ max(− Position fournisseur ; 0).</td><td class="num"><span class="amt" data-amt="23250000" data-nocur></span><div class="hint">23,25 M sur le graphique</div></td><td class="num ratio-c" data-pct-of="23250000">5,1 %</td><td><button class="st ok" data-chart-toggle="dettes"><svg><use href="#i-eye"/></svg>Affichée</button></td><td class="hint">Fournisseurs · positions, échéances, plafonds</td><td><div class="actionbar" style="margin:0;gap:6px;flex-wrap:nowrap"><button class="btn ghost" data-open="fin-visualisation-chaine" data-serie="dettes"><svg><use href="#i-layers"/></svg>Chaîne §10.3</button><button class="btn ghost" data-goto="fin-fournisseurs" data-perm="finance.fournisseurs.view"><svg><use href="#i-arr"/></svg>Descendre au détail</button></div></td></tr>
+        <tr data-serie="creances"><td><span class="lb"><span class="sw" style="background:var(--d3)"></span>Créances clients<button class="fx" data-f="Σ max(Position client ; 0)." data-c="MaaS Keur Massar 3 250 000 + MaaS Ouakam 2 870 000 + MaaS Pikine 1 985 000 + Restaurant Le Baobab 2 400 000 + Boucherie des Almadies 1 730 000 + 9 autres MaaS 7 840 000 = 20 075 000 · Touba Viandes −150 000 exclu (Avances clients)" data-src="Comptes Créance client CALCULÉ · positif = le client doit à Mata (§4.3) · Ventes Mata OK 27/08 20:30 · snapshot 26/08 22:14 : 19 925 000" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></span></td><td class="hint">Σ max(Position client ; 0).</td><td class="num"><span class="amt" data-amt="20075000" data-nocur></span><div class="hint">20,075 M sur le graphique</div></td><td class="num ratio-c" data-pct-of="20075000">4,4 %</td><td><button class="st ok" data-chart-toggle="creances"><svg><use href="#i-eye"/></svg>Affichée</button></td><td class="hint">Créances clients · 12 MaaS et 3 gros clients</td><td><div class="actionbar" style="margin:0;gap:6px;flex-wrap:nowrap"><button class="btn ghost" data-open="fin-visualisation-chaine" data-serie="creances"><svg><use href="#i-layers"/></svg>Chaîne §10.3</button><button class="btn ghost" data-goto="fin-creances" data-perm="finance.creances.view"><svg><use href="#i-arr"/></svg>Descendre au détail</button></div></td></tr>
+        <tr data-serie="pnl"><td><span class="lb"><span class="sw dash" style="color:var(--d1)"></span>P&amp;L Global (cumul)<button class="fx" data-f="P&amp;L Global = CA + ΔS − D − CF" data-c="CA 452 000 000 + ΔS 2 235 000 − D 421 500 000 − CF 6 900 000 = 25 835 000 · CF = max(0 ; 21 700 000 × 27 / 31 − 12 000 000)" data-src="Moteur financier unique · CA : Ventes Mata OK 27/08 20:30 · ΔS : Stock OK 27/08 06:00 · D : Dépenses par date métier, import Achat 17:00 · CF : Charges fixes §8.4 · snapshot 26/08 22:14 : 25 105 000" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></span></td><td class="hint">P&amp;L Global = CA + ΔS − D − CF · cumul du 1er au 27 août</td><td class="num"><span class="amt" data-amt="25835000" data-nocur></span><div class="hint">25,835 M sur le graphique</div></td><td class="num ratio-c" data-pct-of="25835000">5,7 %</td><td><button class="st mut" data-chart-toggle="pnl"><svg><use href="#i-eyeoff"/></svg>Masquée</button></td><td class="hint">P&amp;L et KPI · symboles, variantes, charges fixes</td><td><div class="actionbar" style="margin:0;gap:6px;flex-wrap:nowrap"><button class="btn ghost" data-open="fin-visualisation-chaine" data-serie="pnl"><svg><use href="#i-layers"/></svg>Chaîne §10.3</button><button class="btn ghost" data-goto="fin-pnl" data-perm="finance.pnl.view"><svg><use href="#i-arr"/></svg>Descendre au détail</button></div></td></tr>
+        <tr data-serie="ventes"><td><span class="lb"><span class="sw dash" style="color:var(--d2)"></span>Ventes Mata — CA (cumul)<button class="fx" data-f="Chiffre d’affaires Mata de la période, fourni par Ventes Mata." data-c="Cumul du 1er au 27 août 2026 = 452 000 000 · ventes du jour 6 200 000 (Réconciliation des ventes du jour : Cohérente)" data-src="Ventes Mata, propriétaire unique · jamais saisi dans Mata Finance · OK 27/08 20:30 · CA de référence par défaut des ratios (§8.2)" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></span></td><td class="hint">Chiffre d’affaires Mata de la période, fourni par Ventes Mata.</td><td class="num"><span class="amt" data-amt="452000000" data-nocur></span><div class="hint">452 M sur le graphique</div></td><td class="num ratio-c" data-pct-of="452000000">100,0 %</td><td><button class="st mut" data-chart-toggle="ventes"><svg><use href="#i-eyeoff"/></svg>Masquée</button></td><td class="hint">P&amp;L et KPI · symbole CA · source Ventes Mata</td><td><div class="actionbar" style="margin:0;gap:6px;flex-wrap:nowrap"><button class="btn ghost" data-open="fin-visualisation-chaine" data-serie="ventes"><svg><use href="#i-layers"/></svg>Chaîne §10.3</button><button class="btn ghost" data-goto="fin-pnl" data-perm="finance.pnl.view"><svg><use href="#i-arr"/></svg>Descendre au détail</button></div></td></tr>
+        <tr data-serie="burn"><td><span class="lb"><span class="sw dash" style="color:var(--d3)"></span>Cash burn — dépenses D (cumul)<button class="fx" data-f="Toutes les dépenses de la période selon leur date métier." data-c="D = 421 500 000 dont DI 18 000 000 et DS 6 500 000 · 14 écritures du 27/08 pour 1 862 000 · charges fixes déjà comptabilisées en dépenses 12 000 000" data-src="Dépenses · saisies manuelles et API Achat (import idempotent 27/08 17:00, 5 achats, 0 doublon) · flags Investissement / Dépense spéciale sans effet sur D (§8.3)" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></span></td><td class="hint">Toutes les dépenses de la période selon leur date métier.</td><td class="num"><span class="amt" data-amt="421500000" data-nocur></span><div class="hint">421,5 M sur le graphique</div></td><td class="num ratio-c" data-pct-of="421500000">93,3 %</td><td><button class="st mut" data-chart-toggle="burn"><svg><use href="#i-eyeoff"/></svg>Masquée</button></td><td class="hint">Dépenses · écritures par date métier, flags DI / DS, « Pas sûr »</td><td><div class="actionbar" style="margin:0;gap:6px;flex-wrap:nowrap"><button class="btn ghost" data-open="fin-visualisation-chaine" data-serie="burn"><svg><use href="#i-layers"/></svg>Chaîne §10.3</button><button class="btn ghost" data-goto="fin-depenses" data-perm="finance.depenses.view"><svg><use href="#i-arr"/></svg>Descendre au détail</button></div></td></tr>
+      </tbody>
+    </table></div>
+    <div class="cb" style="padding-top:12px">
+      <div class="hint" style="margin-bottom:8px">Rappel §10.3 · Core §7.1 — chemin d’investigation d’un KPI ou d’un solde, sans accès direct à la base de données :</div>
+      <ol class="steps"><li>Valeur</li><li>Formule</li><li>Composantes</li><li>Mouvements</li><li>Objet métier</li><li>Source</li></ol>
+      <div class="eq"><b>Trésorerie totale contrôlée</b> : 61 305 000 F — <span class="ok" data-pct-of="61305000">13,6 %</span> du CA de référence · <b>Position financière nette</b> = 61 305 000 + 350 000 + 20 075 000 − 23 250 000 − 150 000 = <b>58 330 000</b> · <b>Trésorerie après fournisseurs</b> = 61 305 000 − 23 250 000 = <b>38 055 000</b> (§8.1) — les trois positions tracées ne sont jamais compensées entre elles : les expositions restent affichées séparément.</div>
+      <div class="note-strip"><svg><use href="#i-info"/></svg><span>Depuis un KPI ou un solde, un utilisateur autorisé doit pouvoir descendre jusqu’aux composantes, mouvements, objets métier et sources. L’investigation d’un écart ne doit pas nécessiter un accès direct à la base de données. (§10.3) · La descente vers Comptes est une consultation auditée (Hautement sensible, Core §5.3) · Écart ouvert du jour : Sous-caisse Marché <span class="amt" data-amt="-25000" data-nocur></span> → <button class="linkish" data-goto="fin-reconciliation">Réconciliation</button></span></div>
+    </div>
+  </div>
+
+  <!-- 3. CHAÎNES D'INVESTIGATION PAR SÉRIE (§10.3) : blocs sources du tiroir, un par série, jamais affichés directement -->
+  <div data-chain="treso" data-title="Trésorerie totale contrôlée" data-amt-v="61305000" data-goto-scr="fin-comptes" data-goto-perm="finance.comptes.view" data-goto-lbl="Comptes" data-alt-scr="fin-historique" data-alt-lbl="Snapshots" hidden>
+    <div class="ev on"><b>1 · Valeur</b><small><span class="amt" data-amt="61305000"></span> au 27/08/2026 · <span data-pct-of="61305000">13,6 %</span> du CA de référence · 61,3 M sur le graphique · valeur calculée, jamais saisie (§3)</small></div>
+    <div class="ev"><b>2 · Formule</b><small>Trésorerie disponible + Trésorerie en transit. (§8.1) · Trésorerie disponible = Somme des comptes Trésorerie et Positions externes configurés comme immédiatement disponibles. · Trésorerie en transit = Somme des comptes Relais actifs.</small></div>
+    <div class="ev"><b>3 · Composantes</b><small>Disponible <span class="amt" data-amt="58455000" data-nocur></span> : Caisse générale <span class="amt" data-amt="8450000" data-nocur></span> · Sous-caisse Marché <span class="amt" data-amt="1275000" data-nocur></span> · Sous-caisse Livraisons <span class="amt" data-amt="640000" data-nocur></span> · Banque BOA <span class="amt" data-amt="45200000" data-nocur></span> · Bictorys <span class="amt" data-amt="2890000" data-nocur></span> — Transit <span class="amt" data-amt="2850000" data-nocur></span> : Dépôt en cours (Caisse → Banque) <span class="amt" data-amt="2500000" data-nocur></span> · Bictorys → Banque en cours <span class="amt" data-amt="350000" data-nocur></span> — compte Ajustement exclu</small></div>
+    <div class="ev"><b>4 · Mouvements</b><small>Caisse générale : dernier solde réconcilié 26/08 <span class="amt" data-amt="7980000" data-nocur></span>, mouvements du jour +<span class="amt" data-amt="470000" data-nocur></span>, à déclarer avant 23:59 · Sous-caisse Marché : déclaré <span class="amt" data-amt="1250000" data-nocur></span> à 21:12, écart <span class="amt" data-amt="-25000" data-nocur></span>, « À réconcilier » · Relais Dépôt en cours créé 27/08 07:45 (A. Ndiaye) · Relais Bictorys → Banque ouvert depuis 3 j, seuil 2 j · Transferts en attente : VAL-118 <span class="amt" data-amt="600000" data-nocur></span> BOA → Caisse générale (F. Sarr), VAL-114 <span class="amt" data-amt="1500000" data-nocur></span> Caisse générale → BOA (S. Doucouré)</small></div>
+    <div class="ev"><b>5 · Objet métier</b><small>3 comptes Trésorerie (CALCULÉ) · 2 Positions externes : Banque BOA (IMPORT CSV), Bictorys (SYNCHRONISÉ, « Solde disponible » en lecture API seule) · 2 comptes Relais · correction BOA <span class="amt" data-amt="-45000" data-nocur></span> (VAL-116, frais bancaires non importés) en attente de double validation · ajustement VAL-117 +<span class="amt" data-amt="180000" data-nocur></span> Caisse générale : 2e validation requise</small></div>
+    <div class="ev"><b>6 · Source</b><small>Moteur financier unique · Banque BOA : import 27/08 08:00, 14 lignes, 0 doublon · Bictorys : synchronisation 27/08 08:12 · snapshot 26/08 22:14 : <span class="amt" data-amt="60790000" data-nocur></span>, situation recalculée au 26/08 <span class="amt" data-amt="60970000" data-nocur></span> (+<span class="amt" data-amt="180000" data-nocur></span>, VAL-117, contrepassation tracée) · consultation de Comptes auditée (Hautement sensible)</small></div>
+  </div>
+  <div data-chain="dettes" data-title="Dettes fournisseurs" data-amt-v="23250000" data-goto-scr="fin-fournisseurs" data-goto-perm="finance.fournisseurs.view" data-goto-lbl="Fournisseurs" data-alt-scr="fin-historique" data-alt-lbl="Snapshots" hidden>
+    <div class="ev on"><b>1 · Valeur</b><small><span class="amt" data-amt="23250000"></span> au 27/08/2026 · <span data-pct-of="23250000">5,1 %</span> du CA de référence · 23,25 M sur le graphique · exposition affichée séparément, jamais compensée (§8.1)</small></div>
+    <div class="ev"><b>2 · Formule</b><small>Σ max(− Position fournisseur ; 0). (§8.1) · convention de signe §4.3 : Fournisseur positif = avance de Mata chez le fournisseur ; négatif = Mata doit</small></div>
+    <div class="ev"><b>3 · Composantes</b><small>AGNEAUX <span class="amt" data-amt="12400000" data-nocur></span> · MATA VOLAILLE CHAIR <span class="amt" data-amt="4300000" data-nocur></span> · Bétail Thiès <span class="amt" data-amt="4600000" data-nocur></span> · MATA VOLAILLE ŒUFS <span class="amt" data-amt="1150000" data-nocur></span> · Aliments Sénégal <span class="amt" data-amt="800000" data-nocur></span> · Abattoirs Dakar +<span class="amt" data-amt="350000" data-nocur></span> exclu (Avances fournisseurs)</small></div>
+    <div class="ev"><b>4 · Mouvements</b><small>Du 27/08 : Achat bœuf lot BV-260827-04 <span class="amt" data-amt="850000" data-nocur></span> (AGNEAUX, Achat API, au plus tard le 30/09) · Achat agneau lot AG-260827-02 <span class="amt" data-amt="262000" data-nocur></span> (Bétail Thiès, 12/09) · Achat volaille <span class="amt" data-amt="420000" data-nocur></span> payé immédiatement (MATA VOLAILLE CHAIR, position inchangée) · Frais d’abattage <span class="amt" data-amt="150000" data-nocur></span> payés (Abattoirs Dakar)</small></div>
+    <div class="ev"><b>5 · Objet métier</b><small>6 comptes Fournisseur · échéances : 2 dépassées <span class="amt" data-amt="1950000" data-nocur></span> (ŒUFS 25/08, Aliments Sénégal 20/08), prochaine 02/09/2026 <span class="amt" data-amt="1600000" data-nocur></span> (Bétail Thiès) · plafond AGNEAUX <span class="amt" data-amt="10000000" data-nocur></span> dépassé : alerte, aucun blocage (§5.4) · paiement FIFO, affectation manuelle exceptionnelle auditée (§5.3)</small></div>
+    <div class="ev"><b>6 · Source</b><small>Comptes Fournisseur CALCULÉ · import Achat idempotent 27/08 17:00 (5 achats, 0 doublon) · réconciliation fournisseur du jour : 3 validées, 2 en attente, 1 sans mouvement (§5.5) · snapshot 26/08 22:14 : <span class="amt" data-amt="23100000" data-nocur></span></small></div>
+  </div>
+  <div data-chain="creances" data-title="Créances clients" data-amt-v="20075000" data-goto-scr="fin-creances" data-goto-perm="finance.creances.view" data-goto-lbl="Créances clients" data-alt-scr="fin-historique" data-alt-lbl="Snapshots" hidden>
+    <div class="ev on"><b>1 · Valeur</b><small><span class="amt" data-amt="20075000"></span> au 27/08/2026 · <span data-pct-of="20075000">4,4 %</span> du CA de référence · 20,075 M sur le graphique</small></div>
+    <div class="ev"><b>2 · Formule</b><small>Σ max(Position client ; 0). (§8.1) · convention de signe §4.3 : Client positif = le client doit à Mata ; négatif = avance du client</small></div>
+    <div class="ev"><b>3 · Composantes</b><small>MaaS Keur Massar <span class="amt" data-amt="3250000" data-nocur></span> · MaaS Ouakam <span class="amt" data-amt="2870000" data-nocur></span> · MaaS Pikine <span class="amt" data-amt="1985000" data-nocur></span> · Restaurant Le Baobab <span class="amt" data-amt="2400000" data-nocur></span> · Boucherie des Almadies <span class="amt" data-amt="1730000" data-nocur></span> · 9 autres MaaS <span class="amt" data-amt="7840000" data-nocur></span> · Touba Viandes <span class="amt" data-amt="-150000" data-nocur></span> exclu (Avances clients)</small></div>
+    <div class="ev"><b>4 · Mouvements</b><small>Ventes du jour <span class="amt" data-amt="6200000" data-nocur></span> (Ventes Mata, 20:30) · Créances nettes nouvelles <span class="amt" data-amt="2450000" data-nocur></span> · Encaissements collectés du 26/08 <span class="amt" data-amt="4725000" data-nocur></span> validés 02:04 (12 déclarations MaaS = déclaration du collecteur A. Ndiaye) · Versements du jour <span class="amt" data-amt="3100000" data-nocur></span>, réconciliation vers 02:00</small></div>
+    <div class="ev"><b>5 · Objet métier</b><small>15 comptes Créance client : 12 MaaS référencés par entity_id, 3 gros clients · toute vente Mata crée automatiquement une créance (§6.1) · encaissement et remboursement (§6.2) · Gérant MaaS : lecture de sa seule position</small></div>
+    <div class="ev"><b>6 · Source</b><small>Comptes Créance client CALCULÉ · Ventes Mata OK 27/08 20:30 · Réconciliation des encaissements collectés validée 27/08 02:04 (§6.3) · snapshot 26/08 22:14 : <span class="amt" data-amt="19925000" data-nocur></span></small></div>
+  </div>
+  <div data-chain="pnl" data-title="P&amp;L Global (cumul)" data-amt-v="25835000" data-goto-scr="fin-pnl" data-goto-perm="finance.pnl.view" data-goto-lbl="P&amp;L et KPI" data-alt-scr="fin-charges" data-alt-lbl="Charges fixes" hidden>
+    <div class="ev on"><b>1 · Valeur</b><small><span class="amt" data-amt="25835000"></span> cumul du 1er au 27 août 2026 · <span data-pct-of="25835000">5,7 %</span> du CA de référence · 25,835 M sur le graphique · indicateur de gestion, pas un compte de résultat réglementaire (§8.3)</small></div>
+    <div class="ev"><b>2 · Formule</b><small>P&amp;L Global = CA + ΔS − D − CF (§8.3) · Charge fixe complémentaire = max(0 ; Charge théorique proratisée − Charge déjà comptabilisée) (§8.4)</small></div>
+    <div class="ev"><b>3 · Composantes</b><small>CA <span class="amt" data-amt="452000000" data-nocur></span> + ΔS <span class="amt" data-amt="2235000" data-nocur></span> − D <span class="amt" data-amt="421500000" data-nocur></span> − CF <span class="amt" data-amt="6900000" data-nocur></span> · CF = max(0 ; <span class="amt" data-amt="21700000" data-nocur></span> × 27 / 31 − <span class="amt" data-amt="12000000" data-nocur></span>)</small></div>
+    <div class="ev"><b>4 · Mouvements</b><small>Ventes du jour <span class="amt" data-amt="6200000" data-nocur></span> · dépenses du jour : 14 écritures, <span class="amt" data-amt="1862000" data-nocur></span> · ΔS = stock fin <span class="amt" data-amt="41235000" data-nocur></span> − stock début <span class="amt" data-amt="39000000" data-nocur></span> · DI <span class="amt" data-amt="18000000" data-nocur></span> et DS <span class="amt" data-amt="6500000" data-nocur></span> inclus dans D</small></div>
+    <div class="ev"><b>5 · Objet métier</b><small>Symboles CA, D, DI, DS, ΔS, CF · variantes : hors Investissements <span class="amt" data-amt="43835000" data-nocur></span>, hors Dépenses spéciales <span class="amt" data-amt="32335000" data-nocur></span> · charges fixes actives <span class="amt" data-amt="21700000" data-nocur></span> · flags modifiables après clôture uniquement par correction post-clôture (§3.1)</small></div>
+    <div class="ev"><b>6 · Source</b><small>Moteur financier unique · Ventes Mata OK 20:30 · Stock OK 06:00 (seul propriétaire de la valorisation) · Dépenses par date métier, import Achat 17:00 · Charges fixes : configuration à jour · snapshot 26/08 22:14 : <span class="amt" data-amt="25105000" data-nocur></span>, inchangé par VAL-117 (compte Ajustement exclu)</small></div>
+  </div>
+  <div data-chain="ventes" data-title="Ventes Mata — CA (cumul)" data-amt-v="452000000" data-goto-scr="fin-pnl" data-goto-perm="finance.pnl.view" data-goto-lbl="P&amp;L et KPI (symbole CA)" data-alt-scr="fin-reconciliation" data-alt-lbl="Ventes du jour" hidden>
+    <div class="ev on"><b>1 · Valeur</b><small><span class="amt" data-amt="452000000"></span> cumul du 1er au 27 août 2026 · <span data-pct-of="452000000">100,0 %</span> du CA de référence · 452 M sur le graphique</small></div>
+    <div class="ev"><b>2 · Formule</b><small>Chiffre d’affaires Mata de la période, fourni par Ventes Mata. (§8.3) · CA de référence par défaut des ratios de pilotage (§8.2)</small></div>
+    <div class="ev"><b>3 · Composantes</b><small>Cumul août au 27 <span class="amt" data-amt="452000000" data-nocur></span> · dont ventes du jour <span class="amt" data-amt="6200000" data-nocur></span> · autres périodes de référence : juillet <span class="amt" data-amt="438500000" data-nocur></span>, 3 derniers mois <span class="amt" data-amt="1301200000" data-nocur></span></small></div>
+    <div class="ev"><b>4 · Mouvements</b><small>Réconciliation des ventes du jour (§6.4) : Ventes Mata du jour <span class="amt" data-amt="6200000" data-nocur></span> = Versements <span class="amt" data-amt="3100000" data-nocur></span> + Paiements Bictorys <span class="amt" data-amt="1250000" data-nocur></span> + Créances nettes nouvelles <span class="amt" data-amt="2450000" data-nocur></span> − Remboursements à neutraliser <span class="amt" data-amt="600000" data-nocur></span> → Cohérente</small></div>
+    <div class="ev"><b>5 · Objet métier</b><small>Ventes du module Ventes Mata, propriétaire unique · toute vente Mata crée automatiquement une créance (§6.1) · jamais saisi ni recalculé dans Mata Finance (Core §7.1)</small></div>
+    <div class="ev"><b>6 · Source</b><small>Ventes Mata OK 27/08 20:30 · Versements OK · Bictorys OK 08:12 · Comptes créance OK (§6.5)</small></div>
+  </div>
+  <div data-chain="burn" data-title="Cash burn — dépenses D (cumul)" data-amt-v="421500000" data-goto-scr="fin-depenses" data-goto-perm="finance.depenses.view" data-goto-lbl="Dépenses" data-alt-scr="fin-pnl" data-alt-lbl="P&amp;L et KPI" hidden>
+    <div class="ev on"><b>1 · Valeur</b><small><span class="amt" data-amt="421500000"></span> cumul du 1er au 27 août 2026 · <span data-pct-of="421500000">93,3 %</span> du CA de référence · 421,5 M sur le graphique</small></div>
+    <div class="ev"><b>2 · Formule</b><small>D = Toutes les dépenses de la période selon leur date métier. (§8.3) · DI = Dépenses avec Investissement = true ; DS = Dépenses avec Dépense spéciale = true ; flags false par défaut</small></div>
+    <div class="ev"><b>3 · Composantes</b><small>D <span class="amt" data-amt="421500000" data-nocur></span> dont DI <span class="amt" data-amt="18000000" data-nocur></span> (chambre froide <span class="amt" data-amt="12000000" data-nocur></span> le 12/08, acompte camion frigorifique <span class="amt" data-amt="6000000" data-nocur></span> le 20/08) et DS <span class="amt" data-amt="6500000" data-nocur></span> (indemnités exceptionnelles <span class="amt" data-amt="4000000" data-nocur></span> le 05/08, sinistre <span class="amt" data-amt="2500000" data-nocur></span> le 18/08) · charges fixes déjà comptabilisées <span class="amt" data-amt="12000000" data-nocur></span></small></div>
+    <div class="ev"><b>4 · Mouvements</b><small>14 écritures du 27/08 pour <span class="amt" data-amt="1862000" data-nocur></span> : Achat bœuf <span class="amt" data-amt="850000" data-nocur></span> · Achat volaille <span class="amt" data-amt="420000" data-nocur></span> · Frais d’abattage <span class="amt" data-amt="150000" data-nocur></span> · Entretien chambre froide <span class="amt" data-amt="95000" data-nocur></span> · Achat agneau <span class="amt" data-amt="262000" data-nocur></span> · Carburant <span class="amt" data-amt="85000" data-nocur></span> « Pas sûr » · + 8 autres</small></div>
+    <div class="ev"><b>5 · Objet métier</b><small>Dépenses par date métier, distincte de l’horodatage (§3) · flags Investissement / Dépense spéciale indépendants · 1 dépense « Pas sûr » (Carburant) bloque uniquement Sous-caisse Livraisons, notification à 23:00 si non résolue (§5.2)</small></div>
+    <div class="ev"><b>6 · Source</b><small>Saisies manuelles + API Achat (import idempotent 27/08 17:00, 5 achats intégrés, 0 doublon) · contrat d’interface Achat → Finance : idempotence ; montant payé absent ⇒ Pas sûr ; fraîcheur contrôlée (§9)</small></div>
+  </div>
+
+  <!-- Tiroir : chaîne d'investigation de la série choisie -->
+  <aside class="drawer" data-ov="fin-visualisation-chaine" aria-label="Chaîne d’investigation d’une série (§10.3)">
+    <div class="dh"><h3 data-ch-title>Chaîne d’investigation</h3><button class="ib" data-close aria-label="Fermer"><svg><use href="#i-x"/></svg></button></div>
+    <div class="db">
+      <div class="hint" data-ch-sub>Valeur → formule → composantes → mouvements → objet métier → source (§10.3)</div>
+      <div class="big-amt amt" data-amt="61305000" data-ch-amt></div>
+      <div class="meta-l"><span class="tag lock"><span data-ch-ratio data-pct-of="61305000">13,6 %</span>&nbsp;du CA de référence</span><span class="tag lock"><svg><use href="#i-clock"/></svg>27/08/2026 · moteur financier</span><span class="st ok"><svg><use href="#i-check"/></svg>Sources OK</span></div>
+      <ol class="steps"><li class="on">Valeur</li><li>Formule</li><li>Composantes</li><li>Mouvements</li><li>Objet métier</li><li>Source</li></ol>
+      <div class="tl" data-ch-tl></div>
+      <div class="note-strip"><svg><use href="#i-info"/></svg><span>Aucun recalcul dans cet écran : les six niveaux reprennent les valeurs du moteur financier unique (Core §7.1). Le détail des mouvements, des objets métier et des sources s’ouvre dans l’écran propriétaire, selon la permission de consultation du profil actif (refus par défaut, §3).</span></div>
+    </div>
+    <div class="df"><button class="btn ghost" data-ch-alt data-goto="fin-historique"><svg><use href="#i-history"/></svg><span>Snapshots</span></button><button class="btn pri" data-ch-goto data-goto="fin-comptes" data-perm="finance.comptes.view"><svg><use href="#i-arr"/></svg><span>Descendre au détail · Comptes</span></button></div>
+  </aside>
+  <div class="dback" data-ov-back="fin-visualisation-chaine"></div>
+</section>
+<script data-screen="fin-visualisation">
+ERP.register('fin-visualisation', function (root, ctx) {
+  var $ = function (s, r) { return (r || root).querySelector(s); };
+  var $$ = function (s, r) { return Array.prototype.slice.call((r || root).querySelectorAll(s)); };
+  var PRESETS = { positions: 'creances,dettes,treso', cumuls: 'burn,pnl,ventes', tout: 'burn,creances,dettes,pnl,treso,ventes' };
+  var LABEL = { positions: 'Positions (défaut)', cumuls: 'Cumuls', tout: 'Les six séries' };
+
+  /* 1. CA de référence (§8.2) : tous les ratios sont recalculés, les montants FCFA ne bougent jamais */
+  var sel = $('#fin-visualisation-ca');
+  function pct(v, ca) { return (v / ca * 100).toFixed(1).replace('.', ',') + ' %'; }
+  function applyCa() {
+    var ca = parseInt(sel.value, 10), opt = sel.options[sel.selectedIndex];
+    $$('[data-pct-of]').forEach(function (el) { el.textContent = pct(parseInt(el.getAttribute('data-pct-of'), 10), ca); });
+    $$('[data-ca-short]').forEach(function (el) { el.textContent = opt.getAttribute('data-short'); });
+  }
+  ctx.on(sel, 'change', function () {
+    applyCa();
+    ctx.toast('CA de référence : ' + sel.options[sel.selectedIndex].text + ' — ratios recalculés, montants FCFA inchangés (§8.2)');
+  });
+  applyCa();
+
+  /* 2. Légende ↔ tableau : le moteur dessine le .multichart ; l'écran garde au moins une série cochée et synchronise badges, compteur, préréglages */
+  var boxes = $$('[data-series-toggle]');
+  function checked() {
+    return boxes.filter(function (b) { return b.checked; }).map(function (b) { return b.getAttribute('data-series-toggle'); });
+  }
+  function sync() {
+    var on = checked(), key = on.slice().sort().join(',');
+    $$('tr[data-serie]').forEach(function (tr) {
+      var vis = on.indexOf(tr.getAttribute('data-serie')) > -1, b = $('[data-chart-toggle]', tr);
+      b.className = 'st ' + (vis ? 'ok' : 'mut');
+      b.innerHTML = '<svg><use href="#i-' + (vis ? 'eye' : 'eyeoff') + '"/></svg>' + (vis ? 'Affichée' : 'Masquée');
+      b.title = vis ? 'Retirer du graphique' : 'Ajouter au graphique';
+    });
+    $('[data-count]').textContent = on.length + (on.length > 1 ? ' séries affichées' : ' série affichée');
+    $$('[data-preset]').forEach(function (c) { c.classList.toggle('on', PRESETS[c.getAttribute('data-preset')] === key); });
+    $('[data-scale-note]').hidden = !(on.indexOf('ventes') > -1 || on.indexOf('burn') > -1);
+  }
+  function setSeries(keys) {
+    boxes.forEach(function (b) { b.checked = keys.indexOf(b.getAttribute('data-series-toggle')) > -1; });
+    sync();
+    ctx.drawCharts(root);
+  }
+  ctx.on(root, 'change', function (e) {
+    if (!e.target.hasAttribute('data-series-toggle')) return;
+    if (!checked().length) { e.target.checked = true; ctx.toast('Au moins une série reste affichée : cochez-en une autre avant de retirer celle-ci.'); }
+    sync();
+  });
+  $$('[data-preset]').forEach(function (c) {
+    ctx.on(c, 'click', function () {
+      var k = c.getAttribute('data-preset'), keys = PRESETS[k].split(',');
+      setSeries(keys);
+      ctx.toast(LABEL[k] + ' : ' + keys.length + ' séries sur la même échelle, en millions de FCFA');
+    });
+  });
+  $$('[data-chart-toggle]').forEach(function (b) {
+    ctx.on(b, 'click', function () {
+      var k = b.getAttribute('data-chart-toggle'), on = checked(), i = on.indexOf(k);
+      if (i > -1) { if (on.length === 1) { ctx.toast('Au moins une série reste affichée.'); return; } on.splice(i, 1); } else on.push(k);
+      setSeries(on);
+    });
+  });
+  sync();
+
+  /* 3. Chaîne d'investigation (§10.3) : le tiroir se remplit depuis la série cliquée, le moteur l'ouvre ensuite (data-open) */
+  var dr = $('[data-ov="fin-visualisation-chaine"]');
+  ctx.on(root, 'click', function (e) {
+    var b = e.target.closest('[data-open="fin-visualisation-chaine"]'); if (!b) return;
+    var src = $('[data-chain="' + b.getAttribute('data-serie') + '"]'); if (!src) return;
+    var d = src.dataset, amt = $('[data-ch-amt]', dr), go = $('[data-ch-goto]', dr), alt = $('[data-ch-alt]', dr);
+    $('[data-ch-title]', dr).textContent = d.title;
+    $('[data-ch-sub]', dr).textContent = 'Valeur → formule → composantes → mouvements → objet métier → source (§10.3) · écran propriétaire : ' + d.gotoLbl;
+    amt.setAttribute('data-amt', d.amtV); delete amt.dataset.done; amt.classList.remove('neg');
+    $('[data-ch-ratio]', dr).setAttribute('data-pct-of', d.amtV);
+    $('[data-ch-tl]', dr).innerHTML = src.innerHTML;
+    go.setAttribute('data-goto', d.gotoScr); go.setAttribute('data-perm', d.gotoPerm);
+    $('span', go).textContent = 'Descendre au détail · ' + d.gotoLbl;
+    alt.setAttribute('data-goto', d.altScr);
+    $('span', alt).textContent = d.altLbl;
+    ctx.formatAmounts(dr); applyCa(); ctx.applyPerms();
+  });
+
+  /* 4. Export : permission Exporter distincte de Consulter (§5.7) ; le moteur désactive le bouton si elle manque */
+  $$('[data-export]').forEach(function (b) {
+    ctx.on(b, 'click', function () {
+      if (b.classList.contains('denied')) return;
+      ctx.toast('Export CSV des six séries sur 30 jours généré (service commun d’export, §9.2) — disponible 7 jours puis supprimé, régénérable à la demande (§5.7)');
+    });
+  });
+
+  ctx.formatAmounts(root);
+  ctx.applyPerms();
+});
+</script>
+
+<!-- fin-historique -->
+<!-- ÉCRAN : HISTORIQUE — Mata Finance §8.6 (snapshots immuables, uniques par date et entité, agrégats seulement), Core §5.5 (corrections et clôture), Architecture §13 (Snapshots limités) -->
+<section class="scr" data-scr="fin-historique" data-module="finance" data-perm="finance.historique.view" data-sens="s" hidden>
+  <style data-screen="fin-historique">
+    #app [data-scr="fin-historique"] [data-blk]{margin-top:14px}
+    #app [data-scr="fin-historique"] .modal.wide{width:min(1040px,100%);max-height:92vh;overflow-y:auto}
+    #app [data-scr="fin-historique"] .frozen{margin-top:18px}
+    #app [data-scr="fin-historique"] .frozen .statstrip{margin-bottom:0}
+    #app [data-scr="fin-historique"] .frozen .kpis{grid-template-columns:repeat(3,1fr);margin-top:14px}
+    #app [data-scr="fin-historique"] .frozen .brk{margin-top:14px}
+    #app [data-scr="fin-historique"] .frozen .stat.hero .v{color:var(--red)}
+    #app [data-scr="fin-historique"] .snaphead{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:10px;font-size:12px;color:var(--ink-2)}
+    #app [data-scr="fin-historique"] td small,#app [data-scr="fin-historique"] .cmp-t small{display:block;color:var(--mut);font-size:10.5px;font-weight:500;margin-top:2px;line-height:1.45}
+    #app [data-scr="fin-historique"] td .btn{min-height:30px;padding:5px 10px;font-size:11.5px}
+    #app [data-scr="fin-historique"] td.acts,#app [data-scr="fin-historique"] td .st,#app [data-scr="fin-historique"] td b{white-space:nowrap}
+    #app [data-scr="fin-historique"] td.agg{font-size:11.5px;color:var(--ink-2);line-height:1.6;min-width:320px}
+    #app [data-scr="fin-historique"] .delta{font-family:'Fira Code',monospace;font-size:11px;font-weight:700;padding:2px 7px;border-radius:6px;white-space:nowrap}
+    #app [data-scr="fin-historique"] .delta.up{color:var(--warn);background:var(--warn-bg)}
+    #app [data-scr="fin-historique"] .delta.z{color:var(--mut);background:var(--card-3)}
+    #app [data-scr="fin-historique"] .tbl-scroll .cmp-t{min-width:560px}
+    #app [data-scr="fin-historique"] .cmp-t td:first-child{min-width:220px}
+    #app [data-scr="fin-historique"] .ch .btn{min-height:30px;padding:5px 11px;font-size:11.5px}
+    @media (max-width:900px){#app [data-scr="fin-historique"] .frozen .kpis{grid-template-columns:repeat(2,1fr)}}
+    @media (max-width:640px){#app [data-scr="fin-historique"] .frozen .kpis{grid-template-columns:1fr}}
+  </style>
+  <div class="scr-head">
+    <div>
+      <h2>Historique</h2>
+      <p class="scr-sub">Snapshots financiers de Mata Group · à la clôture, un snapshot immuable et unique par date et entité fige les principaux P&amp;L/KPI tels qu’ils étaient connus (§8.6) · agrégats seulement : trois variantes du P&amp;L, KPI de trésorerie, quelques totaux — jamais le détail des mouvements ni des soldes par compte, qui reste accessible via l’historique horodaté (Architecture §13) · même moteur financier que le Tableau de bord et les agents IA (§3).</p>
+    </div>
+    <div class="scr-meta">
+      <span class="sens s"><svg><use href="#i-shield"/></svg>Sensible</span>
+      <span class="hint">Aucune validation ici : un snapshot ne crée aucune écriture financière · snapshot manuel sur permission dédiée, motif obligatoire, audit de modification · une correction post-clôture suit le workflow d’approbation du Super Admin, par contrepassation tracée (§3.1, Core §5.5)</span>
+    </div>
+  </div>
+  <div class="deny-note" data-view-note hidden><svg><use href="#i-lock"/></svg><span><b>Vue agrégée, lecture seule.</b> Profil externe : les snapshots (agrégats) et leur comparaison restent consultables ; la chaîne de correction post-clôture (ajustement, validations, Hautement sensible) est hors périmètre — refus par défaut, FIXTURES §2. Snapshot manuel et export non accordés.</span></div>
+  <div class="note-strip" style="margin:0 0 14px"><svg><use href="#i-lock"/></svg><span><b>Trois règles (§8.6, Core §5.5).</b> Immuable et unique par date et entité · agrégats seulement · une correction ultérieure ne réécrit pas le snapshot : l’original reste accessible et l’interface compare le snapshot historique à la situation recalculée actuelle.</span></div>
+
+  <div class="actionbar">
+    <div class="chips">
+      <button class="chip on" data-filter="tous">Tous</button>
+      <button class="chip" data-filter="post">Auto post-clôture</button>
+      <button class="chip" data-filter="filet">Auto filet 23:59</button>
+      <button class="chip" data-filter="manuel">Manuel</button>
+    </div>
+    <div class="sp"></div>
+    <button class="btn ghost" data-goto="fin-dashboard"><svg><use href="#i-dash"/></svg>Tableau de bord</button>
+    <button class="btn ghost" data-goto="fin-pnl"><svg><use href="#i-chart"/></svg>P&amp;L et KPI</button>
+    <button class="btn ghost" data-perm="finance.export" data-export><svg><use href="#i-dl"/></svg>Exporter</button>
+    <button class="btn pri" data-perm="finance.historique.snapshot" data-open="fin-historique-nouveau" data-snap-btn><svg><use href="#i-plus"/></svg>Snapshot manuel</button>
+  </div>
+
+  <!-- 1. DERNIER SNAPSHOT ET COMPARAISON (§8.6) : FCFA d’abord, ratio ensuite -->
+  <div class="statstrip">
+    <div class="card stat"><div class="lb">Dernier snapshot figé · P&amp;L Global<button class="fx" data-f="P&amp;L Global = CA + ΔS − D − CF" data-c="Figé le 26/08 à 22:14 (auto post-clôture) : 25 105 000 · valeur recalculée au 27/08 par le même moteur : 25 835 000" data-src="Snapshot immuable 26/08 22:14 · moteur financier unique (§3, §8.6)" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></div><div class="v amt" data-amt="25105000" data-last-v></div><div class="sub2" data-last-sub>26/08 · 22:14 · Auto post-clôture · Système · <span data-count>4</span> snapshots sur la période</div></div>
+    <div class="card stat"><div class="lb">Trésorerie totale contrôlée figée au 26/08<button class="fx" data-f="Trésorerie disponible + Trésorerie en transit." data-c="60 440 000 + 350 000 = 60 790 000 · situation recalculée actuelle : 60 970 000" data-src="Snapshot immuable 26/08 22:14 · comparaison au recalcul du moteur financier (§8.6)" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></div><div class="v amt" data-amt="60790000"></div><div class="sub2">Recalculée : <span class="amt" data-amt="60970000" data-nocur></span> · écart +<span class="amt" data-amt="180000" data-nocur></span></div></div>
+    <div class="card stat hero"><div class="lb">Écart snapshot → recalculé (26/08)<button class="fx" data-f="Comparaison du snapshot historique à la situation recalculée actuelle (§8.6) : recalculé − figé" data-c="60 970 000 − 60 790 000 = +180 000 · ajustement VAL-117 +180 000 Caisse générale, motif « écart de comptage du 26/08 », contrepassation tracée" data-c-agg="60 970 000 − 60 790 000 = +180 000 · correction post-clôture en cours de validation (détail hors périmètre)" data-src="Moteur financier · VAL-117 : 1re validation O. Seck 27/08 19:02, 2e validation requise (approbation Super Admin, §3.1)" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></div><div class="v">+<span class="amt" data-amt="180000"></span></div><div class="sub2">P&amp;L Global inchangé · 1 correction post-clôture en cours</div></div>
+  </div>
+
+  <!-- 2. LISTE DES SNAPSHOTS (FIXTURES §14) -->
+  <div class="card">
+    <div class="ch"><h3>Snapshots · Mata Group</h3><span class="hint-r"><span data-shown>4 sur 4</span> · immuables, uniques par date et entité · cliquer Voir pour la situation figée, Comparer pour l’écart avec le recalcul</span></div>
+    <div class="tbl-scroll"><table>
+      <thead><tr><th>Date</th><th>Origine</th><th>Auteur</th><th>Motif</th><th>Contenu (agrégats uniquement)</th><th>Actions</th></tr></thead>
+      <tbody data-snap-body>
+        <tr data-origine="post" data-snap="s26">
+          <td><b>26/08/2026</b><small>22:14 · Mata Group · clôture événementielle</small></td>
+          <td><span class="st ok"><svg><use href="#i-lock"/></svg>Auto post-clôture</span></td>
+          <td>Système<small>automatisation</small></td>
+          <td>—<small>déclenchement automatique, aucun motif saisi</small></td>
+          <td class="agg">P&amp;L Global <span class="amt" data-amt="25105000" data-nocur></span> · hors Invest. <span class="amt" data-amt="43105000" data-nocur></span> · hors Spéciales <span class="amt" data-amt="31605000" data-nocur></span> · Trésorerie totale contrôlée <span class="amt" data-amt="60790000" data-nocur></span> · Dettes fourn. <span class="amt" data-amt="23100000" data-nocur></span> · Créances <span class="amt" data-amt="19925000" data-nocur></span><small><span class="st warn"><svg><use href="#i-alert"/></svg>1 écart avec le recalcul</span> ajustement VAL-117 en cours</small></td>
+          <td class="acts"><button class="btn ghost" data-open="fin-historique-voir" data-voir="s26"><svg><use href="#i-eye"/></svg>Voir</button> <button class="btn ghost" data-open="fin-historique-cmp" data-cmp-snap="s26"><svg><use href="#i-scale"/></svg>Comparer</button></td>
+        </tr>
+        <tr data-origine="filet" data-snap="s25">
+          <td><b>25/08/2026</b><small>23:59 · Mata Group · gel « À réconcilier »</small></td>
+          <td><span class="st warn"><svg><use href="#i-clock"/></svg>Auto filet 23:59</span></td>
+          <td>Système<small>automatisation</small></td>
+          <td>—<small>filet de sécurité 23:59, clôture événementielle non intervenue</small></td>
+          <td class="agg">P&amp;L Global <span class="amt" data-amt="24380000" data-nocur></span> · Trésorerie totale contrôlée <span class="amt" data-amt="59950000" data-nocur></span><small>Autres agrégats figés : voir la reconstitution · aucun écart avec le recalcul</small></td>
+          <td class="acts"><button class="btn ghost" data-open="fin-historique-voir" data-voir="s25"><svg><use href="#i-eye"/></svg>Voir</button> <button class="btn ghost" data-open="fin-historique-cmp" data-cmp-snap="s25"><svg><use href="#i-scale"/></svg>Comparer</button></td>
+        </tr>
+        <tr data-origine="manuel" data-snap="s24">
+          <td><b>24/08/2026</b><small>18:30 · Mata Group · pris avant la clôture</small></td>
+          <td><span class="st mut"><svg><use href="#i-user"/></svg>Manuel</span></td>
+          <td>S. Doucouré<small>Super Admin</small></td>
+          <td>« avant correction du transfert 24/08 »<small>motif obligatoire, audité</small></td>
+          <td class="agg">P&amp;L Global <span class="amt" data-amt="23900000" data-nocur></span> · Trésorerie totale contrôlée <span class="amt" data-amt="59400000" data-nocur></span><small>Autres agrégats figés : voir la reconstitution · aucun écart avec le recalcul</small></td>
+          <td class="acts"><button class="btn ghost" data-open="fin-historique-voir" data-voir="s24"><svg><use href="#i-eye"/></svg>Voir</button> <button class="btn ghost" data-open="fin-historique-cmp" data-cmp-snap="s24"><svg><use href="#i-scale"/></svg>Comparer</button></td>
+        </tr>
+        <tr data-origine="post" data-snap="s23">
+          <td><b>23/08/2026</b><small>21:50 · Mata Group · clôture événementielle</small></td>
+          <td><span class="st ok"><svg><use href="#i-lock"/></svg>Auto post-clôture</span></td>
+          <td>Système<small>automatisation</small></td>
+          <td>—<small>déclenchement automatique, aucun motif saisi</small></td>
+          <td class="agg">P&amp;L Global <span class="amt" data-amt="23210000" data-nocur></span><small>Autres agrégats figés : voir la reconstitution · aucun écart avec le recalcul</small></td>
+          <td class="acts"><button class="btn ghost" data-open="fin-historique-voir" data-voir="s23"><svg><use href="#i-eye"/></svg>Voir</button> <button class="btn ghost" data-open="fin-historique-cmp" data-cmp-snap="s23"><svg><use href="#i-scale"/></svg>Comparer</button></td>
+        </tr>
+      </tbody>
+    </table></div>
+  </div>
+
+  <div class="grid2" data-blk>
+    <!-- 3. CORRECTION POST-CLÔTURE (Core §5.5, §3.1, §10.2) : le snapshot n’est pas réécrit -->
+    <div class="card" data-view="corrections">
+      <div class="ch"><h3>Correction post-clôture du 26/08</h3><span class="hint-r">Le snapshot reste figé, la situation est recalculée (Core §5.5)</span><button class="btn ghost" data-goto="fin-validations" data-perm="finance.validations.view"><svg><use href="#i-clipboard"/></svg>Validations</button></div>
+      <div class="cb">
+        <div class="tl">
+          <div class="ev"><b>Clôture événementielle du 26/08 · snapshot figé à 22:14</b><small>Système · Auto post-clôture · Trésorerie totale contrôlée <span class="amt" data-amt="60790000" data-nocur></span> · P&amp;L Global <span class="amt" data-amt="25105000" data-nocur></span></small></div>
+          <div class="ev on"><b>VAL-117 · Ajustement +<span class="amt" data-amt="180000" data-nocur></span> sur Caisse générale</b><small>M. Diop · motif « écart de comptage du 26/08 » · correction post-clôture par contrepassation tracée, l’opération originale reste liée (§10.2) · compte Ajustement exclu des agrégats (§4.7)</small></div>
+          <div class="ev on"><b>1re validation</b><small>O. Seck · 27/08 19:02 · Hautement sensible : deux validateurs distincts de l’initiateur et l’un de l’autre (§10.1)</small></div>
+          <div class="ev"><b>2e validation requise · approbation du Super Admin (§3.1)</b><small>En attente · aucun bypass, y compris pour le Super Admin sur ses propres opérations (Core §5.5) · le snapshot du 26/08 reste <span class="amt" data-amt="60790000" data-nocur></span>, situation recalculée <span class="amt" data-amt="60970000" data-nocur></span></small></div>
+        </div>
+        <div class="fcode">Situation recalculée = Snapshot 26/08 <b>60 790 000</b> + Ajustement VAL-117 <b>180 000</b> = <b>60 970 000</b> · P&amp;L Global inchangé</div>
+        <div class="actionbar" style="margin:10px 0 0"><div class="sp"></div><button class="btn ghost" data-goto="core-audit" data-perm="core.audit.view"><svg><use href="#i-history"/></svg>Historique horodaté (Audit)</button><button class="btn pri" data-open="fin-historique-cmp" data-cmp-snap="s26"><svg><use href="#i-scale"/></svg>Comparer le 26/08</button></div>
+      </div>
+    </div>
+    <!-- 4. CONTENU D’UN SNAPSHOT (§8.6, Architecture §13 « Snapshots limités ») -->
+    <div class="card">
+      <div class="ch"><h3>Ce que fige un snapshot</h3><span class="hint-r">§8.6 · Architecture §13</span></div>
+      <div class="cb">
+        <div class="brk">
+          <div class="row"><span class="sign p">+</span>Valeurs des trois variantes de P&amp;L<span class="hint">Global · hors Investissements · hors Dépenses spéciales</span></div>
+          <div class="row"><span class="sign p">+</span>KPI de trésorerie (§8.1)<span class="hint">neuf indicateurs, Ajustement exclu</span></div>
+          <div class="row"><span class="sign p">+</span>Quelques totaux<span class="hint">CA de référence · DI · DS</span></div>
+          <div class="row"><span class="sign m">−</span>Détail des mouvements<span class="hint">jamais</span></div>
+          <div class="row"><span class="sign m">−</span>Soldes par compte, positions par fournisseur ou client<span class="hint">historique horodaté</span></div>
+        </div>
+        <div class="note-strip" style="margin-top:12px"><svg><use href="#i-info"/></svg><span>Le détail transactionnel déjà retrouvable via l’historique horodaté n’est jamais dupliqué dans un snapshot (Architecture §13). Conservation : modifications détaillées 24 mois en base active puis archive froide, restauration sous un jour ouvré (§10.2).</span></div>
+        <div class="actionbar" style="margin:10px 0 0"><div class="sp"></div><button class="btn ghost" data-goto="fin-comptes" data-perm="finance.comptes.view"><svg><use href="#i-wallet"/></svg>Comptes</button><button class="btn ghost" data-goto="core-audit" data-perm="core.audit.view"><svg><use href="#i-history"/></svg>Audit central</button></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODALE : SITUATION FIGÉE (reconstitution du Tableau de bord tel qu’il était) -->
+  <div class="mback" data-ov="fin-historique-voir"><div class="modal wide" role="dialog" aria-modal="true" aria-label="Snapshot figé">
+    <h3><svg><use href="#i-lock"/></svg><span data-voir-title>Snapshot</span></h3>
+    <div class="snaphead" data-voir-meta></div>
+    <div class="exp">Reconstitution du Tableau de bord tel qu’il était connu au moment du snapshot : montants en FCFA d’abord, ratio sur le CA de référence figé ensuite (§8.2). Les formules restent consultables ; les composantes par compte, fournisseur ou client ne sont pas figées (agrégats seulement, §8.6).</div>
+    <div class="frozen" data-voir-body></div>
+    <div class="acts"><button class="btn ghost" data-goto="core-audit" data-perm="core.audit.view"><svg><use href="#i-history"/></svg>Historique horodaté</button><button class="btn ghost" data-close>Fermer</button><button class="btn pri" data-voir-cmp data-cmp-snap="s26"><svg><use href="#i-scale"/></svg>Comparer à l’état actuel</button></div>
+  </div></div>
+
+  <!-- MODALE : COMPARAISON snapshot / situation recalculée actuelle (§8.6) -->
+  <div class="mback" data-ov="fin-historique-cmp"><div class="modal wide" role="dialog" aria-modal="true" aria-label="Comparer le snapshot à la situation recalculée">
+    <h3><svg><use href="#i-scale"/></svg><span data-cmp-title>Comparaison</span></h3>
+    <div class="exp" data-cmp-exp></div>
+    <div class="tbl-scroll"><table class="cmp-t">
+      <thead><tr><th>Agrégat figé</th><th>Snapshot (immuable)</th><th>Situation recalculée actuelle</th><th>Écart</th></tr></thead>
+      <tbody data-cmp-body></tbody>
+    </table></div>
+    <div class="note-strip"><svg><use href="#i-refresh"/></svg><span><b>Recalcul</b> : moteur financier unique, 27/08 · sources Ventes Mata <span class="st ok">OK 20:30</span> · Bictorys <span class="st ok">OK 08:12</span> · Banque BOA <span class="st ok">OK 08:00</span> · Stock <span class="st ok">OK 06:00</span> · Achat <span class="st ok">OK 17:00</span>. Le snapshot, lui, n’est jamais réécrit.</span></div>
+    <div class="acts"><button class="btn ghost" data-goto="fin-dashboard"><svg><use href="#i-dash"/></svg>Tableau de bord actuel</button><button class="btn pri" data-close>Fermer</button></div>
+  </div></div>
+
+  <!-- MODALE : SNAPSHOT MANUEL (permission finance.historique.snapshot, motif obligatoire) -->
+  <div class="mback" data-ov="fin-historique-nouveau"><div class="modal" role="dialog" aria-modal="true" aria-label="Snapshot manuel">
+    <h3><svg><use href="#i-plus"/></svg>Snapshot manuel</h3>
+    <div class="exp">Fige maintenant les agrégats courants de l’entité tels que connus par le moteur financier unique. Immuable, unique par date et entité, jamais réécrit (§8.6). Aucune écriture financière : pas de validation requise ; permission dédiée, motif obligatoire, audit de modification (§10.2).</div>
+    <div class="fld"><label for="fin-historique-entite">Entité</label><select id="fin-historique-entite" class="inp"><option>Mata Group (MG) — seule entité active</option></select></div>
+    <div class="fld" style="margin-top:10px"><label for="fin-historique-motif">Motif (obligatoire)</label><input id="fin-historique-motif" class="inp" maxlength="120" placeholder="ex. avant contrepassation VAL-117"></div>
+    <div class="hint" style="margin:12px 0 4px">Agrégats qui seront figés · 27/08/2026 · Mata Group</div>
+    <div class="brk">
+      <div class="row">P&amp;L Global<span class="amt" data-amt="25835000" data-nocur></span></div>
+      <div class="row">P&amp;L hors Investissements<span class="amt" data-amt="43835000" data-nocur></span></div>
+      <div class="row">P&amp;L hors Dépenses spéciales<span class="amt" data-amt="32335000" data-nocur></span></div>
+      <div class="row">Trésorerie totale contrôlée<span class="amt" data-amt="61305000" data-nocur></span></div>
+      <div class="row">Dettes fournisseurs<span class="amt" data-amt="23250000" data-nocur></span></div>
+      <div class="row">Créances clients<span class="amt" data-amt="20075000" data-nocur></span></div>
+    </div>
+    <div class="acts"><button class="btn ghost" data-close>Annuler</button><button class="btn pri" data-perm="finance.historique.snapshot" data-snap-create><svg><use href="#i-lock"/></svg>Figer le snapshot</button></div>
+  </div></div>
+</section>
+<script data-screen="fin-historique">
+ERP.register('fin-historique', function (root, ctx) {
+  var $ = function (s, r) { return (r || root).querySelector(s); };
+  var $$ = function (s, r) { return Array.prototype.slice.call((r || root).querySelectorAll(s)); };
+  var F = ctx.fmt, lim = false, created = false, cur = 'tous', DI = 18000000, DS = 6500000;
+  /* Agrégats figés — FIXTURES §14 pour les valeurs citées ; les autres KPI sont reconstitués de façon cohérente avec §4 et §5.
+     k = [disponible, transit, totale contrôlée, dettes fourn., avances fourn., créances, avances clients, position nette, après fournisseurs] ; r = valeurs recalculées qui diffèrent */
+  var S = {
+    s26: { d: '26/08/2026', h: '22:14', o: 'Auto post-clôture', a: 'Système', m: 'déclenchement : clôture événementielle du périmètre, contrôles terminés (§3.1)', ca: 445800000, p: [25105000, 43105000, 31605000], k: [60440000, 350000, 60790000, 23100000, 350000, 19925000, 150000, 57815000, 37690000], r: { 2: 60970000, 3: 23250000 } },
+    s25: { d: '25/08/2026', h: '23:59', o: 'Auto filet 23:59', a: 'Système', m: 'déclenchement : filet de sécurité 23:59, gel « À réconcilier » (§3.1, Core §5.5)', ca: 439700000, p: [24380000, 42380000, 30880000], k: [59600000, 350000, 59950000, 22850000, 350000, 19640000, 150000, 56940000, 37100000], r: {} },
+    s24: { d: '24/08/2026', h: '18:30', o: 'Manuel', a: 'S. Doucouré', m: '« avant correction du transfert 24/08 »', ca: 433500000, p: [23900000, 41900000, 30400000], k: [59050000, 350000, 59400000, 22600000, 350000, 19380000, 150000, 56380000, 36800000], r: {} },
+    s23: { d: '23/08/2026', h: '21:50', o: 'Auto post-clôture', a: 'Système', m: 'déclenchement : clôture événementielle du périmètre, contrôles terminés (§3.1)', ca: 427400000, p: [23210000, 41210000, 29710000], k: [58550000, 350000, 58900000, 22300000, 350000, 19100000, 150000, 55900000, 36600000], r: {} }
+  };
+  var KPI = [['Trésorerie disponible', 'Somme des comptes Trésorerie et Positions externes configurés comme immédiatement disponibles.'], ['Trésorerie en transit', 'Somme des comptes Relais actifs.'], ['Trésorerie totale contrôlée', 'Trésorerie disponible + Trésorerie en transit.'], ['Dettes fournisseurs', 'Σ max(− Position fournisseur ; 0).'], ['Avances fournisseurs', 'Σ max(Position fournisseur ; 0).'], ['Créances clients', 'Σ max(Position client ; 0).'], ['Avances clients', 'Σ max(− Position client ; 0).'], ['Position financière nette', 'Trésorerie totale contrôlée + Avances fournisseurs + Créances clients − Dettes fournisseurs − Avances clients.'], ['Trésorerie après fournisseurs', 'Trésorerie totale contrôlée − Dettes fournisseurs. Le transit est inclus car il est considéré comme reçu avant le paiement fournisseur.']];
+  var PNL = [['P&amp;L Global', 'P&amp;L Global = CA + ΔS − D − CF'], ['P&amp;L hors Investissements', 'P&amp;L hors Investissements = CA + ΔS − (D − DI) − CF = P&amp;L Global + DI'], ['P&amp;L hors Dépenses spéciales', 'P&amp;L hors Dépenses spéciales = CA + ΔS − (D − DS) − CF = P&amp;L Global + DS']];
+  var LB = ['P&amp;L Global', 'P&amp;L hors Investissements', 'P&amp;L hors Dépenses spéciales', 'Trésorerie totale contrôlée', 'Dettes fournisseurs', 'Créances clients'], IDX = [null, null, null, 2, 3, 5];
+  var NOFIG = 'non figé : agrégats seulement, jamais le détail des soldes par compte (§8.6) — reste accessible via l’historique horodaté';
+  function pct(v, ca) { return (v / ca * 100).toFixed(1).replace('.', ',') + ' %'; }
+  function badge(o) { return o === 'Manuel' ? '<span class="st mut"><svg><use href="#i-user"/></svg>Manuel</span>' : (o === 'Auto filet 23:59' ? '<span class="st warn"><svg><use href="#i-clock"/></svg>Auto filet 23:59</span>' : '<span class="st ok"><svg><use href="#i-lock"/></svg>Auto post-clôture</span>'); }
+  function card(cls, lb, v, f, c, src, sub) { return '<div class="card ' + cls + '"><div class="lb">' + lb + '<button class="fx" data-f="' + f + '" data-c="' + c + '" data-src="' + src + '" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></div><div class="v amt" data-amt="' + v + '"></div><div class="' + (cls.indexOf('kpi') === 0 ? 'ratio' : 'sub2') + '">' + sub + '</div></div>'; }
+
+  /* 1. Voir : reconstitution du Tableau de bord figé — 3 variantes du P&L (§8.3) + 9 KPI (§8.1), ratios sur le CA de référence figé (§8.2) */
+  function renderVoir(id) {
+    var s = S[id], k = s.k, src = 'Snapshot immuable ' + s.d + ' ' + s.h + ' · ' + s.o + ' · moteur financier unique, figé tel que connu à l’époque, jamais réécrit (§8.6)', ref = ' du CA de référence figé · août au ' + s.d.slice(0, 2);
+    $('[data-voir-title]').textContent = 'Snapshot du ' + s.d + ' · ' + s.h;
+    $('[data-voir-meta]').innerHTML = badge(s.o) + '<span><b>' + s.a + '</b> · ' + s.m + '</span><span class="tag lock"><svg><use href="#i-lock"/></svg>Immuable · Mata Group</span>';
+    var pc = ['Symboles CA, ΔS, D et CF non figés individuellement ; totaux figés : CA de référence ' + F(s.ca) + ' · DI ' + F(DI) + ' · DS ' + F(DS), 'P&amp;L Global ' + F(s.p[0]) + ' + DI ' + F(DI), 'P&amp;L Global ' + F(s.p[0]) + ' + DS ' + F(DS)];
+    var kc = ['Comptes Trésorerie et Positions externes : soldes par compte ' + NOFIG, 'Comptes Relais actifs : détail ' + NOFIG, F(k[0]) + ' + ' + F(k[1]), 'Positions par fournisseur ' + NOFIG, 'Positions par fournisseur ' + NOFIG, 'Positions par client ' + NOFIG, 'Positions par client ' + NOFIG, F(k[2]) + ' + ' + F(k[4]) + ' + ' + F(k[5]) + ' − ' + F(k[3]) + ' − ' + F(k[6]), F(k[2]) + ' − ' + F(k[3])];
+    var h = '<div class="statstrip">' + PNL.map(function (p, i) { return card('stat' + (i ? '' : ' hero'), p[0], s.p[i], p[1], pc[i], src, pct(s.p[i], s.ca) + ref); }).join('') + '</div>';
+    h += '<div class="kpis">' + KPI.map(function (p, i) { return card('kpi' + (i === 2 ? ' hero' : ''), p[0], k[i], p[1], kc[i], src, (i === 4 || i === 6) ? 'Affiché séparément, sans ratio (§8.1)' : pct(k[i], s.ca) + ref); }).join('') + '</div>';
+    h += '<div class="brk"><div class="row"><span class="sign p">Σ</span>Total figé · CA de référence (Ventes Mata)<span class="amt" data-amt="' + s.ca + '" data-nocur></span></div><div class="row"><span class="sign p">DI</span>Total figé · dépenses avec Investissement = true<span class="amt" data-amt="' + DI + '" data-nocur></span></div><div class="row"><span class="sign p">DS</span>Total figé · dépenses avec Dépense spéciale = true<span class="amt" data-amt="' + DS + '" data-nocur></span></div></div>';
+    var b = $('[data-voir-body]'); b.innerHTML = h; ctx.formatAmounts(b);
+    $('[data-voir-cmp]').setAttribute('data-cmp-snap', id);
+  }
+
+  /* 2. Comparer : snapshot figé / situation recalculée actuelle / écart (§8.6) — le snapshot n’est jamais réécrit */
+  function renderCmp(id) {
+    var s = S[id], vals = [s.p[0], s.p[1], s.p[2], s.k[2], s.k[3], s.k[5]], n = 0;
+    var why = { 3: lim ? 'Correction post-clôture en cours de validation (détail Hautement sensible, hors périmètre)' : 'Ajustement VAL-117 +180 000 Caisse générale, motif « écart de comptage du 26/08 » — correction post-clôture par contrepassation tracée ; 1re validation O. Seck 19:02, 2e validation requise (approbation Super Admin, §3.1)', 4: 'Positions fournisseurs recalculées par le moteur à partir des dépenses par date métier et des paiements (§4.3, §5.5)' };
+    $('[data-cmp-title]').textContent = 'Snapshot du ' + s.d + ' · ' + s.h + ' — situation recalculée actuelle';
+    $('[data-cmp-body]').innerHTML = LB.map(function (lb, i) {
+      var c = IDX[i] !== null && s.r[IDX[i]] !== undefined ? s.r[IDX[i]] : vals[i], e = c - vals[i]; if (e) n++;
+      return '<tr><td><b>' + lb + '</b><small>' + (e ? why[i] : 'Aucune correction : la valeur recalculée par le moteur est identique à la valeur figée') + '</small></td><td><span class="amt" data-amt="' + vals[i] + '" data-nocur></span></td><td><span class="amt" data-amt="' + c + '" data-nocur></span></td><td>' + (e ? '<span class="delta up">' + (e > 0 ? '+' : '') + F(e) + '</span>' : '<span class="delta z">Inchangé</span>') + '</td></tr>';
+    }).join('');
+    $('[data-cmp-exp]').innerHTML = n ? '<b>' + n + ' agrégat' + (n > 1 ? 's diffèrent' : ' diffère') + '.</b> Une correction ultérieure ne réécrit pas le snapshot : l’original reste accessible, le moteur financier unique recalcule la situation actuelle et l’interface compare les deux (§8.6, Core §5.5).' : '<b>Aucun écart.</b> Snapshot figé et situation recalculée coïncident : aucune correction n’a modifié ces agrégats — un transfert interne corrigé, par exemple, ne change pas la trésorerie totale contrôlée (§8.6).';
+    ctx.formatAmounts($('[data-cmp-body]'));
+  }
+
+  /* 3. Snapshot manuel : motif obligatoire → nouvelle ligne figée ; unicité par date et entité ensuite (§8.6) */
+  function rowHtml(id, s) { return '<tr data-origine="manuel" data-snap="' + id + '"><td><b>' + s.d + '</b><small>' + s.h + ' · Mata Group · pris avant la clôture</small></td><td>' + badge(s.o) + '</td><td>' + s.a + '<small>' + ctx.profile.profile + '</small></td><td>' + s.m + '<small>motif obligatoire, audité</small></td><td class="agg">P&amp;L Global <span class="amt" data-amt="' + s.p[0] + '" data-nocur></span> · hors Invest. <span class="amt" data-amt="' + s.p[1] + '" data-nocur></span> · hors Spéciales <span class="amt" data-amt="' + s.p[2] + '" data-nocur></span> · Trésorerie totale contrôlée <span class="amt" data-amt="' + s.k[2] + '" data-nocur></span> · Dettes fourn. <span class="amt" data-amt="' + s.k[3] + '" data-nocur></span> · Créances <span class="amt" data-amt="' + s.k[5] + '" data-nocur></span><small>Aucun écart avec le recalcul</small></td><td class="acts"><button class="btn ghost" data-open="fin-historique-voir" data-voir="' + id + '"><svg><use href="#i-eye"/></svg>Voir</button> <button class="btn ghost" data-open="fin-historique-cmp" data-cmp-snap="' + id + '"><svg><use href="#i-scale"/></svg>Comparer</button></td></tr>'; }
+  function lock() { var b = $('[data-snap-btn]'); if (!created || b.classList.contains('denied')) return; b.disabled = true; b.classList.add('denied'); b.title = 'Unicité par date et entité (§8.6) : un snapshot existe déjà pour le 27/08/2026 · Mata Group. Il est immuable ; la clôture de ce soir n’en crée pas de second.'; }
+  ctx.on($('[data-snap-create]'), 'click', function () {
+    var inp = $('#fin-historique-motif'), m = inp.value.trim();
+    if (!m) { inp.focus(); ctx.toast('Motif obligatoire : un snapshot manuel doit être justifié (audit de modification, §10.2)'); return; }
+    var now = new Date(), h = ('0' + now.getHours()).slice(-2) + ':' + ('0' + now.getMinutes()).slice(-2);
+    S.s27 = { d: '27/08/2026', h: h, o: 'Manuel', a: ctx.profile.short, m: '« ' + m + ' »', ca: 452000000, p: [25835000, 43835000, 32335000], k: [58455000, 2850000, 61305000, 23250000, 350000, 20075000, 150000, 58330000, 38055000], r: {} };
+    var tb = $('[data-snap-body]'); tb.insertAdjacentHTML('afterbegin', rowHtml('s27', S.s27)); ctx.formatAmounts(tb);
+    var lv = $('[data-last-v]'); lv.setAttribute('data-amt', '25835000'); ctx.formatAmounts(lv.parentNode);
+    $('[data-last-sub]').innerHTML = '27/08 · ' + h + ' · Manuel · ' + ctx.profile.short + ' · motif « ' + m + ' » · <span data-count>5</span> snapshots sur la période';
+    created = true; lock(); inp.value = ''; ctx.close('fin-historique-nouveau'); applyFilter(cur);
+    ctx.toast('Snapshot manuel figé — 27/08 · ' + h + ' · Mata Group · immuable, unique pour la date, audit de modification enregistré');
+  });
+
+  /* 4. Filtres par origine, clics délégués (Voir, Comparer, Export), vue par profil (externes : lecture agrégée) */
+  function applyFilter(v) { cur = v; var tb = $('[data-snap-body]'); ctx.filterRows(tb, 'origine', v); $$('.chip[data-filter]').forEach(function (c) { c.classList.toggle('on', c.getAttribute('data-filter') === v); }); var all = $$('tr', tb); $('[data-shown]').textContent = all.filter(function (r) { return !r.hidden; }).length + ' sur ' + all.length; }
+  $$('.chip[data-filter]').forEach(function (c) { ctx.on(c, 'click', function () { applyFilter(c.getAttribute('data-filter')); }); });
+  ctx.on(root, 'click', function (e) {
+    var v = e.target.closest('[data-voir]'); if (v && !v.classList.contains('denied')) renderVoir(v.getAttribute('data-voir'));
+    var c = e.target.closest('[data-cmp-snap]'); if (c && !c.classList.contains('denied')) { renderCmp(c.getAttribute('data-cmp-snap')); if (c.hasAttribute('data-voir-cmp')) { ctx.close('fin-historique-voir'); ctx.open('fin-historique-cmp'); } }
+    var x = e.target.closest('[data-export]'); if (x && !x.classList.contains('denied')) ctx.toast('Export CSV des snapshots généré (service commun d’export, §9.2) — conservé 7 jours, régénérable à la demande');
+  });
+  function applyView(p) {
+    lim = !!(p && p.readonly);
+    $$('[data-view="corrections"]').forEach(function (el) { el.hidden = lim; });
+    $$('.fx[data-c-agg]').forEach(function (b) { if (!b.dataset.cFull) b.dataset.cFull = b.getAttribute('data-c'); b.setAttribute('data-c', lim ? b.dataset.cAgg : b.dataset.cFull); });
+    $('[data-view-note]').hidden = !lim; lock();
+  }
+  applyView(ctx.profile);
+  document.addEventListener('erp:profile', function (e) { applyView(e.detail); });
+  applyFilter('tous');
+  ctx.formatAmounts(root);
+  ctx.applyPerms();
+});
+</script>
+
+<!-- fin-stock -->
+<!-- ÉCRAN : STOCK (LECTURE) — Mata Finance §2.2 (propriété des données), §8.3 (ΔS), §9 et §9.1 (contrat Stock → Finance, fraîcheur, jamais zéro), §11.1 (hors périmètre V1) -->
+<section class="scr" data-scr="fin-stock" data-module="finance" data-perm="finance.stock.view" data-sens="std" hidden>
+  <style data-screen="fin-stock">
+    #app [data-scr="fin-stock"] [hidden]{display:none!important}
+    #app [data-scr="fin-stock"] [data-blk]{margin-top:14px}
+    #app [data-scr="fin-stock"] .grid2,#app [data-scr="fin-stock"] .grid2b{align-items:start}
+    #app [data-scr="fin-stock"] .grid2>.card,#app [data-scr="fin-stock"] .grid2b>.card{min-width:0}
+    #app [data-scr="fin-stock"] .sites table{min-width:540px}
+    #app [data-scr="fin-stock"] .contrat table{min-width:700px}
+    #app [data-scr="fin-stock"] td.num,#app [data-scr="fin-stock"] th.num{text-align:right;white-space:nowrap}
+    #app [data-scr="fin-stock"] td .st{white-space:nowrap}
+    #app [data-scr="fin-stock"] .stat .v{font-size:21px;letter-spacing:-.02em}
+    #app [data-scr="fin-stock"] .stat.hero .v{color:var(--red)}
+    #app [data-scr="fin-stock"] .stat .sub2{font-weight:600;color:var(--ink-2)}
+    #app [data-scr="fin-stock"] .miss{font-family:'Fira Code',monospace;font-weight:600;color:var(--bad)}
+    #app [data-scr="fin-stock"] .plus{font-family:'Fira Code',monospace;margin-right:2px}
+    #app [data-scr="fin-stock"] .brk [data-live],#app [data-scr="fin-stock"] .brk .miss{margin-left:auto;white-space:nowrap}
+    #app [data-scr="fin-stock"] .soon-wrap{display:inline-flex;cursor:not-allowed}
+    #app [data-scr="fin-stock"] .soon-wrap .btn{pointer-events:none;opacity:.55;filter:saturate(.4)}
+    #app [data-scr="fin-stock"] .jauge{min-width:90px;margin-bottom:3px}
+    #app [data-scr="fin-stock"] .drawer .dl{font-size:10.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-2);margin:14px 0 4px}
+    #app [data-scr="fin-stock"] .drawer .big-amt .miss{font-size:24px}
+    #app [data-scr="fin-stock"] .ch .btn{min-height:30px;padding:5px 11px;font-size:11.5px}
+  </style>
+  <div class="scr-head">
+    <div>
+      <h2>Stock (lecture)</h2>
+      <p class="scr-sub">Quantités et valorisation de stock : module propriétaire Stock ; usage dans Mata Finance : fourniture de la valeur financière nécessaire au P&amp;L (§2.2). Entité Mata Group · période du 1er au 27 août 2026 · ΔS entre dans les trois variantes du P&amp;L de gestion (§8.3) · lecture par interface contrôlée, aucune ressaisie (§2.2, §9).</p>
+    </div>
+    <div class="scr-meta">
+      <span class="sens std"><svg><use href="#i-shield"/></svg>Standard</span>
+      <span class="hint">Écran de lecture seule : aucune écriture, aucune validation · gestion physique et valorisation du stock hors périmètre V1, propriété du module Stock (§11.1) · consultation non auditée (Standard : l’audit de consultation vise les données hautement sensibles, §10.2)</span>
+    </div>
+  </div>
+
+  <div class="note-strip" style="margin:0 0 14px"><svg><use href="#i-box"/></svg><span><b>Le module Stock est propriétaire des quantités, de la valorisation et de toute décote.</b> Mata Finance consomme uniquement la valeur financière du stock, fournie par Stock : une donnée métier est créée et modifiée dans un seul module ; les autres modules la consomment par interface contrôlée et ne la ressaisissent pas (§2.2). Aucune quantité, aucun prix unitaire, aucune décote n’est calculé ni stocké dans Mata Finance ; ΔS est la seule grandeur utilisée par le moteur financier unique (§3, §8.3).</span></div>
+
+  <div class="actionbar">
+    <span class="tag lock"><svg><use href="#i-lock"/></svg>Lecture interface Stock</span>
+    <span class="st ok" data-fresh><svg><use href="#i-check"/></svg>OK · lecture 27/08 06:00</span>
+    <div class="sp"></div>
+    <span class="soon-wrap" data-soon title="Module Stock : bientôt disponible dans l’ERP Mata"><button class="btn ghost" disabled aria-disabled="true"><svg><use href="#i-box"/></svg>Ouvrir le module Stock<span class="tag lock">Bientôt</span></button></span>
+    <button class="btn ghost" data-goto="fin-pnl" data-perm="finance.pnl.view"><svg><use href="#i-scale"/></svg>P&amp;L et KPI</button>
+    <button class="btn ghost" data-goto="fin-dashboard" data-perm="finance.dashboard.view"><svg><use href="#i-dash"/></svg>Tableau de bord</button>
+  </div>
+
+  <!-- 1. VALEURS LUES ET ΔS (§8.3) : FCFA d’abord, ratios ensuite -->
+  <div class="statstrip">
+    <div class="card stat">
+      <div class="lb">Valeur financière du stock début<button class="fx" data-f="Valeur financière du stock début, fournie par Stock (§8.3) : lue par interface au début de la période, jamais calculée ni saisie dans Mata Finance." data-c="Valeur unique reçue de Stock au 01/08/2026 : 39 000 000 · le contrat Stock → Finance porte la valeur financière début/fin de période (§9)" data-src="Module Stock, propriétaire de la valorisation · valeur de début de période datée du 01/08/2026 · OK" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></div>
+      <div class="v"><span class="amt" data-amt="39000000"></span></div>
+      <div class="sub2">Début de période · 01/08/2026 · valeur datée reçue de Stock, base de ΔS pour tout le mois</div>
+    </div>
+    <div class="card stat">
+      <div class="lb">Valeur financière du stock fin (courante)<button class="fx" data-f="Valeur financière du stock fin, fournie par Stock (§8.3) : dernière valeur datée reçue par interface ; Stock reste propriétaire de la valorisation ; donnée datée et fraîche (§9)." data-c="Abattoir 22 400 000 + Dépôt central 12 835 000 + Points de vente 6 000 000 = 41 235 000" data-src="Module Stock · lecture OK 27/08 06:00 · états possibles : OK, Manquante, Erreur, Non à jour (§3)" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></div>
+      <div class="v"><span data-live><span class="amt" data-amt="41235000"></span></span><span class="miss" data-miss hidden>Manquante</span></div>
+      <div class="sub2">3 sites · <span data-live>lecture 27/08 06:00 · +5,7 % depuis le début de mois</span><span data-miss hidden>aucune valeur reçue pour la période, jamais remplacée par 0 (§9.1)</span></div>
+    </div>
+    <div class="card stat hero">
+      <div class="lb">ΔS — variation de stock<button class="fx" data-f="ΔS = Valeur financière du stock fin − valeur financière du stock début, fournie par Stock. (§8.3)" data-c="Stock fin 41 235 000 − stock début 39 000 000 = +2 235 000" data-src="Module Stock, seul propriétaire de la valorisation · Stock OK 27/08 06:00 · lecture seule dans Mata Finance · même valeur dans P&amp;L et KPI, Tableau de bord, snapshots et agents IA (moteur unique, §3)" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></div>
+      <div class="v"><span data-live><span class="plus">+</span><span class="amt" data-amt="2235000"></span></span><span class="miss" data-miss hidden>Non calculable</span></div>
+      <div class="sub2"><span data-live>+5,7 % de la valeur de début de mois · 0,5 % du CA de référence (<span class="amt" data-amt="452000000" data-nocur></span>) · 8,7 % du P&amp;L Global</span><span data-miss hidden>ΔS manquante : le P&amp;L n’est pas calculé avec 0 (§9.1)</span></div>
+    </div>
+  </div>
+
+  <div class="grid2" style="margin-top:0">
+    <!-- 2. RÉPARTITION PAR SITE : valeur financière seule -->
+    <div class="card sites">
+      <div class="ch"><h3>Répartition par site</h3><span class="hint-r">Valeur financière seule · quantités, prix et décote restent dans Stock · cliquer un site</span></div>
+      <div class="tbl-scroll"><table>
+        <thead><tr><th>Site</th><th class="num">Valeur financière</th><th>Part de la valeur courante</th><th>Fraîcheur</th></tr></thead>
+        <tbody data-sites>
+          <tr class="rowlink" data-open="fin-stock-site" data-site="Abattoir" data-val="22400000" data-part="54,3 %" data-pct="54" title="Ouvrir la fiche du site"><td><b>Abattoir</b></td><td class="num"><span data-live><span class="amt" data-amt="22400000" data-nocur></span></span><span class="miss" data-miss hidden>Manquante</span></td><td><div data-live><div class="jauge"><i style="width:54%"></i></div><span class="hint">54,3 %</span></div><span class="miss" data-miss hidden>Non calculable</span></td><td><span class="st ok" data-fresh="short"><svg><use href="#i-check"/></svg>OK 06:00</span></td></tr>
+          <tr class="rowlink" data-open="fin-stock-site" data-site="Dépôt central" data-val="12835000" data-part="31,1 %" data-pct="31" title="Ouvrir la fiche du site"><td><b>Dépôt central</b></td><td class="num"><span data-live><span class="amt" data-amt="12835000" data-nocur></span></span><span class="miss" data-miss hidden>Manquante</span></td><td><div data-live><div class="jauge"><i style="width:31%"></i></div><span class="hint">31,1 %</span></div><span class="miss" data-miss hidden>Non calculable</span></td><td><span class="st ok" data-fresh="short"><svg><use href="#i-check"/></svg>OK 06:00</span></td></tr>
+          <tr class="rowlink" data-open="fin-stock-site" data-site="Points de vente" data-val="6000000" data-part="14,6 %" data-pct="15" title="Ouvrir la fiche du site"><td><b>Points de vente</b></td><td class="num"><span data-live><span class="amt" data-amt="6000000" data-nocur></span></span><span class="miss" data-miss hidden>Manquante</span></td><td><div data-live><div class="jauge"><i style="width:15%"></i></div><span class="hint">14,6 %</span></div><span class="miss" data-miss hidden>Non calculable</span></td><td><span class="st ok" data-fresh="short"><svg><use href="#i-check"/></svg>OK 06:00</span></td></tr>
+          <tr><td><b>Total Mata Group</b><div class="hint">Somme des sites = valeur financière du stock fin</div></td><td class="num"><b><span data-live><span class="amt" data-amt="41235000" data-nocur></span></span><span class="miss" data-miss hidden>Manquante</span></b></td><td><div data-live><div class="jauge"><i style="width:100%"></i></div><span class="hint">100 %</span></div><span class="miss" data-miss hidden>Non calculable</span></td><td><span class="st ok" data-fresh="short"><svg><use href="#i-check"/></svg>OK 06:00</span></td></tr>
+        </tbody>
+      </table></div>
+      <div class="cb" style="padding-top:10px">
+        <div class="eq" data-live><b>Contrôle</b> : 22 400 000 + 12 835 000 + 6 000 000 = <b>41 235 000</b> = valeur financière du stock fin <span class="ok">cohérent</span></div>
+        <div class="eq" data-miss hidden><b>Contrôle</b> : aucune valeur par site reçue — les lignes affichent « Manquante », la somme n’est pas calculée avec 0 <span class="bad">(§9.1)</span></div>
+        <div class="note-strip"><svg><use href="#i-info"/></svg><span>Le contrat Stock → Finance ne porte que la valeur financière début/fin de période (§9) ; la répartition par site est une lecture d’affichage, elle n’intervient dans aucun calcul du moteur financier. Investigation d’un écart de ΔS : valeur → formule → composantes → source (§10.3) ; le détail par mouvement de stock relève du module Stock.</span></div>
+      </div>
+    </div>
+
+    <!-- 3. OÙ ΔS ENTRE DANS LE P&L (§8.3) -->
+    <div class="card">
+      <div class="ch"><h3>ΔS dans le P&amp;L de gestion</h3><span class="hint-r">§8.3 · cumul du 1er au 27 août</span></div>
+      <div class="cb">
+        <div class="brk">
+          <div class="row"><span class="sign p">+</span>CA <span class="hint">Ventes Mata · OK 20:30</span><span class="amt" data-amt="452000000" data-nocur></span></div>
+          <div class="row"><span class="sign p">+</span><b>ΔS</b> <span class="hint">Stock · OK 06:00</span><span data-live><span class="amt" data-amt="2235000" data-nocur></span></span><span class="miss" data-miss hidden>Manquante</span></div>
+          <div class="row"><span class="sign m">−</span>D <span class="hint">dépenses par date métier</span><span class="amt m" data-amt="421500000" data-nocur></span></div>
+          <div class="row"><span class="sign m">−</span>CF <span class="hint">charges fixes complémentaires</span><span class="amt m" data-amt="6900000" data-nocur></span></div>
+          <div class="row"><span class="sign p">=</span><b>P&amp;L Global</b><span data-live><span class="amt" data-amt="25835000" data-nocur></span></span><span class="miss" data-miss hidden>Non calculé</span></div>
+        </div>
+        <div class="fcode">P&amp;L Global = CA + ΔS − D − CF<br>P&amp;L hors Investissements = CA + ΔS − (D − DI) − CF = P&amp;L Global + DI<br>P&amp;L hors Dépenses spéciales = CA + ΔS − (D − DS) − CF = P&amp;L Global + DS</div>
+        <div class="eq" data-live style="margin-top:10px"><b>ΔS</b> = 41 235 000 − 39 000 000 = <b>+2 235 000</b><br><b>P&amp;L Global</b> = 452 000 000 + 2 235 000 − 421 500 000 − 6 900 000 = <b>25 835 000</b> · ΔS = <span class="ok">8,7 %</span> du P&amp;L Global</div>
+        <div class="eq" data-miss hidden style="margin-top:10px"><b>ΔS</b> = Manquante − 39 000 000 = <span class="bad">Non calculable</span><br>Une donnée absente n’est jamais interprétée comme zéro (§9.1) : le <b>P&amp;L Global</b> reste non calculé tant que ΔS manque</div>
+        <div class="hint" style="margin-top:10px">Les trois variantes partagent la même ΔS ; les flags Investissement et Dépense spéciale n’agissent que sur D (§8.3). Snapshot 26/08 22:14 : P&amp;L Global <span class="amt" data-amt="25105000" data-nocur></span> · hors Investissements <span class="amt" data-amt="43105000" data-nocur></span> · hors Dépenses spéciales <span class="amt" data-amt="31605000" data-nocur></span>.</div>
+        <div class="actionbar" style="margin:12px 0 0"><button class="btn ghost" data-goto="fin-pnl" data-perm="finance.pnl.view"><svg><use href="#i-scale"/></svg>Ouvrir P&amp;L et KPI</button><button class="btn ghost" data-goto="fin-historique" data-perm="finance.historique.view"><svg><use href="#i-history"/></svg>Snapshots</button></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid2b" data-blk>
+    <!-- 4. ÉTAT DE FRAÎCHEUR (§3, §9.1, §10.4) — démonstration du comportement « jamais zéro » -->
+    <div class="card">
+      <div class="ch"><h3>État de fraîcheur de la source Stock</h3><span class="hint-r">§3 · §9.1 · §10.4</span></div>
+      <div class="cb">
+        <div class="due"><span>État courant</span><span class="st ok" data-fresh><svg><use href="#i-check"/></svg>OK · lecture 27/08 06:00</span></div>
+        <div class="due"><span>Dernière lecture reçue</span><span class="dt"><b>27/08/2026 · 06:00</b></span></div>
+        <div class="due"><span>Valeur de début de période</span><span class="dt"><b>01/08/2026</b></span></div>
+        <div class="due"><span>Seuil de fraîcheur</span><span class="hint">Non fixé · à préciser au contrat d’interface (§9.1)</span></div>
+        <div class="fcode">États minimaux : OK, Manquante, Erreur, Non à jour. Une donnée périmée peut être affichée mais ne permet pas une auto-validation. (§3)<br>Une donnée absente n’est jamais interprétée comme zéro. Une dernière valeur connue peut rester visible à titre informatif mais ne peut pas être utilisée pour une auto-validation si elle dépasse le seuil de fraîcheur. (§9.1)</div>
+        <div class="deny-note" data-note="stale" hidden style="margin:12px 0 0"><svg><use href="#i-alert"/></svg><span><b>Dernière valeur connue affichée à titre informatif.</b> Lecture du 27/08 06:00 conservée avec son horodatage ; elle ne peut pas être utilisée pour une auto-validation (§3, §9.1). Signal de qualité « sources non à jour » rendu visible sur le Tableau de bord et en notification (§10.4) · règle d’alerte « Source non à jour » : centre de notifications, destinataire Admin, criticité Haute.</span></div>
+        <div class="deny-note" data-note="missing" hidden style="margin:12px 0 0"><svg><use href="#i-eyeoff"/></svg><span><b>Donnée Manquante : affichée « Manquante », jamais 0.</b> Aucune valeur reçue de Stock pour la période : la valeur courante, la répartition par site et ΔS sont non calculables ; le P&amp;L Global n’est pas calculé avec un stock nul (§9.1). Signal de qualité remonté au Tableau de bord et en notification (§10.4).</span></div>
+        <div class="hint" style="margin:12px 0 6px">Démonstration (maquette) : comportement de l’écran selon l’état de fraîcheur. L’état réel est fourni par l’interface Stock ; il n’est jamais choisi par un utilisateur.</div>
+        <div class="chips" role="group" aria-label="Simuler l’état de fraîcheur"><button class="chip on" data-sim="ok">OK</button><button class="chip" data-sim="nonajour">Non à jour</button><button class="chip" data-sim="erreur">Erreur</button><button class="chip" data-sim="manquante">Manquante</button></div>
+      </div>
+    </div>
+
+    <!-- 5. CHRONOLOGIE DE LA PÉRIODE (§8.6) -->
+    <div class="card">
+      <div class="ch"><h3>Chronologie de la période</h3><span class="hint-r">Août 2026 · lectures Stock et clôture</span></div>
+      <div class="cb">
+        <div class="tl">
+          <div class="ev"><b>01/08/2026 · Début de période</b><small>Valeur financière du stock début reçue de Stock : <span class="amt" data-amt="39000000" data-nocur></span> · base de ΔS pour tout le mois</small></div>
+          <div class="ev on"><b>27/08 · 06:00 · Lecture Stock OK</b><small>Valeur financière du stock fin : <span class="amt" data-amt="41235000" data-nocur></span> · Abattoir <span class="amt" data-amt="22400000" data-nocur></span> · Dépôt central <span class="amt" data-amt="12835000" data-nocur></span> · Points de vente <span class="amt" data-amt="6000000" data-nocur></span> · ΔS +<span class="amt" data-amt="2235000" data-nocur></span></small></div>
+          <div class="ev"><b>27/08 · Clôture du jour (filet 23:59)</b><small>Snapshot financier immuable, unique par date et entité : les P&amp;L et KPI sont figés tels qu’ils étaient connus, ΔS comprise (§8.6) · snapshot précédent 26/08 22:14, auto post-clôture</small></div>
+        </div>
+        <div class="note-strip"><svg><use href="#i-history"/></svg><span>Une correction ultérieure ne réécrit pas le snapshot ; l’interface peut comparer le snapshot historique à la situation recalculée actuelle (§8.6). Une nouvelle valeur de stock transmise par Stock après clôture modifie la situation recalculée, jamais le snapshot. <button class="linkish" data-goto="fin-historique" data-perm="finance.historique.view">Historique et snapshots</button></span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 6. CONTRAT D’INTERFACE STOCK → FINANCE (§9, §9.1) -->
+  <div class="card contrat" data-blk>
+    <div class="ch"><h3>Contrat d’interface Stock → Finance</h3><span class="hint-r">§9 · §9.1 : à préciser avant développement · clarté des contrats d’interface, point à valider par le panel (§11.4)</span></div>
+    <div class="tbl-scroll"><table>
+      <thead><tr><th>Élément du contrat (§9.1)</th><th>Stock → Finance</th><th>État</th></tr></thead>
+      <tbody>
+        <tr><td><b>Système source et destinataire</b></td><td>Stock → Mata Finance · Stock reste propriétaire de la valorisation (§9)</td><td><span class="st ok"><svg><use href="#i-check"/></svg>Fixé (§9)</span></td></tr>
+        <tr><td><b>Données critiques</b></td><td>Valeur financière début/fin de période (§9)</td><td><span class="st ok"><svg><use href="#i-check"/></svg>Fixé (§9)</span></td></tr>
+        <tr><td><b>Identifiant externe</b></td><td>Identifiant externe stable exigé par l’idempotence (§3) ; format à fixer</td><td><span class="st warn"><svg><use href="#i-clock"/></svg>À fixer (§9.1)</span></td></tr>
+        <tr><td><b>Champs obligatoires, date métier, horodatage</b></td><td>Valeur financière, entité, date métier de la valorisation, horodatage de la lecture · donnée datée et fraîche (§9)</td><td><span class="st warn"><svg><use href="#i-clock"/></svg>À compléter (§9.1)</span></td></tr>
+        <tr><td><b>Fréquence / déclencheur</b></td><td>Lecture observée à 06:00 · fréquence contractuelle non fixée</td><td><span class="st warn"><svg><use href="#i-clock"/></svg>À fixer (§9.1)</span></td></tr>
+        <tr><td><b>Seuil de fraîcheur</b></td><td>Au-delà du seuil : état « Non à jour », dernière valeur connue affichée à titre informatif, aucune auto-validation (§9.1)</td><td><span class="st warn"><svg><use href="#i-clock"/></svg>À fixer (§9.1)</span></td></tr>
+        <tr><td><b>Règle d’idempotence</b></td><td>Toute opération d’interface ou d’import possède un identifiant externe stable ; un événement répété ne crée qu’un seul effet financier (§3)</td><td><span class="st ok"><svg><use href="#i-check"/></svg>Fixé (§3)</span></td></tr>
+        <tr><td><b>Comportement en cas d’erreur</b></td><td>États OK, Manquante, Erreur, Non à jour · une donnée absente n’est jamais interprétée comme zéro (§3, §9.1)</td><td><span class="st ok"><svg><use href="#i-check"/></svg>Fixé (§3, §9.1)</span></td></tr>
+        <tr><td><b>Correction / annulation</b></td><td>Nouvelle valeur datée fournie par Stock · aucune saisie ni correction de la valorisation dans Mata Finance (§2.2, §11.1)</td><td><span class="st warn"><svg><use href="#i-clock"/></svg>À préciser (§9.1)</span></td></tr>
+        <tr><td><b>Authentification</b></td><td>Interface contrôlée · mécanisme défini avec le document technique (§9)</td><td><span class="st warn"><svg><use href="#i-clock"/></svg>À fixer (§9.1)</span></td></tr>
+      </tbody>
+    </table></div>
+    <div class="cb" style="padding-top:10px"><div class="note-strip" style="margin:0"><svg><use href="#i-info"/></svg><span>Le mot « interface » désigne ici un contrat de données et de comportement entre modules — sa mise en œuvre technique (appel en processus ou réseau) est définie dans le document technique, §9, et n’a aucune incidence sur les règles ci-dessus. (§9) · Hors périmètre V1 : gestion physique/valorisation du stock, propriété du module Stock (§11.1).</span></div></div>
+  </div>
+
+  <!-- Tiroir : fiche site (valeur financière seule) -->
+  <aside class="drawer" data-ov="fin-stock-site" aria-label="Fiche site — valeur financière du stock">
+    <div class="dh"><h3 data-site-name>Abattoir</h3><button class="ib" data-close aria-label="Fermer"><svg><use href="#i-x"/></svg></button></div>
+    <div class="db">
+      <div class="hint">Valeur financière du stock du site, lue depuis le module Stock · aucune quantité, aucun prix unitaire, aucune décote dans Mata Finance (§2.2, §11.1)</div>
+      <div class="big-amt"><span data-live><span class="amt" data-site-amt data-amt="22400000"></span></span><span class="miss" data-miss hidden>Manquante</span></div>
+      <div class="meta-l"><span class="st ok" data-fresh><svg><use href="#i-check"/></svg>OK · lecture 27/08 06:00</span><span class="tag lock"><svg><use href="#i-lock"/></svg>Lecture seule</span><span class="tag lock"><svg><use href="#i-box"/></svg>Propriétaire : Stock</span></div>
+      <div class="dl">Part de la valeur financière du stock fin</div>
+      <div class="jauge" data-live><i data-site-bar style="width:54%"></i></div>
+      <div class="eq" data-live style="margin-top:10px"><span data-site-eq>22 400 000 / 41 235 000 = 54,3 %</span> · <b data-site-part>54,3 %</b> de la valeur courante</div>
+      <div class="eq" data-miss hidden style="margin-top:10px">Part non calculable : valeur du site <span class="bad">Manquante</span>, jamais interprétée comme zéro (§9.1)</div>
+      <div class="dl">Ce que Mata Finance ne détient pas pour ce site</div>
+      <div class="due"><span>Quantités</span><span class="hint">Module Stock</span></div>
+      <div class="due"><span>Méthode de valorisation, prix unitaires</span><span class="hint">Module Stock</span></div>
+      <div class="due"><span>Décote et pertes</span><span class="hint">Module Stock · absentes des calculs Finance</span></div>
+      <div class="due"><span>Fraîcheur de la lecture</span><span class="dt"><b>27/08 · 06:00</b></span></div>
+      <div class="note-strip"><svg><use href="#i-info"/></svg><span>Une modification de la valeur d’un site ne peut venir que d’une nouvelle lecture datée fournie par Stock ; Mata Finance ne corrige jamais une valeur de stock, même par Ajustement (§2.2, §4.7 : le compte Ajustement corrige des soldes de comptes, pas une valorisation).</span></div>
+    </div>
+    <div class="df"><button class="btn ghost" data-close>Fermer</button><span class="soon-wrap" data-soon title="Module Stock : bientôt disponible dans l’ERP Mata"><button class="btn ghost" disabled aria-disabled="true"><svg><use href="#i-box"/></svg>Ouvrir dans Stock<span class="tag lock">Bientôt</span></button></span></div>
+  </aside>
+  <div class="dback" data-ov-back="fin-stock-site"></div>
+</section>
+<script data-screen="fin-stock">
+ERP.register('fin-stock', function (root, ctx) {
+  var $ = function (s, r) { return (r || root).querySelector(s); };
+  var $$ = function (s, r) { return Array.prototype.slice.call((r || root).querySelectorAll(s)); };
+  var TOTAL = 41235000;
+
+  /* 1. État de fraîcheur (§3, §9.1) — démonstration : l’état réel vient de l’interface Stock, jamais d’un utilisateur */
+  var STATES = {
+    ok: { cls: 'ok', ic: 'check', lbl: 'OK · lecture 27/08 06:00', short: 'OK 06:00', miss: false, note: '',
+      msg: 'Source Stock OK (27/08 06:00) : valeur courante, répartition par site et ΔS utilisables par le moteur financier unique.' },
+    nonajour: { cls: 'warn', ic: 'clock', lbl: 'Non à jour · dernière lecture 27/08 06:00, seuil de fraîcheur dépassé', short: 'Non à jour', miss: false, note: 'stale',
+      msg: 'Source Non à jour : dernière valeur connue affichée à titre informatif, aucune auto-validation possible (§3, §9.1).' },
+    erreur: { cls: 'bad', ic: 'alert', lbl: 'Erreur · lecture en échec, dernière valeur connue 27/08 06:00', short: 'Erreur', miss: false, note: 'stale',
+      msg: 'Source en Erreur : dernière valeur connue conservée avec son horodatage, jamais remplacée par 0 ; signal de qualité remonté (§10.4).' },
+    manquante: { cls: 'bad', ic: 'eyeoff', lbl: 'Manquante · aucune valeur reçue de Stock pour la période', short: 'Manquante', miss: true, note: 'missing',
+      msg: 'Donnée Manquante : affichée « Manquante », jamais interprétée comme zéro (§9.1) ; ΔS et P&L Global non calculés.' }
+  };
+  function setState(k) {
+    var s = STATES[k];
+    $$('[data-fresh]').forEach(function (b) {
+      b.className = 'st ' + s.cls;
+      b.innerHTML = '<svg><use href="#i-' + s.ic + '"/></svg>' + (b.getAttribute('data-fresh') === 'short' ? s.short : s.lbl);
+    });
+    $$('[data-live]').forEach(function (el) { el.hidden = s.miss; });
+    $$('[data-miss]').forEach(function (el) { el.hidden = !s.miss; });
+    $$('[data-note]').forEach(function (el) { el.hidden = el.getAttribute('data-note') !== s.note; });
+    $$('[data-sim]').forEach(function (c) { c.classList.toggle('on', c.getAttribute('data-sim') === k); });
+    root.setAttribute('data-fresh-state', k);
+  }
+  $$('[data-sim]').forEach(function (c) {
+    ctx.on(c, 'click', function () { var k = c.getAttribute('data-sim'); setState(k); ctx.toast(STATES[k].msg); });
+  });
+
+  /* 2. Fiche site (tiroir) : valeur financière seule et part de la valeur courante (§2.2, §10.3) */
+  var dr = $('[data-ov="fin-stock-site"]');
+  $$('tr[data-site]').forEach(function (tr) {
+    ctx.on(tr, 'click', function () {
+      var v = parseInt(tr.getAttribute('data-val'), 10), part = tr.getAttribute('data-part');
+      $('[data-site-name]', dr).textContent = tr.getAttribute('data-site');
+      $('[data-site-amt]', dr).setAttribute('data-amt', String(v));
+      $('[data-site-bar]', dr).style.width = tr.getAttribute('data-pct') + '%';
+      $('[data-site-part]', dr).textContent = part;
+      $('[data-site-eq]', dr).textContent = ctx.fmt(v) + ' / ' + ctx.fmt(TOTAL) + ' = ' + part;
+      ctx.formatAmounts(dr);
+      ctx.applyPerms();
+    });
+  });
+
+  /* 3. « Ouvrir le module Stock » : désactivé, Bientôt — l’explication reste visible au clic (refus expliqué, jamais masqué) */
+  $$('[data-soon]').forEach(function (w) {
+    ctx.on(w, 'click', function () {
+      ctx.toast('Module Stock : bientôt disponible dans l’ERP Mata. Quantités, valorisation et décote y seront gérées ; Mata Finance n’en lit que la valeur financière (§2.2).');
+    });
+  });
+
+  setState('ok');
+  ctx.formatAmounts(root);
+  ctx.applyPerms();
+});
+</script>
+
+<!-- fin-import -->
+<!-- ÉCRAN : IMPORT RELEVÉ BANCAIRE (Mata Finance §4.9, §9, §11.1 · Mata Core §6.3) — assistant en 5 étapes, import idempotent -->
+<section class="scr" data-scr="fin-import" data-module="finance" data-perm="finance.import.view" data-sens="s" hidden>
+  <style data-screen="fin-import">
+    #app [data-scr="fin-import"] [data-wiznav]{margin-top:14px}
+    #app [data-scr="fin-import"] .filebox{display:flex;align-items:center;gap:12px;padding:14px;border:1px dashed var(--line-2);border-radius:12px;background:var(--card-2)}
+    #app [data-scr="fin-import"] .filebox>svg{width:26px;height:26px;color:var(--red);flex:none}
+    #app [data-scr="fin-import"] .filebox b{display:block;font-family:'Fira Code',monospace;font-size:12.5px;word-break:break-all}
+    #app [data-scr="fin-import"] .filebox small{color:var(--mut);font-size:11px;line-height:1.4}
+    #app [data-scr="fin-import"] .filebox .st{margin-left:auto;flex:none}
+    #app [data-scr="fin-import"] .kv{display:grid;grid-template-columns:auto 1fr;gap:7px 12px;font-size:12px;line-height:1.45;color:var(--ink-2)}
+    #app [data-scr="fin-import"] .kv b{font-size:10.5px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-2);white-space:nowrap;padding-top:1px}
+    #app [data-scr="fin-import"] .kv .amt{font-weight:600;color:var(--ink)}
+    #app [data-scr="fin-import"] .ch{flex-wrap:wrap}
+    #app [data-scr="fin-import"] .cb .grid2b{margin-top:0}
+    #app [data-scr="fin-import"] .cb .actionbar{margin:12px 0 0}
+    #app [data-scr="fin-import"] .cb .note-strip{margin-top:12px}
+    #app [data-scr="fin-import"] .eq{margin-top:12px}
+    #app [data-scr="fin-import"] .tl{margin-top:12px}
+    #app [data-scr="fin-import"] .prog{margin-top:10px}
+    #app [data-scr="fin-import"] .rline{margin:12px 0 0;max-width:none;width:auto}
+    #app [data-scr="fin-import"] .rline input[type=checkbox]{width:15px;height:15px;accent-color:var(--red);flex:none}
+    #app [data-scr="fin-import"] .steps li[data-go]{cursor:pointer}
+    #app [data-scr="fin-import"] td .hint{display:block;margin-top:2px}
+    @media (max-width:640px){#app [data-scr="fin-import"] .kv{grid-template-columns:1fr}#app [data-scr="fin-import"] .kv b{white-space:normal}#app [data-scr="fin-import"] .filebox{flex-wrap:wrap}#app [data-scr="fin-import"] .rline{flex-wrap:wrap}#app [data-scr="fin-import"] .rline .rh{margin-left:24px;width:100%}}
+  </style>
+  <div class="scr-head">
+    <div>
+      <h2>Import relevé bancaire</h2>
+      <p class="scr-sub">Banque → Finance : position bancaire via CSV et références disponibles · import idempotent ; correction tracée ; rapprochement ligne à ligne hors V1 (§9) · La Banque est alimentée en V1 par import CSV (§4.9) · Assistant : Fichier → Prévisualisation → Contrôles → Validation → Import (Core §6.3) · jeudi 27 août 2026</p>
+    </div>
+    <div class="scr-meta">
+      <span class="sens s"><svg><use href="#i-shield"/></svg>Sensible</span>
+      <span class="hint">Import/Export : accès restreint, modifications auditées, export contrôlé (Core §5.3) · exécution selon la permission « finance.import.executer », sans second validateur · toute correction de la Position externe est matérialisée par un ajustement validé (§4.2 · VAL-116, double validation)</span>
+    </div>
+  </div>
+
+  <ol class="steps" data-steps><li class="on" data-go="1">Fichier</li><li data-go="2">Prévisualisation</li><li data-go="3">Contrôles</li><li data-go="4">Validation</li><li data-go="5">Import</li></ol>
+
+  <!-- ===== Étape 1 : Fichier ===== -->
+  <div class="card" data-step="1">
+    <div class="ch"><h3>Étape 1 — Fichier</h3><span class="hint-r">Un fichier CSV par import · compte cible : une Position externe alimentée par IMPORT</span></div>
+    <div class="cb">
+      <div class="grid2b">
+        <div>
+          <div class="filebox"><svg><use href="#i-file"/></svg><div><b>releve_BOA_2026-08-27.csv</b><small>CSV · UTF-8 · séparateur « ; » · 14 lignes · reçu le 27/08/2026 · 08:00 · colonnes : compte, date de valeur, libellé, montant, sens, référence bancaire</small></div><span class="st ok"><svg><use href="#i-check"/></svg>Lu</span></div>
+          <div class="actionbar"><button class="btn ghost" data-file-pick><svg><use href="#i-upload"/></svg>Choisir un autre fichier</button><span class="hint">Sélecteur simulé dans la maquette · formats selon le besoin : CSV, Excel, PDF (Core §6.3) · CSV = mode V1</span></div>
+          <div class="fld" style="margin-top:12px"><label for="fin-import-compte">Compte cible (Position externe)</label><select id="fin-import-compte" class="inp"><option>Banque BOA — Position externe · IMPORT CSV</option><option disabled>Bictorys — Position externe · SYNCHRONISÉ · jamais modifiable à la main</option></select></div>
+          <div class="kv" style="margin-top:12px">
+            <b>Position actuelle</b><span><span class="amt" data-amt="45200000"></span> · valeur reçue à l’import du 27/08 08:00 · fraîcheur OK</span>
+            <b>Dernier import</b><span data-last-import>27/08 · 08:00 · S. Doucouré · 14 lignes · 0 doublon</span>
+            <b>Correction en attente</b><span><span class="amt" data-amt="-45000"></span> « frais bancaires non importés » (VAL-116, double validation) · la valeur source originale est toujours conservée (§4.2)</span>
+          </div>
+        </div>
+        <div>
+          <div class="kv">
+            <b>Source → destinataire</b><span>Banque BOA → Mata Finance, Position externe « Banque BOA » (contrat d’interface obligatoire, §9.1)</span>
+            <b>Identifiant externe</b><span>Référence bancaire = identifiant privilégié ; si elle est absente, empreinte logique stable construite à partir des attributs disponibles : compte, date de valeur, montant, sens, libellé normalisé et occurrence (§4.9)</span>
+            <b>Champs obligatoires</b><span>compte, date de valeur, libellé, montant (entier FCFA), sens · référence bancaire lorsqu’elle est disponible</span>
+            <b>Date métier</b><span>date de valeur (ISO 8601) · horodatage : réception du fichier, 27/08/2026 08:00</span>
+            <b>Déclencheur</b><span>import manuel par un utilisateur autorisé · mode V1 CSV ; bascule API ultérieure sans impact fonctionnel (§4.9)</span>
+            <b>Fraîcheur</b><span>états : OK, Manquante, Erreur, Non à jour · une donnée périmée peut rester visible mais ne permet pas une auto-validation (§9.1)</span>
+            <b>Idempotence</b><span>un événement répété ne crée qu’un seul effet financier (§3) · l’import ou l’appel répété ne doit jamais produire un double effet (§4.9)</span>
+            <b>Erreur · correction</b><span>tout contrôle en échec bloque l’étape Validation · correction manuelle auditée, matérialisée par un ajustement validé (§4.1, §4.2)</span>
+            <b>Authentification</b><span>utilisateur authentifié et permission « finance.import.executer » (CSV V1) · clé API dédiée à la bascule API</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== Étape 2 : Prévisualisation ===== -->
+  <div class="card" data-step="2" hidden>
+    <div class="ch"><h3>Étape 2 — Prévisualisation</h3><div class="chips"><button class="chip on" data-filter="tous">Toutes</button><button class="chip" data-filter="credit">Crédits</button><button class="chip" data-filter="debit">Débits</button><button class="chip" data-filter="sansref">Sans référence</button></div><span class="hint-r" data-prev-count>6 lignes affichées sur 14 · 8 non affichées</span></div>
+    <div class="tbl-scroll"><table>
+      <thead><tr><th>Date de valeur</th><th>Libellé</th><th>Montant</th><th>Sens</th><th>Référence bancaire</th></tr></thead>
+      <tbody data-prev-rows>
+        <tr data-sens="credit" data-ref="non"><td>26/08/2026</td><td>VERSEMENT ESPECES</td><td><span class="amt" data-amt="3000000" data-nocur></span></td><td><span class="st ok">Crédit</span></td><td><span class="tag lock"><svg><use href="#i-key"/></svg>Empreinte logique</span><span class="hint">sans référence · BOA · 2026-08-26 · <span class="amt" data-amt="3000000" data-nocur></span> · crédit · « versement especes » · occurrence 1</span></td></tr>
+        <tr data-sens="credit" data-ref="oui"><td>26/08/2026</td><td>VIR RECU RESTAURANT LE BAOBAB</td><td><span class="amt" data-amt="1500000" data-nocur></span></td><td><span class="st ok">Crédit</span></td><td>BOA-20260826-04471</td></tr>
+        <tr data-sens="debit" data-ref="oui"><td>25/08/2026</td><td>VIR MATA VOLAILLE CHAIR</td><td><span class="amt" data-amt="1200000" data-nocur></span></td><td><span class="st mut">Débit</span></td><td>BOA-20260825-03902</td></tr>
+        <tr data-sens="credit" data-ref="oui"><td>25/08/2026</td><td>VIR RECU BOUCHERIE DES ALMADIES</td><td><span class="amt" data-amt="650000" data-nocur></span></td><td><span class="st ok">Crédit</span></td><td>BOA-20260825-03877</td></tr>
+        <tr data-sens="debit" data-ref="non"><td>24/08/2026</td><td>RETRAIT ESPECES</td><td><span class="amt" data-amt="800000" data-nocur></span></td><td><span class="st mut">Débit</span></td><td><span class="tag lock"><svg><use href="#i-key"/></svg>Empreinte logique</span><span class="hint">sans référence · BOA · 2026-08-24 · 800 000 · débit · « retrait especes » · occurrence 1</span></td></tr>
+        <tr data-sens="credit" data-ref="oui"><td>22/08/2026</td><td>VIR RECU TOUBA VIANDES</td><td><span class="amt" data-amt="150000" data-nocur></span></td><td><span class="st ok">Crédit</span></td><td>BOA-20260822-02210</td></tr>
+      </tbody>
+    </table></div>
+    <div class="cb">
+      <div class="declres">
+        <div><div class="k">Crédits affichés</div><div class="val ok"><span class="amt" data-amt="5300000" data-nocur data-tot="c"></span></div></div>
+        <div><div class="k">Débits affichés</div><div class="val"><span class="amt" data-amt="2000000" data-nocur data-tot="d"></span></div></div>
+        <div><div class="k">Lignes non affichées</div><div class="val" data-tot="n">8 · 14 au total</div></div>
+      </div>
+      <div class="note-strip"><svg><use href="#i-info"/></svg><span>Aperçu limité à 6 lignes ; les 14 lignes sont contrôlées à l’étape suivante. Le rapprochement d’une ligne bancaire avec une dépense ou un paiement n’est pas inclus en V1 (§4.9) : aucune ligne n’est associée à une dépense, un paiement ou un transfert.</span></div>
+    </div>
+  </div>
+
+  <!-- ===== Étape 3 : Contrôles ===== -->
+  <div class="card" data-step="3" hidden>
+    <div class="ch"><h3>Étape 3 — Contrôles</h3><span class="hint-r">Règles minimales Banque → Finance : import idempotent ; correction tracée (§9)</span></div>
+    <div class="tbl-scroll"><table>
+      <thead><tr><th>Contrôle</th><th>Résultat</th><th>Détail</th></tr></thead>
+      <tbody>
+        <tr><td><b>Format</b></td><td><span class="st ok"><svg><use href="#i-check"/></svg>OK</span></td><td>14 lignes lues · 14 valides · 0 rejetée · colonnes attendues présentes (compte, date de valeur, libellé, montant, sens, référence bancaire) · dates ISO 8601 · montants entiers FCFA sans décimales (§3)</td></tr>
+        <tr><td><b>Idempotence</b></td><td><span class="st ok"><svg><use href="#i-check"/></svg>OK</span></td><td>Référence bancaire = identifiant privilégié : 12 lignes · 2 lignes sans référence → empreinte logique stable construite à partir de compte, date de valeur, montant, sens, libellé normalisé et occurrence (§4.9) · 14 identifiants stables</td></tr>
+        <tr><td><b>Doublons</b></td><td><span class="st ok"><svg><use href="#i-check"/></svg>OK</span></td><td>0 doublon dans le fichier · 14 identifiants déjà connus de la Position externe (import du 27/08 08:00) → aucun double effet : un import répété ne produit qu’un seul effet (§11.2 « Pas de double comptage »)</td></tr>
+        <tr><td><b>Fraîcheur</b></td><td><span class="st ok"><svg><use href="#i-check"/></svg>OK</span></td><td>Relevé du 27/08/2026 reçu à 08:00 · source Banque BOA : OK (états minimaux OK, Manquante, Erreur, Non à jour, §3) · une donnée absente n’est jamais interprétée comme zéro (§9.1)</td></tr>
+        <tr><td><b>Unicité des références</b></td><td><span class="st ok"><svg><use href="#i-check"/></svg>OK</span></td><td>12 références présentes · 12 distinctes · contrôle rendu visible à la suite de l’incident INC-014 (rappel ci-dessous)</td></tr>
+      </tbody>
+    </table></div>
+    <div class="cb">
+      <div class="note-strip" style="margin-top:0"><svg><use href="#i-alert"/></svg><span><b>Rappel INC-014 · Majeur · En cours</b> — Import CSV BOA : référence dupliquée sur 2 lignes du 26/08 (ouvert par S. Doucouré, 27/08 08:05). Le cahier (§4.9) traite l’absence de référence par l’empreinte logique ; une référence présente mais dupliquée n’y est pas couverte : traitement à arbitrer. D’ici là, toute duplication détectée est signalée ici avant l’étape Validation.</span></div>
+      <div class="kv" style="margin-top:12px"><b>Bilan</b><span><span class="st ok"><svg><use href="#i-check"/></svg>5 contrôles · 5 OK · 0 bloquant</span> passage à l’étape Validation autorisé</span></div>
+      <div class="prog"><i style="width:100%"></i></div>
+    </div>
+  </div>
+
+  <!-- ===== Étape 4 : Validation ===== -->
+  <div data-step="4" hidden>
+    <div class="statstrip">
+      <div class="card stat">
+        <div class="lb">Position Banque BOA avant import<button class="fx" data-f="Une Position externe conserve la valeur reçue, son horodatage, la source et toute correction manuelle." data-c="Valeur reçue 45 200 000 · horodatage 27/08 08:00 · source : import CSV · correction −45 000 (VAL-116) en attente, non appliquée" data-src="Banque → Finance · CSV releve_BOA_2026-08-27.csv · fraîcheur OK 27/08 08:00 (§4.9)" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></div>
+        <div class="v amt" data-amt="45200000"></div>
+        <div class="sub2">valeur reçue · import CSV 27/08 08:00 · fraîcheur OK</div>
+      </div>
+      <div class="card stat">
+        <div class="lb">Position Banque BOA après import<button class="fx" data-f="L’import ou l’appel répété ne doit jamais produire un double effet." data-c="Valeur reçue 45 200 000 · 14 identifiants déjà connus → 0 effet · écart 0" data-src="Position externe Banque BOA · CSV releve_BOA_2026-08-27.csv · moteur de calcul financier unique (§3, §4.9)" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></div>
+        <div class="v amt" data-amt="45200000"></div>
+        <div class="sub2">identique : lignes déjà reflétées · 0 double effet</div>
+      </div>
+      <div class="card stat">
+        <div class="lb">Trésorerie disponible<button class="fx" data-f="Somme des comptes Trésorerie et Positions externes configurés comme immédiatement disponibles." data-c="Caisse générale 8 450 000 · Sous-caisse Marché 1 275 000 · Sous-caisse Livraisons 640 000 · Banque BOA 45 200 000 · Bictorys 2 890 000" data-src="Moteur financier unique (§3) · comptes CALCULÉ, IMPORT, SYNCHRONISÉ · 27/08 (§8.1)" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></div>
+        <div class="v amt" data-amt="58455000"></div>
+        <div class="sub2">12,9 % du CA de référence (<span class="amt" data-amt="452000000" data-nocur></span>) · inchangée par cet import</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="ch"><h3>Étape 4 — Validation</h3><span class="hint-r">Aucune écriture avant l’étape Import · la position affichée est la valeur reçue, jamais saisie</span></div>
+      <div class="cb">
+        <div class="eq" style="margin-top:0">Position externe = <b>valeur reçue</b> (solde de fin de relevé) · corrections manuelles conservées séparément<br>Avant : <b>45 200 000</b> · Après : <b>45 200 000</b> · Δ = <span class="ok">0</span> → lignes déjà reflétées, aucun double effet (§4.9 · §11.2 « Pas de double comptage »)<br>Correction <b>−45 000</b> « frais bancaires non importés » (VAL-116, double validation) : en attente, non appliquée · la valeur source originale est toujours conservée (§4.2)</div>
+        <div class="tl">
+          <div class="ev on"><b>Rapprochement ligne à ligne hors V1</b><small>Le rapprochement d’une ligne bancaire avec une dépense ou un paiement n’est pas inclus en V1. Il est prévu ultérieurement, d’abord en rapprochement manuel puis, éventuellement, avec propositions automatiques (§4.9, §11.1).</small></div>
+          <div class="ev"><b>Relais « Bictorys → Banque en cours » · <span class="amt" data-amt="350000" data-nocur></span> · âge 3 j &gt; seuil 2 j</b><small>Ce relevé ne contient aucun crédit de 350 000 provenant de Bictorys : le Relais reste ouvert jusqu’à confirmation à destination (§4.6) · constat manuel, aucun rapprochement automatique en V1.</small></div>
+          <div class="ev"><b>Transferts validés reflétés par la valeur reçue</b><small>26/08 Caisse générale → Banque BOA <span class="amt" data-amt="3000000" data-nocur></span> (O. Seck / S. Doucouré) · 24/08 Banque BOA → Caisse générale 800 000 (F. Sarr / O. Seck) · le montant n’est compté qu’une seule fois dans la trésorerie totale contrôlée (§4.6).</small></div>
+        </div>
+        <label class="rline"><input type="checkbox" data-confirm>J’ai vérifié la prévisualisation et les 5 contrôles ; la position après import est conforme à la valeur reçue<span class="rh">obligatoire pour passer à l’étape Import</span></label>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== Étape 5 : Import ===== -->
+  <div class="card" data-step="5" hidden>
+    <div class="ch"><h3>Étape 5 — Import</h3><span class="hint-r">Écriture auditée : acteur, date/heure, entité, action, anciennes/nouvelles valeurs (§10.2)</span></div>
+    <div class="cb">
+      <div class="kv">
+        <b>Fichier</b><span>releve_BOA_2026-08-27.csv · 14 lignes · reçu le 27/08/2026 · 08:00</span>
+        <b>Compte</b><span>Banque BOA · Position externe · IMPORT CSV · entité Mata Group</span>
+        <b>Identifiants</b><span>12 références bancaires + 2 empreintes logiques · 0 doublon · 14 identifiants déjà connus</span>
+        <b>Effet attendu</b><span>position <span class="amt" data-amt="45200000"></span> → <span class="amt" data-amt="45200000"></span> (identique) · Trésorerie disponible inchangée</span>
+        <b>Exécutant</b><span><span data-me>S. Doucouré · Super Admin</span> · sans second validateur · notification « Sources » au centre commun (Core §6.1)</span>
+      </div>
+      <div class="actionbar">
+        <button class="btn pri" data-import data-perm="finance.import.executer"><svg><use href="#i-upload"/></svg>Importer</button>
+        <button class="btn ghost" data-export data-perm="finance.export"><svg><use href="#i-dl"/></svg>Exporter le journal d’import (CSV)</button>
+        <span class="hint">Le droit d’export reste distinct du droit de consultation (Core §6.3) · exports conservés 7 jours puis régénérables</span>
+      </div>
+      <div data-result hidden>
+        <div class="kv" style="margin-top:14px"><b>Résultat</b><span><span class="st ok"><svg><use href="#i-check"/></svg>Import réussi</span> 14 lignes · 0 doublon · 0 double effet · position Banque BOA <span class="amt" data-amt="45200000"></span> inchangée</span></div>
+        <div class="tl" data-result-tl></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="actionbar" data-wiznav>
+    <button class="btn ghost" data-prev><svg><use href="#i-arr"/></svg>Précédent</button>
+    <span class="hint" data-stepinfo>Étape 1 sur 5 · Fichier</span>
+    <div class="sp"></div>
+    <button class="btn pri" data-next>Suivant<svg><use href="#i-arr"/></svg></button>
+  </div>
+  <div class="note-strip"><svg><use href="#i-info"/></svg><span>Le CSV reste le mode V1 ; une bascule ultérieure vers une API bancaire n’aura aucun impact sur le comportement fonctionnel de la Position externe ni sur les écrans qui la consomment (§4.9). Bictorys, alimenté par synchronisation automatique, n’est jamais importé ni modifié à la main. Toute écriture automatique passe en Recette avant production (AG-02 : Test / Recette).</span></div>
+</section>
+<script data-screen="fin-import">
+ERP.register('fin-import', function (root, ctx) {
+  var q = function (s, r) { return (r || root).querySelector(s); };
+  var qa = function (s, r) { return Array.prototype.slice.call((r || root).querySelectorAll(s)); };
+  var NAMES = ['Fichier', 'Prévisualisation', 'Contrôles', 'Validation', 'Import'];
+  var step = 1, reached = 1, imported = false, tbody = q('[data-prev-rows]');
+  function now() { var d = new Date(); return '27/08 · ' + ('0' + d.getHours()).slice(-2) + ':' + ('0' + d.getMinutes()).slice(-2); }
+  function me() { return ctx.profile.short + ' · ' + ctx.profile.profile; }
+  function setAmt(el, v) { el.setAttribute('data-amt', String(v)); ctx.formatAmounts(el.parentNode); }
+  /* ---- Navigation de l'assistant : Fichier → Prévisualisation → Contrôles → Validation → Import (Core §6.3) ---- */
+  function gate() {
+    var nx = q('[data-next]'), ok = step !== 4 || q('[data-confirm]').checked;
+    nx.disabled = !ok; nx.title = ok ? '' : 'Confirmation obligatoire : vérifiez la prévisualisation et les contrôles avant l’étape Import';
+  }
+  function show(n) {
+    step = n; reached = Math.max(reached, n);
+    qa('[data-step]').forEach(function (p) { p.hidden = +p.getAttribute('data-step') !== n; });
+    qa('.steps li').forEach(function (li, i) {
+      var k = i + 1, done = k < n || (imported && k === 5);
+      li.classList.toggle('done', done); li.classList.toggle('on', k === n && !done);
+      li.title = k <= reached ? 'Revenir à l’étape ' + k + ' · ' + NAMES[i] : 'Étape non encore atteinte : utilisez « Suivant »';
+    });
+    q('[data-prev]').disabled = n === 1; q('[data-next]').hidden = n === 5;
+    q('[data-stepinfo]').textContent = 'Étape ' + n + ' sur 5 · ' + NAMES[n - 1] + (n === 4 ? ' · aucune écriture avant l’étape Import' : n === 5 && !imported ? ' · permission « finance.import.executer » requise' : '');
+    gate();
+  }
+  ctx.on(q('[data-prev]'), 'click', function () { if (step > 1) show(step - 1); });
+  ctx.on(q('[data-next]'), 'click', function () {
+    if (step === 4 && !q('[data-confirm]').checked) { ctx.toast('Cochez la confirmation : la validation humaine précède toute écriture (Core §6.3)'); return; }
+    if (step < 5) show(step + 1);
+  });
+  ctx.on(q('[data-steps]'), 'click', function (e) {
+    var li = e.target.closest('li[data-go]'); if (!li) return; var k = +li.getAttribute('data-go');
+    if (k <= reached) show(k); else ctx.toast('Étape « ' + NAMES[k - 1] + ' » non encore atteinte : l’assistant se parcourt dans l’ordre Fichier → Prévisualisation → Contrôles → Validation → Import');
+  });
+  ctx.on(q('[data-confirm]'), 'change', function (e) { e.target.closest('.rline').classList.toggle('sel', e.target.checked); gate(); });
+  /* ---- Étape 1 : sélecteur de fichier simulé ---- */
+  ctx.on(q('[data-file-pick]'), 'click', function () { ctx.toast('Sélecteur de fichier simulé : releve_BOA_2026-08-27.csv conservé (14 lignes) · un fichier CSV par import, compte cible Banque BOA'); });
+  /* ---- Étape 2 : filtres de prévisualisation et totaux affichés ---- */
+  function filter(f) {
+    var c = 0, d = 0, n = 0;
+    qa('tr', tbody).forEach(function (r) {
+      var vis = f === 'tous' || (f === 'sansref' ? r.getAttribute('data-ref') === 'non' : r.getAttribute('data-sens') === f);
+      r.hidden = !vis; if (!vis) return; n++;
+      var m = +q('[data-amt]', r).getAttribute('data-amt'); if (r.getAttribute('data-sens') === 'credit') c += m; else d += m;
+    });
+    setAmt(q('[data-tot="c"]'), c); setAmt(q('[data-tot="d"]'), d);
+    q('[data-prev-count]').textContent = f === 'tous' ? '6 lignes affichées sur 14 · 8 non affichées' : n + ' ligne' + (n > 1 ? 's' : '') + ' sur 6 prévisualisées · 14 au total';
+  }
+  qa('.chip[data-filter]').forEach(function (c) { ctx.on(c, 'click', function () { qa('.chip[data-filter]').forEach(function (x) { x.classList.toggle('on', x === c); }); filter(c.getAttribute('data-filter')); }); });
+  /* ---- Étape 5 : Importer (idempotent, audité) et Exporter (droit distinct) ---- */
+  ctx.on(q('[data-import]'), 'click', function () {
+    var t = now(), who = ctx.profile.short;
+    if (imported) { ctx.toast('Import répété : 14 identifiants déjà connus, aucun double effet (§4.9) · position Banque BOA 45 200 000 inchangée · tentative auditée'); return; }
+    imported = true;
+    q('[data-result-tl]').innerHTML =
+      '<div class="ev on"><b>Import exécuté par ' + who + '</b><small>' + t + ' · releve_BOA_2026-08-27.csv · 14 lignes, 0 doublon, 0 double effet · Mata Group</small></div>' +
+      '<div class="ev on"><b>Position externe Banque BOA</b><small>valeur reçue 45 200 000 conservée · horodatage de réception 27/08 08:00 · source : import CSV · correction −45 000 (VAL-116) toujours en attente</small></div>' +
+      '<div class="ev on"><b>Audit central</b><small>Import CSV · ' + who + ' · Finance · Import relevé · Modification · Hautement sensible · Banque BOA : 14 lignes (§10.2)</small></div>' +
+      '<div class="ev"><b>Notification « Sources »</b><small>Import relevé BOA réussi : 14 lignes, 0 doublon · centre commun de notifications (Core §6.1)</small></div>';
+    q('[data-result]').hidden = false; q('[data-last-import]').textContent = t + ' · ' + who + ' · 14 lignes · 0 doublon';
+    var b = q('[data-import]'); b.innerHTML = '<svg><use href="#i-refresh"/></svg>Importer à nouveau (aucun double effet)';
+    ctx.formatAmounts(root); ctx.applyPerms(); show(5);
+    ctx.toast('Import exécuté par ' + who + ' : 14 lignes, 0 doublon, 0 double effet · Banque BOA 45 200 000 inchangée · événement audité (§10.2)');
+  });
+  ctx.on(q('[data-export]'), 'click', function () { ctx.toast('Export du journal d’import (CSV) : 14 lignes, identifiants, résultat des 5 contrôles · disponible 7 jours puis supprimé, régénérable · export audité (§9.2)'); });
+  /* ---- Profil : exécutant affiché, permissions réappliquées ---- */
+  function who() { qa('[data-me]').forEach(function (el) { el.textContent = me(); }); }
+  document.addEventListener('erp:profile', function () { who(); ctx.applyPerms(); gate(); });
+  who(); filter('tous'); show(1); ctx.formatAmounts(root); ctx.applyPerms();
+});
+</script>
+
 <!-- core-droits -->
 <section class="scr" data-scr="core-droits" data-module="core" data-perm="core.droits.view" data-sens="s" hidden>
   <style data-screen="core-droits">

@@ -1,0 +1,255 @@
+<!-- ÉCRAN : HISTORIQUE — Mata Finance §8.6 (snapshots immuables, uniques par date et entité, agrégats seulement), Core §5.5 (corrections et clôture), Architecture §13 (Snapshots limités) -->
+<section class="scr" data-scr="fin-historique" data-module="finance" data-perm="finance.historique.view" data-sens="s" hidden>
+  <style data-screen="fin-historique">
+    #app [data-scr="fin-historique"] [data-blk]{margin-top:14px}
+    #app [data-scr="fin-historique"] .modal.wide{width:min(1040px,100%);max-height:92vh;overflow-y:auto}
+    #app [data-scr="fin-historique"] .frozen{margin-top:18px}
+    #app [data-scr="fin-historique"] .frozen .statstrip{margin-bottom:0}
+    #app [data-scr="fin-historique"] .frozen .kpis{grid-template-columns:repeat(3,1fr);margin-top:14px}
+    #app [data-scr="fin-historique"] .frozen .brk{margin-top:14px}
+    #app [data-scr="fin-historique"] .frozen .stat.hero .v{color:var(--red)}
+    #app [data-scr="fin-historique"] .snaphead{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:10px;font-size:12px;color:var(--ink-2)}
+    #app [data-scr="fin-historique"] td small,#app [data-scr="fin-historique"] .cmp-t small{display:block;color:var(--mut);font-size:10.5px;font-weight:500;margin-top:2px;line-height:1.45}
+    #app [data-scr="fin-historique"] td .btn{min-height:30px;padding:5px 10px;font-size:11.5px}
+    #app [data-scr="fin-historique"] td.acts,#app [data-scr="fin-historique"] td .st,#app [data-scr="fin-historique"] td b{white-space:nowrap}
+    #app [data-scr="fin-historique"] td.agg{font-size:11.5px;color:var(--ink-2);line-height:1.6;min-width:320px}
+    #app [data-scr="fin-historique"] .delta{font-family:'Fira Code',monospace;font-size:11px;font-weight:700;padding:2px 7px;border-radius:6px;white-space:nowrap}
+    #app [data-scr="fin-historique"] .delta.up{color:var(--warn);background:var(--warn-bg)}
+    #app [data-scr="fin-historique"] .delta.z{color:var(--mut);background:var(--card-3)}
+    #app [data-scr="fin-historique"] .tbl-scroll .cmp-t{min-width:560px}
+    #app [data-scr="fin-historique"] .cmp-t td:first-child{min-width:220px}
+    #app [data-scr="fin-historique"] .ch .btn{min-height:30px;padding:5px 11px;font-size:11.5px}
+    @media (max-width:900px){#app [data-scr="fin-historique"] .frozen .kpis{grid-template-columns:repeat(2,1fr)}}
+    @media (max-width:640px){#app [data-scr="fin-historique"] .frozen .kpis{grid-template-columns:1fr}}
+  </style>
+  <div class="scr-head">
+    <div>
+      <h2>Historique</h2>
+      <p class="scr-sub">Snapshots financiers de Mata Group · à la clôture, un snapshot immuable et unique par date et entité fige les principaux P&amp;L/KPI tels qu’ils étaient connus (§8.6) · agrégats seulement : trois variantes du P&amp;L, KPI de trésorerie, quelques totaux — jamais le détail des mouvements ni des soldes par compte, qui reste accessible via l’historique horodaté (Architecture §13) · même moteur financier que le Tableau de bord et les agents IA (§3).</p>
+    </div>
+    <div class="scr-meta">
+      <span class="sens s"><svg><use href="#i-shield"/></svg>Sensible</span>
+      <span class="hint">Aucune validation ici : un snapshot ne crée aucune écriture financière · snapshot manuel sur permission dédiée, motif obligatoire, audit de modification · une correction post-clôture suit le workflow d’approbation du Super Admin, par contrepassation tracée (§3.1, Core §5.5)</span>
+    </div>
+  </div>
+  <div class="deny-note" data-view-note hidden><svg><use href="#i-lock"/></svg><span><b>Vue agrégée, lecture seule.</b> Profil externe : les snapshots (agrégats) et leur comparaison restent consultables ; la chaîne de correction post-clôture (ajustement, validations, Hautement sensible) est hors périmètre — refus par défaut, FIXTURES §2. Snapshot manuel et export non accordés.</span></div>
+  <div class="note-strip" style="margin:0 0 14px"><svg><use href="#i-lock"/></svg><span><b>Trois règles (§8.6, Core §5.5).</b> Immuable et unique par date et entité · agrégats seulement · une correction ultérieure ne réécrit pas le snapshot : l’original reste accessible et l’interface compare le snapshot historique à la situation recalculée actuelle.</span></div>
+
+  <div class="actionbar">
+    <div class="chips">
+      <button class="chip on" data-filter="tous">Tous</button>
+      <button class="chip" data-filter="post">Auto post-clôture</button>
+      <button class="chip" data-filter="filet">Auto filet 23:59</button>
+      <button class="chip" data-filter="manuel">Manuel</button>
+    </div>
+    <div class="sp"></div>
+    <button class="btn ghost" data-goto="fin-dashboard"><svg><use href="#i-dash"/></svg>Tableau de bord</button>
+    <button class="btn ghost" data-goto="fin-pnl"><svg><use href="#i-chart"/></svg>P&amp;L et KPI</button>
+    <button class="btn ghost" data-perm="finance.export" data-export><svg><use href="#i-dl"/></svg>Exporter</button>
+    <button class="btn pri" data-perm="finance.historique.snapshot" data-open="fin-historique-nouveau" data-snap-btn><svg><use href="#i-plus"/></svg>Snapshot manuel</button>
+  </div>
+
+  <!-- 1. DERNIER SNAPSHOT ET COMPARAISON (§8.6) : FCFA d’abord, ratio ensuite -->
+  <div class="statstrip">
+    <div class="card stat"><div class="lb">Dernier snapshot figé · P&amp;L Global<button class="fx" data-f="P&amp;L Global = CA + ΔS − D − CF" data-c="Figé le 26/08 à 22:14 (auto post-clôture) : 25 105 000 · valeur recalculée au 27/08 par le même moteur : 25 835 000" data-src="Snapshot immuable 26/08 22:14 · moteur financier unique (§3, §8.6)" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></div><div class="v amt" data-amt="25105000" data-last-v></div><div class="sub2" data-last-sub>26/08 · 22:14 · Auto post-clôture · Système · <span data-count>4</span> snapshots sur la période</div></div>
+    <div class="card stat"><div class="lb">Trésorerie totale contrôlée figée au 26/08<button class="fx" data-f="Trésorerie disponible + Trésorerie en transit." data-c="60 440 000 + 350 000 = 60 790 000 · situation recalculée actuelle : 60 970 000" data-src="Snapshot immuable 26/08 22:14 · comparaison au recalcul du moteur financier (§8.6)" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></div><div class="v amt" data-amt="60790000"></div><div class="sub2">Recalculée : <span class="amt" data-amt="60970000" data-nocur></span> · écart +<span class="amt" data-amt="180000" data-nocur></span></div></div>
+    <div class="card stat hero"><div class="lb">Écart snapshot → recalculé (26/08)<button class="fx" data-f="Comparaison du snapshot historique à la situation recalculée actuelle (§8.6) : recalculé − figé" data-c="60 970 000 − 60 790 000 = +180 000 · ajustement VAL-117 +180 000 Caisse générale, motif « écart de comptage du 26/08 », contrepassation tracée" data-c-agg="60 970 000 − 60 790 000 = +180 000 · correction post-clôture en cours de validation (détail hors périmètre)" data-src="Moteur financier · VAL-117 : 1re validation O. Seck 27/08 19:02, 2e validation requise (approbation Super Admin, §3.1)" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></div><div class="v">+<span class="amt" data-amt="180000"></span></div><div class="sub2">P&amp;L Global inchangé · 1 correction post-clôture en cours</div></div>
+  </div>
+
+  <!-- 2. LISTE DES SNAPSHOTS (FIXTURES §14) -->
+  <div class="card">
+    <div class="ch"><h3>Snapshots · Mata Group</h3><span class="hint-r"><span data-shown>4 sur 4</span> · immuables, uniques par date et entité · cliquer Voir pour la situation figée, Comparer pour l’écart avec le recalcul</span></div>
+    <div class="tbl-scroll"><table>
+      <thead><tr><th>Date</th><th>Origine</th><th>Auteur</th><th>Motif</th><th>Contenu (agrégats uniquement)</th><th>Actions</th></tr></thead>
+      <tbody data-snap-body>
+        <tr data-origine="post" data-snap="s26">
+          <td><b>26/08/2026</b><small>22:14 · Mata Group · clôture événementielle</small></td>
+          <td><span class="st ok"><svg><use href="#i-lock"/></svg>Auto post-clôture</span></td>
+          <td>Système<small>automatisation</small></td>
+          <td>—<small>déclenchement automatique, aucun motif saisi</small></td>
+          <td class="agg">P&amp;L Global <span class="amt" data-amt="25105000" data-nocur></span> · hors Invest. <span class="amt" data-amt="43105000" data-nocur></span> · hors Spéciales <span class="amt" data-amt="31605000" data-nocur></span> · Trésorerie totale contrôlée <span class="amt" data-amt="60790000" data-nocur></span> · Dettes fourn. <span class="amt" data-amt="23100000" data-nocur></span> · Créances <span class="amt" data-amt="19925000" data-nocur></span><small><span class="st warn"><svg><use href="#i-alert"/></svg>1 écart avec le recalcul</span> ajustement VAL-117 en cours</small></td>
+          <td class="acts"><button class="btn ghost" data-open="fin-historique-voir" data-voir="s26"><svg><use href="#i-eye"/></svg>Voir</button> <button class="btn ghost" data-open="fin-historique-cmp" data-cmp-snap="s26"><svg><use href="#i-scale"/></svg>Comparer</button></td>
+        </tr>
+        <tr data-origine="filet" data-snap="s25">
+          <td><b>25/08/2026</b><small>23:59 · Mata Group · gel « À réconcilier »</small></td>
+          <td><span class="st warn"><svg><use href="#i-clock"/></svg>Auto filet 23:59</span></td>
+          <td>Système<small>automatisation</small></td>
+          <td>—<small>filet de sécurité 23:59, clôture événementielle non intervenue</small></td>
+          <td class="agg">P&amp;L Global <span class="amt" data-amt="24380000" data-nocur></span> · Trésorerie totale contrôlée <span class="amt" data-amt="59950000" data-nocur></span><small>Autres agrégats figés : voir la reconstitution · aucun écart avec le recalcul</small></td>
+          <td class="acts"><button class="btn ghost" data-open="fin-historique-voir" data-voir="s25"><svg><use href="#i-eye"/></svg>Voir</button> <button class="btn ghost" data-open="fin-historique-cmp" data-cmp-snap="s25"><svg><use href="#i-scale"/></svg>Comparer</button></td>
+        </tr>
+        <tr data-origine="manuel" data-snap="s24">
+          <td><b>24/08/2026</b><small>18:30 · Mata Group · pris avant la clôture</small></td>
+          <td><span class="st mut"><svg><use href="#i-user"/></svg>Manuel</span></td>
+          <td>S. Doucouré<small>Super Admin</small></td>
+          <td>« avant correction du transfert 24/08 »<small>motif obligatoire, audité</small></td>
+          <td class="agg">P&amp;L Global <span class="amt" data-amt="23900000" data-nocur></span> · Trésorerie totale contrôlée <span class="amt" data-amt="59400000" data-nocur></span><small>Autres agrégats figés : voir la reconstitution · aucun écart avec le recalcul</small></td>
+          <td class="acts"><button class="btn ghost" data-open="fin-historique-voir" data-voir="s24"><svg><use href="#i-eye"/></svg>Voir</button> <button class="btn ghost" data-open="fin-historique-cmp" data-cmp-snap="s24"><svg><use href="#i-scale"/></svg>Comparer</button></td>
+        </tr>
+        <tr data-origine="post" data-snap="s23">
+          <td><b>23/08/2026</b><small>21:50 · Mata Group · clôture événementielle</small></td>
+          <td><span class="st ok"><svg><use href="#i-lock"/></svg>Auto post-clôture</span></td>
+          <td>Système<small>automatisation</small></td>
+          <td>—<small>déclenchement automatique, aucun motif saisi</small></td>
+          <td class="agg">P&amp;L Global <span class="amt" data-amt="23210000" data-nocur></span><small>Autres agrégats figés : voir la reconstitution · aucun écart avec le recalcul</small></td>
+          <td class="acts"><button class="btn ghost" data-open="fin-historique-voir" data-voir="s23"><svg><use href="#i-eye"/></svg>Voir</button> <button class="btn ghost" data-open="fin-historique-cmp" data-cmp-snap="s23"><svg><use href="#i-scale"/></svg>Comparer</button></td>
+        </tr>
+      </tbody>
+    </table></div>
+  </div>
+
+  <div class="grid2" data-blk>
+    <!-- 3. CORRECTION POST-CLÔTURE (Core §5.5, §3.1, §10.2) : le snapshot n’est pas réécrit -->
+    <div class="card" data-view="corrections">
+      <div class="ch"><h3>Correction post-clôture du 26/08</h3><span class="hint-r">Le snapshot reste figé, la situation est recalculée (Core §5.5)</span><button class="btn ghost" data-goto="fin-validations" data-perm="finance.validations.view"><svg><use href="#i-clipboard"/></svg>Validations</button></div>
+      <div class="cb">
+        <div class="tl">
+          <div class="ev"><b>Clôture événementielle du 26/08 · snapshot figé à 22:14</b><small>Système · Auto post-clôture · Trésorerie totale contrôlée <span class="amt" data-amt="60790000" data-nocur></span> · P&amp;L Global <span class="amt" data-amt="25105000" data-nocur></span></small></div>
+          <div class="ev on"><b>VAL-117 · Ajustement +<span class="amt" data-amt="180000" data-nocur></span> sur Caisse générale</b><small>M. Diop · motif « écart de comptage du 26/08 » · correction post-clôture par contrepassation tracée, l’opération originale reste liée (§10.2) · compte Ajustement exclu des agrégats (§4.7)</small></div>
+          <div class="ev on"><b>1re validation</b><small>O. Seck · 27/08 19:02 · Hautement sensible : deux validateurs distincts de l’initiateur et l’un de l’autre (§10.1)</small></div>
+          <div class="ev"><b>2e validation requise · approbation du Super Admin (§3.1)</b><small>En attente · aucun bypass, y compris pour le Super Admin sur ses propres opérations (Core §5.5) · le snapshot du 26/08 reste <span class="amt" data-amt="60790000" data-nocur></span>, situation recalculée <span class="amt" data-amt="60970000" data-nocur></span></small></div>
+        </div>
+        <div class="fcode">Situation recalculée = Snapshot 26/08 <b>60 790 000</b> + Ajustement VAL-117 <b>180 000</b> = <b>60 970 000</b> · P&amp;L Global inchangé</div>
+        <div class="actionbar" style="margin:10px 0 0"><div class="sp"></div><button class="btn ghost" data-goto="core-audit" data-perm="core.audit.view"><svg><use href="#i-history"/></svg>Historique horodaté (Audit)</button><button class="btn pri" data-open="fin-historique-cmp" data-cmp-snap="s26"><svg><use href="#i-scale"/></svg>Comparer le 26/08</button></div>
+      </div>
+    </div>
+    <!-- 4. CONTENU D’UN SNAPSHOT (§8.6, Architecture §13 « Snapshots limités ») -->
+    <div class="card">
+      <div class="ch"><h3>Ce que fige un snapshot</h3><span class="hint-r">§8.6 · Architecture §13</span></div>
+      <div class="cb">
+        <div class="brk">
+          <div class="row"><span class="sign p">+</span>Valeurs des trois variantes de P&amp;L<span class="hint">Global · hors Investissements · hors Dépenses spéciales</span></div>
+          <div class="row"><span class="sign p">+</span>KPI de trésorerie (§8.1)<span class="hint">neuf indicateurs, Ajustement exclu</span></div>
+          <div class="row"><span class="sign p">+</span>Quelques totaux<span class="hint">CA de référence · DI · DS</span></div>
+          <div class="row"><span class="sign m">−</span>Détail des mouvements<span class="hint">jamais</span></div>
+          <div class="row"><span class="sign m">−</span>Soldes par compte, positions par fournisseur ou client<span class="hint">historique horodaté</span></div>
+        </div>
+        <div class="note-strip" style="margin-top:12px"><svg><use href="#i-info"/></svg><span>Le détail transactionnel déjà retrouvable via l’historique horodaté n’est jamais dupliqué dans un snapshot (Architecture §13). Conservation : modifications détaillées 24 mois en base active puis archive froide, restauration sous un jour ouvré (§10.2).</span></div>
+        <div class="actionbar" style="margin:10px 0 0"><div class="sp"></div><button class="btn ghost" data-goto="fin-comptes" data-perm="finance.comptes.view"><svg><use href="#i-wallet"/></svg>Comptes</button><button class="btn ghost" data-goto="core-audit" data-perm="core.audit.view"><svg><use href="#i-history"/></svg>Audit central</button></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODALE : SITUATION FIGÉE (reconstitution du Tableau de bord tel qu’il était) -->
+  <div class="mback" data-ov="fin-historique-voir"><div class="modal wide" role="dialog" aria-modal="true" aria-label="Snapshot figé">
+    <h3><svg><use href="#i-lock"/></svg><span data-voir-title>Snapshot</span></h3>
+    <div class="snaphead" data-voir-meta></div>
+    <div class="exp">Reconstitution du Tableau de bord tel qu’il était connu au moment du snapshot : montants en FCFA d’abord, ratio sur le CA de référence figé ensuite (§8.2). Les formules restent consultables ; les composantes par compte, fournisseur ou client ne sont pas figées (agrégats seulement, §8.6).</div>
+    <div class="frozen" data-voir-body></div>
+    <div class="acts"><button class="btn ghost" data-goto="core-audit" data-perm="core.audit.view"><svg><use href="#i-history"/></svg>Historique horodaté</button><button class="btn ghost" data-close>Fermer</button><button class="btn pri" data-voir-cmp data-cmp-snap="s26"><svg><use href="#i-scale"/></svg>Comparer à l’état actuel</button></div>
+  </div></div>
+
+  <!-- MODALE : COMPARAISON snapshot / situation recalculée actuelle (§8.6) -->
+  <div class="mback" data-ov="fin-historique-cmp"><div class="modal wide" role="dialog" aria-modal="true" aria-label="Comparer le snapshot à la situation recalculée">
+    <h3><svg><use href="#i-scale"/></svg><span data-cmp-title>Comparaison</span></h3>
+    <div class="exp" data-cmp-exp></div>
+    <div class="tbl-scroll"><table class="cmp-t">
+      <thead><tr><th>Agrégat figé</th><th>Snapshot (immuable)</th><th>Situation recalculée actuelle</th><th>Écart</th></tr></thead>
+      <tbody data-cmp-body></tbody>
+    </table></div>
+    <div class="note-strip"><svg><use href="#i-refresh"/></svg><span><b>Recalcul</b> : moteur financier unique, 27/08 · sources Ventes Mata <span class="st ok">OK 20:30</span> · Bictorys <span class="st ok">OK 08:12</span> · Banque BOA <span class="st ok">OK 08:00</span> · Stock <span class="st ok">OK 06:00</span> · Achat <span class="st ok">OK 17:00</span>. Le snapshot, lui, n’est jamais réécrit.</span></div>
+    <div class="acts"><button class="btn ghost" data-goto="fin-dashboard"><svg><use href="#i-dash"/></svg>Tableau de bord actuel</button><button class="btn pri" data-close>Fermer</button></div>
+  </div></div>
+
+  <!-- MODALE : SNAPSHOT MANUEL (permission finance.historique.snapshot, motif obligatoire) -->
+  <div class="mback" data-ov="fin-historique-nouveau"><div class="modal" role="dialog" aria-modal="true" aria-label="Snapshot manuel">
+    <h3><svg><use href="#i-plus"/></svg>Snapshot manuel</h3>
+    <div class="exp">Fige maintenant les agrégats courants de l’entité tels que connus par le moteur financier unique. Immuable, unique par date et entité, jamais réécrit (§8.6). Aucune écriture financière : pas de validation requise ; permission dédiée, motif obligatoire, audit de modification (§10.2).</div>
+    <div class="fld"><label for="fin-historique-entite">Entité</label><select id="fin-historique-entite" class="inp"><option>Mata Group (MG) — seule entité active</option></select></div>
+    <div class="fld" style="margin-top:10px"><label for="fin-historique-motif">Motif (obligatoire)</label><input id="fin-historique-motif" class="inp" maxlength="120" placeholder="ex. avant contrepassation VAL-117"></div>
+    <div class="hint" style="margin:12px 0 4px">Agrégats qui seront figés · 27/08/2026 · Mata Group</div>
+    <div class="brk">
+      <div class="row">P&amp;L Global<span class="amt" data-amt="25835000" data-nocur></span></div>
+      <div class="row">P&amp;L hors Investissements<span class="amt" data-amt="43835000" data-nocur></span></div>
+      <div class="row">P&amp;L hors Dépenses spéciales<span class="amt" data-amt="32335000" data-nocur></span></div>
+      <div class="row">Trésorerie totale contrôlée<span class="amt" data-amt="61305000" data-nocur></span></div>
+      <div class="row">Dettes fournisseurs<span class="amt" data-amt="23250000" data-nocur></span></div>
+      <div class="row">Créances clients<span class="amt" data-amt="20075000" data-nocur></span></div>
+    </div>
+    <div class="acts"><button class="btn ghost" data-close>Annuler</button><button class="btn pri" data-perm="finance.historique.snapshot" data-snap-create><svg><use href="#i-lock"/></svg>Figer le snapshot</button></div>
+  </div></div>
+</section>
+<script data-screen="fin-historique">
+ERP.register('fin-historique', function (root, ctx) {
+  var $ = function (s, r) { return (r || root).querySelector(s); };
+  var $$ = function (s, r) { return Array.prototype.slice.call((r || root).querySelectorAll(s)); };
+  var F = ctx.fmt, lim = false, created = false, cur = 'tous', DI = 18000000, DS = 6500000;
+  /* Agrégats figés — FIXTURES §14 pour les valeurs citées ; les autres KPI sont reconstitués de façon cohérente avec §4 et §5.
+     k = [disponible, transit, totale contrôlée, dettes fourn., avances fourn., créances, avances clients, position nette, après fournisseurs] ; r = valeurs recalculées qui diffèrent */
+  var S = {
+    s26: { d: '26/08/2026', h: '22:14', o: 'Auto post-clôture', a: 'Système', m: 'déclenchement : clôture événementielle du périmètre, contrôles terminés (§3.1)', ca: 445800000, p: [25105000, 43105000, 31605000], k: [60440000, 350000, 60790000, 23100000, 350000, 19925000, 150000, 57815000, 37690000], r: { 2: 60970000, 3: 23250000 } },
+    s25: { d: '25/08/2026', h: '23:59', o: 'Auto filet 23:59', a: 'Système', m: 'déclenchement : filet de sécurité 23:59, gel « À réconcilier » (§3.1, Core §5.5)', ca: 439700000, p: [24380000, 42380000, 30880000], k: [59600000, 350000, 59950000, 22850000, 350000, 19640000, 150000, 56940000, 37100000], r: {} },
+    s24: { d: '24/08/2026', h: '18:30', o: 'Manuel', a: 'S. Doucouré', m: '« avant correction du transfert 24/08 »', ca: 433500000, p: [23900000, 41900000, 30400000], k: [59050000, 350000, 59400000, 22600000, 350000, 19380000, 150000, 56380000, 36800000], r: {} },
+    s23: { d: '23/08/2026', h: '21:50', o: 'Auto post-clôture', a: 'Système', m: 'déclenchement : clôture événementielle du périmètre, contrôles terminés (§3.1)', ca: 427400000, p: [23210000, 41210000, 29710000], k: [58550000, 350000, 58900000, 22300000, 350000, 19100000, 150000, 55900000, 36600000], r: {} }
+  };
+  var KPI = [['Trésorerie disponible', 'Somme des comptes Trésorerie et Positions externes configurés comme immédiatement disponibles.'], ['Trésorerie en transit', 'Somme des comptes Relais actifs.'], ['Trésorerie totale contrôlée', 'Trésorerie disponible + Trésorerie en transit.'], ['Dettes fournisseurs', 'Σ max(− Position fournisseur ; 0).'], ['Avances fournisseurs', 'Σ max(Position fournisseur ; 0).'], ['Créances clients', 'Σ max(Position client ; 0).'], ['Avances clients', 'Σ max(− Position client ; 0).'], ['Position financière nette', 'Trésorerie totale contrôlée + Avances fournisseurs + Créances clients − Dettes fournisseurs − Avances clients.'], ['Trésorerie après fournisseurs', 'Trésorerie totale contrôlée − Dettes fournisseurs. Le transit est inclus car il est considéré comme reçu avant le paiement fournisseur.']];
+  var PNL = [['P&amp;L Global', 'P&amp;L Global = CA + ΔS − D − CF'], ['P&amp;L hors Investissements', 'P&amp;L hors Investissements = CA + ΔS − (D − DI) − CF = P&amp;L Global + DI'], ['P&amp;L hors Dépenses spéciales', 'P&amp;L hors Dépenses spéciales = CA + ΔS − (D − DS) − CF = P&amp;L Global + DS']];
+  var LB = ['P&amp;L Global', 'P&amp;L hors Investissements', 'P&amp;L hors Dépenses spéciales', 'Trésorerie totale contrôlée', 'Dettes fournisseurs', 'Créances clients'], IDX = [null, null, null, 2, 3, 5];
+  var NOFIG = 'non figé : agrégats seulement, jamais le détail des soldes par compte (§8.6) — reste accessible via l’historique horodaté';
+  function pct(v, ca) { return (v / ca * 100).toFixed(1).replace('.', ',') + ' %'; }
+  function badge(o) { return o === 'Manuel' ? '<span class="st mut"><svg><use href="#i-user"/></svg>Manuel</span>' : (o === 'Auto filet 23:59' ? '<span class="st warn"><svg><use href="#i-clock"/></svg>Auto filet 23:59</span>' : '<span class="st ok"><svg><use href="#i-lock"/></svg>Auto post-clôture</span>'); }
+  function card(cls, lb, v, f, c, src, sub) { return '<div class="card ' + cls + '"><div class="lb">' + lb + '<button class="fx" data-f="' + f + '" data-c="' + c + '" data-src="' + src + '" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></div><div class="v amt" data-amt="' + v + '"></div><div class="' + (cls.indexOf('kpi') === 0 ? 'ratio' : 'sub2') + '">' + sub + '</div></div>'; }
+
+  /* 1. Voir : reconstitution du Tableau de bord figé — 3 variantes du P&L (§8.3) + 9 KPI (§8.1), ratios sur le CA de référence figé (§8.2) */
+  function renderVoir(id) {
+    var s = S[id], k = s.k, src = 'Snapshot immuable ' + s.d + ' ' + s.h + ' · ' + s.o + ' · moteur financier unique, figé tel que connu à l’époque, jamais réécrit (§8.6)', ref = ' du CA de référence figé · août au ' + s.d.slice(0, 2);
+    $('[data-voir-title]').textContent = 'Snapshot du ' + s.d + ' · ' + s.h;
+    $('[data-voir-meta]').innerHTML = badge(s.o) + '<span><b>' + s.a + '</b> · ' + s.m + '</span><span class="tag lock"><svg><use href="#i-lock"/></svg>Immuable · Mata Group</span>';
+    var pc = ['Symboles CA, ΔS, D et CF non figés individuellement ; totaux figés : CA de référence ' + F(s.ca) + ' · DI ' + F(DI) + ' · DS ' + F(DS), 'P&amp;L Global ' + F(s.p[0]) + ' + DI ' + F(DI), 'P&amp;L Global ' + F(s.p[0]) + ' + DS ' + F(DS)];
+    var kc = ['Comptes Trésorerie et Positions externes : soldes par compte ' + NOFIG, 'Comptes Relais actifs : détail ' + NOFIG, F(k[0]) + ' + ' + F(k[1]), 'Positions par fournisseur ' + NOFIG, 'Positions par fournisseur ' + NOFIG, 'Positions par client ' + NOFIG, 'Positions par client ' + NOFIG, F(k[2]) + ' + ' + F(k[4]) + ' + ' + F(k[5]) + ' − ' + F(k[3]) + ' − ' + F(k[6]), F(k[2]) + ' − ' + F(k[3])];
+    var h = '<div class="statstrip">' + PNL.map(function (p, i) { return card('stat' + (i ? '' : ' hero'), p[0], s.p[i], p[1], pc[i], src, pct(s.p[i], s.ca) + ref); }).join('') + '</div>';
+    h += '<div class="kpis">' + KPI.map(function (p, i) { return card('kpi' + (i === 2 ? ' hero' : ''), p[0], k[i], p[1], kc[i], src, (i === 4 || i === 6) ? 'Affiché séparément, sans ratio (§8.1)' : pct(k[i], s.ca) + ref); }).join('') + '</div>';
+    h += '<div class="brk"><div class="row"><span class="sign p">Σ</span>Total figé · CA de référence (Ventes Mata)<span class="amt" data-amt="' + s.ca + '" data-nocur></span></div><div class="row"><span class="sign p">DI</span>Total figé · dépenses avec Investissement = true<span class="amt" data-amt="' + DI + '" data-nocur></span></div><div class="row"><span class="sign p">DS</span>Total figé · dépenses avec Dépense spéciale = true<span class="amt" data-amt="' + DS + '" data-nocur></span></div></div>';
+    var b = $('[data-voir-body]'); b.innerHTML = h; ctx.formatAmounts(b);
+    $('[data-voir-cmp]').setAttribute('data-cmp-snap', id);
+  }
+
+  /* 2. Comparer : snapshot figé / situation recalculée actuelle / écart (§8.6) — le snapshot n’est jamais réécrit */
+  function renderCmp(id) {
+    var s = S[id], vals = [s.p[0], s.p[1], s.p[2], s.k[2], s.k[3], s.k[5]], n = 0;
+    var why = { 3: lim ? 'Correction post-clôture en cours de validation (détail Hautement sensible, hors périmètre)' : 'Ajustement VAL-117 +180 000 Caisse générale, motif « écart de comptage du 26/08 » — correction post-clôture par contrepassation tracée ; 1re validation O. Seck 19:02, 2e validation requise (approbation Super Admin, §3.1)', 4: 'Positions fournisseurs recalculées par le moteur à partir des dépenses par date métier et des paiements (§4.3, §5.5)' };
+    $('[data-cmp-title]').textContent = 'Snapshot du ' + s.d + ' · ' + s.h + ' — situation recalculée actuelle';
+    $('[data-cmp-body]').innerHTML = LB.map(function (lb, i) {
+      var c = IDX[i] !== null && s.r[IDX[i]] !== undefined ? s.r[IDX[i]] : vals[i], e = c - vals[i]; if (e) n++;
+      return '<tr><td><b>' + lb + '</b><small>' + (e ? why[i] : 'Aucune correction : la valeur recalculée par le moteur est identique à la valeur figée') + '</small></td><td><span class="amt" data-amt="' + vals[i] + '" data-nocur></span></td><td><span class="amt" data-amt="' + c + '" data-nocur></span></td><td>' + (e ? '<span class="delta up">' + (e > 0 ? '+' : '') + F(e) + '</span>' : '<span class="delta z">Inchangé</span>') + '</td></tr>';
+    }).join('');
+    $('[data-cmp-exp]').innerHTML = n ? '<b>' + n + ' agrégat' + (n > 1 ? 's diffèrent' : ' diffère') + '.</b> Une correction ultérieure ne réécrit pas le snapshot : l’original reste accessible, le moteur financier unique recalcule la situation actuelle et l’interface compare les deux (§8.6, Core §5.5).' : '<b>Aucun écart.</b> Snapshot figé et situation recalculée coïncident : aucune correction n’a modifié ces agrégats — un transfert interne corrigé, par exemple, ne change pas la trésorerie totale contrôlée (§8.6).';
+    ctx.formatAmounts($('[data-cmp-body]'));
+  }
+
+  /* 3. Snapshot manuel : motif obligatoire → nouvelle ligne figée ; unicité par date et entité ensuite (§8.6) */
+  function rowHtml(id, s) { return '<tr data-origine="manuel" data-snap="' + id + '"><td><b>' + s.d + '</b><small>' + s.h + ' · Mata Group · pris avant la clôture</small></td><td>' + badge(s.o) + '</td><td>' + s.a + '<small>' + ctx.profile.profile + '</small></td><td>' + s.m + '<small>motif obligatoire, audité</small></td><td class="agg">P&amp;L Global <span class="amt" data-amt="' + s.p[0] + '" data-nocur></span> · hors Invest. <span class="amt" data-amt="' + s.p[1] + '" data-nocur></span> · hors Spéciales <span class="amt" data-amt="' + s.p[2] + '" data-nocur></span> · Trésorerie totale contrôlée <span class="amt" data-amt="' + s.k[2] + '" data-nocur></span> · Dettes fourn. <span class="amt" data-amt="' + s.k[3] + '" data-nocur></span> · Créances <span class="amt" data-amt="' + s.k[5] + '" data-nocur></span><small>Aucun écart avec le recalcul</small></td><td class="acts"><button class="btn ghost" data-open="fin-historique-voir" data-voir="' + id + '"><svg><use href="#i-eye"/></svg>Voir</button> <button class="btn ghost" data-open="fin-historique-cmp" data-cmp-snap="' + id + '"><svg><use href="#i-scale"/></svg>Comparer</button></td></tr>'; }
+  function lock() { var b = $('[data-snap-btn]'); if (!created || b.classList.contains('denied')) return; b.disabled = true; b.classList.add('denied'); b.title = 'Unicité par date et entité (§8.6) : un snapshot existe déjà pour le 27/08/2026 · Mata Group. Il est immuable ; la clôture de ce soir n’en crée pas de second.'; }
+  ctx.on($('[data-snap-create]'), 'click', function () {
+    var inp = $('#fin-historique-motif'), m = inp.value.trim();
+    if (!m) { inp.focus(); ctx.toast('Motif obligatoire : un snapshot manuel doit être justifié (audit de modification, §10.2)'); return; }
+    var now = new Date(), h = ('0' + now.getHours()).slice(-2) + ':' + ('0' + now.getMinutes()).slice(-2);
+    S.s27 = { d: '27/08/2026', h: h, o: 'Manuel', a: ctx.profile.short, m: '« ' + m + ' »', ca: 452000000, p: [25835000, 43835000, 32335000], k: [58455000, 2850000, 61305000, 23250000, 350000, 20075000, 150000, 58330000, 38055000], r: {} };
+    var tb = $('[data-snap-body]'); tb.insertAdjacentHTML('afterbegin', rowHtml('s27', S.s27)); ctx.formatAmounts(tb);
+    var lv = $('[data-last-v]'); lv.setAttribute('data-amt', '25835000'); ctx.formatAmounts(lv.parentNode);
+    $('[data-last-sub]').innerHTML = '27/08 · ' + h + ' · Manuel · ' + ctx.profile.short + ' · motif « ' + m + ' » · <span data-count>5</span> snapshots sur la période';
+    created = true; lock(); inp.value = ''; ctx.close('fin-historique-nouveau'); applyFilter(cur);
+    ctx.toast('Snapshot manuel figé — 27/08 · ' + h + ' · Mata Group · immuable, unique pour la date, audit de modification enregistré');
+  });
+
+  /* 4. Filtres par origine, clics délégués (Voir, Comparer, Export), vue par profil (externes : lecture agrégée) */
+  function applyFilter(v) { cur = v; var tb = $('[data-snap-body]'); ctx.filterRows(tb, 'origine', v); $$('.chip[data-filter]').forEach(function (c) { c.classList.toggle('on', c.getAttribute('data-filter') === v); }); var all = $$('tr', tb); $('[data-shown]').textContent = all.filter(function (r) { return !r.hidden; }).length + ' sur ' + all.length; }
+  $$('.chip[data-filter]').forEach(function (c) { ctx.on(c, 'click', function () { applyFilter(c.getAttribute('data-filter')); }); });
+  ctx.on(root, 'click', function (e) {
+    var v = e.target.closest('[data-voir]'); if (v && !v.classList.contains('denied')) renderVoir(v.getAttribute('data-voir'));
+    var c = e.target.closest('[data-cmp-snap]'); if (c && !c.classList.contains('denied')) { renderCmp(c.getAttribute('data-cmp-snap')); if (c.hasAttribute('data-voir-cmp')) { ctx.close('fin-historique-voir'); ctx.open('fin-historique-cmp'); } }
+    var x = e.target.closest('[data-export]'); if (x && !x.classList.contains('denied')) ctx.toast('Export CSV des snapshots généré (service commun d’export, §9.2) — conservé 7 jours, régénérable à la demande');
+  });
+  function applyView(p) {
+    lim = !!(p && p.readonly);
+    $$('[data-view="corrections"]').forEach(function (el) { el.hidden = lim; });
+    $$('.fx[data-c-agg]').forEach(function (b) { if (!b.dataset.cFull) b.dataset.cFull = b.getAttribute('data-c'); b.setAttribute('data-c', lim ? b.dataset.cAgg : b.dataset.cFull); });
+    $('[data-view-note]').hidden = !lim; lock();
+  }
+  applyView(ctx.profile);
+  document.addEventListener('erp:profile', function (e) { applyView(e.detail); });
+  applyFilter('tous');
+  ctx.formatAmounts(root);
+  ctx.applyPerms();
+});
+</script>

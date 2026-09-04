@@ -1,0 +1,246 @@
+<!-- ÉCRAN : VISUALISATION — Mata Finance §8.5 (dashboard financier), §8.1/§8.3 (définitions des séries), §8.2 (FCFA puis ratio), §10.3 (explicabilité) ; Mata Core §7.1 (valeur → formule → composantes → source) -->
+<section class="scr" data-scr="fin-visualisation" data-module="finance" data-perm="finance.visualisation.view" data-sens="s" hidden>
+  <style data-screen="fin-visualisation">
+    #app [data-scr="fin-visualisation"] .ch{flex-wrap:wrap}
+    #app [data-scr="fin-visualisation"] .legend{flex-wrap:wrap;gap:8px 18px;margin-bottom:12px}
+    #app [data-scr="fin-visualisation"] .sw{display:inline-block;width:14px;height:3px;border-radius:2px;flex:none}
+    #app [data-scr="fin-visualisation"] .sw.dash{background:repeating-linear-gradient(90deg,currentColor 0 4px,transparent 4px 7px)}
+    #app [data-scr="fin-visualisation"] td.num,#app [data-scr="fin-visualisation"] th.num{text-align:right;white-space:nowrap}
+    #app [data-scr="fin-visualisation"] .ratio-c{font-family:'Fira Code',monospace;font-size:11.5px;font-weight:600;color:var(--ink-2)}
+    #app [data-scr="fin-visualisation"] .lb{display:inline-flex;align-items:center;gap:8px;font-weight:700;white-space:nowrap}
+    #app [data-scr="fin-visualisation"] .vals table{min-width:1080px}
+    #app [data-scr="fin-visualisation"] td .btn,#app [data-scr="fin-visualisation"] .ch .btn{min-height:30px;padding:5px 10px;font-size:11.5px}
+    #app [data-scr="fin-visualisation"] td .st{border:none;cursor:pointer}
+    #app [data-scr="fin-visualisation"] .tl small{display:block;color:var(--mut);line-height:1.55;margin-top:2px}
+    #app [data-scr="fin-visualisation"] .drawer .steps{margin:0 0 10px}
+  </style>
+  <div class="scr-head">
+    <div>
+      <h2>Visualisation</h2>
+      <p class="scr-sub">Six séries du moteur financier unique sur 30 jours (29/07 → 27/08/2026) · Mata Group · même échelle en millions de FCFA · positions en trait plein, cumuls en pointillé · chaque valeur du 27/08 redescend vers sa formule, ses composantes, ses mouvements et sa source (§10.3, Core §7.1).</p>
+    </div>
+    <div class="scr-meta">
+      <span class="sens s"><svg><use href="#i-shield"/></svg>Sensible</span>
+      <span class="hint">Écran de lecture, aucune validation ici · aucun recalcul local : les valeurs sont celles du moteur financier, affichées sans être recréées (Core §7.1) · Exporter distinct de Consulter (§5.7)</span>
+    </div>
+  </div>
+  <div class="note-strip" style="margin:0 0 14px"><svg><use href="#i-refresh"/></svg><span><b>Sources et fraîcheur (§3, §6.5)</b> — Ventes Mata <span class="st ok">OK 20:30</span> · Bictorys <span class="st ok">OK 08:12</span> · Banque BOA <span class="st ok">OK 08:00</span> · Stock <span class="st ok">OK 06:00</span> · Achat <span class="st ok">OK · import 17:00, 5 achats intégrés</span> — une source périmée reste affichée avec son horodatage et n’est jamais remplacée par 0 ; le compte Ajustement est exclu de toutes les séries (§8.1).</span></div>
+
+  <div class="actionbar">
+    <div class="chips" data-presets>
+      <button class="chip on" data-preset="positions">Positions (défaut)</button>
+      <button class="chip" data-preset="cumuls">Cumuls</button>
+      <button class="chip" data-preset="tout">Les six séries</button>
+    </div>
+    <div class="fld"><label for="fin-visualisation-ca">CA de référence des ratios (§8.2)</label>
+      <select id="fin-visualisation-ca" class="inp">
+        <option value="452000000" data-short="août au 27">Mois en cours — août 2026 au 27 : 452 000 000 FCFA</option>
+        <option value="438500000" data-short="juillet">Mois précédent — juillet 2026 : 438 500 000 FCFA</option>
+        <option value="1301200000" data-short="3 derniers mois">3 derniers mois : 1 301 200 000 FCFA</option>
+      </select></div>
+    <div class="sp"></div>
+    <button class="btn ghost" data-goto="fin-dashboard"><svg><use href="#i-dash"/></svg>Tableau de bord</button>
+    <button class="btn ghost" data-goto="fin-pnl"><svg><use href="#i-scale"/></svg>P&amp;L et KPI</button>
+    <button class="btn ghost" data-goto="fin-historique"><svg><use href="#i-history"/></svg>Snapshots</button>
+    <button class="btn ghost" data-perm="finance.export" data-export><svg><use href="#i-dl"/></svg>Exporter les séries</button>
+  </div>
+
+  <!-- 1. GRAPHIQUE UNIQUE : six séries, même échelle, dessiné par le moteur commun -->
+  <div class="card">
+    <div class="ch"><h3>Six séries — 30 derniers jours</h3><span class="hint-r">29/07 → 27/08/2026 · millions de FCFA · survol ou tap : valeurs du jour · <b data-count>3 séries affichées</b></span></div>
+    <div class="cb">
+      <div class="legend" aria-label="Séries affichées">
+        <label><input type="checkbox" data-series-toggle="treso" checked><span class="sw" style="background:var(--d1)"></span>Trésorerie totale contrôlée</label>
+        <label><input type="checkbox" data-series-toggle="dettes" checked><span class="sw" style="background:var(--d2)"></span>Dettes fournisseurs</label>
+        <label><input type="checkbox" data-series-toggle="creances" checked><span class="sw" style="background:var(--d3)"></span>Créances clients</label>
+        <label><input type="checkbox" data-series-toggle="pnl"><span class="sw dash" style="color:var(--d1)"></span>P&amp;L Global (cumul)</label>
+        <label><input type="checkbox" data-series-toggle="ventes"><span class="sw dash" style="color:var(--d2)"></span>Ventes Mata — CA (cumul)</label>
+        <label><input type="checkbox" data-series-toggle="burn"><span class="sw dash" style="color:var(--d3)"></span>Cash burn — dépenses D (cumul)</label>
+      </div>
+      <div class="multichart" data-series="treso,dettes,creances" style="height:280px"></div>
+      <div class="note-strip" data-scale-note hidden><svg><use href="#i-alert"/></svg><span><b>Même échelle.</b> L’axe suit le maximum des séries cochées : avec les cumuls Ventes Mata ou dépenses D (≈ 450 M), les positions comprises entre 20 M et 61 M s’aplatissent. Décocher les cumuls pour relire les positions ; les valeurs exactes restent lisibles au survol et dans le tableau.</span></div>
+      <div class="note-strip"><svg><use href="#i-info"/></svg><span><b>Lecture.</b> Trait plein = position calculée au jour (Trésorerie totale contrôlée, Dettes fournisseurs, Créances clients, §8.1). Pointillé = cumul de la période (P&amp;L Global, CA fourni par Ventes Mata, dépenses D par date métier, §8.3). Palette CVD validée : rouge, bleu, ocre ; deux traits partagent une couleur uniquement s’ils diffèrent par le style de trait.</span></div>
+    </div>
+  </div>
+
+  <!-- 2. DERNIÈRES VALEURS (27/08) : FCFA puis ratio, formule sur chaque valeur, descente vers l'écran propriétaire -->
+  <div class="card vals" style="margin-top:14px">
+    <div class="ch"><h3>Dernières valeurs — 27/08/2026</h3><span class="hint-r">Valeur en FCFA d’abord, ratio ensuite (§8.2) · formule, composantes et source sur chaque valeur (Core §7.1) · « Descendre au détail » ouvre l’écran propriétaire (§10.3)</span></div>
+    <div class="tbl-scroll"><table>
+      <thead><tr><th>Série</th><th>Définition (§8.1, §8.3)</th><th class="num">Valeur au 27/08 (FCFA)</th><th class="num">Ratio / CA de référence (<span data-ca-short>août au 27</span>)</th><th>Sur le graphique</th><th>Écran propriétaire</th><th>Actions</th></tr></thead>
+      <tbody>
+        <tr data-serie="treso"><td><span class="lb"><span class="sw" style="background:var(--d1)"></span>Trésorerie totale contrôlée<button class="fx" data-f="Trésorerie disponible + Trésorerie en transit." data-c="58 455 000 + 2 850 000 = 61 305 000 · Disponible : Caisse générale 8 450 000 · Sous-caisse Marché 1 275 000 · Sous-caisse Livraisons 640 000 · Banque BOA 45 200 000 · Bictorys 2 890 000 · Transit : Dépôt en cours (Caisse → Banque) 2 500 000 · Bictorys → Banque en cours 350 000" data-src="Moteur financier · CALCULÉ (caisses, relais) · IMPORT CSV 27/08 08:00 (Banque BOA) · SYNCHRONISÉ 27/08 08:12 (Bictorys) · compte Ajustement exclu (§8.1) · snapshot 26/08 22:14 : 60 790 000" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></span></td><td class="hint">Trésorerie disponible + Trésorerie en transit.</td><td class="num"><span class="amt" data-amt="61305000" data-nocur></span><div class="hint">61,3 M sur le graphique</div></td><td class="num ratio-c" data-pct-of="61305000">13,6 %</td><td><button class="st ok" data-chart-toggle="treso"><svg><use href="#i-eye"/></svg>Affichée</button></td><td class="hint">Comptes · Trésorerie, Positions externes, Relais <span class="sens hs" style="margin-left:4px"><svg><use href="#i-shield"/></svg>Hautement sensible</span></td><td><div class="actionbar" style="margin:0;gap:6px;flex-wrap:nowrap"><button class="btn ghost" data-open="fin-visualisation-chaine" data-serie="treso"><svg><use href="#i-layers"/></svg>Chaîne §10.3</button><button class="btn ghost" data-goto="fin-comptes" data-perm="finance.comptes.view"><svg><use href="#i-arr"/></svg>Descendre au détail</button></div></td></tr>
+        <tr data-serie="dettes"><td><span class="lb"><span class="sw" style="background:var(--d2)"></span>Dettes fournisseurs<button class="fx" data-f="Σ max(− Position fournisseur ; 0)." data-c="AGNEAUX 12 400 000 + MATA VOLAILLE CHAIR 4 300 000 + Bétail Thiès 4 600 000 + MATA VOLAILLE ŒUFS 1 150 000 + Aliments Sénégal 800 000 = 23 250 000 · Abattoirs Dakar +350 000 exclu (Avances fournisseurs)" data-src="Comptes Fournisseur CALCULÉ · convention de signe §4.3 : négatif = Mata doit · import Achat idempotent 27/08 17:00 · snapshot 26/08 22:14 : 23 100 000" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></span></td><td class="hint">Σ max(− Position fournisseur ; 0).</td><td class="num"><span class="amt" data-amt="23250000" data-nocur></span><div class="hint">23,25 M sur le graphique</div></td><td class="num ratio-c" data-pct-of="23250000">5,1 %</td><td><button class="st ok" data-chart-toggle="dettes"><svg><use href="#i-eye"/></svg>Affichée</button></td><td class="hint">Fournisseurs · positions, échéances, plafonds</td><td><div class="actionbar" style="margin:0;gap:6px;flex-wrap:nowrap"><button class="btn ghost" data-open="fin-visualisation-chaine" data-serie="dettes"><svg><use href="#i-layers"/></svg>Chaîne §10.3</button><button class="btn ghost" data-goto="fin-fournisseurs" data-perm="finance.fournisseurs.view"><svg><use href="#i-arr"/></svg>Descendre au détail</button></div></td></tr>
+        <tr data-serie="creances"><td><span class="lb"><span class="sw" style="background:var(--d3)"></span>Créances clients<button class="fx" data-f="Σ max(Position client ; 0)." data-c="MaaS Keur Massar 3 250 000 + MaaS Ouakam 2 870 000 + MaaS Pikine 1 985 000 + Restaurant Le Baobab 2 400 000 + Boucherie des Almadies 1 730 000 + 9 autres MaaS 7 840 000 = 20 075 000 · Touba Viandes −150 000 exclu (Avances clients)" data-src="Comptes Créance client CALCULÉ · positif = le client doit à Mata (§4.3) · Ventes Mata OK 27/08 20:30 · snapshot 26/08 22:14 : 19 925 000" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></span></td><td class="hint">Σ max(Position client ; 0).</td><td class="num"><span class="amt" data-amt="20075000" data-nocur></span><div class="hint">20,075 M sur le graphique</div></td><td class="num ratio-c" data-pct-of="20075000">4,4 %</td><td><button class="st ok" data-chart-toggle="creances"><svg><use href="#i-eye"/></svg>Affichée</button></td><td class="hint">Créances clients · 12 MaaS et 3 gros clients</td><td><div class="actionbar" style="margin:0;gap:6px;flex-wrap:nowrap"><button class="btn ghost" data-open="fin-visualisation-chaine" data-serie="creances"><svg><use href="#i-layers"/></svg>Chaîne §10.3</button><button class="btn ghost" data-goto="fin-creances" data-perm="finance.creances.view"><svg><use href="#i-arr"/></svg>Descendre au détail</button></div></td></tr>
+        <tr data-serie="pnl"><td><span class="lb"><span class="sw dash" style="color:var(--d1)"></span>P&amp;L Global (cumul)<button class="fx" data-f="P&amp;L Global = CA + ΔS − D − CF" data-c="CA 452 000 000 + ΔS 2 235 000 − D 421 500 000 − CF 6 900 000 = 25 835 000 · CF = max(0 ; 21 700 000 × 27 / 31 − 12 000 000)" data-src="Moteur financier unique · CA : Ventes Mata OK 27/08 20:30 · ΔS : Stock OK 27/08 06:00 · D : Dépenses par date métier, import Achat 17:00 · CF : Charges fixes §8.4 · snapshot 26/08 22:14 : 25 105 000" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></span></td><td class="hint">P&amp;L Global = CA + ΔS − D − CF · cumul du 1er au 27 août</td><td class="num"><span class="amt" data-amt="25835000" data-nocur></span><div class="hint">25,835 M sur le graphique</div></td><td class="num ratio-c" data-pct-of="25835000">5,7 %</td><td><button class="st mut" data-chart-toggle="pnl"><svg><use href="#i-eyeoff"/></svg>Masquée</button></td><td class="hint">P&amp;L et KPI · symboles, variantes, charges fixes</td><td><div class="actionbar" style="margin:0;gap:6px;flex-wrap:nowrap"><button class="btn ghost" data-open="fin-visualisation-chaine" data-serie="pnl"><svg><use href="#i-layers"/></svg>Chaîne §10.3</button><button class="btn ghost" data-goto="fin-pnl" data-perm="finance.pnl.view"><svg><use href="#i-arr"/></svg>Descendre au détail</button></div></td></tr>
+        <tr data-serie="ventes"><td><span class="lb"><span class="sw dash" style="color:var(--d2)"></span>Ventes Mata — CA (cumul)<button class="fx" data-f="Chiffre d’affaires Mata de la période, fourni par Ventes Mata." data-c="Cumul du 1er au 27 août 2026 = 452 000 000 · ventes du jour 6 200 000 (Réconciliation des ventes du jour : Cohérente)" data-src="Ventes Mata, propriétaire unique · jamais saisi dans Mata Finance · OK 27/08 20:30 · CA de référence par défaut des ratios (§8.2)" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></span></td><td class="hint">Chiffre d’affaires Mata de la période, fourni par Ventes Mata.</td><td class="num"><span class="amt" data-amt="452000000" data-nocur></span><div class="hint">452 M sur le graphique</div></td><td class="num ratio-c" data-pct-of="452000000">100,0 %</td><td><button class="st mut" data-chart-toggle="ventes"><svg><use href="#i-eyeoff"/></svg>Masquée</button></td><td class="hint">P&amp;L et KPI · symbole CA · source Ventes Mata</td><td><div class="actionbar" style="margin:0;gap:6px;flex-wrap:nowrap"><button class="btn ghost" data-open="fin-visualisation-chaine" data-serie="ventes"><svg><use href="#i-layers"/></svg>Chaîne §10.3</button><button class="btn ghost" data-goto="fin-pnl" data-perm="finance.pnl.view"><svg><use href="#i-arr"/></svg>Descendre au détail</button></div></td></tr>
+        <tr data-serie="burn"><td><span class="lb"><span class="sw dash" style="color:var(--d3)"></span>Cash burn — dépenses D (cumul)<button class="fx" data-f="Toutes les dépenses de la période selon leur date métier." data-c="D = 421 500 000 dont DI 18 000 000 et DS 6 500 000 · 14 écritures du 27/08 pour 1 862 000 · charges fixes déjà comptabilisées en dépenses 12 000 000" data-src="Dépenses · saisies manuelles et API Achat (import idempotent 27/08 17:00, 5 achats, 0 doublon) · flags Investissement / Dépense spéciale sans effet sur D (§8.3)" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></span></td><td class="hint">Toutes les dépenses de la période selon leur date métier.</td><td class="num"><span class="amt" data-amt="421500000" data-nocur></span><div class="hint">421,5 M sur le graphique</div></td><td class="num ratio-c" data-pct-of="421500000">93,3 %</td><td><button class="st mut" data-chart-toggle="burn"><svg><use href="#i-eyeoff"/></svg>Masquée</button></td><td class="hint">Dépenses · écritures par date métier, flags DI / DS, « Pas sûr »</td><td><div class="actionbar" style="margin:0;gap:6px;flex-wrap:nowrap"><button class="btn ghost" data-open="fin-visualisation-chaine" data-serie="burn"><svg><use href="#i-layers"/></svg>Chaîne §10.3</button><button class="btn ghost" data-goto="fin-depenses" data-perm="finance.depenses.view"><svg><use href="#i-arr"/></svg>Descendre au détail</button></div></td></tr>
+      </tbody>
+    </table></div>
+    <div class="cb" style="padding-top:12px">
+      <div class="hint" style="margin-bottom:8px">Rappel §10.3 · Core §7.1 — chemin d’investigation d’un KPI ou d’un solde, sans accès direct à la base de données :</div>
+      <ol class="steps"><li>Valeur</li><li>Formule</li><li>Composantes</li><li>Mouvements</li><li>Objet métier</li><li>Source</li></ol>
+      <div class="eq"><b>Trésorerie totale contrôlée</b> : 61 305 000 F — <span class="ok" data-pct-of="61305000">13,6 %</span> du CA de référence · <b>Position financière nette</b> = 61 305 000 + 350 000 + 20 075 000 − 23 250 000 − 150 000 = <b>58 330 000</b> · <b>Trésorerie après fournisseurs</b> = 61 305 000 − 23 250 000 = <b>38 055 000</b> (§8.1) — les trois positions tracées ne sont jamais compensées entre elles : les expositions restent affichées séparément.</div>
+      <div class="note-strip"><svg><use href="#i-info"/></svg><span>Depuis un KPI ou un solde, un utilisateur autorisé doit pouvoir descendre jusqu’aux composantes, mouvements, objets métier et sources. L’investigation d’un écart ne doit pas nécessiter un accès direct à la base de données. (§10.3) · La descente vers Comptes est une consultation auditée (Hautement sensible, Core §5.3) · Écart ouvert du jour : Sous-caisse Marché <span class="amt" data-amt="-25000" data-nocur></span> → <button class="linkish" data-goto="fin-reconciliation">Réconciliation</button></span></div>
+    </div>
+  </div>
+
+  <!-- 3. CHAÎNES D'INVESTIGATION PAR SÉRIE (§10.3) : blocs sources du tiroir, un par série, jamais affichés directement -->
+  <div data-chain="treso" data-title="Trésorerie totale contrôlée" data-amt-v="61305000" data-goto-scr="fin-comptes" data-goto-perm="finance.comptes.view" data-goto-lbl="Comptes" data-alt-scr="fin-historique" data-alt-lbl="Snapshots" hidden>
+    <div class="ev on"><b>1 · Valeur</b><small><span class="amt" data-amt="61305000"></span> au 27/08/2026 · <span data-pct-of="61305000">13,6 %</span> du CA de référence · 61,3 M sur le graphique · valeur calculée, jamais saisie (§3)</small></div>
+    <div class="ev"><b>2 · Formule</b><small>Trésorerie disponible + Trésorerie en transit. (§8.1) · Trésorerie disponible = Somme des comptes Trésorerie et Positions externes configurés comme immédiatement disponibles. · Trésorerie en transit = Somme des comptes Relais actifs.</small></div>
+    <div class="ev"><b>3 · Composantes</b><small>Disponible <span class="amt" data-amt="58455000" data-nocur></span> : Caisse générale <span class="amt" data-amt="8450000" data-nocur></span> · Sous-caisse Marché <span class="amt" data-amt="1275000" data-nocur></span> · Sous-caisse Livraisons <span class="amt" data-amt="640000" data-nocur></span> · Banque BOA <span class="amt" data-amt="45200000" data-nocur></span> · Bictorys <span class="amt" data-amt="2890000" data-nocur></span> — Transit <span class="amt" data-amt="2850000" data-nocur></span> : Dépôt en cours (Caisse → Banque) <span class="amt" data-amt="2500000" data-nocur></span> · Bictorys → Banque en cours <span class="amt" data-amt="350000" data-nocur></span> — compte Ajustement exclu</small></div>
+    <div class="ev"><b>4 · Mouvements</b><small>Caisse générale : dernier solde réconcilié 26/08 <span class="amt" data-amt="7980000" data-nocur></span>, mouvements du jour +<span class="amt" data-amt="470000" data-nocur></span>, à déclarer avant 23:59 · Sous-caisse Marché : déclaré <span class="amt" data-amt="1250000" data-nocur></span> à 21:12, écart <span class="amt" data-amt="-25000" data-nocur></span>, « À réconcilier » · Relais Dépôt en cours créé 27/08 07:45 (A. Ndiaye) · Relais Bictorys → Banque ouvert depuis 3 j, seuil 2 j · Transferts en attente : VAL-118 <span class="amt" data-amt="600000" data-nocur></span> BOA → Caisse générale (F. Sarr), VAL-114 <span class="amt" data-amt="1500000" data-nocur></span> Caisse générale → BOA (S. Doucouré)</small></div>
+    <div class="ev"><b>5 · Objet métier</b><small>3 comptes Trésorerie (CALCULÉ) · 2 Positions externes : Banque BOA (IMPORT CSV), Bictorys (SYNCHRONISÉ, « Solde disponible » en lecture API seule) · 2 comptes Relais · correction BOA <span class="amt" data-amt="-45000" data-nocur></span> (VAL-116, frais bancaires non importés) en attente de double validation · ajustement VAL-117 +<span class="amt" data-amt="180000" data-nocur></span> Caisse générale : 2e validation requise</small></div>
+    <div class="ev"><b>6 · Source</b><small>Moteur financier unique · Banque BOA : import 27/08 08:00, 14 lignes, 0 doublon · Bictorys : synchronisation 27/08 08:12 · snapshot 26/08 22:14 : <span class="amt" data-amt="60790000" data-nocur></span>, situation recalculée au 26/08 <span class="amt" data-amt="60970000" data-nocur></span> (+<span class="amt" data-amt="180000" data-nocur></span>, VAL-117, contrepassation tracée) · consultation de Comptes auditée (Hautement sensible)</small></div>
+  </div>
+  <div data-chain="dettes" data-title="Dettes fournisseurs" data-amt-v="23250000" data-goto-scr="fin-fournisseurs" data-goto-perm="finance.fournisseurs.view" data-goto-lbl="Fournisseurs" data-alt-scr="fin-historique" data-alt-lbl="Snapshots" hidden>
+    <div class="ev on"><b>1 · Valeur</b><small><span class="amt" data-amt="23250000"></span> au 27/08/2026 · <span data-pct-of="23250000">5,1 %</span> du CA de référence · 23,25 M sur le graphique · exposition affichée séparément, jamais compensée (§8.1)</small></div>
+    <div class="ev"><b>2 · Formule</b><small>Σ max(− Position fournisseur ; 0). (§8.1) · convention de signe §4.3 : Fournisseur positif = avance de Mata chez le fournisseur ; négatif = Mata doit</small></div>
+    <div class="ev"><b>3 · Composantes</b><small>AGNEAUX <span class="amt" data-amt="12400000" data-nocur></span> · MATA VOLAILLE CHAIR <span class="amt" data-amt="4300000" data-nocur></span> · Bétail Thiès <span class="amt" data-amt="4600000" data-nocur></span> · MATA VOLAILLE ŒUFS <span class="amt" data-amt="1150000" data-nocur></span> · Aliments Sénégal <span class="amt" data-amt="800000" data-nocur></span> · Abattoirs Dakar +<span class="amt" data-amt="350000" data-nocur></span> exclu (Avances fournisseurs)</small></div>
+    <div class="ev"><b>4 · Mouvements</b><small>Du 27/08 : Achat bœuf lot BV-260827-04 <span class="amt" data-amt="850000" data-nocur></span> (AGNEAUX, Achat API, au plus tard le 30/09) · Achat agneau lot AG-260827-02 <span class="amt" data-amt="262000" data-nocur></span> (Bétail Thiès, 12/09) · Achat volaille <span class="amt" data-amt="420000" data-nocur></span> payé immédiatement (MATA VOLAILLE CHAIR, position inchangée) · Frais d’abattage <span class="amt" data-amt="150000" data-nocur></span> payés (Abattoirs Dakar)</small></div>
+    <div class="ev"><b>5 · Objet métier</b><small>6 comptes Fournisseur · échéances : 2 dépassées <span class="amt" data-amt="1950000" data-nocur></span> (ŒUFS 25/08, Aliments Sénégal 20/08), prochaine 02/09/2026 <span class="amt" data-amt="1600000" data-nocur></span> (Bétail Thiès) · plafond AGNEAUX <span class="amt" data-amt="10000000" data-nocur></span> dépassé : alerte, aucun blocage (§5.4) · paiement FIFO, affectation manuelle exceptionnelle auditée (§5.3)</small></div>
+    <div class="ev"><b>6 · Source</b><small>Comptes Fournisseur CALCULÉ · import Achat idempotent 27/08 17:00 (5 achats, 0 doublon) · réconciliation fournisseur du jour : 3 validées, 2 en attente, 1 sans mouvement (§5.5) · snapshot 26/08 22:14 : <span class="amt" data-amt="23100000" data-nocur></span></small></div>
+  </div>
+  <div data-chain="creances" data-title="Créances clients" data-amt-v="20075000" data-goto-scr="fin-creances" data-goto-perm="finance.creances.view" data-goto-lbl="Créances clients" data-alt-scr="fin-historique" data-alt-lbl="Snapshots" hidden>
+    <div class="ev on"><b>1 · Valeur</b><small><span class="amt" data-amt="20075000"></span> au 27/08/2026 · <span data-pct-of="20075000">4,4 %</span> du CA de référence · 20,075 M sur le graphique</small></div>
+    <div class="ev"><b>2 · Formule</b><small>Σ max(Position client ; 0). (§8.1) · convention de signe §4.3 : Client positif = le client doit à Mata ; négatif = avance du client</small></div>
+    <div class="ev"><b>3 · Composantes</b><small>MaaS Keur Massar <span class="amt" data-amt="3250000" data-nocur></span> · MaaS Ouakam <span class="amt" data-amt="2870000" data-nocur></span> · MaaS Pikine <span class="amt" data-amt="1985000" data-nocur></span> · Restaurant Le Baobab <span class="amt" data-amt="2400000" data-nocur></span> · Boucherie des Almadies <span class="amt" data-amt="1730000" data-nocur></span> · 9 autres MaaS <span class="amt" data-amt="7840000" data-nocur></span> · Touba Viandes <span class="amt" data-amt="-150000" data-nocur></span> exclu (Avances clients)</small></div>
+    <div class="ev"><b>4 · Mouvements</b><small>Ventes du jour <span class="amt" data-amt="6200000" data-nocur></span> (Ventes Mata, 20:30) · Créances nettes nouvelles <span class="amt" data-amt="2450000" data-nocur></span> · Encaissements collectés du 26/08 <span class="amt" data-amt="4725000" data-nocur></span> validés 02:04 (12 déclarations MaaS = déclaration du collecteur A. Ndiaye) · Versements du jour <span class="amt" data-amt="3100000" data-nocur></span>, réconciliation vers 02:00</small></div>
+    <div class="ev"><b>5 · Objet métier</b><small>15 comptes Créance client : 12 MaaS référencés par entity_id, 3 gros clients · toute vente Mata crée automatiquement une créance (§6.1) · encaissement et remboursement (§6.2) · Gérant MaaS : lecture de sa seule position</small></div>
+    <div class="ev"><b>6 · Source</b><small>Comptes Créance client CALCULÉ · Ventes Mata OK 27/08 20:30 · Réconciliation des encaissements collectés validée 27/08 02:04 (§6.3) · snapshot 26/08 22:14 : <span class="amt" data-amt="19925000" data-nocur></span></small></div>
+  </div>
+  <div data-chain="pnl" data-title="P&amp;L Global (cumul)" data-amt-v="25835000" data-goto-scr="fin-pnl" data-goto-perm="finance.pnl.view" data-goto-lbl="P&amp;L et KPI" data-alt-scr="fin-charges" data-alt-lbl="Charges fixes" hidden>
+    <div class="ev on"><b>1 · Valeur</b><small><span class="amt" data-amt="25835000"></span> cumul du 1er au 27 août 2026 · <span data-pct-of="25835000">5,7 %</span> du CA de référence · 25,835 M sur le graphique · indicateur de gestion, pas un compte de résultat réglementaire (§8.3)</small></div>
+    <div class="ev"><b>2 · Formule</b><small>P&amp;L Global = CA + ΔS − D − CF (§8.3) · Charge fixe complémentaire = max(0 ; Charge théorique proratisée − Charge déjà comptabilisée) (§8.4)</small></div>
+    <div class="ev"><b>3 · Composantes</b><small>CA <span class="amt" data-amt="452000000" data-nocur></span> + ΔS <span class="amt" data-amt="2235000" data-nocur></span> − D <span class="amt" data-amt="421500000" data-nocur></span> − CF <span class="amt" data-amt="6900000" data-nocur></span> · CF = max(0 ; <span class="amt" data-amt="21700000" data-nocur></span> × 27 / 31 − <span class="amt" data-amt="12000000" data-nocur></span>)</small></div>
+    <div class="ev"><b>4 · Mouvements</b><small>Ventes du jour <span class="amt" data-amt="6200000" data-nocur></span> · dépenses du jour : 14 écritures, <span class="amt" data-amt="1862000" data-nocur></span> · ΔS = stock fin <span class="amt" data-amt="41235000" data-nocur></span> − stock début <span class="amt" data-amt="39000000" data-nocur></span> · DI <span class="amt" data-amt="18000000" data-nocur></span> et DS <span class="amt" data-amt="6500000" data-nocur></span> inclus dans D</small></div>
+    <div class="ev"><b>5 · Objet métier</b><small>Symboles CA, D, DI, DS, ΔS, CF · variantes : hors Investissements <span class="amt" data-amt="43835000" data-nocur></span>, hors Dépenses spéciales <span class="amt" data-amt="32335000" data-nocur></span> · charges fixes actives <span class="amt" data-amt="21700000" data-nocur></span> · flags modifiables après clôture uniquement par correction post-clôture (§3.1)</small></div>
+    <div class="ev"><b>6 · Source</b><small>Moteur financier unique · Ventes Mata OK 20:30 · Stock OK 06:00 (seul propriétaire de la valorisation) · Dépenses par date métier, import Achat 17:00 · Charges fixes : configuration à jour · snapshot 26/08 22:14 : <span class="amt" data-amt="25105000" data-nocur></span>, inchangé par VAL-117 (compte Ajustement exclu)</small></div>
+  </div>
+  <div data-chain="ventes" data-title="Ventes Mata — CA (cumul)" data-amt-v="452000000" data-goto-scr="fin-pnl" data-goto-perm="finance.pnl.view" data-goto-lbl="P&amp;L et KPI (symbole CA)" data-alt-scr="fin-reconciliation" data-alt-lbl="Ventes du jour" hidden>
+    <div class="ev on"><b>1 · Valeur</b><small><span class="amt" data-amt="452000000"></span> cumul du 1er au 27 août 2026 · <span data-pct-of="452000000">100,0 %</span> du CA de référence · 452 M sur le graphique</small></div>
+    <div class="ev"><b>2 · Formule</b><small>Chiffre d’affaires Mata de la période, fourni par Ventes Mata. (§8.3) · CA de référence par défaut des ratios de pilotage (§8.2)</small></div>
+    <div class="ev"><b>3 · Composantes</b><small>Cumul août au 27 <span class="amt" data-amt="452000000" data-nocur></span> · dont ventes du jour <span class="amt" data-amt="6200000" data-nocur></span> · autres périodes de référence : juillet <span class="amt" data-amt="438500000" data-nocur></span>, 3 derniers mois <span class="amt" data-amt="1301200000" data-nocur></span></small></div>
+    <div class="ev"><b>4 · Mouvements</b><small>Réconciliation des ventes du jour (§6.4) : Ventes Mata du jour <span class="amt" data-amt="6200000" data-nocur></span> = Versements <span class="amt" data-amt="3100000" data-nocur></span> + Paiements Bictorys <span class="amt" data-amt="1250000" data-nocur></span> + Créances nettes nouvelles <span class="amt" data-amt="2450000" data-nocur></span> − Remboursements à neutraliser <span class="amt" data-amt="600000" data-nocur></span> → Cohérente</small></div>
+    <div class="ev"><b>5 · Objet métier</b><small>Ventes du module Ventes Mata, propriétaire unique · toute vente Mata crée automatiquement une créance (§6.1) · jamais saisi ni recalculé dans Mata Finance (Core §7.1)</small></div>
+    <div class="ev"><b>6 · Source</b><small>Ventes Mata OK 27/08 20:30 · Versements OK · Bictorys OK 08:12 · Comptes créance OK (§6.5)</small></div>
+  </div>
+  <div data-chain="burn" data-title="Cash burn — dépenses D (cumul)" data-amt-v="421500000" data-goto-scr="fin-depenses" data-goto-perm="finance.depenses.view" data-goto-lbl="Dépenses" data-alt-scr="fin-pnl" data-alt-lbl="P&amp;L et KPI" hidden>
+    <div class="ev on"><b>1 · Valeur</b><small><span class="amt" data-amt="421500000"></span> cumul du 1er au 27 août 2026 · <span data-pct-of="421500000">93,3 %</span> du CA de référence · 421,5 M sur le graphique</small></div>
+    <div class="ev"><b>2 · Formule</b><small>D = Toutes les dépenses de la période selon leur date métier. (§8.3) · DI = Dépenses avec Investissement = true ; DS = Dépenses avec Dépense spéciale = true ; flags false par défaut</small></div>
+    <div class="ev"><b>3 · Composantes</b><small>D <span class="amt" data-amt="421500000" data-nocur></span> dont DI <span class="amt" data-amt="18000000" data-nocur></span> (chambre froide <span class="amt" data-amt="12000000" data-nocur></span> le 12/08, acompte camion frigorifique <span class="amt" data-amt="6000000" data-nocur></span> le 20/08) et DS <span class="amt" data-amt="6500000" data-nocur></span> (indemnités exceptionnelles <span class="amt" data-amt="4000000" data-nocur></span> le 05/08, sinistre <span class="amt" data-amt="2500000" data-nocur></span> le 18/08) · charges fixes déjà comptabilisées <span class="amt" data-amt="12000000" data-nocur></span></small></div>
+    <div class="ev"><b>4 · Mouvements</b><small>14 écritures du 27/08 pour <span class="amt" data-amt="1862000" data-nocur></span> : Achat bœuf <span class="amt" data-amt="850000" data-nocur></span> · Achat volaille <span class="amt" data-amt="420000" data-nocur></span> · Frais d’abattage <span class="amt" data-amt="150000" data-nocur></span> · Entretien chambre froide <span class="amt" data-amt="95000" data-nocur></span> · Achat agneau <span class="amt" data-amt="262000" data-nocur></span> · Carburant <span class="amt" data-amt="85000" data-nocur></span> « Pas sûr » · + 8 autres</small></div>
+    <div class="ev"><b>5 · Objet métier</b><small>Dépenses par date métier, distincte de l’horodatage (§3) · flags Investissement / Dépense spéciale indépendants · 1 dépense « Pas sûr » (Carburant) bloque uniquement Sous-caisse Livraisons, notification à 23:00 si non résolue (§5.2)</small></div>
+    <div class="ev"><b>6 · Source</b><small>Saisies manuelles + API Achat (import idempotent 27/08 17:00, 5 achats intégrés, 0 doublon) · contrat d’interface Achat → Finance : idempotence ; montant payé absent ⇒ Pas sûr ; fraîcheur contrôlée (§9)</small></div>
+  </div>
+
+  <!-- Tiroir : chaîne d'investigation de la série choisie -->
+  <aside class="drawer" data-ov="fin-visualisation-chaine" aria-label="Chaîne d’investigation d’une série (§10.3)">
+    <div class="dh"><h3 data-ch-title>Chaîne d’investigation</h3><button class="ib" data-close aria-label="Fermer"><svg><use href="#i-x"/></svg></button></div>
+    <div class="db">
+      <div class="hint" data-ch-sub>Valeur → formule → composantes → mouvements → objet métier → source (§10.3)</div>
+      <div class="big-amt amt" data-amt="61305000" data-ch-amt></div>
+      <div class="meta-l"><span class="tag lock"><span data-ch-ratio data-pct-of="61305000">13,6 %</span>&nbsp;du CA de référence</span><span class="tag lock"><svg><use href="#i-clock"/></svg>27/08/2026 · moteur financier</span><span class="st ok"><svg><use href="#i-check"/></svg>Sources OK</span></div>
+      <ol class="steps"><li class="on">Valeur</li><li>Formule</li><li>Composantes</li><li>Mouvements</li><li>Objet métier</li><li>Source</li></ol>
+      <div class="tl" data-ch-tl></div>
+      <div class="note-strip"><svg><use href="#i-info"/></svg><span>Aucun recalcul dans cet écran : les six niveaux reprennent les valeurs du moteur financier unique (Core §7.1). Le détail des mouvements, des objets métier et des sources s’ouvre dans l’écran propriétaire, selon la permission de consultation du profil actif (refus par défaut, §3).</span></div>
+    </div>
+    <div class="df"><button class="btn ghost" data-ch-alt data-goto="fin-historique"><svg><use href="#i-history"/></svg><span>Snapshots</span></button><button class="btn pri" data-ch-goto data-goto="fin-comptes" data-perm="finance.comptes.view"><svg><use href="#i-arr"/></svg><span>Descendre au détail · Comptes</span></button></div>
+  </aside>
+  <div class="dback" data-ov-back="fin-visualisation-chaine"></div>
+</section>
+<script data-screen="fin-visualisation">
+ERP.register('fin-visualisation', function (root, ctx) {
+  var $ = function (s, r) { return (r || root).querySelector(s); };
+  var $$ = function (s, r) { return Array.prototype.slice.call((r || root).querySelectorAll(s)); };
+  var PRESETS = { positions: 'creances,dettes,treso', cumuls: 'burn,pnl,ventes', tout: 'burn,creances,dettes,pnl,treso,ventes' };
+  var LABEL = { positions: 'Positions (défaut)', cumuls: 'Cumuls', tout: 'Les six séries' };
+
+  /* 1. CA de référence (§8.2) : tous les ratios sont recalculés, les montants FCFA ne bougent jamais */
+  var sel = $('#fin-visualisation-ca');
+  function pct(v, ca) { return (v / ca * 100).toFixed(1).replace('.', ',') + ' %'; }
+  function applyCa() {
+    var ca = parseInt(sel.value, 10), opt = sel.options[sel.selectedIndex];
+    $$('[data-pct-of]').forEach(function (el) { el.textContent = pct(parseInt(el.getAttribute('data-pct-of'), 10), ca); });
+    $$('[data-ca-short]').forEach(function (el) { el.textContent = opt.getAttribute('data-short'); });
+  }
+  ctx.on(sel, 'change', function () {
+    applyCa();
+    ctx.toast('CA de référence : ' + sel.options[sel.selectedIndex].text + ' — ratios recalculés, montants FCFA inchangés (§8.2)');
+  });
+  applyCa();
+
+  /* 2. Légende ↔ tableau : le moteur dessine le .multichart ; l'écran garde au moins une série cochée et synchronise badges, compteur, préréglages */
+  var boxes = $$('[data-series-toggle]');
+  function checked() {
+    return boxes.filter(function (b) { return b.checked; }).map(function (b) { return b.getAttribute('data-series-toggle'); });
+  }
+  function sync() {
+    var on = checked(), key = on.slice().sort().join(',');
+    $$('tr[data-serie]').forEach(function (tr) {
+      var vis = on.indexOf(tr.getAttribute('data-serie')) > -1, b = $('[data-chart-toggle]', tr);
+      b.className = 'st ' + (vis ? 'ok' : 'mut');
+      b.innerHTML = '<svg><use href="#i-' + (vis ? 'eye' : 'eyeoff') + '"/></svg>' + (vis ? 'Affichée' : 'Masquée');
+      b.title = vis ? 'Retirer du graphique' : 'Ajouter au graphique';
+    });
+    $('[data-count]').textContent = on.length + (on.length > 1 ? ' séries affichées' : ' série affichée');
+    $$('[data-preset]').forEach(function (c) { c.classList.toggle('on', PRESETS[c.getAttribute('data-preset')] === key); });
+    $('[data-scale-note]').hidden = !(on.indexOf('ventes') > -1 || on.indexOf('burn') > -1);
+  }
+  function setSeries(keys) {
+    boxes.forEach(function (b) { b.checked = keys.indexOf(b.getAttribute('data-series-toggle')) > -1; });
+    sync();
+    ctx.drawCharts(root);
+  }
+  ctx.on(root, 'change', function (e) {
+    if (!e.target.hasAttribute('data-series-toggle')) return;
+    if (!checked().length) { e.target.checked = true; ctx.toast('Au moins une série reste affichée : cochez-en une autre avant de retirer celle-ci.'); }
+    sync();
+  });
+  $$('[data-preset]').forEach(function (c) {
+    ctx.on(c, 'click', function () {
+      var k = c.getAttribute('data-preset'), keys = PRESETS[k].split(',');
+      setSeries(keys);
+      ctx.toast(LABEL[k] + ' : ' + keys.length + ' séries sur la même échelle, en millions de FCFA');
+    });
+  });
+  $$('[data-chart-toggle]').forEach(function (b) {
+    ctx.on(b, 'click', function () {
+      var k = b.getAttribute('data-chart-toggle'), on = checked(), i = on.indexOf(k);
+      if (i > -1) { if (on.length === 1) { ctx.toast('Au moins une série reste affichée.'); return; } on.splice(i, 1); } else on.push(k);
+      setSeries(on);
+    });
+  });
+  sync();
+
+  /* 3. Chaîne d'investigation (§10.3) : le tiroir se remplit depuis la série cliquée, le moteur l'ouvre ensuite (data-open) */
+  var dr = $('[data-ov="fin-visualisation-chaine"]');
+  ctx.on(root, 'click', function (e) {
+    var b = e.target.closest('[data-open="fin-visualisation-chaine"]'); if (!b) return;
+    var src = $('[data-chain="' + b.getAttribute('data-serie') + '"]'); if (!src) return;
+    var d = src.dataset, amt = $('[data-ch-amt]', dr), go = $('[data-ch-goto]', dr), alt = $('[data-ch-alt]', dr);
+    $('[data-ch-title]', dr).textContent = d.title;
+    $('[data-ch-sub]', dr).textContent = 'Valeur → formule → composantes → mouvements → objet métier → source (§10.3) · écran propriétaire : ' + d.gotoLbl;
+    amt.setAttribute('data-amt', d.amtV); delete amt.dataset.done; amt.classList.remove('neg');
+    $('[data-ch-ratio]', dr).setAttribute('data-pct-of', d.amtV);
+    $('[data-ch-tl]', dr).innerHTML = src.innerHTML;
+    go.setAttribute('data-goto', d.gotoScr); go.setAttribute('data-perm', d.gotoPerm);
+    $('span', go).textContent = 'Descendre au détail · ' + d.gotoLbl;
+    alt.setAttribute('data-goto', d.altScr);
+    $('span', alt).textContent = d.altLbl;
+    ctx.formatAmounts(dr); applyCa(); ctx.applyPerms();
+  });
+
+  /* 4. Export : permission Exporter distincte de Consulter (§5.7) ; le moteur désactive le bouton si elle manque */
+  $$('[data-export]').forEach(function (b) {
+    ctx.on(b, 'click', function () {
+      if (b.classList.contains('denied')) return;
+      ctx.toast('Export CSV des six séries sur 30 jours généré (service commun d’export, §9.2) — disponible 7 jours puis supprimé, régénérable à la demande (§5.7)');
+    });
+  });
+
+  ctx.formatAmounts(root);
+  ctx.applyPerms();
+});
+</script>

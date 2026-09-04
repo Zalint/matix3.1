@@ -1,0 +1,250 @@
+<!-- ÉCRAN : IMPORT RELEVÉ BANCAIRE (Mata Finance §4.9, §9, §11.1 · Mata Core §6.3) — assistant en 5 étapes, import idempotent -->
+<section class="scr" data-scr="fin-import" data-module="finance" data-perm="finance.import.view" data-sens="s" hidden>
+  <style data-screen="fin-import">
+    #app [data-scr="fin-import"] [data-wiznav]{margin-top:14px}
+    #app [data-scr="fin-import"] .filebox{display:flex;align-items:center;gap:12px;padding:14px;border:1px dashed var(--line-2);border-radius:12px;background:var(--card-2)}
+    #app [data-scr="fin-import"] .filebox>svg{width:26px;height:26px;color:var(--red);flex:none}
+    #app [data-scr="fin-import"] .filebox b{display:block;font-family:'Fira Code',monospace;font-size:12.5px;word-break:break-all}
+    #app [data-scr="fin-import"] .filebox small{color:var(--mut);font-size:11px;line-height:1.4}
+    #app [data-scr="fin-import"] .filebox .st{margin-left:auto;flex:none}
+    #app [data-scr="fin-import"] .kv{display:grid;grid-template-columns:auto 1fr;gap:7px 12px;font-size:12px;line-height:1.45;color:var(--ink-2)}
+    #app [data-scr="fin-import"] .kv b{font-size:10.5px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-2);white-space:nowrap;padding-top:1px}
+    #app [data-scr="fin-import"] .kv .amt{font-weight:600;color:var(--ink)}
+    #app [data-scr="fin-import"] .ch{flex-wrap:wrap}
+    #app [data-scr="fin-import"] .cb .grid2b{margin-top:0}
+    #app [data-scr="fin-import"] .cb .actionbar{margin:12px 0 0}
+    #app [data-scr="fin-import"] .cb .note-strip{margin-top:12px}
+    #app [data-scr="fin-import"] .eq{margin-top:12px}
+    #app [data-scr="fin-import"] .tl{margin-top:12px}
+    #app [data-scr="fin-import"] .prog{margin-top:10px}
+    #app [data-scr="fin-import"] .rline{margin:12px 0 0;max-width:none;width:auto}
+    #app [data-scr="fin-import"] .rline input[type=checkbox]{width:15px;height:15px;accent-color:var(--red);flex:none}
+    #app [data-scr="fin-import"] .steps li[data-go]{cursor:pointer}
+    #app [data-scr="fin-import"] td .hint{display:block;margin-top:2px}
+    @media (max-width:640px){#app [data-scr="fin-import"] .kv{grid-template-columns:1fr}#app [data-scr="fin-import"] .kv b{white-space:normal}#app [data-scr="fin-import"] .filebox{flex-wrap:wrap}#app [data-scr="fin-import"] .rline{flex-wrap:wrap}#app [data-scr="fin-import"] .rline .rh{margin-left:24px;width:100%}}
+  </style>
+  <div class="scr-head">
+    <div>
+      <h2>Import relevé bancaire</h2>
+      <p class="scr-sub">Banque → Finance : position bancaire via CSV et références disponibles · import idempotent ; correction tracée ; rapprochement ligne à ligne hors V1 (§9) · La Banque est alimentée en V1 par import CSV (§4.9) · Assistant : Fichier → Prévisualisation → Contrôles → Validation → Import (Core §6.3) · jeudi 27 août 2026</p>
+    </div>
+    <div class="scr-meta">
+      <span class="sens s"><svg><use href="#i-shield"/></svg>Sensible</span>
+      <span class="hint">Import/Export : accès restreint, modifications auditées, export contrôlé (Core §5.3) · exécution selon la permission « finance.import.executer », sans second validateur · toute correction de la Position externe est matérialisée par un ajustement validé (§4.2 · VAL-116, double validation)</span>
+    </div>
+  </div>
+
+  <ol class="steps" data-steps><li class="on" data-go="1">Fichier</li><li data-go="2">Prévisualisation</li><li data-go="3">Contrôles</li><li data-go="4">Validation</li><li data-go="5">Import</li></ol>
+
+  <!-- ===== Étape 1 : Fichier ===== -->
+  <div class="card" data-step="1">
+    <div class="ch"><h3>Étape 1 — Fichier</h3><span class="hint-r">Un fichier CSV par import · compte cible : une Position externe alimentée par IMPORT</span></div>
+    <div class="cb">
+      <div class="grid2b">
+        <div>
+          <div class="filebox"><svg><use href="#i-file"/></svg><div><b>releve_BOA_2026-08-27.csv</b><small>CSV · UTF-8 · séparateur « ; » · 14 lignes · reçu le 27/08/2026 · 08:00 · colonnes : compte, date de valeur, libellé, montant, sens, référence bancaire</small></div><span class="st ok"><svg><use href="#i-check"/></svg>Lu</span></div>
+          <div class="actionbar"><button class="btn ghost" data-file-pick><svg><use href="#i-upload"/></svg>Choisir un autre fichier</button><span class="hint">Sélecteur simulé dans la maquette · formats selon le besoin : CSV, Excel, PDF (Core §6.3) · CSV = mode V1</span></div>
+          <div class="fld" style="margin-top:12px"><label for="fin-import-compte">Compte cible (Position externe)</label><select id="fin-import-compte" class="inp"><option>Banque BOA — Position externe · IMPORT CSV</option><option disabled>Bictorys — Position externe · SYNCHRONISÉ · jamais modifiable à la main</option></select></div>
+          <div class="kv" style="margin-top:12px">
+            <b>Position actuelle</b><span><span class="amt" data-amt="45200000"></span> · valeur reçue à l’import du 27/08 08:00 · fraîcheur OK</span>
+            <b>Dernier import</b><span data-last-import>27/08 · 08:00 · S. Doucouré · 14 lignes · 0 doublon</span>
+            <b>Correction en attente</b><span><span class="amt" data-amt="-45000"></span> « frais bancaires non importés » (VAL-116, double validation) · la valeur source originale est toujours conservée (§4.2)</span>
+          </div>
+        </div>
+        <div>
+          <div class="kv">
+            <b>Source → destinataire</b><span>Banque BOA → Mata Finance, Position externe « Banque BOA » (contrat d’interface obligatoire, §9.1)</span>
+            <b>Identifiant externe</b><span>Référence bancaire = identifiant privilégié ; si elle est absente, empreinte logique stable construite à partir des attributs disponibles : compte, date de valeur, montant, sens, libellé normalisé et occurrence (§4.9)</span>
+            <b>Champs obligatoires</b><span>compte, date de valeur, libellé, montant (entier FCFA), sens · référence bancaire lorsqu’elle est disponible</span>
+            <b>Date métier</b><span>date de valeur (ISO 8601) · horodatage : réception du fichier, 27/08/2026 08:00</span>
+            <b>Déclencheur</b><span>import manuel par un utilisateur autorisé · mode V1 CSV ; bascule API ultérieure sans impact fonctionnel (§4.9)</span>
+            <b>Fraîcheur</b><span>états : OK, Manquante, Erreur, Non à jour · une donnée périmée peut rester visible mais ne permet pas une auto-validation (§9.1)</span>
+            <b>Idempotence</b><span>un événement répété ne crée qu’un seul effet financier (§3) · l’import ou l’appel répété ne doit jamais produire un double effet (§4.9)</span>
+            <b>Erreur · correction</b><span>tout contrôle en échec bloque l’étape Validation · correction manuelle auditée, matérialisée par un ajustement validé (§4.1, §4.2)</span>
+            <b>Authentification</b><span>utilisateur authentifié et permission « finance.import.executer » (CSV V1) · clé API dédiée à la bascule API</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== Étape 2 : Prévisualisation ===== -->
+  <div class="card" data-step="2" hidden>
+    <div class="ch"><h3>Étape 2 — Prévisualisation</h3><div class="chips"><button class="chip on" data-filter="tous">Toutes</button><button class="chip" data-filter="credit">Crédits</button><button class="chip" data-filter="debit">Débits</button><button class="chip" data-filter="sansref">Sans référence</button></div><span class="hint-r" data-prev-count>6 lignes affichées sur 14 · 8 non affichées</span></div>
+    <div class="tbl-scroll"><table>
+      <thead><tr><th>Date de valeur</th><th>Libellé</th><th>Montant</th><th>Sens</th><th>Référence bancaire</th></tr></thead>
+      <tbody data-prev-rows>
+        <tr data-sens="credit" data-ref="non"><td>26/08/2026</td><td>VERSEMENT ESPECES</td><td><span class="amt" data-amt="3000000" data-nocur></span></td><td><span class="st ok">Crédit</span></td><td><span class="tag lock"><svg><use href="#i-key"/></svg>Empreinte logique</span><span class="hint">sans référence · BOA · 2026-08-26 · <span class="amt" data-amt="3000000" data-nocur></span> · crédit · « versement especes » · occurrence 1</span></td></tr>
+        <tr data-sens="credit" data-ref="oui"><td>26/08/2026</td><td>VIR RECU RESTAURANT LE BAOBAB</td><td><span class="amt" data-amt="1500000" data-nocur></span></td><td><span class="st ok">Crédit</span></td><td>BOA-20260826-04471</td></tr>
+        <tr data-sens="debit" data-ref="oui"><td>25/08/2026</td><td>VIR MATA VOLAILLE CHAIR</td><td><span class="amt" data-amt="1200000" data-nocur></span></td><td><span class="st mut">Débit</span></td><td>BOA-20260825-03902</td></tr>
+        <tr data-sens="credit" data-ref="oui"><td>25/08/2026</td><td>VIR RECU BOUCHERIE DES ALMADIES</td><td><span class="amt" data-amt="650000" data-nocur></span></td><td><span class="st ok">Crédit</span></td><td>BOA-20260825-03877</td></tr>
+        <tr data-sens="debit" data-ref="non"><td>24/08/2026</td><td>RETRAIT ESPECES</td><td><span class="amt" data-amt="800000" data-nocur></span></td><td><span class="st mut">Débit</span></td><td><span class="tag lock"><svg><use href="#i-key"/></svg>Empreinte logique</span><span class="hint">sans référence · BOA · 2026-08-24 · 800 000 · débit · « retrait especes » · occurrence 1</span></td></tr>
+        <tr data-sens="credit" data-ref="oui"><td>22/08/2026</td><td>VIR RECU TOUBA VIANDES</td><td><span class="amt" data-amt="150000" data-nocur></span></td><td><span class="st ok">Crédit</span></td><td>BOA-20260822-02210</td></tr>
+      </tbody>
+    </table></div>
+    <div class="cb">
+      <div class="declres">
+        <div><div class="k">Crédits affichés</div><div class="val ok"><span class="amt" data-amt="5300000" data-nocur data-tot="c"></span></div></div>
+        <div><div class="k">Débits affichés</div><div class="val"><span class="amt" data-amt="2000000" data-nocur data-tot="d"></span></div></div>
+        <div><div class="k">Lignes non affichées</div><div class="val" data-tot="n">8 · 14 au total</div></div>
+      </div>
+      <div class="note-strip"><svg><use href="#i-info"/></svg><span>Aperçu limité à 6 lignes ; les 14 lignes sont contrôlées à l’étape suivante. Le rapprochement d’une ligne bancaire avec une dépense ou un paiement n’est pas inclus en V1 (§4.9) : aucune ligne n’est associée à une dépense, un paiement ou un transfert.</span></div>
+    </div>
+  </div>
+
+  <!-- ===== Étape 3 : Contrôles ===== -->
+  <div class="card" data-step="3" hidden>
+    <div class="ch"><h3>Étape 3 — Contrôles</h3><span class="hint-r">Règles minimales Banque → Finance : import idempotent ; correction tracée (§9)</span></div>
+    <div class="tbl-scroll"><table>
+      <thead><tr><th>Contrôle</th><th>Résultat</th><th>Détail</th></tr></thead>
+      <tbody>
+        <tr><td><b>Format</b></td><td><span class="st ok"><svg><use href="#i-check"/></svg>OK</span></td><td>14 lignes lues · 14 valides · 0 rejetée · colonnes attendues présentes (compte, date de valeur, libellé, montant, sens, référence bancaire) · dates ISO 8601 · montants entiers FCFA sans décimales (§3)</td></tr>
+        <tr><td><b>Idempotence</b></td><td><span class="st ok"><svg><use href="#i-check"/></svg>OK</span></td><td>Référence bancaire = identifiant privilégié : 12 lignes · 2 lignes sans référence → empreinte logique stable construite à partir de compte, date de valeur, montant, sens, libellé normalisé et occurrence (§4.9) · 14 identifiants stables</td></tr>
+        <tr><td><b>Doublons</b></td><td><span class="st ok"><svg><use href="#i-check"/></svg>OK</span></td><td>0 doublon dans le fichier · 14 identifiants déjà connus de la Position externe (import du 27/08 08:00) → aucun double effet : un import répété ne produit qu’un seul effet (§11.2 « Pas de double comptage »)</td></tr>
+        <tr><td><b>Fraîcheur</b></td><td><span class="st ok"><svg><use href="#i-check"/></svg>OK</span></td><td>Relevé du 27/08/2026 reçu à 08:00 · source Banque BOA : OK (états minimaux OK, Manquante, Erreur, Non à jour, §3) · une donnée absente n’est jamais interprétée comme zéro (§9.1)</td></tr>
+        <tr><td><b>Unicité des références</b></td><td><span class="st ok"><svg><use href="#i-check"/></svg>OK</span></td><td>12 références présentes · 12 distinctes · contrôle rendu visible à la suite de l’incident INC-014 (rappel ci-dessous)</td></tr>
+      </tbody>
+    </table></div>
+    <div class="cb">
+      <div class="note-strip" style="margin-top:0"><svg><use href="#i-alert"/></svg><span><b>Rappel INC-014 · Majeur · En cours</b> — Import CSV BOA : référence dupliquée sur 2 lignes du 26/08 (ouvert par S. Doucouré, 27/08 08:05). Le cahier (§4.9) traite l’absence de référence par l’empreinte logique ; une référence présente mais dupliquée n’y est pas couverte : traitement à arbitrer. D’ici là, toute duplication détectée est signalée ici avant l’étape Validation.</span></div>
+      <div class="kv" style="margin-top:12px"><b>Bilan</b><span><span class="st ok"><svg><use href="#i-check"/></svg>5 contrôles · 5 OK · 0 bloquant</span> passage à l’étape Validation autorisé</span></div>
+      <div class="prog"><i style="width:100%"></i></div>
+    </div>
+  </div>
+
+  <!-- ===== Étape 4 : Validation ===== -->
+  <div data-step="4" hidden>
+    <div class="statstrip">
+      <div class="card stat">
+        <div class="lb">Position Banque BOA avant import<button class="fx" data-f="Une Position externe conserve la valeur reçue, son horodatage, la source et toute correction manuelle." data-c="Valeur reçue 45 200 000 · horodatage 27/08 08:00 · source : import CSV · correction −45 000 (VAL-116) en attente, non appliquée" data-src="Banque → Finance · CSV releve_BOA_2026-08-27.csv · fraîcheur OK 27/08 08:00 (§4.9)" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></div>
+        <div class="v amt" data-amt="45200000"></div>
+        <div class="sub2">valeur reçue · import CSV 27/08 08:00 · fraîcheur OK</div>
+      </div>
+      <div class="card stat">
+        <div class="lb">Position Banque BOA après import<button class="fx" data-f="L’import ou l’appel répété ne doit jamais produire un double effet." data-c="Valeur reçue 45 200 000 · 14 identifiants déjà connus → 0 effet · écart 0" data-src="Position externe Banque BOA · CSV releve_BOA_2026-08-27.csv · moteur de calcul financier unique (§3, §4.9)" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></div>
+        <div class="v amt" data-amt="45200000"></div>
+        <div class="sub2">identique : lignes déjà reflétées · 0 double effet</div>
+      </div>
+      <div class="card stat">
+        <div class="lb">Trésorerie disponible<button class="fx" data-f="Somme des comptes Trésorerie et Positions externes configurés comme immédiatement disponibles." data-c="Caisse générale 8 450 000 · Sous-caisse Marché 1 275 000 · Sous-caisse Livraisons 640 000 · Banque BOA 45 200 000 · Bictorys 2 890 000" data-src="Moteur financier unique (§3) · comptes CALCULÉ, IMPORT, SYNCHRONISÉ · 27/08 (§8.1)" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></div>
+        <div class="v amt" data-amt="58455000"></div>
+        <div class="sub2">12,9 % du CA de référence (<span class="amt" data-amt="452000000" data-nocur></span>) · inchangée par cet import</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="ch"><h3>Étape 4 — Validation</h3><span class="hint-r">Aucune écriture avant l’étape Import · la position affichée est la valeur reçue, jamais saisie</span></div>
+      <div class="cb">
+        <div class="eq" style="margin-top:0">Position externe = <b>valeur reçue</b> (solde de fin de relevé) · corrections manuelles conservées séparément<br>Avant : <b>45 200 000</b> · Après : <b>45 200 000</b> · Δ = <span class="ok">0</span> → lignes déjà reflétées, aucun double effet (§4.9 · §11.2 « Pas de double comptage »)<br>Correction <b>−45 000</b> « frais bancaires non importés » (VAL-116, double validation) : en attente, non appliquée · la valeur source originale est toujours conservée (§4.2)</div>
+        <div class="tl">
+          <div class="ev on"><b>Rapprochement ligne à ligne hors V1</b><small>Le rapprochement d’une ligne bancaire avec une dépense ou un paiement n’est pas inclus en V1. Il est prévu ultérieurement, d’abord en rapprochement manuel puis, éventuellement, avec propositions automatiques (§4.9, §11.1).</small></div>
+          <div class="ev"><b>Relais « Bictorys → Banque en cours » · <span class="amt" data-amt="350000" data-nocur></span> · âge 3 j &gt; seuil 2 j</b><small>Ce relevé ne contient aucun crédit de 350 000 provenant de Bictorys : le Relais reste ouvert jusqu’à confirmation à destination (§4.6) · constat manuel, aucun rapprochement automatique en V1.</small></div>
+          <div class="ev"><b>Transferts validés reflétés par la valeur reçue</b><small>26/08 Caisse générale → Banque BOA <span class="amt" data-amt="3000000" data-nocur></span> (O. Seck / S. Doucouré) · 24/08 Banque BOA → Caisse générale 800 000 (F. Sarr / O. Seck) · le montant n’est compté qu’une seule fois dans la trésorerie totale contrôlée (§4.6).</small></div>
+        </div>
+        <label class="rline"><input type="checkbox" data-confirm>J’ai vérifié la prévisualisation et les 5 contrôles ; la position après import est conforme à la valeur reçue<span class="rh">obligatoire pour passer à l’étape Import</span></label>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== Étape 5 : Import ===== -->
+  <div class="card" data-step="5" hidden>
+    <div class="ch"><h3>Étape 5 — Import</h3><span class="hint-r">Écriture auditée : acteur, date/heure, entité, action, anciennes/nouvelles valeurs (§10.2)</span></div>
+    <div class="cb">
+      <div class="kv">
+        <b>Fichier</b><span>releve_BOA_2026-08-27.csv · 14 lignes · reçu le 27/08/2026 · 08:00</span>
+        <b>Compte</b><span>Banque BOA · Position externe · IMPORT CSV · entité Mata Group</span>
+        <b>Identifiants</b><span>12 références bancaires + 2 empreintes logiques · 0 doublon · 14 identifiants déjà connus</span>
+        <b>Effet attendu</b><span>position <span class="amt" data-amt="45200000"></span> → <span class="amt" data-amt="45200000"></span> (identique) · Trésorerie disponible inchangée</span>
+        <b>Exécutant</b><span><span data-me>S. Doucouré · Super Admin</span> · sans second validateur · notification « Sources » au centre commun (Core §6.1)</span>
+      </div>
+      <div class="actionbar">
+        <button class="btn pri" data-import data-perm="finance.import.executer"><svg><use href="#i-upload"/></svg>Importer</button>
+        <button class="btn ghost" data-export data-perm="finance.export"><svg><use href="#i-dl"/></svg>Exporter le journal d’import (CSV)</button>
+        <span class="hint">Le droit d’export reste distinct du droit de consultation (Core §6.3) · exports conservés 7 jours puis régénérables</span>
+      </div>
+      <div data-result hidden>
+        <div class="kv" style="margin-top:14px"><b>Résultat</b><span><span class="st ok"><svg><use href="#i-check"/></svg>Import réussi</span> 14 lignes · 0 doublon · 0 double effet · position Banque BOA <span class="amt" data-amt="45200000"></span> inchangée</span></div>
+        <div class="tl" data-result-tl></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="actionbar" data-wiznav>
+    <button class="btn ghost" data-prev><svg><use href="#i-arr"/></svg>Précédent</button>
+    <span class="hint" data-stepinfo>Étape 1 sur 5 · Fichier</span>
+    <div class="sp"></div>
+    <button class="btn pri" data-next>Suivant<svg><use href="#i-arr"/></svg></button>
+  </div>
+  <div class="note-strip"><svg><use href="#i-info"/></svg><span>Le CSV reste le mode V1 ; une bascule ultérieure vers une API bancaire n’aura aucun impact sur le comportement fonctionnel de la Position externe ni sur les écrans qui la consomment (§4.9). Bictorys, alimenté par synchronisation automatique, n’est jamais importé ni modifié à la main. Toute écriture automatique passe en Recette avant production (AG-02 : Test / Recette).</span></div>
+</section>
+<script data-screen="fin-import">
+ERP.register('fin-import', function (root, ctx) {
+  var q = function (s, r) { return (r || root).querySelector(s); };
+  var qa = function (s, r) { return Array.prototype.slice.call((r || root).querySelectorAll(s)); };
+  var NAMES = ['Fichier', 'Prévisualisation', 'Contrôles', 'Validation', 'Import'];
+  var step = 1, reached = 1, imported = false, tbody = q('[data-prev-rows]');
+  function now() { var d = new Date(); return '27/08 · ' + ('0' + d.getHours()).slice(-2) + ':' + ('0' + d.getMinutes()).slice(-2); }
+  function me() { return ctx.profile.short + ' · ' + ctx.profile.profile; }
+  function setAmt(el, v) { el.setAttribute('data-amt', String(v)); ctx.formatAmounts(el.parentNode); }
+  /* ---- Navigation de l'assistant : Fichier → Prévisualisation → Contrôles → Validation → Import (Core §6.3) ---- */
+  function gate() {
+    var nx = q('[data-next]'), ok = step !== 4 || q('[data-confirm]').checked;
+    nx.disabled = !ok; nx.title = ok ? '' : 'Confirmation obligatoire : vérifiez la prévisualisation et les contrôles avant l’étape Import';
+  }
+  function show(n) {
+    step = n; reached = Math.max(reached, n);
+    qa('[data-step]').forEach(function (p) { p.hidden = +p.getAttribute('data-step') !== n; });
+    qa('.steps li').forEach(function (li, i) {
+      var k = i + 1, done = k < n || (imported && k === 5);
+      li.classList.toggle('done', done); li.classList.toggle('on', k === n && !done);
+      li.title = k <= reached ? 'Revenir à l’étape ' + k + ' · ' + NAMES[i] : 'Étape non encore atteinte : utilisez « Suivant »';
+    });
+    q('[data-prev]').disabled = n === 1; q('[data-next]').hidden = n === 5;
+    q('[data-stepinfo]').textContent = 'Étape ' + n + ' sur 5 · ' + NAMES[n - 1] + (n === 4 ? ' · aucune écriture avant l’étape Import' : n === 5 && !imported ? ' · permission « finance.import.executer » requise' : '');
+    gate();
+  }
+  ctx.on(q('[data-prev]'), 'click', function () { if (step > 1) show(step - 1); });
+  ctx.on(q('[data-next]'), 'click', function () {
+    if (step === 4 && !q('[data-confirm]').checked) { ctx.toast('Cochez la confirmation : la validation humaine précède toute écriture (Core §6.3)'); return; }
+    if (step < 5) show(step + 1);
+  });
+  ctx.on(q('[data-steps]'), 'click', function (e) {
+    var li = e.target.closest('li[data-go]'); if (!li) return; var k = +li.getAttribute('data-go');
+    if (k <= reached) show(k); else ctx.toast('Étape « ' + NAMES[k - 1] + ' » non encore atteinte : l’assistant se parcourt dans l’ordre Fichier → Prévisualisation → Contrôles → Validation → Import');
+  });
+  ctx.on(q('[data-confirm]'), 'change', function (e) { e.target.closest('.rline').classList.toggle('sel', e.target.checked); gate(); });
+  /* ---- Étape 1 : sélecteur de fichier simulé ---- */
+  ctx.on(q('[data-file-pick]'), 'click', function () { ctx.toast('Sélecteur de fichier simulé : releve_BOA_2026-08-27.csv conservé (14 lignes) · un fichier CSV par import, compte cible Banque BOA'); });
+  /* ---- Étape 2 : filtres de prévisualisation et totaux affichés ---- */
+  function filter(f) {
+    var c = 0, d = 0, n = 0;
+    qa('tr', tbody).forEach(function (r) {
+      var vis = f === 'tous' || (f === 'sansref' ? r.getAttribute('data-ref') === 'non' : r.getAttribute('data-sens') === f);
+      r.hidden = !vis; if (!vis) return; n++;
+      var m = +q('[data-amt]', r).getAttribute('data-amt'); if (r.getAttribute('data-sens') === 'credit') c += m; else d += m;
+    });
+    setAmt(q('[data-tot="c"]'), c); setAmt(q('[data-tot="d"]'), d);
+    q('[data-prev-count]').textContent = f === 'tous' ? '6 lignes affichées sur 14 · 8 non affichées' : n + ' ligne' + (n > 1 ? 's' : '') + ' sur 6 prévisualisées · 14 au total';
+  }
+  qa('.chip[data-filter]').forEach(function (c) { ctx.on(c, 'click', function () { qa('.chip[data-filter]').forEach(function (x) { x.classList.toggle('on', x === c); }); filter(c.getAttribute('data-filter')); }); });
+  /* ---- Étape 5 : Importer (idempotent, audité) et Exporter (droit distinct) ---- */
+  ctx.on(q('[data-import]'), 'click', function () {
+    var t = now(), who = ctx.profile.short;
+    if (imported) { ctx.toast('Import répété : 14 identifiants déjà connus, aucun double effet (§4.9) · position Banque BOA 45 200 000 inchangée · tentative auditée'); return; }
+    imported = true;
+    q('[data-result-tl]').innerHTML =
+      '<div class="ev on"><b>Import exécuté par ' + who + '</b><small>' + t + ' · releve_BOA_2026-08-27.csv · 14 lignes, 0 doublon, 0 double effet · Mata Group</small></div>' +
+      '<div class="ev on"><b>Position externe Banque BOA</b><small>valeur reçue 45 200 000 conservée · horodatage de réception 27/08 08:00 · source : import CSV · correction −45 000 (VAL-116) toujours en attente</small></div>' +
+      '<div class="ev on"><b>Audit central</b><small>Import CSV · ' + who + ' · Finance · Import relevé · Modification · Hautement sensible · Banque BOA : 14 lignes (§10.2)</small></div>' +
+      '<div class="ev"><b>Notification « Sources »</b><small>Import relevé BOA réussi : 14 lignes, 0 doublon · centre commun de notifications (Core §6.1)</small></div>';
+    q('[data-result]').hidden = false; q('[data-last-import]').textContent = t + ' · ' + who + ' · 14 lignes · 0 doublon';
+    var b = q('[data-import]'); b.innerHTML = '<svg><use href="#i-refresh"/></svg>Importer à nouveau (aucun double effet)';
+    ctx.formatAmounts(root); ctx.applyPerms(); show(5);
+    ctx.toast('Import exécuté par ' + who + ' : 14 lignes, 0 doublon, 0 double effet · Banque BOA 45 200 000 inchangée · événement audité (§10.2)');
+  });
+  ctx.on(q('[data-export]'), 'click', function () { ctx.toast('Export du journal d’import (CSV) : 14 lignes, identifiants, résultat des 5 contrôles · disponible 7 jours puis supprimé, régénérable · export audité (§9.2)'); });
+  /* ---- Profil : exécutant affiché, permissions réappliquées ---- */
+  function who() { qa('[data-me]').forEach(function (el) { el.textContent = me(); }); }
+  document.addEventListener('erp:profile', function () { who(); ctx.applyPerms(); gate(); });
+  who(); filter('tous'); show(1); ctx.formatAmounts(root); ctx.applyPerms();
+});
+</script>
