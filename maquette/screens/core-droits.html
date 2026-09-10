@@ -14,6 +14,7 @@
     #app [data-scr="core-droits"] .modal .rline{display:flex;text-transform:none;font-size:12.5px;font-weight:600;letter-spacing:0;color:var(--ink);margin-bottom:8px}
     #app [data-scr="core-droits"] .modal .rline .rh{font-weight:500;color:var(--mut);font-size:11px;margin-left:auto;text-align:right}
     #app [data-scr="core-droits"] .modal select.inp,#app [data-scr="core-droits"] .modal input.inp{font-family:var(--body);font-size:13px;margin-bottom:12px}
+    #app [data-scr="core-droits"] .fld>label{display:flex;align-items:center;gap:6px}
   </style>
   <div class="scr-head">
     <div>
@@ -64,7 +65,7 @@
         <div class="fld"><label for="core-droits-action">Action (permission)</label><select id="core-droits-action" class="inp mono" data-q="action"></select></div>
         <div class="fld"><label for="core-droits-entite">Entité</label>
           <select id="core-droits-entite" class="inp" data-q="entite"><option value="MG">Mata Group · Active</option><option value="MLC">MLC · à migrer</option><option value="MV">Mata Volaille · à migrer</option><option value="KB">Keur Bally · à activer</option><option value="MAAS-KM">MaaS Keur Massar · à activer</option><option value="MAAS-OU">MaaS Ouakam · à activer</option></select></div>
-        <div class="fld"><label for="core-droits-objet">Objet concerné (facultatif)</label>
+        <div class="fld"><label for="core-droits-objet">Objet concerné (facultatif)<button class="fx" data-f="Objet concerné = l'opération précise sur laquelle porte la question de droit : une validation financière en attente ou une demande administrative. Facultatif : laissé sur « Aucun », la question porte sur l'action en général, sans opération de rattachement" data-c="On y saisit la référence de l'objet — VAL-114 à VAL-118 pour les validations financières, DEM-030 ou DEM-031 pour les demandes. Exemple : VAL-114, transfert de 1 500 000 de la Caisse générale vers la Banque BOA initié par S. Doucouré · renseigner cet objet fait apparaître l'interdiction explicite de niveau 1 (l'initiateur ne valide jamais sa propre opération, §4.2), là où la même question sans objet répondrait « autorisé » au niveau Permission rôle" data-src="Mata Core · validations et demandes en cours au 27/08/2026 · FIXTURES §9, §10 · liste lue à l'instant" aria-label="Voir l'aide du champ Objet concerné"><svg><use href="#i-info"/></svg></button></label>
           <select id="core-droits-objet" class="inp" data-q="objet"><option value="">Aucun</option><option value="VAL-118">VAL-118 · Transfert BOA → CG · init. F. Sarr</option><option value="VAL-117">VAL-117 · Ajustement CG · init. M. Diop · 1re validation O. Seck</option><option value="VAL-116">VAL-116 · Correction BOA · init. F. Sarr</option><option value="VAL-115">VAL-115 · Désactivation Sous-caisse Abattoir · init. F. Sarr</option><option value="VAL-114">VAL-114 · Transfert CG → BOA · init. S. Doucouré</option><option value="DEM-031">DEM-031 · Création utilisateur · init. B. Fall</option><option value="DEM-030">DEM-030 · Prolongation C. Mbaye · init. F. Sarr</option></select></div>
         <button class="btn pri" data-run><svg><use href="#i-search"/></svg>Expliquer</button>
       </div>
@@ -108,7 +109,7 @@
         <div class="row-m"><span>Action</span><b data-k="act">—</b></div>
         <div class="row-m"><span>Sensibilité de l'action</span><b data-k="sens">—</b></div>
         <div class="row-m"><span>Niveau de validation</span><b data-k="val">—</b></div>
-        <div class="row-m"><span>Objet</span><b><span data-k="obj">—</span> <span class="amt" data-k-amt data-nocur hidden></span></b></div>
+        <div class="row-m"><span>Objet concerné</span><b><span data-k="obj">—</span> <span class="amt" data-k-amt data-nocur hidden></span></b></div>
         <div class="fld"><label>Qui a donné quel droit à qui, quand et sous quel profil ? (§5.4)</label><div class="fcode" data-k="audit">—</div></div>
         <div class="fld"><label>Sources lues pour ce calcul</label>
           <div class="row-m"><span>Interdictions explicites</span><b data-k="bans">table lue à l'instant</b></div>
