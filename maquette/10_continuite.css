@@ -95,7 +95,7 @@
 /* ---- Content / cards ---- */
 #app .ct{padding:20px 26px 60px;max-width:1460px;width:100%;min-width:0;margin:0 auto}
 #app .card{background:var(--card);border:1px solid var(--line);border-radius:13px;box-shadow:var(--sh)}
-#app .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+#app .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px}
 #app .kpi{padding:15px 16px 13px;position:relative;overflow:hidden}
 #app .kpi::before{content:"";position:absolute;left:0;top:12px;bottom:12px;width:3px;border-radius:0 3px 3px 0;background:var(--line-2)}
 #app .kpi.hero::before{background:var(--red)}
@@ -316,6 +316,19 @@
 /* ---------- C : Studio ---------- */
 
 /* tables horizontales scrollables (mockup, petits écrans) */
+/* Sélecteur de séries du graphique de trésorerie (R-08). */
+#app .serpick{display:flex;flex-wrap:wrap;gap:6px 16px;margin-bottom:12px}
+#app .serpick label{display:flex;align-items:center;gap:7px;font-size:12px;color:var(--ink-2);cursor:pointer}
+#app .serpick input{accent-color:var(--red);width:14px;height:14px;flex:none}
+#app .serpick .swatch{width:18px;border-top:2.5px solid var(--sc);flex:none;align-self:center}
+#app .serpick .swatch.dash{border-top-style:dashed}
+/* Carte repliable (R-09) : affichage progressif du tableau de bord. */
+#app .foldb{display:flex;align-items:center;gap:5px;margin-left:8px;padding:4px 9px;border:1px solid var(--line-2);border-radius:7px;font-size:11px;font-weight:700;color:var(--ink-2);white-space:nowrap}
+#app .foldb:hover{border-color:var(--red-line);color:var(--red)}
+#app .foldb svg{width:13px;height:13px;transition:transform .18s}
+#app .card.folded .foldb svg{transform:rotate(-90deg)}
+#app .ch .foldsum{margin-left:auto;text-align:right}
+#app .card.folded{background:var(--card)}
 /* Filtre par colonne et recherche (R-03) : barre posée par le moteur au-dessus de chaque
    tableau assez long. f-out écarte une ligne sans toucher à tr.hidden, que les écrans
    utilisent pour leurs propres puces : les deux filtres se composent. */

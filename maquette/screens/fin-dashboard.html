@@ -56,10 +56,20 @@
       <div class="v amt" data-amt="58330000"></div>
       <div class="ratio" data-ratio-of="58330000">12,9 % du CA de référence · août au 27</div>
     </div>
+    <div class="card kpi">
+      <div class="lb">Trésorerie nette fournisseur<button class="fx" data-f="Trésorerie totale contrôlée − Dettes fournisseurs. Le transit est inclus car il est considéré comme reçu avant le paiement fournisseur." data-c="61 305 000 − 23 250 000 · avances fournisseurs 350 000 affichées à part, hors calcul" data-src="Moteur financier · §8.1, §8.2" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></div>
+      <div class="v amt" data-amt="38055000"></div>
+      <div class="ratio" data-ratio-of="38055000">8,4 % du CA de référence · ce qui resterait si tous les fournisseurs étaient payés</div>
+    </div>
   </div>
   <div class="card" data-blk>
-    <div class="ch"><h3>Trésorerie totale contrôlée — 30 derniers jours</h3><span class="hint-r">En millions de FCFA · même moteur que l’écran Visualisation</span><button class="btn ghost" data-goto="fin-visualisation"><svg><use href="#i-chart"/></svg>Superposer</button></div>
-    <div class="cb"><div class="linechart" data-series="treso" style="height:220px"></div></div>
+    <div class="ch"><h3>Évolution de la trésorerie — 30 derniers jours</h3><span class="hint-r">En millions de FCFA · cocher une ou plusieurs séries pour les comparer sur le même graphique · même moteur financier que Visualisation</span></div>
+    <div class="cb">
+      <div class="serpick">
+        <label><input type="checkbox" data-series-toggle="dispo" checked> Trésorerie disponible</label><label><input type="checkbox" data-series-toggle="transit"> Trésorerie en transit</label><label><input type="checkbox" data-series-toggle="treso" checked> Trésorerie totale contrôlée</label><label><input type="checkbox" data-series-toggle="netfou"> Trésorerie nette fournisseur</label><label><input type="checkbox" data-series-toggle="pfn"> Position financière nette</label>
+      </div>
+      <div class="multichart" data-series="dispo,treso" style="height:250px"></div>
+    </div>
   </div>
   <div class="grid2" data-view="detail">
     <div class="card">
@@ -93,7 +103,7 @@
   </div>
 
   <!-- 2. FOURNISSEURS (§5.6, §8.1) -->
-  <div class="card" data-view="ops" data-blk>
+  <div class="card" data-fold="closed" data-fold-sum="dettes, avances, plafonds d'encours et trésorerie nette" data-view="ops" data-blk>
     <div class="ch"><h3>Fournisseurs</h3><span class="hint-r">§5.6 : échéances dépassées en priorité, puis prochaine date de paiement due · paiements affectés aux échéances les plus proches (§5.3)</span><button class="btn ghost" data-goto="fin-fournisseurs"><svg><use href="#i-arr"/></svg>Ouvrir</button></div>
     <div class="cb">
       <div class="statstrip">
@@ -104,9 +114,8 @@
       <div class="statstrip">
         <div class="card stat"><div class="lb">Dettes fournisseurs<button class="fx" data-f="Σ max(− Position fournisseur ; 0)." data-c="AGNEAUX 12 400 000 · MATA VOLAILLE CHAIR 4 300 000 · Bétail Thiès 4 600 000 · MATA VOLAILLE ŒUFS 1 150 000 · Aliments Sénégal 800 000" data-src="Comptes Fournisseur CALCULÉ · Position fournisseur = Position précédente + Paiements/avances − Dépenses ± Ajustements validés (§4.3)" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></div><div class="v amt" data-amt="23250000"></div><div class="sub2" data-ratio-of="23250000">5,1 % du CA de référence · août au 27</div></div>
         <div class="card stat"><div class="lb">Avances fournisseurs<button class="fx" data-f="Σ max(Position fournisseur ; 0)." data-c="Abattoirs Dakar +350 000" data-src="Comptes Fournisseur CALCULÉ · une avance est consommée par les achats futurs avant toute dette (§4.3)" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></div><div class="v amt" data-amt="350000"></div><div class="sub2">Abattoirs Dakar · réconciliation en attente (frais d’abattage <span class="amt" data-amt="150000" data-nocur></span>)</div></div>
-        <div class="card stat"><div class="lb">Trésorerie après fournisseurs<button class="fx" data-f="Trésorerie totale contrôlée − Dettes fournisseurs. Le transit est inclus car il est considéré comme reçu avant le paiement fournisseur." data-c="61 305 000 − 23 250 000" data-src="Moteur financier · §8.1, §8.2" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></div><div class="v amt" data-amt="38055000"></div><div class="sub2" data-ratio-of="38055000">8,4 % du CA de référence · août au 27</div></div>
       </div>
-      <div class="card">
+      <div class="card" data-fold="closed" data-fold-sum="échéances à venir et échéances dépassées">
         <div class="ch"><h3>Échéancier</h3><div class="chips" data-ech-chips><button class="chip on" data-filter="tous">Toutes</button><button class="chip" data-filter="dep">Dépassées</button><button class="chip" data-filter="proch">Prochaine</button><button class="chip" data-filter="avenir">À venir</button></div><span class="hint-r" data-ech-count>8 échéances · total <span class="amt" data-amt="23250000" data-nocur></span> = Dettes fournisseurs</span></div>
         <div class="tbl-scroll"><table>
           <thead><tr><th>État</th><th>Fournisseur</th><th>Dépense / lot</th><th>Montant restant</th><th>Date souhaitée au plus tard</th><th>Compte de paiement de référence</th></tr></thead>
@@ -128,7 +137,7 @@
   </div>
 
   <!-- 3. CLIENTS (§6, §8.1) -->
-  <div class="card" data-view="detail" data-blk>
+  <div class="card" data-fold="closed" data-fold-sum="créances, avances, principaux débiteurs et encaissements collectés" data-view="detail" data-blk>
     <div class="ch"><h3>Clients</h3><span class="hint-r">Position client = Position précédente + Ventes Mata − Encaissements affectés au compte client ± Ajustements validés (§4.3) · positif = le client doit à Mata</span><button class="btn ghost" data-goto="fin-creances"><svg><use href="#i-arr"/></svg>Ouvrir</button></div>
     <div class="cb">
       <div class="statstrip four">
@@ -160,7 +169,7 @@
   </div>
 
   <!-- 4. ACTIVITÉ (§6.4, §5.1) -->
-  <div class="card" data-view="detail" data-blk>
+  <div class="card" data-fold="closed" data-fold-sum="ventes, dépenses et mouvements de la journée" data-view="detail" data-blk>
     <div class="ch"><h3>Activité du jour</h3><span class="hint-r">Jeudi 27 août 2026 · date métier · le CA n’est jamais saisi dans Mata Finance</span><button class="btn ghost" data-goto="fin-depenses"><svg><use href="#i-arr"/></svg>Dépenses</button></div>
     <div class="cb">
       <div class="statstrip">
@@ -174,7 +183,7 @@
   </div>
 
   <!-- 5. CONTRÔLES (§10.4) -->
-  <div class="card" data-view="ctrl" data-blk>
+  <div class="card" data-fold="closed" data-fold-sum="signaux de qualité financière et sources" data-view="ctrl" data-blk>
     <div class="ch"><h3>Contrôles — signaux de qualité financière</h3><span class="hint-r">§10.4 · les mêmes signaux alimentent les notifications</span><button class="btn ghost" data-goto="core-notifications"><svg><use href="#i-bell"/></svg>Notifications</button></div>
     <div class="cb">
       <div class="statstrip four">
@@ -197,7 +206,7 @@
   </div>
 
   <!-- 6. P&L (§8.3, §8.4) -->
-  <div class="card" data-blk>
+  <div class="card" data-fold="closed" data-fold-sum="trois variantes du P&L et décomposition" data-blk>
     <div class="ch"><h3>P&amp;L de gestion — cumul du 1er au 27 août 2026</h3><span class="hint-r">Indicateurs de gestion, pas un compte de résultat comptable réglementaire (§8.3) · trois variantes côte à côte, montant puis ratio</span><button class="btn ghost" data-goto="fin-pnl"><svg><use href="#i-chart"/></svg>Détail</button></div>
     <div class="cb">
       <div class="statstrip">

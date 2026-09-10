@@ -139,7 +139,7 @@ svg{display:block;flex:none}
 /* ---- Content / cards ---- */
 #app .ct{padding:20px 26px 60px;max-width:1460px;width:100%;min-width:0;margin:0 auto}
 #app .card{background:var(--card);border:1px solid var(--line);border-radius:13px;box-shadow:var(--sh)}
-#app .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+#app .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px}
 #app .kpi{padding:15px 16px 13px;position:relative;overflow:hidden}
 #app .kpi::before{content:"";position:absolute;left:0;top:12px;bottom:12px;width:3px;border-radius:0 3px 3px 0;background:var(--line-2)}
 #app .kpi.hero::before{background:var(--red)}
@@ -360,6 +360,19 @@ svg{display:block;flex:none}
 /* ---------- C : Studio ---------- */
 
 /* tables horizontales scrollables (mockup, petits écrans) */
+/* Sélecteur de séries du graphique de trésorerie (R-08). */
+#app .serpick{display:flex;flex-wrap:wrap;gap:6px 16px;margin-bottom:12px}
+#app .serpick label{display:flex;align-items:center;gap:7px;font-size:12px;color:var(--ink-2);cursor:pointer}
+#app .serpick input{accent-color:var(--red);width:14px;height:14px;flex:none}
+#app .serpick .swatch{width:18px;border-top:2.5px solid var(--sc);flex:none;align-self:center}
+#app .serpick .swatch.dash{border-top-style:dashed}
+/* Carte repliable (R-09) : affichage progressif du tableau de bord. */
+#app .foldb{display:flex;align-items:center;gap:5px;margin-left:8px;padding:4px 9px;border:1px solid var(--line-2);border-radius:7px;font-size:11px;font-weight:700;color:var(--ink-2);white-space:nowrap}
+#app .foldb:hover{border-color:var(--red-line);color:var(--red)}
+#app .foldb svg{width:13px;height:13px;transition:transform .18s}
+#app .card.folded .foldb svg{transform:rotate(-90deg)}
+#app .ch .foldsum{margin-left:auto;text-align:right}
+#app .card.folded{background:var(--card)}
 /* Filtre par colonne et recherche (R-03) : barre posée par le moteur au-dessus de chaque
    tableau assez long. f-out écarte une ligne sans toucher à tr.hidden, que les écrans
    utilisent pour leurs propres puces : les deux filtres se composent. */
@@ -864,10 +877,20 @@ svg{display:block;flex:none}
       <div class="v amt" data-amt="58330000"></div>
       <div class="ratio" data-ratio-of="58330000">12,9 % du CA de référence · août au 27</div>
     </div>
+    <div class="card kpi">
+      <div class="lb">Trésorerie nette fournisseur<button class="fx" data-f="Trésorerie totale contrôlée − Dettes fournisseurs. Le transit est inclus car il est considéré comme reçu avant le paiement fournisseur." data-c="61 305 000 − 23 250 000 · avances fournisseurs 350 000 affichées à part, hors calcul" data-src="Moteur financier · §8.1, §8.2" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></div>
+      <div class="v amt" data-amt="38055000"></div>
+      <div class="ratio" data-ratio-of="38055000">8,4 % du CA de référence · ce qui resterait si tous les fournisseurs étaient payés</div>
+    </div>
   </div>
   <div class="card" data-blk>
-    <div class="ch"><h3>Trésorerie totale contrôlée — 30 derniers jours</h3><span class="hint-r">En millions de FCFA · même moteur que l’écran Visualisation</span><button class="btn ghost" data-goto="fin-visualisation"><svg><use href="#i-chart"/></svg>Superposer</button></div>
-    <div class="cb"><div class="linechart" data-series="treso" style="height:220px"></div></div>
+    <div class="ch"><h3>Évolution de la trésorerie — 30 derniers jours</h3><span class="hint-r">En millions de FCFA · cocher une ou plusieurs séries pour les comparer sur le même graphique · même moteur financier que Visualisation</span></div>
+    <div class="cb">
+      <div class="serpick">
+        <label><input type="checkbox" data-series-toggle="dispo" checked> Trésorerie disponible</label><label><input type="checkbox" data-series-toggle="transit"> Trésorerie en transit</label><label><input type="checkbox" data-series-toggle="treso" checked> Trésorerie totale contrôlée</label><label><input type="checkbox" data-series-toggle="netfou"> Trésorerie nette fournisseur</label><label><input type="checkbox" data-series-toggle="pfn"> Position financière nette</label>
+      </div>
+      <div class="multichart" data-series="dispo,treso" style="height:250px"></div>
+    </div>
   </div>
   <div class="grid2" data-view="detail">
     <div class="card">
@@ -901,7 +924,7 @@ svg{display:block;flex:none}
   </div>
 
   <!-- 2. FOURNISSEURS (§5.6, §8.1) -->
-  <div class="card" data-view="ops" data-blk>
+  <div class="card" data-fold="closed" data-fold-sum="dettes, avances, plafonds d'encours et trésorerie nette" data-view="ops" data-blk>
     <div class="ch"><h3>Fournisseurs</h3><span class="hint-r">§5.6 : échéances dépassées en priorité, puis prochaine date de paiement due · paiements affectés aux échéances les plus proches (§5.3)</span><button class="btn ghost" data-goto="fin-fournisseurs"><svg><use href="#i-arr"/></svg>Ouvrir</button></div>
     <div class="cb">
       <div class="statstrip">
@@ -912,9 +935,8 @@ svg{display:block;flex:none}
       <div class="statstrip">
         <div class="card stat"><div class="lb">Dettes fournisseurs<button class="fx" data-f="Σ max(− Position fournisseur ; 0)." data-c="AGNEAUX 12 400 000 · MATA VOLAILLE CHAIR 4 300 000 · Bétail Thiès 4 600 000 · MATA VOLAILLE ŒUFS 1 150 000 · Aliments Sénégal 800 000" data-src="Comptes Fournisseur CALCULÉ · Position fournisseur = Position précédente + Paiements/avances − Dépenses ± Ajustements validés (§4.3)" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></div><div class="v amt" data-amt="23250000"></div><div class="sub2" data-ratio-of="23250000">5,1 % du CA de référence · août au 27</div></div>
         <div class="card stat"><div class="lb">Avances fournisseurs<button class="fx" data-f="Σ max(Position fournisseur ; 0)." data-c="Abattoirs Dakar +350 000" data-src="Comptes Fournisseur CALCULÉ · une avance est consommée par les achats futurs avant toute dette (§4.3)" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></div><div class="v amt" data-amt="350000"></div><div class="sub2">Abattoirs Dakar · réconciliation en attente (frais d’abattage <span class="amt" data-amt="150000" data-nocur></span>)</div></div>
-        <div class="card stat"><div class="lb">Trésorerie après fournisseurs<button class="fx" data-f="Trésorerie totale contrôlée − Dettes fournisseurs. Le transit est inclus car il est considéré comme reçu avant le paiement fournisseur." data-c="61 305 000 − 23 250 000" data-src="Moteur financier · §8.1, §8.2" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></div><div class="v amt" data-amt="38055000"></div><div class="sub2" data-ratio-of="38055000">8,4 % du CA de référence · août au 27</div></div>
       </div>
-      <div class="card">
+      <div class="card" data-fold="closed" data-fold-sum="échéances à venir et échéances dépassées">
         <div class="ch"><h3>Échéancier</h3><div class="chips" data-ech-chips><button class="chip on" data-filter="tous">Toutes</button><button class="chip" data-filter="dep">Dépassées</button><button class="chip" data-filter="proch">Prochaine</button><button class="chip" data-filter="avenir">À venir</button></div><span class="hint-r" data-ech-count>8 échéances · total <span class="amt" data-amt="23250000" data-nocur></span> = Dettes fournisseurs</span></div>
         <div class="tbl-scroll"><table>
           <thead><tr><th>État</th><th>Fournisseur</th><th>Dépense / lot</th><th>Montant restant</th><th>Date souhaitée au plus tard</th><th>Compte de paiement de référence</th></tr></thead>
@@ -936,7 +958,7 @@ svg{display:block;flex:none}
   </div>
 
   <!-- 3. CLIENTS (§6, §8.1) -->
-  <div class="card" data-view="detail" data-blk>
+  <div class="card" data-fold="closed" data-fold-sum="créances, avances, principaux débiteurs et encaissements collectés" data-view="detail" data-blk>
     <div class="ch"><h3>Clients</h3><span class="hint-r">Position client = Position précédente + Ventes Mata − Encaissements affectés au compte client ± Ajustements validés (§4.3) · positif = le client doit à Mata</span><button class="btn ghost" data-goto="fin-creances"><svg><use href="#i-arr"/></svg>Ouvrir</button></div>
     <div class="cb">
       <div class="statstrip four">
@@ -968,7 +990,7 @@ svg{display:block;flex:none}
   </div>
 
   <!-- 4. ACTIVITÉ (§6.4, §5.1) -->
-  <div class="card" data-view="detail" data-blk>
+  <div class="card" data-fold="closed" data-fold-sum="ventes, dépenses et mouvements de la journée" data-view="detail" data-blk>
     <div class="ch"><h3>Activité du jour</h3><span class="hint-r">Jeudi 27 août 2026 · date métier · le CA n’est jamais saisi dans Mata Finance</span><button class="btn ghost" data-goto="fin-depenses"><svg><use href="#i-arr"/></svg>Dépenses</button></div>
     <div class="cb">
       <div class="statstrip">
@@ -982,7 +1004,7 @@ svg{display:block;flex:none}
   </div>
 
   <!-- 5. CONTRÔLES (§10.4) -->
-  <div class="card" data-view="ctrl" data-blk>
+  <div class="card" data-fold="closed" data-fold-sum="signaux de qualité financière et sources" data-view="ctrl" data-blk>
     <div class="ch"><h3>Contrôles — signaux de qualité financière</h3><span class="hint-r">§10.4 · les mêmes signaux alimentent les notifications</span><button class="btn ghost" data-goto="core-notifications"><svg><use href="#i-bell"/></svg>Notifications</button></div>
     <div class="cb">
       <div class="statstrip four">
@@ -1005,7 +1027,7 @@ svg{display:block;flex:none}
   </div>
 
   <!-- 6. P&L (§8.3, §8.4) -->
-  <div class="card" data-blk>
+  <div class="card" data-fold="closed" data-fold-sum="trois variantes du P&L et décomposition" data-blk>
     <div class="ch"><h3>P&amp;L de gestion — cumul du 1er au 27 août 2026</h3><span class="hint-r">Indicateurs de gestion, pas un compte de résultat comptable réglementaire (§8.3) · trois variantes côte à côte, montant puis ratio</span><button class="btn ghost" data-goto="fin-pnl"><svg><use href="#i-chart"/></svg>Détail</button></div>
     <div class="cb">
       <div class="statstrip">
@@ -7179,35 +7201,19 @@ ERP.register('core-audit', function (root, ctx) {
 <section class="scr" data-scr="core-agents" data-module="core" data-perm="core.agents.view" data-sens="s" hidden>
   <style data-screen="core-agents">
     #app [data-scr="core-agents"] .agents{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px;margin-top:14px}
-    #app [data-scr="core-agents"] .agent{min-width:0}
-    #app [data-scr="core-agents"] .agent .ch{flex-wrap:wrap}
-    #app [data-scr="core-agents"] .agent .ch h3{display:flex;align-items:center;gap:7px;flex:1;min-width:0}
-    #app [data-scr="core-agents"] .agent .ch h3 svg{width:15px;height:15px;color:var(--red);flex:none}
-    #app [data-scr="core-agents"] .agtags{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
-    #app [data-scr="core-agents"] .kv{display:flex;justify-content:space-between;gap:12px;font-size:12px;padding:5px 0;border-bottom:1px dashed var(--line)}
-    #app [data-scr="core-agents"] .kv span{color:var(--mut);flex:none}
-    #app [data-scr="core-agents"] .kv b{text-align:right;font-weight:600;min-width:0;line-height:1.4}
+    #app [data-scr="core-agents"] .agent{min-width:0} #app [data-scr="core-agents"] .agent .ch{flex-wrap:wrap} #app [data-scr="core-agents"] .agent .ch h3{display:flex;align-items:center;gap:7px;flex:1;min-width:0}
+    #app [data-scr="core-agents"] .agent .ch h3 svg{width:15px;height:15px;color:var(--red);flex:none} #app [data-scr="core-agents"] .agtags{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+    #app [data-scr="core-agents"] .kv{display:flex;justify-content:space-between;gap:12px;font-size:12px;padding:5px 0;border-bottom:1px dashed var(--line)} #app [data-scr="core-agents"] .kv span{color:var(--mut);flex:none} #app [data-scr="core-agents"] .kv b{text-align:right;font-weight:600;min-width:0;line-height:1.4}
     #app [data-scr="core-agents"] .ovr{display:flex;gap:9px;align-items:flex-start;flex-wrap:wrap;background:var(--warn-bg);border:1px solid color-mix(in srgb,var(--warn) 35%,transparent);border-radius:10px;padding:10px 12px;font-size:11.5px;line-height:1.5;margin-bottom:10px;color:var(--ink-2)}
-    #app [data-scr="core-agents"] .ovr svg{width:14px;height:14px;color:var(--warn);flex:none;margin-top:2px}
-    #app [data-scr="core-agents"] .ovr>div{flex:1;min-width:180px}
-    #app [data-scr="core-agents"] .ovr b{color:var(--ink)}
-    #app [data-scr="core-agents"] .bud{margin-top:12px;padding:12px;border:1px solid var(--line-2);border-radius:10px;background:var(--card-2)}
-    #app [data-scr="core-agents"] .bud .lb{font-size:10.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-2);display:flex;align-items:center;gap:6px}
-    #app [data-scr="core-agents"] .budrow{display:flex;gap:8px;margin:8px 0;align-items:center}
-    #app [data-scr="core-agents"] .budrow .inp{flex:1;min-width:0}
-    #app [data-scr="core-agents"] .jrow{display:flex;justify-content:space-between;gap:8px;font-size:11.5px;color:var(--ink-2);margin-bottom:6px}
-    #app [data-scr="core-agents"] .jrow b{font-family:'Fira Code',monospace;color:var(--ink)}
-    #app [data-scr="core-agents"] .bud .hint{display:block;margin-top:6px;line-height:1.45}
-    #app [data-scr="core-agents"] .agacts{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
-    #app [data-scr="core-agents"] .rules{list-style:none;margin:0;padding:0}
-    #app [data-scr="core-agents"] .rules li{font-size:12px;line-height:1.5;padding:7px 0;border-bottom:1px dashed var(--line);display:flex;gap:9px;color:var(--ink-2)}
-    #app [data-scr="core-agents"] .rules li svg{width:13px;height:13px;flex:none;color:var(--red);margin-top:3px}
-    #app [data-scr="core-agents"] .rules li:last-child{border-bottom:none}
-    #app [data-scr="core-agents"] .rules b{color:var(--ink)}
-    #app [data-scr="core-agents"] .modal .fld{margin-bottom:10px}
-    #app [data-scr="core-agents"] .modal .note-strip{margin-top:10px}
-    #app [data-scr="core-agents"] .drawer .kv b{max-width:62%}
-    #app [data-scr="core-agents"] .drawer h4{font-family:var(--head);font-size:11.5px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-2);margin:16px 0 6px}
+    #app [data-scr="core-agents"] .ovr svg{width:14px;height:14px;color:var(--warn);flex:none;margin-top:2px} #app [data-scr="core-agents"] .ovr>div{flex:1;min-width:180px} #app [data-scr="core-agents"] .ovr b{color:var(--ink)}
+    #app [data-scr="core-agents"] .bud{margin-top:12px;padding:12px;border:1px solid var(--line-2);border-radius:10px;background:var(--card-2)} #app [data-scr="core-agents"] .bud .lb{font-size:10.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-2);display:flex;align-items:center;gap:6px}
+    #app [data-scr="core-agents"] .budrow{display:flex;gap:8px;margin:8px 0;align-items:center} #app [data-scr="core-agents"] .budrow .inp{flex:1;min-width:0} #app [data-scr="core-agents"] .bud .hint{display:block;margin-top:6px;line-height:1.45}
+    #app [data-scr="core-agents"] .jrow{display:flex;justify-content:space-between;gap:8px;font-size:11.5px;color:var(--ink-2);margin-bottom:6px} #app [data-scr="core-agents"] .jrow b{font-family:'Fira Code',monospace;color:var(--ink)}
+    #app [data-scr="core-agents"] .agacts{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px} #app [data-scr="core-agents"] .rules{list-style:none;margin:0;padding:0} #app [data-scr="core-agents"] .rules li{font-size:12px;line-height:1.5;padding:7px 0;border-bottom:1px dashed var(--line);display:flex;gap:9px;color:var(--ink-2)}
+    #app [data-scr="core-agents"] .rules li svg{width:13px;height:13px;flex:none;color:var(--red);margin-top:3px} #app [data-scr="core-agents"] .rules li:last-child{border-bottom:none} #app [data-scr="core-agents"] .rules b{color:var(--ink)}
+    #app [data-scr="core-agents"] .modal .fld{margin-bottom:10px} #app [data-scr="core-agents"] .modal .note-strip{margin-top:10px} #app [data-scr="core-agents"] .modal textarea.inp{min-height:72px;resize:vertical;font-family:var(--body)}
+    #app [data-scr="core-agents"] .modal .maas-list{margin-bottom:10px} #app [data-scr="core-agents"] .modal .maas-list .mrow span+span{font-weight:700;color:var(--ink);flex:none;padding-left:14px;text-align:right} #app [data-scr="core-agents"] .modal .ovr{margin:10px 0 0}
+    #app [data-scr="core-agents"] .drawer .kv b{max-width:62%} #app [data-scr="core-agents"] .drawer h4{font-family:var(--head);font-size:11.5px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-2);margin:16px 0 6px}
   </style>
   <div class="scr-head">
     <div>
@@ -7217,31 +7223,19 @@ ERP.register('core-audit', function (root, ctx) {
     <div class="scr-meta">
       <button class="linkish" data-open="help-core-agents"><svg><use href="#i-info"/></svg>Comment ça marche ?</button>
       <span class="sens s"><svg><use href="#i-shield"/></svg>Sensible</span>
-      <span class="hint">Sensible : modifications auditées, export contrôlé (§5.3) · aucune validation : budget, override et activation enregistrés sous le profil actif et tracés dans l'Audit central (§5.4) · Test/Recette obligatoire avant Production pour tout agent ayant des droits d'écriture</span>
+      <span class="hint">Sensible : modifications auditées, export contrôlé (§5.3) · budget, override et activation enregistrés sous le profil actif et tracés dans l'Audit central (§5.4) · création par parcours guidé : le modèle est proposé par la grille des Paramètres, le remplacer demande deux validations distinctes (périmètre V1) · Test/Recette obligatoire avant Production pour tout agent ayant des droits d'écriture</span>
     </div>
   </div>
 
   <div class="statstrip four">
-    <div class="card stat">
-      <div class="lb">Agents au registre</div>
-      <div class="v" data-k="n-total">3</div>
-      <div class="sub2" data-k="n-sub">2 actifs · 1 inactif · Conseiller 2 · Exécutant 1</div>
-    </div>
-    <div class="card stat">
-      <div class="lb">Budget mensuel plafond · Σ<button class="fx" data-k="fx-bud" data-f="Chaque agent porte un budget mensuel plafond, configurable depuis un écran d'administration dédié ; au-delà du plafond, l'agent cesse de répondre jusqu'au mois suivant ou jusqu'à relèvement explicite par un utilisateur autorisé." data-c="AG-01 150 000 · AG-02 80 000 · AG-03 40 000 · Σ = 270 000" data-src="Mata Core · registre des agents (§7.2) · plafonds en vigueur au 27/08/2026" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></div>
-      <div class="v amt" data-amt="270000" data-k="bud-total"></div>
-      <div class="sub2">FCFA par mois · éditable agent par agent (core.agents.budget)</div>
-    </div>
-    <div class="card stat">
-      <div class="lb">Consommé en août<button class="fx" data-k="fx-used" data-f="Un budget mensuel plafond, configurable par agent depuis Mata Core, ne peut être dépassé ; au-delà du plafond, l'agent cesse de répondre jusqu'au mois suivant ou jusqu'à relèvement explicite du plafond par un utilisateur autorisé." data-c="AG-01 93 000 (62 %) · AG-02 12 400 (16 %) · AG-03 0 (0 %) · Σ = 105 400 / 270 000 = 39 %" data-src="Mata Core · compteur de consommation par agent au 27/08 · Finance §9.3 · règle d'alerte « Budget agent IA > 80 % » → Super Admin, Informative" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></div>
-      <div class="v amt" data-amt="105400" data-k="used-total"></div>
-      <div class="sub2"><span data-k="used-pct">39 %</span> du plafond cumulé · alerte Super Admin au-delà de 80 % par agent</div>
-    </div>
-    <div class="card stat">
-      <div class="lb">Overrides de modèle actifs</div>
-      <div class="v" data-k="n-ov">1</div>
-      <div class="sub2" data-k="ov-sub">AG-01 · modèle avancé · expire 27/08 · 18:00 · retour automatique au routage par défaut</div>
-    </div>
+    <div class="card stat"><div class="lb">Agents au registre</div>
+      <div class="v" data-k="n-total">3</div><div class="sub2" data-k="n-sub">2 actifs · 1 inactif · Conseiller 2 · Exécutant 1</div></div>
+    <div class="card stat"><div class="lb">Budget mensuel plafond · Σ<button class="fx" data-k="fx-bud" data-f="Chaque agent porte un budget mensuel plafond, configurable depuis un écran d'administration dédié ; au-delà du plafond, l'agent cesse de répondre jusqu'au mois suivant ou jusqu'à relèvement explicite par un utilisateur autorisé." data-c="AG-01 150 000 · AG-02 80 000 · AG-03 40 000 · Σ = 270 000" data-src="Mata Core · registre des agents (§7.2) · plafonds en vigueur au 27/08/2026" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></div>
+      <div class="v amt" data-amt="270000" data-k="bud-total"></div><div class="sub2">FCFA par mois · éditable agent par agent (core.agents.budget)</div></div>
+    <div class="card stat"><div class="lb">Consommé en août<button class="fx" data-k="fx-used" data-f="Un budget mensuel plafond, configurable par agent depuis Mata Core, ne peut être dépassé ; au-delà du plafond, l'agent cesse de répondre jusqu'au mois suivant ou jusqu'à relèvement explicite du plafond par un utilisateur autorisé." data-c="AG-01 93 000 (62 %) · AG-02 12 400 (16 %) · AG-03 0 (0 %) · Σ = 105 400 / 270 000 = 39 %" data-src="Mata Core · compteur de consommation par agent au 27/08 · Finance §9.3 · règle d'alerte « Budget agent IA > 80 % » → Super Admin, Informative" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></div>
+      <div class="v amt" data-amt="105400" data-k="used-total"></div><div class="sub2"><span data-k="used-pct">39 %</span> du plafond cumulé · alerte Super Admin au-delà de 80 % par agent</div></div>
+    <div class="card stat"><div class="lb">Overrides de modèle actifs</div>
+      <div class="v" data-k="n-ov">1</div><div class="sub2" data-k="ov-sub">AG-01 · modèle avancé · expire 27/08 · 18:00 · retour automatique au routage par défaut</div></div>
   </div>
 
   <div class="actionbar">
@@ -7262,7 +7256,7 @@ ERP.register('core-audit', function (root, ctx) {
       <div class="ch"><h3><svg><use href="#i-bot"/></svg>AG-01 · Conseiller financier Mata</h3><span class="st ok" data-k="state"><svg><use href="#i-check"/></svg>Production · lecture seule</span></div>
       <div class="cb">
         <div class="agtags"><span class="tag lock"><svg><use href="#i-eye"/></svg>Conseiller</span><span class="tag api"><svg><use href="#i-lock"/></svg>Lecture API</span><span class="tag lock"><svg><use href="#i-sliders"/></svg>Routage économique</span></div>
-        <div class="ovr" data-k="ovr"></div>
+        <div class="ovr" data-k="ovr"></div><div class="ovr" data-k="pend" hidden></div>
         <div class="kv"><span>Autonomie</span><b>Conseil</b></div>
         <div class="kv"><span>Modules</span><b>Mata Finance (lecture)</b></div>
         <div class="kv"><span>Modèle par défaut</span><b>Économique</b></div>
@@ -7282,7 +7276,7 @@ ERP.register('core-audit', function (root, ctx) {
       <div class="ch"><h3><svg><use href="#i-bot"/></svg>AG-02 · Assistant réconciliation</h3><span class="st warn" data-k="state"><svg><use href="#i-alert"/></svg>Test / Recette</span></div>
       <div class="cb">
         <div class="agtags"><span class="tag lock"><svg><use href="#i-key"/></svg>Exécutant</span><span class="tag lock"><svg><use href="#i-alert"/></svg>Droits d'écriture</span><span class="tag lock"><svg><use href="#i-sliders"/></svg>Routage économique</span></div>
-        <div class="ovr" data-k="ovr"></div>
+        <div class="ovr" data-k="ovr"></div><div class="ovr" data-k="pend" hidden></div>
         <div class="kv"><span>Autonomie</span><b>Préparation + confirmation humaine</b></div>
         <div class="kv"><span>Modules</span><b>Mata Finance (réconciliation)</b></div>
         <div class="kv"><span>Modèle par défaut</span><b>Économique</b></div>
@@ -7303,7 +7297,7 @@ ERP.register('core-audit', function (root, ctx) {
       <div class="ch"><h3><svg><use href="#i-bot"/></svg>AG-03 · Assistant Demandes</h3><span class="st mut" data-k="state"><svg><use href="#i-eyeoff"/></svg>Inactif</span></div>
       <div class="cb">
         <div class="agtags"><span class="tag lock"><svg><use href="#i-eye"/></svg>Conseiller</span><span class="tag lock"><svg><use href="#i-inbox"/></svg>Mata Core</span><span class="tag lock"><svg><use href="#i-sliders"/></svg>Routage économique</span></div>
-        <div class="ovr" data-k="ovr"></div>
+        <div class="ovr" data-k="ovr"></div><div class="ovr" data-k="pend" hidden></div>
         <div class="kv"><span>Autonomie</span><b>Conseil</b></div>
         <div class="kv"><span>Modules</span><b>Mata Core (Demandes)</b></div>
         <div class="kv"><span>Modèle par défaut</span><b>Économique</b></div>
@@ -7332,6 +7326,7 @@ ERP.register('core-audit', function (root, ctx) {
           <li><svg><use href="#i-clock"/></svg><span><b>Override temporaire.</b> Un modèle plus coûteux peut être choisi pour une requête ou une période limitée ; l'override est audité, expire automatiquement et revient au routage par défaut ; le plafond reste applicable sauf relèvement explicite.</span></li>
           <li><svg><use href="#i-layers"/></svg><span><b>Sobriété V1.</b> Aucun agent n'exploite de base vectorielle dédiée, ni d'indexation sémantique globale, ni de conservation massive des conversations pour créer une mémoire implicite ; seules les traces nécessaires à l'audit et les données explicitement utiles sont conservées (Technique §10).</span></li>
           <li><svg><use href="#i-scale"/></svg><span><b>Principe : si une règle déterministe suffit, ne pas utiliser l'IA.</b> Le routage privilégie par défaut le modèle répondant au besoin au coût le plus faible.</span></li>
+          <li><svg><use href="#i-sliders"/></svg><span><b>Création guidée, modèle proposé, remplacement à deux validations.</b> Décision de périmètre V1, hors cahier : l'agent n'est plus configuré librement. Le besoin est décrit en français, rapproché de la grille « types de tâches → modèles » tenue dans les Paramètres, et le modèle le moins cher capable de la tâche est proposé ; le remplacer demande deux détenteurs de core.agents.budget, distincts de l'initiateur et distincts entre eux, l'agent restant inactif jusqu'à la seconde validation.</span></li>
           <li><svg><use href="#i-alert"/></svg><span><b>Écriture encadrée.</b> Un agent ayant des droits d'écriture doit passer en Test/Recette avant Production ; le Conseiller financier ne modifie pas directement les écritures financières et ne dispose pas d'une console SQL utilisateur (Finance §9.3).</span></li>
         </ul>
         <div class="note-strip"><svg><use href="#i-info"/></svg><span><b>Compromis assumé</b> (Technique §10) : sans base vectorielle ni indexation sémantique, un agent ne peut pas retrouver rapidement des situations passées similaires par recherche floue ; il raisonne sur les données structurées interrogées à la demande. Acceptable au volume actuel ; à revisiter explicitement, agent par agent, si l'usage évolue.</span></div>
@@ -7361,20 +7356,32 @@ ERP.register('core-audit', function (root, ctx) {
     <div class="acts"><button class="btn ghost" data-close>Annuler</button><button class="btn pri" data-perm="core.agents.override" data-act="ov-save"><svg><use href="#i-check"/></svg>Activer l'override</button></div>
   </div></div>
 
-  <div class="mback" data-ov="core-agents-nouveau"><div class="modal wide" role="dialog" aria-modal="true" aria-label="Nouvel agent au registre">
-    <h3><svg><use href="#i-bot"/></svg>Nouvel agent au registre</h3>
-    <div class="exp">Principe : si une règle déterministe suffit, ne pas utiliser l'IA (§7.2). L'agent est créé Inactif, modèle par défaut Économique ; un agent ayant des droits d'écriture doit passer en Test/Recette avant Production. Création auditée.</div>
-    <div class="fld"><label for="core-agents-n-name">Nom de l'agent</label><input id="core-agents-n-name" class="inp" data-n="name" placeholder="Ex. Assistant échéances fournisseurs"></div>
-    <div class="grid2b" style="margin-top:0">
-      <div class="fld"><label for="core-agents-n-type">Catégorie</label><select id="core-agents-n-type" class="inp" data-n="type"><option value="Conseiller">Conseiller — aucune écriture directe</option><option value="Exécutant">Exécutant — actions explicitement autorisées</option></select></div>
-      <div class="fld"><label for="core-agents-n-auto">Autonomie</label><select id="core-agents-n-auto" class="inp" data-n="auto"><option>Conseil</option><option>Préparation + confirmation humaine</option><option>Exécution automatique autorisée</option></select></div>
+  <div class="mback" data-ov="core-agents-nouveau"><div class="modal wide" role="dialog" aria-modal="true" aria-label="Nouvel agent : parcours guide">
+    <h3><svg><use href="#i-bot"/></svg>Nouvel agent — parcours guidé</h3>
+    <ol class="steps" data-w="steps"><li class="on">Besoin</li><li>Modèle</li><li>Création</li></ol>
+    <div data-pane="1">
+      <div class="exp">Décrivez en français ce que l'agent doit faire. L'application rapproche cette description de la grille « types de tâches → modèles » tenue dans les Paramètres et modifiable sans redéploiement : aucun modèle n'est appelé à ce stade, la reconnaissance est faite par l'application (périmètre V1, hors cahier).</div>
+      <div class="fld"><label for="core-agents-n-name">Nom de l'agent</label><input id="core-agents-n-name" class="inp" data-n="name" placeholder="Ex. Assistant échéances fournisseurs"></div>
+      <div class="fld"><label for="core-agents-n-need">Ce que l'agent doit faire</label><textarea id="core-agents-n-need" class="inp" rows="3" data-n="need" placeholder="Ex. répondre aux questions sur les échéances fournisseurs et signaler celles qui sont dépassées"></textarea><span class="hint">Phrase libre · sert à reconnaître le type de tâche · conservée dans la fiche registre et dans l'audit</span></div>
+      <div class="note-strip"><svg><use href="#i-lock"/></svg><span><b>Lecture seule, borné à votre périmètre.</b> Un agent IA est une API de lecture uniquement, bornée au périmètre de l'utilisateur qui l'interroge (§7.2, §10.2). Le parcours ne crée donc que des agents de catégorie Conseiller, autonomie Conseil, sans aucune écriture : ces trois points ne sont pas modifiables ici, et les droits effectifs restent l'intersection avec ceux du profil qui pose la question.</span></div>
     </div>
-    <div class="grid2b" style="margin-top:0">
-      <div class="fld"><label for="core-agents-n-mod">Modules</label><select id="core-agents-n-mod" class="inp" data-n="mod"><option>Mata Finance (lecture)</option><option>Mata Finance (réconciliation)</option><option>Mata Core (Demandes)</option></select></div>
-      <div class="fld"><label for="core-agents-n-bud">Budget mensuel plafond (FCFA)</label><input id="core-agents-n-bud" class="inp mono" data-n="budget" inputmode="numeric" placeholder="0"></div>
+    <div data-pane="2" hidden>
+      <div class="exp" data-w="verdict"></div>
+      <div data-w="kv"></div>
+      <button class="linkish" data-acc-toggle><span>Voir la grille de correspondance</span><svg><use href="#i-chevd"/></svg></button>
+      <div class="maas-list" data-w="grid" hidden></div>
+      <div class="fld"><label for="core-agents-n-model">Modèle retenu</label><select id="core-agents-n-model" class="inp" data-n="model"></select><span class="hint">Liste des modèles et coûts : référentiel Mata Core · la grille types de tâches → modèles est tenue dans les Paramètres · le modèle proposé est le moins cher capable de traiter le type de tâche reconnu</span></div>
+      <div class="ovr" data-w="warn" hidden></div>
     </div>
-    <div class="fld"><label for="core-agents-n-why">Justification — pourquoi une règle déterministe ne suffit pas</label><input id="core-agents-n-why" class="inp" data-n="why" placeholder="Obligatoire · conservée dans la fiche registre et l'audit"></div>
-    <div class="acts"><button class="btn ghost" data-close>Annuler</button><button class="btn pri" data-perm="core.agents.budget" data-act="new-save"><svg><use href="#i-plus"/></svg>Créer l'agent (Inactif)</button></div>
+    <div data-pane="3" hidden>
+      <div data-w="recap"></div>
+      <div class="grid2b" style="margin-top:0">
+        <div class="fld"><label for="core-agents-n-bud">Budget mensuel plafond (FCFA)</label><input id="core-agents-n-bud" class="inp mono" data-n="budget" inputmode="numeric" placeholder="0"></div>
+        <div class="fld"><label for="core-agents-n-why">Pourquoi une règle déterministe ne suffit pas</label><input id="core-agents-n-why" class="inp" data-n="why" placeholder="Obligatoire · fiche registre et audit"></div>
+      </div>
+      <div class="note-strip"><svg><use href="#i-info"/></svg><span>L'agent est créé <b>Inactif</b> ; l'activation est un geste distinct, sous core.agents.budget. Création, besoin décrit, type reconnu, modèle proposé et modèle retenu sont tracés dans l'Audit central (§5.4).</span></div>
+    </div>
+    <div class="acts"><button class="btn ghost" data-close>Annuler</button><button class="btn ghost" data-act="w-back" hidden>Retour</button><button class="btn pri" data-act="w-next"><svg><use href="#i-arr"/></svg><span data-w="nextlbl">Analyser le besoin</span></button><button class="btn pri" data-perm="core.agents.budget" data-act="new-save" hidden><svg><use href="#i-plus"/></svg>Créer l'agent (Inactif)</button></div>
   </div></div>
 
   <aside class="drawer" data-ov="core-agents-fiche">
@@ -9260,7 +9267,7 @@ function go(id){
   try{history.replaceState(null,'',location.pathname+(id==='hub'?'':'#'+id));}catch(x){}
   if(!inited[id]){inited[id]=true;formatAmounts(sec);if(registry[id]){try{registry[id](sec,ctx);}catch(e){console.error('init '+id,e);}}}
   drawCharts(sec);setTimeout(function(){drawCharts(sec);},60);
-  tableTools(sec);tallTables(sec);
+  seriesSwatches(sec);tableTools(sec);tallTables(sec);buildFolds(sec);
 }
 /* En-tetes figes (R-02) : position:sticky n'agit que dans un conteneur qui defile vraiment.
    .tbl-scroll ne defile qu'en X, on lui plafonne donc la hauteur des qu'un tableau depasse
@@ -9354,6 +9361,47 @@ function buildTools(w){
   apply();
 }
 function tableTools(sec){$$('.tbl-scroll',sec).forEach(buildTools);}
+
+/* Temoin de couleur devant chaque case du selecteur de series : cinq courbes superposees pour
+   trois couleurs CVD validees, la distinction se fait aussi au trait. Sans temoin, la legende
+   ne dit pas quelle courbe est laquelle. */
+function seriesSwatches(sec){
+  $$('[data-series-toggle]',sec).forEach(function(c){
+    var s=SERIES[c.getAttribute('data-series-toggle')];
+    if(!s||c.dataset.sw)return;
+    c.dataset.sw='1';
+    var i=document.createElement('i');
+    i.className='swatch'+(s.dash?' dash':'');
+    i.style.setProperty('--sc','var('+s.c+')');
+    c.parentNode.insertBefore(i,c.nextSibling);
+  });
+}
+
+/* ===== Repli d'une carte (R-09) =====
+   data-fold="closed|open" sur une .card : le moteur pose le bouton dans son en-tete et masque
+   tout ce qui suit. data-fold-sum donne la ligne de resume lue quand la carte est repliee.
+   Appele apres tableTools pour que la barre de filtre soit repliee avec le tableau. */
+function buildFolds(sec){
+  $$('.card[data-fold]',sec).forEach(function(c){
+    if(c.dataset.foldReady)return;
+    var ch=$('.ch',c); if(!ch)return;
+    c.dataset.foldReady='1';
+    var body=Array.prototype.slice.call(c.children).filter(function(x){return x!==ch;});
+    var sum=c.getAttribute('data-fold-sum'),sEl=null;
+    if(sum){sEl=document.createElement('span');sEl.className='hint foldsum';sEl.textContent=sum;ch.appendChild(sEl);}
+    var b=document.createElement('button');b.type='button';b.className='foldb';ch.appendChild(b);
+    function set(open){
+      c.classList.toggle('folded',!open);
+      body.forEach(function(x){x.hidden=!open;});
+      if(sEl)sEl.hidden=open;
+      b.setAttribute('aria-expanded',open?'true':'false');
+      b.innerHTML='<svg><use href="#i-chevd"/></svg>'+(open?'Replier':'Déplier');
+      if(open){drawCharts(c);tallTables(c);}
+    }
+    b.addEventListener('click',function(){set(c.classList.contains('folded'));});
+    set(c.getAttribute('data-fold')!=='closed');
+  });
+}
 
 /* ================= HUB / PERSONA ================= */
 function renderHub(){
@@ -9485,8 +9533,19 @@ var SERIES={
  creances:{name:'Créances clients',c:'--d3',dash:false,v:[16.9,17.2,17.0,17.6,17.9,17.5,18.1,18.4,18.2,18.0,18.6,18.9,18.5,19.0,18.8,19.3,19.1,18.9,19.4,19.7,19.5,19.2,19.6,19.9,19.7,20.0,19.8,20.1,19.9,20.075]},
  pnl:{name:'P&L Global (cumul)',c:'--d1',dash:true,v:[1.1,2.0,2.8,3.9,4.7,5.6,6.8,7.5,8.6,9.4,10.3,11.5,12.2,13.4,14.1,15.3,16.0,16.8,17.9,18.9,19.6,20.4,21.5,22.3,23.2,23.9,24.4,25.1,25.5,25.835]},
  ventes:{name:'Ventes Mata (cumul)',c:'--d2',dash:true,v:[16,32,49,66,82,99,116,133,149,165,182,199,215,232,249,265,282,299,316,332,349,366,382,399,416,424,433,441,447,452]},
- burn:{name:'Cash burn (cumul dépenses)',c:'--d3',dash:true,v:[15.2,30.4,46.1,61.8,77.0,93.1,109.0,124.6,140.1,155.7,171.4,187.2,202.6,218.4,234.1,249.6,265.5,281.2,296.9,312.4,328.3,344.0,359.5,375.2,390.8,398.6,405.9,412.7,417.9,421.5]}
+ burn:{name:'Cash burn (cumul dépenses)',c:'--d3',dash:true,v:[15.2,30.4,46.1,61.8,77.0,93.1,109.0,124.6,140.1,155.7,171.4,187.2,202.6,218.4,234.1,249.6,265.5,281.2,296.9,312.4,328.3,344.0,359.5,375.2,390.8,398.6,405.9,412.7,417.9,421.5]},
+ transit:{name:'Trésorerie en transit',c:'--d3',dash:false,v:[0.9,1.2,0.8,1.5,2.1,1.7,1.1,0.6,1.9,2.4,1.3,0.7,1.6,2.2,1.8,1.0,0.5,1.4,2.0,2.6,1.5,0.9,1.7,2.3,1.2,0.8,1.6,2.1,2.5,2.85]}
 };
+/* Les cinq séries de trésorerie du tableau de bord (R-08) doivent rester cohérentes entre elles
+   à chaque point, pas seulement au dernier. On les dérive donc des séries de base au lieu de les
+   saisir à la main : disponible = totale − transit, nette fournisseur = totale − dettes, position
+   financière nette = totale + avances fournisseurs + créances − dettes − avances clients (§8.1).
+   Palette limitée aux trois couleurs CVD validées : au-delà, on distingue par le trait. */
+var AV_F=0.35,AV_C=0.15;
+function derive(f){return SERIES.treso.v.map(function(t,i){return +f(t,i).toFixed(3);});}
+SERIES.dispo={name:'Trésorerie disponible',c:'--d2',dash:false,v:derive(function(t,i){return t-SERIES.transit.v[i];})};
+SERIES.netfou={name:'Trésorerie nette fournisseur',c:'--d2',dash:true,v:derive(function(t,i){return t-SERIES.dettes.v[i];})};
+SERIES.pfn={name:'Position financière nette',c:'--d1',dash:true,v:derive(function(t,i){return t+AV_F+SERIES.creances.v[i]-SERIES.dettes.v[i]-AV_C;})};
 var NS='http://www.w3.org/2000/svg';
 function E(n,a){var el=document.createElementNS(NS,n);for(var k in a)el.setAttribute(k,a[k]);return el;}
 function colorOf(tok){return getComputedStyle(app).getPropertyValue(tok).trim();}

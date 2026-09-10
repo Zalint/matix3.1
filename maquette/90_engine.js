@@ -122,7 +122,7 @@ function go(id){
   try{history.replaceState(null,'',location.pathname+(id==='hub'?'':'#'+id));}catch(x){}
   if(!inited[id]){inited[id]=true;formatAmounts(sec);if(registry[id]){try{registry[id](sec,ctx);}catch(e){console.error('init '+id,e);}}}
   drawCharts(sec);setTimeout(function(){drawCharts(sec);},60);
-  tableTools(sec);tallTables(sec);
+  seriesSwatches(sec);tableTools(sec);tallTables(sec);buildFolds(sec);
 }
 /* En-tetes figes (R-02) : position:sticky n'agit que dans un conteneur qui defile vraiment.
    .tbl-scroll ne defile qu'en X, on lui plafonne donc la hauteur des qu'un tableau depasse
@@ -216,6 +216,47 @@ function buildTools(w){
   apply();
 }
 function tableTools(sec){$$('.tbl-scroll',sec).forEach(buildTools);}
+
+/* Temoin de couleur devant chaque case du selecteur de series : cinq courbes superposees pour
+   trois couleurs CVD validees, la distinction se fait aussi au trait. Sans temoin, la legende
+   ne dit pas quelle courbe est laquelle. */
+function seriesSwatches(sec){
+  $$('[data-series-toggle]',sec).forEach(function(c){
+    var s=SERIES[c.getAttribute('data-series-toggle')];
+    if(!s||c.dataset.sw)return;
+    c.dataset.sw='1';
+    var i=document.createElement('i');
+    i.className='swatch'+(s.dash?' dash':'');
+    i.style.setProperty('--sc','var('+s.c+')');
+    c.parentNode.insertBefore(i,c.nextSibling);
+  });
+}
+
+/* ===== Repli d'une carte (R-09) =====
+   data-fold="closed|open" sur une .card : le moteur pose le bouton dans son en-tete et masque
+   tout ce qui suit. data-fold-sum donne la ligne de resume lue quand la carte est repliee.
+   Appele apres tableTools pour que la barre de filtre soit repliee avec le tableau. */
+function buildFolds(sec){
+  $$('.card[data-fold]',sec).forEach(function(c){
+    if(c.dataset.foldReady)return;
+    var ch=$('.ch',c); if(!ch)return;
+    c.dataset.foldReady='1';
+    var body=Array.prototype.slice.call(c.children).filter(function(x){return x!==ch;});
+    var sum=c.getAttribute('data-fold-sum'),sEl=null;
+    if(sum){sEl=document.createElement('span');sEl.className='hint foldsum';sEl.textContent=sum;ch.appendChild(sEl);}
+    var b=document.createElement('button');b.type='button';b.className='foldb';ch.appendChild(b);
+    function set(open){
+      c.classList.toggle('folded',!open);
+      body.forEach(function(x){x.hidden=!open;});
+      if(sEl)sEl.hidden=open;
+      b.setAttribute('aria-expanded',open?'true':'false');
+      b.innerHTML='<svg><use href="#i-chevd"/></svg>'+(open?'Replier':'Déplier');
+      if(open){drawCharts(c);tallTables(c);}
+    }
+    b.addEventListener('click',function(){set(c.classList.contains('folded'));});
+    set(c.getAttribute('data-fold')!=='closed');
+  });
+}
 
 /* ================= HUB / PERSONA ================= */
 function renderHub(){
@@ -347,8 +388,19 @@ var SERIES={
  creances:{name:'Créances clients',c:'--d3',dash:false,v:[16.9,17.2,17.0,17.6,17.9,17.5,18.1,18.4,18.2,18.0,18.6,18.9,18.5,19.0,18.8,19.3,19.1,18.9,19.4,19.7,19.5,19.2,19.6,19.9,19.7,20.0,19.8,20.1,19.9,20.075]},
  pnl:{name:'P&L Global (cumul)',c:'--d1',dash:true,v:[1.1,2.0,2.8,3.9,4.7,5.6,6.8,7.5,8.6,9.4,10.3,11.5,12.2,13.4,14.1,15.3,16.0,16.8,17.9,18.9,19.6,20.4,21.5,22.3,23.2,23.9,24.4,25.1,25.5,25.835]},
  ventes:{name:'Ventes Mata (cumul)',c:'--d2',dash:true,v:[16,32,49,66,82,99,116,133,149,165,182,199,215,232,249,265,282,299,316,332,349,366,382,399,416,424,433,441,447,452]},
- burn:{name:'Cash burn (cumul dépenses)',c:'--d3',dash:true,v:[15.2,30.4,46.1,61.8,77.0,93.1,109.0,124.6,140.1,155.7,171.4,187.2,202.6,218.4,234.1,249.6,265.5,281.2,296.9,312.4,328.3,344.0,359.5,375.2,390.8,398.6,405.9,412.7,417.9,421.5]}
+ burn:{name:'Cash burn (cumul dépenses)',c:'--d3',dash:true,v:[15.2,30.4,46.1,61.8,77.0,93.1,109.0,124.6,140.1,155.7,171.4,187.2,202.6,218.4,234.1,249.6,265.5,281.2,296.9,312.4,328.3,344.0,359.5,375.2,390.8,398.6,405.9,412.7,417.9,421.5]},
+ transit:{name:'Trésorerie en transit',c:'--d3',dash:false,v:[0.9,1.2,0.8,1.5,2.1,1.7,1.1,0.6,1.9,2.4,1.3,0.7,1.6,2.2,1.8,1.0,0.5,1.4,2.0,2.6,1.5,0.9,1.7,2.3,1.2,0.8,1.6,2.1,2.5,2.85]}
 };
+/* Les cinq séries de trésorerie du tableau de bord (R-08) doivent rester cohérentes entre elles
+   à chaque point, pas seulement au dernier. On les dérive donc des séries de base au lieu de les
+   saisir à la main : disponible = totale − transit, nette fournisseur = totale − dettes, position
+   financière nette = totale + avances fournisseurs + créances − dettes − avances clients (§8.1).
+   Palette limitée aux trois couleurs CVD validées : au-delà, on distingue par le trait. */
+var AV_F=0.35,AV_C=0.15;
+function derive(f){return SERIES.treso.v.map(function(t,i){return +f(t,i).toFixed(3);});}
+SERIES.dispo={name:'Trésorerie disponible',c:'--d2',dash:false,v:derive(function(t,i){return t-SERIES.transit.v[i];})};
+SERIES.netfou={name:'Trésorerie nette fournisseur',c:'--d2',dash:true,v:derive(function(t,i){return t-SERIES.dettes.v[i];})};
+SERIES.pfn={name:'Position financière nette',c:'--d1',dash:true,v:derive(function(t,i){return t+AV_F+SERIES.creances.v[i]-SERIES.dettes.v[i]-AV_C;})};
 var NS='http://www.w3.org/2000/svg';
 function E(n,a){var el=document.createElementNS(NS,n);for(var k in a)el.setAttribute(k,a[k]);return el;}
 function colorOf(tok){return getComputedStyle(app).getPropertyValue(tok).trim();}

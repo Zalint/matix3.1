@@ -50,18 +50,23 @@ La maquette masquait le théorique avant la déclaration et le révélait après
 Correction : dans les quatre vues déclarantes, le panneau de résultat se limite à « Votre déclaration » et « Statut », les colonnes Solde théorique et Écart disparaissent des historiques personnels et du tableau des positions fournisseurs, un bandeau indique que le montant part à l'Admin, au DG et au Collecteur. Le théorique n'est plus injecté que dans la table de contrôle `[data-sa-rows]`, lue par les seuls profils qui ne déclarent pas.
 Vérifié dans Chromium sur les quatre profils déclarants et sur le Super Admin, avant et après une déclaration en écart.
 
-**R-07 · Trésorerie nette fournisseur au tableau de bord.** Statut : **À faire**, arbitré le 10/09.
+**R-07 · Trésorerie nette fournisseur au tableau de bord.** Statut : **Corrigé**, arbitré le 10/09.
 Décision : Trésorerie totale contrôlée − Dettes fournisseurs brutes = 61 305 000 − 23 250 000 = 38 055 000. Les avances fournisseurs (350 000) restent affichées à part et n'entrent pas dans le calcul. Libellé retenu à l'écran : « Trésorerie nette fournisseur ».
 Indicateur demandé : ce qui resterait disponible si tous les fournisseurs étaient payés.
+À noter : l'indicateur existait déjà sur l'écran, nommé « Trésorerie après fournisseurs », avec la bonne formule et la bonne valeur, mais rangé dans le bandeau du bloc Fournisseurs où il passait inaperçu. Correction : il monte en cinquième indicateur de tête sous le nom demandé et quitte le bandeau, pour ne pas figurer deux fois. La grille d'indicateurs passe en colonnes adaptatives afin d'en accueillir cinq sans casser les écrans qui n'en ont que quatre.
 
-**R-08 · Évolution historique des 5 types de trésorerie.** Statut : **À faire**, arbitré le 10/09.
+**R-08 · Évolution historique des 5 types de trésorerie.** Statut : **Corrigé**, arbitré le 10/09.
 Décision : les cinq séries sont Trésorerie disponible, Trésorerie en transit, Trésorerie totale contrôlée, Position financière nette, Trésorerie nette fournisseur. Sélection d'une seule ou de plusieurs, superposées sur le même graphique. Les courbes restent dans le tableau de bord.
 Le tableau de bord doit permettre de suivre l'évolution des types de trésorerie, un seul ou plusieurs à la fois, superposés sur le même graphique pour comparaison. Les graphiques de trésorerie restent strictement dans le tableau de bord.
-État actuel : le graphique n'affiche qu'une série (Trésorerie totale contrôlée) et son bouton « Superposer » renvoie vers l'écran Visualisation, ce qui contredit la consigne de garder ces courbes dans le tableau de bord.
+Correction : le graphique devient un graphique à séries multiples avec cinq cases à cocher, et le bouton « Superposer » qui renvoyait vers Visualisation disparaît. Les courbes restent donc dans le tableau de bord.
+Les trois nouvelles séries sont dérivées des séries de base à chaque point, pas saisies à la main, pour que les invariants tiennent sur les 30 jours : disponible = totale − transit, nette fournisseur = totale − dettes, position financière nette = totale + avances fournisseurs + créances − dettes − avances clients (§8.1). Les valeurs du 27/08 tombent sur les indicateurs de tête : 58,45 + 2,85 = 61,30, nette fournisseur 38,05, position nette 58,33.
+La palette reste limitée aux trois couleurs CVD validées : cinq courbes se distinguent par la couleur et par le trait, plein ou pointillé, et chaque case à cocher porte le témoin de sa courbe. Sans lui la légende ne disait pas quelle courbe était laquelle.
 
-**R-09 · Allègement visuel du tableau de bord.** Statut : **À cadrer**.
+**R-09 · Allègement visuel du tableau de bord.** Statut : **Corrigé**.
 Les informations présentes sont toutes utiles, la densité est trop forte. Travail attendu sur la hiérarchisation, les regroupements et l'affichage progressif. Les graphiques de trésorerie restent visibles sans repli.
-À noter : R-07 et R-08 ajoutent un indicateur et un sélecteur de séries sur cet écran. Traiter l'allègement dans le même lot pour ne pas densifier puis dédensifier.
+Correction : affichage progressif, aucune information retirée. Le bloc Trésorerie reste ouvert avec ses cinq indicateurs, son graphique, le détail par compte et les caisses à réconcilier. Les six blocs suivants (Fournisseurs, Échéancier, Clients, Activité du jour, Contrôles, P&L) arrivent repliés, chacun avec une ligne qui dit ce qu'il contient, et se déplient d'un clic.
+Le repli est un mécanisme transverse du moteur, `data-fold` et `data-fold-sum` sur une carte, disponible pour les autres écrans. Il s'applique après la barre de filtre pour que celle-ci se replie avec son tableau, et redessine les graphiques au dépliage.
+Mesuré : la page passe de 4 899 px à 1 942 px à l'arrivée, soit 60 % de moins, sans rien perdre.
 
 **R-10 · Saisie manuelle des créances et des remboursements.** Statut : **Corrigé**, arbitré le 10/09.
 Décision : écriture directe, sans validation. Le Directeur des Opérations détient ce droit par défaut. Création d'une créance sans vente et enregistrement d'un remboursement sans versement, tous deux couverts par l'audit de modification. Mesure transitoire assumée : une fois la refonte terminée, toutes les créances naîtront des ventes et ce circuit manuel sera retiré. À écrire comme telle dans les specs pour qu'elle ne survive pas à la refonte.
