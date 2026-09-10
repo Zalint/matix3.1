@@ -25,6 +25,7 @@
     #app [data-scr="core-notifications"] .kv{display:flex;justify-content:space-between;gap:12px;font-size:12px;padding:6px 0;border-bottom:1px dashed var(--line)}
     #app [data-scr="core-notifications"] .kv span{color:var(--mut);flex:none;max-width:40%}
     #app [data-scr="core-notifications"] .kv b{text-align:right;font-weight:600;min-width:0;line-height:1.45}
+    #app [data-scr="core-notifications"] .kv .linkish{margin-left:6px}
     #app [data-scr="core-notifications"] .msg{font-size:12.5px;background:var(--red-tint);border:1px solid var(--red-line);border-radius:9px;padding:10px 12px;margin:13px 0;line-height:1.5}
     #app [data-scr="core-notifications"] .drawer .df{flex-wrap:wrap}
   </style>
@@ -77,73 +78,73 @@
       <div class="cb"><div class="tbl-scroll"><table>
         <thead><tr><th>Heure</th><th>Type</th><th>Message</th><th>Accès</th></tr></thead>
         <tbody data-rows>
-          <tr class="rowlink" data-n="1" data-d="27/08" data-t="21:15" data-type="Réconciliation" data-crit="1" data-read="0" data-view="sa dg collecteur caisse" data-rule="Écart de réconciliation" data-dest="Admin, DG, Collecteur · déclarant M. Diop informé de l'écart sur sa caisse" data-canal="Email + centre" data-go="fin-reconciliation" data-go-perm="finance.reconciliation.view" data-go-lbl="Réconciliation">
+          <tr class="rowlink" data-n="1" data-obj="Sous-caisse Marché" data-obj-t="déclaration du 27/08 · 21:12 · circuit Caisses, statut « À réconcilier »" data-d="27/08" data-t="21:15" data-type="Réconciliation" data-crit="1" data-read="0" data-view="sa dg collecteur caisse" data-rule="Écart de réconciliation" data-dest="Admin, DG, Collecteur · déclarant M. Diop informé de l'écart sur sa caisse" data-canal="Email + centre" data-go="fin-reconciliation" data-go-perm="finance.reconciliation.view" data-go-lbl="Réconciliation">
             <td><i class="nd"></i><span class="mono">21:15</span><div class="hint">27/08</div></td>
             <td>Réconciliation<div><span class="st bad"><svg><use href="#i-alert"/></svg>Critique</span></div></td>
             <td data-c="msg"><b>Écart <span class="amt" data-amt="-25000" data-nocur></span> sur Sous-caisse Marché (déclaré par M. Diop)</b><div class="hint" data-c="hint"></div></td>
             <td><button class="btn ghost sm" data-goto="fin-reconciliation" data-perm="finance.reconciliation.view"><svg><use href="#i-arr"/></svg>Réconciliation</button></td>
           </tr>
-          <tr class="rowlink" data-n="2" data-d="27/08" data-t="19:02" data-type="Validation" data-crit="1" data-read="0" data-view="sa dg caisse" data-rule="Ajustement : deux validateurs distincts de l'initiateur et l'un de l'autre (Finance §10.1)" data-dest="Validateurs habilités · initiateur M. Diop informé du suivi" data-canal="Email + centre" data-go="fin-validations" data-go-perm="finance.validations.view" data-go-lbl="Validations">
+          <tr class="rowlink" data-n="2" data-obj="VAL-117" data-obj-t="ajustement Caisse générale · 2e validation requise (1re : O. Seck)" data-d="27/08" data-t="19:02" data-type="Validation" data-crit="1" data-read="0" data-view="sa dg caisse" data-rule="Ajustement : deux validateurs distincts de l'initiateur et l'un de l'autre (Finance §10.1)" data-dest="Validateurs habilités · initiateur M. Diop informé du suivi" data-canal="Email + centre" data-go="fin-validations" data-go-perm="finance.validations.view" data-go-lbl="Validations">
             <td><i class="nd"></i><span class="mono">19:02</span><div class="hint">27/08</div></td>
             <td>Validation<div><span class="st bad"><svg><use href="#i-alert"/></svg>Critique</span></div></td>
             <td data-c="msg"><b>Ajustement +<span class="amt" data-amt="180000" data-nocur></span> Caisse générale : 2e validation requise (1re : O. Seck)</b><div class="hint" data-c="hint"></div></td>
             <td><button class="btn ghost sm" data-goto="fin-validations" data-perm="finance.validations.view"><svg><use href="#i-arr"/></svg>Validations</button></td>
           </tr>
-          <tr class="rowlink" data-n="3" data-d="27/08" data-t="18:05" data-type="Validation" data-crit="1" data-read="0" data-view="sa dg dirops" data-rule="Transfert manuel : un validateur distinct de l'initiateur (Finance §10.1)" data-dest="Validateurs habilités · initiateur F. Sarr informé du suivi" data-canal="Email + centre" data-go="fin-validations" data-go-perm="finance.validations.view" data-go-lbl="Validations">
+          <tr class="rowlink" data-n="3" data-obj="VAL-118" data-obj-t="transfert Banque BOA → Caisse générale · initié par F. Sarr, en attente" data-d="27/08" data-t="18:05" data-type="Validation" data-crit="1" data-read="0" data-view="sa dg dirops" data-rule="Transfert manuel : un validateur distinct de l'initiateur (Finance §10.1)" data-dest="Validateurs habilités · initiateur F. Sarr informé du suivi" data-canal="Email + centre" data-go="fin-validations" data-go-perm="finance.validations.view" data-go-lbl="Validations">
             <td><i class="nd"></i><span class="mono">18:05</span><div class="hint">27/08</div></td>
             <td>Validation<div><span class="st bad"><svg><use href="#i-alert"/></svg>Critique</span></div></td>
             <td data-c="msg"><b>Transfert <span class="amt" data-amt="600000" data-nocur></span> BOA → CG proposé par F. Sarr</b><div class="hint" data-c="hint"></div></td>
             <td><button class="btn ghost sm" data-goto="fin-validations" data-perm="finance.validations.view"><svg><use href="#i-arr"/></svg>Validations</button></td>
           </tr>
-          <tr class="rowlink" data-n="4" data-d="27/08" data-t="17:30" data-type="Fournisseurs" data-crit="1" data-read="0" data-view="sa dirops" data-rule="Échéance fournisseur dépassée" data-dest="Directeur des Opérations" data-canal="Centre" data-go="fin-fournisseurs" data-go-perm="finance.fournisseurs.view" data-go-lbl="Fournisseurs">
+          <tr class="rowlink" data-n="4" data-obj="MATA VOLAILLE ŒUFS" data-obj-t="lot œufs du 18/08 · échéance 25/08 dépassée" data-d="27/08" data-t="17:30" data-type="Fournisseurs" data-crit="1" data-read="0" data-view="sa dirops" data-rule="Échéance fournisseur dépassée" data-dest="Directeur des Opérations" data-canal="Centre" data-go="fin-fournisseurs" data-go-perm="finance.fournisseurs.view" data-go-lbl="Fournisseurs">
             <td><i class="nd"></i><span class="mono">17:30</span><div class="hint">27/08</div></td>
             <td>Fournisseurs<div><span class="st bad"><svg><use href="#i-alert"/></svg>Critique</span></div></td>
             <td data-c="msg"><b>Échéance dépassée : ŒUFS <span class="amt" data-amt="1150000" data-nocur></span> (25/08)</b><div class="hint" data-c="hint"></div></td>
             <td><button class="btn ghost sm" data-goto="fin-fournisseurs" data-perm="finance.fournisseurs.view"><svg><use href="#i-arr"/></svg>Fournisseurs</button></td>
           </tr>
-          <tr class="rowlink" data-n="5" data-d="27/08" data-t="15:24" data-type="Fournisseurs" data-crit="0" data-read="0" data-view="sa dg dirops" data-rule="Plafond d'encours dépassé" data-dest="Directeur des Opérations, DG" data-canal="Centre" data-go="fin-fournisseurs" data-go-perm="finance.fournisseurs.view" data-go-lbl="Fournisseurs">
+          <tr class="rowlink" data-n="5" data-obj="AGNEAUX" data-obj-t="compte fournisseur · plafond d'encours dépassé, sans blocage" data-d="27/08" data-t="15:24" data-type="Fournisseurs" data-crit="0" data-read="0" data-view="sa dg dirops" data-rule="Plafond d'encours dépassé" data-dest="Directeur des Opérations, DG" data-canal="Centre" data-go="fin-fournisseurs" data-go-perm="finance.fournisseurs.view" data-go-lbl="Fournisseurs">
             <td><i class="nd"></i><span class="mono">15:24</span><div class="hint">27/08</div></td>
             <td>Fournisseurs<div><span class="st mut"><svg><use href="#i-sliders"/></svg>Configurable</span></div></td>
             <td data-c="msg"><b>Plafond d'encours dépassé : AGNEAUX 12,4 M / 10 M</b><div class="hint" data-c="hint"></div></td>
             <td><button class="btn ghost sm" data-goto="fin-fournisseurs" data-perm="finance.fournisseurs.view"><svg><use href="#i-arr"/></svg>Fournisseurs</button></td>
           </tr>
-          <tr class="rowlink" data-n="6" data-d="27/08" data-t="12:00" data-type="Comptes" data-crit="1" data-read="0" data-view="sa" data-rule="Relais ouvert au-delà du seuil (2 j)" data-dest="Admin" data-canal="Centre" data-go="fin-comptes" data-go-perm="finance.comptes.view" data-go-lbl="Comptes">
+          <tr class="rowlink" data-n="6" data-obj="Bictorys → Banque en cours" data-obj-t="compte Relais créé le 24/08 · âge 3 j au-delà du seuil de 2 j" data-d="27/08" data-t="12:00" data-type="Comptes" data-crit="1" data-read="0" data-view="sa" data-rule="Relais ouvert au-delà du seuil (2 j)" data-dest="Admin" data-canal="Centre" data-go="fin-comptes" data-go-perm="finance.comptes.view" data-go-lbl="Comptes">
             <td><i class="nd"></i><span class="mono">12:00</span><div class="hint">27/08</div></td>
             <td>Comptes<div><span class="st bad"><svg><use href="#i-alert"/></svg>Critique</span></div></td>
             <td data-c="msg"><b>Relais « Bictorys → Banque en cours » ouvert depuis 3 jours (seuil 2 j)</b><div class="hint" data-c="hint"></div></td>
             <td><button class="btn ghost sm" data-goto="fin-comptes" data-perm="finance.comptes.view"><svg><use href="#i-arr"/></svg>Comptes</button></td>
           </tr>
-          <tr class="rowlink" data-n="7" data-d="27/08" data-t="09:15" data-type="Demandes" data-crit="0" data-read="0" data-view="maas" data-rule="Demande administrative : accusé de soumission (Core §4.1)" data-dest="Initiateur B. Fall" data-canal="Centre" data-go="core-demandes" data-go-perm="core.demandes.view" data-go-lbl="Demandes">
+          <tr class="rowlink" data-n="7" data-obj="DEM-031" data-obj-t="création utilisateur « Khady Sow » · en attente" data-d="27/08" data-t="09:15" data-type="Demandes" data-crit="0" data-read="0" data-view="maas" data-rule="Demande administrative : accusé de soumission (Core §4.1)" data-dest="Initiateur B. Fall" data-canal="Centre" data-go="core-demandes" data-go-perm="core.demandes.view" data-go-lbl="Demandes">
             <td><i class="nd"></i><span class="mono">09:15</span><div class="hint">27/08</div></td>
             <td>Demandes<div><span class="st mut"><svg><use href="#i-sliders"/></svg>Configurable</span></div></td>
             <td data-c="msg"><b>DEM-031 soumise : création utilisateur « Khady Sow », commerciale MaaS Ouakam · En attente</b><div class="hint" data-c="hint"></div></td>
             <td><button class="btn ghost sm" data-goto="core-demandes" data-perm="core.demandes.view"><svg><use href="#i-arr"/></svg>Demandes</button></td>
           </tr>
-          <tr class="rowlink" data-n="8" data-d="27/08" data-t="08:12" data-type="Sources" data-crit="0" data-read="1" data-view="sa" data-rule="Source non à jour (suivi de fraîcheur des sources, Finance §6.5)" data-dest="Admin" data-canal="Centre" data-go="fin-comptes" data-go-perm="finance.comptes.view" data-go-lbl="Comptes">
+          <tr class="rowlink" data-n="8" data-obj="Bictorys" data-obj-t="position externe · synchronisation du 27/08 · 08:12" data-d="27/08" data-t="08:12" data-type="Sources" data-crit="0" data-read="1" data-view="sa" data-rule="Source non à jour (suivi de fraîcheur des sources, Finance §6.5)" data-dest="Admin" data-canal="Centre" data-go="fin-comptes" data-go-perm="finance.comptes.view" data-go-lbl="Comptes">
             <td><i class="nd"></i><span class="mono">08:12</span><div class="hint">27/08</div></td>
             <td>Sources<div><span class="st mut"><svg><use href="#i-sliders"/></svg>Configurable</span></div></td>
             <td data-c="msg"><b>Synchronisation Bictorys réussie (<span class="amt" data-amt="2890000" data-nocur></span>)</b><div class="hint" data-c="hint"></div></td>
             <td><button class="btn ghost sm" data-goto="fin-comptes" data-perm="finance.comptes.view"><svg><use href="#i-arr"/></svg>Comptes</button></td>
           </tr>
-          <tr class="rowlink" data-n="9" data-d="27/08" data-t="08:00" data-type="Sources" data-crit="0" data-read="1" data-view="sa" data-rule="Source non à jour (suivi de fraîcheur des sources, Finance §6.5)" data-dest="Admin" data-canal="Centre" data-go="fin-import" data-go-perm="finance.import.view" data-go-lbl="Import relevé bancaire">
+          <tr class="rowlink" data-n="9" data-obj="Relevé BOA du 27/08" data-obj-t="import de 14 lignes · 0 doublon" data-d="27/08" data-t="08:00" data-type="Sources" data-crit="0" data-read="1" data-view="sa" data-rule="Source non à jour (suivi de fraîcheur des sources, Finance §6.5)" data-dest="Admin" data-canal="Centre" data-go="fin-import" data-go-perm="finance.import.view" data-go-lbl="Import relevé bancaire">
             <td><i class="nd"></i><span class="mono">08:00</span><div class="hint">27/08</div></td>
             <td>Sources<div><span class="st mut"><svg><use href="#i-sliders"/></svg>Configurable</span></div></td>
             <td data-c="msg"><b>Import relevé BOA réussi : 14 lignes, 0 doublon</b><div class="hint" data-c="hint"></div></td>
             <td><button class="btn ghost sm" data-goto="fin-import" data-perm="finance.import.view"><svg><use href="#i-arr"/></svg>Import</button></td>
           </tr>
-          <tr class="rowlink" data-n="10" data-d="27/08" data-t="02:04" data-type="Réconciliation" data-crit="0" data-read="1" data-view="sa dg collecteur" data-rule="Réconciliation automatique des encaissements collectés (Finance §6.3)" data-dest="Admin, DG, Collecteur" data-canal="Centre" data-go="fin-reconciliation" data-go-perm="finance.reconciliation.view" data-go-lbl="Réconciliation">
+          <tr class="rowlink" data-n="10" data-obj="Encaissements collectés du 26/08" data-obj-t="réconciliation validée à 02:04" data-d="27/08" data-t="02:04" data-type="Réconciliation" data-crit="0" data-read="1" data-view="sa dg collecteur" data-rule="Réconciliation automatique des encaissements collectés (Finance §6.3)" data-dest="Admin, DG, Collecteur" data-canal="Centre" data-go="fin-reconciliation" data-go-perm="finance.reconciliation.view" data-go-lbl="Réconciliation">
             <td><i class="nd"></i><span class="mono">02:04</span><div class="hint">27/08</div></td>
             <td>Réconciliation<div><span class="st mut"><svg><use href="#i-sliders"/></svg>Configurable</span></div></td>
             <td data-c="msg"><b>Encaissements collectés du 26/08 validés (<span class="amt" data-amt="4725000" data-nocur></span>)</b><div class="hint" data-c="hint"></div></td>
             <td><button class="btn ghost sm" data-goto="fin-reconciliation" data-perm="finance.reconciliation.view"><svg><use href="#i-arr"/></svg>Réconciliation</button></td>
           </tr>
-          <tr class="rowlink" data-n="11" data-d="26/08" data-t="23:00" data-type="Dépenses" data-crit="1" data-read="1" data-view="sa dirops" data-rule="Dépense « Pas sûr » à 23:00" data-dest="Directeur des Opérations, Admins, Super Admin" data-canal="Email + centre" data-go="fin-depenses" data-go-perm="finance.depenses.view" data-go-lbl="Dépenses">
+          <tr class="rowlink" data-n="11" data-obj="Carburant véhicule livraison" data-obj-t="dépense « Pas sûr » du 26/08 · Sous-caisse Livraisons" data-d="26/08" data-t="23:00" data-type="Dépenses" data-crit="1" data-read="1" data-view="sa dirops" data-rule="Dépense « Pas sûr » à 23:00" data-dest="Directeur des Opérations, Admins, Super Admin" data-canal="Email + centre" data-go="fin-depenses" data-go-perm="finance.depenses.view" data-go-lbl="Dépenses">
             <td><i class="nd"></i><span class="mono">23:00</span><div class="hint">26/08</div></td>
             <td>Dépenses<div><span class="st bad"><svg><use href="#i-alert"/></svg>Critique</span></div></td>
             <td data-c="msg"><b>1 dépense « Pas sûr » non résolue à 23:00</b><div class="hint" data-c="hint"></div></td>
             <td><button class="btn ghost sm" data-goto="fin-depenses" data-perm="finance.depenses.view"><svg><use href="#i-arr"/></svg>Dépenses</button></td>
           </tr>
-          <tr class="rowlink" data-n="12" data-d="26/08" data-t="22:14" data-type="Snapshot" data-crit="0" data-read="0" data-view="invest compta" data-rule="Snapshot automatique post-clôture (Finance §8.6) · agrégats uniquement" data-dest="Investisseur, Comptable externe · profils en lecture" data-canal="Centre" data-go="fin-historique" data-go-perm="finance.historique.view" data-go-lbl="Historique">
+          <tr class="rowlink" data-n="12" data-obj="Snapshot du 26/08 · 22:14" data-obj-t="auto post-clôture · agrégats uniquement" data-d="26/08" data-t="22:14" data-type="Snapshot" data-crit="0" data-read="0" data-view="invest compta" data-rule="Snapshot automatique post-clôture (Finance §8.6) · agrégats uniquement" data-dest="Investisseur, Comptable externe · profils en lecture" data-canal="Centre" data-go="fin-historique" data-go-perm="finance.historique.view" data-go-lbl="Historique">
             <td><i class="nd"></i><span class="mono">22:14</span><div class="hint">26/08</div></td>
             <td>Snapshot<div><span class="st mut"><svg><use href="#i-sliders"/></svg>Configurable</span></div></td>
             <td data-c="msg"><b>Snapshot post-clôture du 26/08 disponible : P&amp;L Global <span class="amt" data-amt="25105000" data-nocur></span> · Trésorerie totale contrôlée <span class="amt" data-amt="60790000" data-nocur></span></b><div class="hint" data-c="hint"></div></td>
@@ -195,7 +196,7 @@
       <div class="meta-l" data-d="meta"></div>
       <div class="msg" data-d="msg"></div>
       <div data-d="kv"></div>
-      <div class="note-strip"><svg><use href="#i-info"/></svg>Les notifications respectent le profil et les droits (§6.1) : l'accès à l'écran cible reste soumis à sa permission de consultation ; un refus est affiché avec son motif, jamais masqué.</div>
+      <div class="note-strip"><svg><use href="#i-info"/></svg>Les notifications respectent le profil et les droits (§6.1) : l'accès à l'écran cible reste soumis à sa permission de consultation ; un refus est affiché avec son motif, jamais masqué. Le lien « Objet concerné » ouvre l'écran cible en rappelant la référence à traiter.</div>
     </div>
     <div class="df"><button class="btn ghost" data-act="toggle"><svg><use href="#i-eye"/></svg>Marquer comme lue</button><button class="btn ghost" data-goto="core-alertes" data-perm="core.alertes.view"><svg><use href="#i-sliders"/></svg>Règle</button><div class="sp"></div><button class="btn pri" data-act="go" data-goto="hub" data-perm="core.notifications.view"><svg><use href="#i-arr"/></svg>Ouvrir</button></div>
   </aside>
@@ -208,11 +209,12 @@
       <li><b>Filtrage par profil et droits</b> — chaque ligne porte un périmètre : l'écart <span class="amt" data-amt="-25000" data-nocur></span> sur Sous-caisse Marché n'apparaît que pour Super Admin, DG, Collecteur et Gestionnaire de caisse, jamais pour les autres profils (§6.1).</li>
       <li><b>Critique ou configurable</b> — une critique reste toujours envoyée : dans Préférences, l'interrupteur « Ajustement inhabituel (&gt; <span class="amt" data-amt="500000" data-nocur></span>) » est verrouillé et coché en permanence, alors qu'une règle non critique comme « Échéance fournisseur dépassée » se désactive (§6.1).</li>
       <li><b>Marquage « lu » personnel</b> — « Tout marquer comme lu » ne change que votre statut de lecture : une notification critique reste dans la boîte de tout destinataire concerné même après lecture (§6.1).</li>
+      <li><b>De la notification à l'objet</b> — le détail donne deux liens, l'écran cible et l'objet concerné, par exemple VAL-117, l'ajustement de Caisse générale dont la 2e validation est attendue. Les deux ouvrent l'écran, le second rappelle en plus la référence à traiter, et l'un comme l'autre restent soumis à la permission de consultation de l'écran visé (§6.1).</li>
       <li><b>Email en V1</b> — la carte « Canal V1 » affiche Email + centre ; WhatsApp et SMS apparaissent dans Canaux mais restent grisés, prévus ultérieurement (§10.1).</li>
       <li><b>Signaux de qualité financière</b> — les alertes Fournisseurs et Comptes reprennent les signaux du Dashboard financier : un plafond d'encours dépassé (AGNEAUX 12,4 M / 10 M) reste informatif, une échéance dépassée comme ŒUFS <span class="amt" data-amt="1150000" data-nocur></span> reste critique (§10.4).</li>
     </ul>
     <div class="note-strip"><svg><use href="#i-lock"/></svg>Refus par défaut : le détail d'une notification ouvre l'écran cible seulement si votre profil en a la permission ; sinon le refus est affiché avec son motif, jamais masqué.</div>
-    <div class="hint">Sources : Cahier Mata Core §6.1, §10.1 · Cahier Mata Finance §10.4</div>
+    <div class="hint">Sources : Cahier Mata Core §6.1, §10.1 · Cahier Mata Finance §10.4 · FIXTURES §9, §12</div>
     <div class="acts"><button class="btn ghost" data-close>Fermer</button></div>
   </div></div>
 </section>
@@ -246,6 +248,9 @@ ERP.register('core-notifications', function (root, ctx) {
     q('[data-rules-hint]').textContent = nr ? plural(nr, 'règle') + ' adressée' + (nr > 1 ? 's' : '') + ' à votre profil · critiques verrouillées' : 'Aucune règle adressée à votre profil';
   }
   function badge(r) { return r ? '<span class="st ok"><svg><use href="#i-check"/></svg>Lue</span>' : '<span class="st warn"><svg><use href="#i-bell"/></svg>Non lue</span>'; }
+  function objTxt(tr) { return tr.getAttribute('data-obj') + ' · ' + tr.getAttribute('data-obj-t'); }
+  /* Objet concerné : lien vers l'écran cible (data-goto, permission de consultation) qui rappelle la référence de l'objet à traiter — la maquette n'ouvre pas la ligne elle-même */
+  function objRow(tr, lbl) { return '<div class="kv"><span>Objet concerné</span><b>' + esc(objTxt(tr)) + '<button class="linkish" data-act="go-obj" data-goto="' + tr.getAttribute('data-go') + '" data-perm="' + tr.getAttribute('data-go-perm') + '"><svg><use href="#i-arr"/></svg>Ouvrir dans ' + esc(lbl) + '</button></b></div>'; }
   /* Tiroir : message, règle ou workflow d'origine, destinataires, canal, accès à l'écran cible soumis à sa permission (refus expliqué) */
   function fill(tr) {
     cur = tr; var c = isCrit(tr), r = isRead(tr), lbl = tr.getAttribute('data-go-lbl'), perm = tr.getAttribute('data-go-perm'), can = ctx.hasPerm(perm);
@@ -255,17 +260,22 @@ ERP.register('core-notifications', function (root, ctx) {
     var kv = [['Horodatage', tag(tr) + ' · Dakar (GMT)'], ['Type', tr.getAttribute('data-type')], ['Règle ou workflow', tr.getAttribute('data-rule')], ['Destinataires', tr.getAttribute('data-dest')], ['Canal', tr.getAttribute('data-canal')],
       ['Criticité', c ? 'Critique : non désactivable, envoyée quelles que soient les préférences (§6.1)' : 'Configurable dans les préférences'],
       ['Écran cible', lbl + ' · ' + (can ? 'accessible au profil ' + ctx.profile.profile : 'refus par défaut : permission ' + perm + ' non accordée au profil ' + ctx.profile.profile)]];
-    q('[data-d="kv"]', D).innerHTML = kv.map(function (x) { return '<div class="kv"><span>' + x[0] + '</span><b>' + esc(x[1]) + '</b></div>'; }).join('');
+    q('[data-d="kv"]', D).innerHTML = kv.map(function (x) { return '<div class="kv"><span>' + x[0] + '</span><b>' + esc(x[1]) + '</b></div>'; }).join('') + objRow(tr, lbl);
     var g = q('[data-act="go"]', D); g.setAttribute('data-goto', tr.getAttribute('data-go')); g.setAttribute('data-perm', perm); g.innerHTML = '<svg><use href="#i-arr"/></svg>Ouvrir ' + esc(lbl);
     q('[data-act="toggle"]', D).innerHTML = '<svg><use href="#i-' + (r ? 'eyeoff' : 'eye') + '"/></svg>' + (r ? 'Marquer comme non lue' : 'Marquer comme lue');
     ctx.formatAmounts(D); ctx.applyPerms();
   }
   ctx.on(root, 'click', function (e) {
     var tr = e.target.closest('tr[data-n]'), b = e.target.closest('[data-act]');
-    if (tr && root.contains(tr)) { tr.setAttribute('data-read', '1'); if (!e.target.closest('[data-goto]')) { fill(tr); ctx.open('core-notifications-detail'); } refresh(); return; }
+    if (tr && root.contains(tr)) {
+      tr.setAttribute('data-read', '1'); var g = e.target.closest('[data-goto]');
+      if (!g) { fill(tr); ctx.open('core-notifications-detail'); } else if (!g.classList.contains('denied')) ctx.toast('Objet à traiter : ' + objTxt(tr));
+      refresh(); return;
+    }
     if (!b || !root.contains(b) || b.disabled || b.classList.contains('denied')) return;
     var a = b.getAttribute('data-act');
     if (a === 'all') { var n = 0; rows().forEach(function (t) { if (inView(t) && !isRead(t)) { t.setAttribute('data-read', '1'); n++; } }); refresh(); ctx.toast(n ? plural(n, 'notification') + ' marquée' + (n > 1 ? 's' : '') + ' comme lue' + (n > 1 ? 's' : '') + ' · marquage personnel, les critiques restent dans la boîte' : 'Aucune notification non lue dans votre périmètre'); }
+    if (a === 'go-obj' && cur) ctx.toast('Objet à traiter : ' + objTxt(cur) + ' · écran ' + cur.getAttribute('data-go-lbl'));
     if (a === 'toggle' && cur) { var r = !isRead(cur); cur.setAttribute('data-read', r ? '1' : '0'); fill(cur); refresh(); ctx.toast('Notification ' + tag(cur) + ' marquée comme ' + (r ? 'lue' : 'non lue')); }
   });
   /* Préférences : interrupteurs personnels ; les critiques et les canaux non disponibles sont verrouillés dans le HTML (disabled, motif visible) */

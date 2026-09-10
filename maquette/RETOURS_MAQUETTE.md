@@ -65,25 +65,26 @@ Point déjà ouvert au panel (`AMBIGUITES_PANEL.md`, questions de revue, point 2
 
 ### Périmètre V1
 
-**R-11 · Règles d'alerte figées.** Statut : **À cadrer**.
-La création libre de règles d'alerte introduit trop d'ambiguïté. En V1, on fige les règles définies dans le cahier. L'écran Alertes conserve les 8 règles existantes et leur configuration (activation, seuils, destinataires) ; le bouton « Nouvelle règle » disparaît.
-À vérifier au cadrage : les règles critiques non désactivables restent identifiées comme telles, et la suppression du bouton ne retire pas la permission `core.alertes.modifier` qui sert aussi à régler les seuils.
+**R-11 · Règles d'alerte figées.** Statut : **Corrigé**.
+La création libre de règles d'alerte introduit trop d'ambiguïté. En V1 le catalogue est fermé aux règles définies au cahier.
+Correction : bouton « Nouvelle règle », modale de création et bouton « Créer la règle » du signal « Caisses à réconcilier » retirés, avec le code et le CSS devenus morts. Les 10 règles du cahier (et non 8, décompte corrigé), les 3 verrous des règles critiques non désactivables et les 12 commandes de configuration sous `core.alertes.modifier` restent en place. La fermeture du catalogue est signalée dans la note d'écran, le bandeau d'en-tête, le bloc « Refus par défaut » et l'aide, présentée comme une décision de périmètre V1 et non comme une règle du cahier.
 
 **R-12 · Formulaire guidé de création d'un agent IA.** Statut : **À faire**, arbitré le 10/09.
 Décisions : l'analyse du besoin repose sur une grille de correspondance entre types de tâches et modèles, tenue dans les paramètres et modifiable sans redéploiement. La liste des modèles et de leurs coûts vit dans Mata Core. Le remplacement du modèle proposé passe par deux détenteurs de core.agents.budget, distincts de l'initiateur et distincts entre eux ; l'agent reste inactif tant que la deuxième validation n'est pas acquise.
 Remplacer la configuration libre par un parcours guidé : l'utilisateur décrit ce que l'agent doit faire, l'application analyse le besoin, elle propose le modèle le moins cher capable de réaliser la tâche correctement, la liste des modèles disponibles reste configurable, l'utilisateur peut remplacer le modèle proposé, et ce remplacement passe par une double validation.
 Rappel du cahier applicable en l'état : l'agent IA reste une API de lecture uniquement, bornée au périmètre de l'utilisateur.
 
-**R-13 · Retrait du paramètre Devise.** Statut : **À cadrer**.
-La V1 est en FCFA uniquement. Le paramètre `devise` de l'écran Paramètres (portée globale, sensible, valeur unique FCFA) est retiré, ainsi que sa mention dans le compteur de paramètres sensibles et dans le panneau d'aide. Le formatage des montants reste en FCFA entiers sans décimales, en dur.
+**R-13 · Retrait du paramètre Devise.** Statut : **Corrigé**.
+La V1 est en FCFA uniquement. Le paramètre `devise` est retiré, et les décomptes sont recomptés sur le tableau réel : 9 paramètres transverses, 4 globaux, 3 avec override, 2 locaux, 6 sensibles pour 3 standard. Repris dans les cartes du bandeau, le compteur du tableau Global et les trois passages du panneau d'aide. Le formatage des montants reste en FCFA entiers sans décimales, en dur.
 
 ### Confort d'usage
 
-**R-14 · Champ « Objet concerné » de l'écran Droits effectifs.** Statut : **À cadrer**.
-Le libellé n'est pas explicite pour l'utilisateur. Ajouter une explication de ce que le champ désigne et de ce qu'on y saisit, avec un exemple, dans l'aide contextuelle du champ.
+**R-14 · Champ « Objet concerné » de l'écran Droits effectifs.** Statut : **Corrigé**.
+Le champ porte une aide au format des autres champs de la maquette (formule, composantes, source) : ce que l'objet désigne, ce qu'on y saisit, et l'exemple VAL-114 qui montre que renseigner l'objet fait basculer la réponse au niveau 1 là où la même question sans objet répondrait « autorisé ». Le bloc « Contexte évalué » emploie désormais le même libellé que le champ.
 
-**R-15 · Lien vers l'objet dans le détail d'une notification.** Statut : **À cadrer**.
-Le détail d'une notification doit offrir un lien cliquable vers l'écran et vers l'objet concerné, pour aller traiter le sujet directement. Le tableau propose déjà un bouton qui ouvre l'écran ; il manque l'ouverture de l'objet précis (la ligne, la fiche, la validation en attente) et le lien dans le panneau de détail.
+**R-15 · Lien vers l'objet dans le détail d'une notification.** Statut : **Corrigé**.
+Chaque notification porte la référence de l'objet concerné, tirée des fixtures (VAL-117, DEM-031, Sous-caisse Marché, relais « Bictorys → Banque en cours »…). Le tiroir de détail gagne une ligne « Objet concerné » avec son lien, sous permission, à côté du bouton d'ouverture de l'écran : les deux liens demandés.
+Limite assumée : la maquette n'a aucun mécanisme de lien profond, `data-goto` ne sait qu'ouvrir un écran. Plutôt que d'en inventer un qui n'existerait nulle part ailleurs, le lien objet ouvre l'écran cible et rappelle la référence à traiter. Un vrai ciblage de ligne est à décider au cadrage technique, pas dans la maquette.
 
 ### Constat issu de la vérification de R-06
 
