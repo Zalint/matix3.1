@@ -34,12 +34,15 @@ Résultat : 21 écrans sur 27 reçoivent une barre, 65 filtres de colonne au tot
 
 ### Pédagogie de la maquette, à retirer en production
 
-**R-04 · Écran d'accueil.** Statut : **À cadrer**.
-La section qui détaille les 27 écrans et le bloc de contexte qui explique la maquette disparaissent en production. À écrire explicitement dans les specs de développement pour éviter toute confusion entre support de validation et application livrée.
+**R-04 · Écran d'accueil.** Statut : **Corrigé**.
+La section qui détaille les 27 écrans et le bloc de contexte qui explique la maquette disparaissent en production.
+Correction : plutôt que de retirer cette pédagogie de la maquette, qui reste le support de validation, un basculement « Vue production » dans la barre du haut la masque et montre exactement ce que reçoit la production. Ce qui disparaît : les boutons et panneaux « Comment ça marche ? », les paragraphes d'explication en tête d'écran, le texte de présentation de l'accueil, et tout élément marqué `data-maquette-only`.
+La règle est donc démontrable au lieu d'être seulement écrite : la spec de développement dit que la production ne reçoit pas ce que la vue production masque.
 
-**R-05 · Blocs explicatifs dans les écrans.** Statut : **À faire**, arbitré le 10/09.
+**R-05 · Blocs explicatifs dans les écrans.** Statut : **En cours**, arbitré le 10/09.
 Décision : le contenu des panneaux « Comment ça marche ? » est redécoupé en infobulles « ? » rattachées aux éléments qu'elles expliquent. Rien du contenu validé n'est perdu.
-Les textes qui expliquent les entités, leur rôle et le fonctionnement des écrans disparaissent en production. Les explications fonctionnelles restent accessibles par les « ? » : survol sur desktop, interaction équivalente adaptée au tactile sur mobile.
+Le mécanisme « ? » existe déjà, c'est le bouton `.fx` du §3 du contrat, avec survol sur desktop et tap sur mobile.
+Couverture mesurée écran par écran, pédagogie masquée : 191 infobulles pour 155 points d'aide. La plupart des écrans ne perdent rien. Quatre font exception et sont en cours d'enrichissement : Entités (0 infobulle pour 5 points), Validations (1 pour 6), Profils et rôles (2 pour 6), Droits effectifs (2 pour 5).
 
 ### Règles métier
 

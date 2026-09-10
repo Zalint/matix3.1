@@ -322,6 +322,19 @@
 #app .serpick input{accent-color:var(--red);width:14px;height:14px;flex:none}
 #app .serpick .swatch{width:18px;border-top:2.5px solid var(--sc);flex:none;align-self:center}
 #app .serpick .swatch.dash{border-top-style:dashed}
+/* Vue production (R-04, R-05) : la maquette porte une pédagogie qui n'est pas livrée, les
+   panneaux « Comment ça marche ? », les paragraphes d'explication en tête d'écran et les blocs
+   qui décrivent la maquette elle-même. Les explications fonctionnelles restent dans les
+   infobulles « ? ». Ce basculement montre ce que reçoit réellement la production. */
+#app.prod [data-open^="help-"],
+#app.prod .scr-head .scr-sub,
+#app.prod .hub .hsub,
+#app.prod [data-maquette-only]{display:none!important}
+#app .prodb{display:flex;align-items:center;gap:6px;padding:5px 10px;border:1px solid var(--line-2);border-radius:8px;font-size:11.5px;font-weight:700;color:var(--ink-2);min-height:32px;white-space:nowrap}
+#app .prodb:hover{border-color:var(--red-line);color:var(--red)}
+#app .prodb svg{width:14px;height:14px}
+#app .prodb[aria-pressed="true"]{background:var(--red-tint);border-color:var(--red-line);color:var(--red)}
+@media (max-width:900px){#app .prodb span{display:none}}
 /* Carte repliable (R-09) : affichage progressif du tableau de bord. */
 #app .foldb{display:flex;align-items:center;gap:5px;margin-left:8px;padding:4px 9px;border:1px solid var(--line-2);border-radius:7px;font-size:11px;font-weight:700;color:var(--ink-2);white-space:nowrap}
 #app .foldb:hover{border-color:var(--red-line);color:var(--red)}

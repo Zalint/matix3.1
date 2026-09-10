@@ -122,7 +122,7 @@ function go(id){
   try{history.replaceState(null,'',location.pathname+(id==='hub'?'':'#'+id));}catch(x){}
   if(!inited[id]){inited[id]=true;formatAmounts(sec);if(registry[id]){try{registry[id](sec,ctx);}catch(e){console.error('init '+id,e);}}}
   drawCharts(sec);setTimeout(function(){drawCharts(sec);},60);
-  seriesSwatches(sec);tableTools(sec);tallTables(sec);buildFolds(sec);
+  seriesSwatches(sec);applyBlind(sec);tableTools(sec);tallTables(sec);buildFolds(sec);
 }
 /* En-tetes figes (R-02) : position:sticky n'agit que dans un conteneur qui defile vraiment.
    .tbl-scroll ne defile qu'en X, on lui plafonne donc la hauteur des qu'un tableau depasse
@@ -217,6 +217,30 @@ function buildTools(w){
 }
 function tableTools(sec){$$('.tbl-scroll',sec).forEach(buildTools);}
 
+/* ===== Aveugle par périmètre (R-16) =====
+   Masquer le théorique sur l'écran Déclarations ne suffit pas : le même déclarant le retrouve
+   sur les autres écrans de son périmètre. Un élément portant data-blind="<périmètre>" est
+   remplacé par un cache pour les profils qui doivent déclarer ce périmètre. Un périmètre déjà
+   réconcilié (déclaré = théorique) n'a plus rien de secret et n'est donc pas listé : seuls le
+   restent Caisse générale et Sous-caisse Marché pour M. Diop, les positions fournisseurs encore
+   attendues pour F. Sarr, et la Source A pour le collecteur (FIXTURES §3, §6).
+   data-blind se pose sur un conteneur, jamais sur l'élément [data-amt] lui-même. */
+var BLIND={caisse:['cg','scm'],dirops:['f4','f5'],collecteur:['srca']};
+function applyBlind(scope){
+  var l=BLIND[state.persona.id]||[];
+  $$('[data-blind]',scope||document).forEach(function(el){
+    var hide=el.getAttribute('data-blind').split(/\s+/).some(function(k){return l.indexOf(k)>=0;});
+    if(hide&&!el.dataset.blindOn){
+      el.dataset.blindOn='1';el.dataset.blindHtml=el.innerHTML;
+      el.innerHTML='<span class="tag lock"><svg><use href="#i-eyeoff"/></svg>Masqué (§3)</span>';
+    }else if(!hide&&el.dataset.blindOn){
+      el.innerHTML=el.dataset.blindHtml;
+      delete el.dataset.blindOn;delete el.dataset.blindHtml;
+      formatAmounts(el);
+    }
+  });
+}
+
 /* Temoin de couleur devant chaque case du selecteur de series : cinq courbes superposees pour
    trois couleurs CVD validees, la distinction se fait aussi au trait. Sans temoin, la legende
    ne dit pas quelle courbe est laquelle. */
@@ -298,7 +322,7 @@ function setPersona(p){
   $$('[data-profile-name],[data-hub-profile]').forEach(function(e){e.textContent=p.profile+' — '+p.short;});
   $$('[data-entity-name],[data-hub-entity],[data-sb-entity]').forEach(function(e){e.textContent=ent.name;});
   var hc=$('[data-hub-cat]');if(hc)hc.textContent=p.cat;
-  applyPerms();renderHub();renderPops();
+  applyPerms();applyBlind();renderHub();renderPops();
   try{document.dispatchEvent(new CustomEvent('erp:profile',{detail:p}));}catch(e){}
   var cur=$('.scr[data-scr="'+state.screen+'"]');
   if(cur&&cur.getAttribute('data-perm')&&!hasPerm(cur.getAttribute('data-perm'))){go('hub');toast('Profil '+p.profile+' : l’écran précédent n’est pas dans votre périmètre, retour à l’accueil.');}
@@ -357,6 +381,17 @@ document.addEventListener('click',function(e){
   if(!t.closest('.pop,.notifpop,[data-sel],[data-notif]'))$$('.pop.on,.notifpop.on').forEach(function(o){o.classList.remove('on');});
   if(t.closest('.denied')&&!t.closest('.ni')){var d=t.closest('.denied');if(d.title)toast(d.title);}
 });
+/* Vue production (R-04, R-05) : masque la pédagogie propre à la maquette. */
+(function(){
+  var b=$('[data-prod-toggle]');if(!b)return;
+  b.addEventListener('click',function(){
+    var on=!app.classList.contains('prod');
+    app.classList.toggle('prod',on);
+    b.setAttribute('aria-pressed',on?'true':'false');
+    $('[data-prod-lbl]',b).textContent=on?'Vue maquette':'Vue production';
+    toast(on?'Vue production : la pédagogie de la maquette est masquée. Les explications fonctionnelles restent dans les infobulles « ? ».':'Vue maquette : la pédagogie est réaffichée.');
+  });
+})();
 document.addEventListener('keydown',function(e){if(e.key==='Escape')closeAll();});
 document.addEventListener('click',function(e){var o=e.target.closest('[data-open="ov-signaler"]');if(o){var c=$('[data-sig-ctx]');if(c)c.textContent=(MODULE_LABEL[state.module]||'Accueil')+' · '+state.screen+' · '+state.persona.profile+' · '+state.persona.entity+' · v0.9.0';}},true);
 
