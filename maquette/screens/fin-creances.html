@@ -22,7 +22,7 @@
     <div class="card stat">
       <div class="lb">Créances clients<button class="fx" data-f="Créances clients = Σ max(Position client ; 0)" data-c="MaaS Keur Massar 3 250 000 · MaaS Ouakam 2 870 000 · MaaS Pikine 1 985 000 · Restaurant Le Baobab 2 400 000 · Boucherie des Almadies 1 730 000 · 9 autres MaaS 7 840 000 · Touba Viandes exclu (position négative)" data-src="Moteur financier · 15 comptes Créance client CALCULÉ · 27/08/2026 · compte Ajustement exclu (§8.1)" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></div>
       <div class="v amt" data-amt="20075000" data-kpi="cre"></div>
-      <div class="sub2">4,4 % du CA de référence (CA Mata août au 27 : <span class="amt" data-amt="452000000" data-nocur></span>)</div>
+      <div class="sub2"><span data-ratio="cre">4,4</span> % du CA de référence (CA Mata août au 27 : <span class="amt" data-amt="452000000" data-nocur></span>)</div>
     </div>
     <div class="card stat">
       <div class="lb">Avances clients<button class="fx" data-f="Avances clients = Σ max(− Position client ; 0)" data-c="Touba Viandes 150 000 (position −150 000)" data-src="Moteur financier · comptes Créance client CALCULÉ · 27/08/2026" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></div>
@@ -73,6 +73,7 @@
     <div class="sp"></div>
     <button class="btn ghost" data-perm="finance.reconciliation.view" data-goto="fin-reconciliation"><svg><use href="#i-refresh"/></svg>Voir la réconciliation</button>
     <button class="btn ghost" data-perm="finance.export" data-act="export"><svg><use href="#i-dl"/></svg>Exporter</button>
+    <button class="btn ghost" data-perm="finance.creances.saisir" data-open="fin-creances-manuel"><svg><use href="#i-note"/></svg>Saisie manuelle</button>
     <button class="btn pri" data-perm="finance.creances.accorder" data-open="fin-creances-accorder"><svg><use href="#i-plus"/></svg>Accorder une créance</button>
   </div>
 
@@ -138,6 +139,21 @@
     <div class="acts"><button class="btn ghost" data-close>Annuler</button><button class="btn pri" data-perm="finance.creances.accorder" data-act="acc-ok"><svg><use href="#i-check"/></svg>Accorder</button></div>
   </div></div>
 
+  <!-- Modale : saisie manuelle d'une créance ou d'un remboursement (R-10, circuit transitoire) -->
+  <div class="mback" data-ov="fin-creances-manuel"><div class="modal" role="dialog" aria-modal="true" aria-label="Saisie manuelle d'un mouvement de position client">
+    <h3><svg><use href="#i-note"/></svg>Saisie manuelle d'un mouvement</h3>
+    <div class="exp">Enregistre directement un mouvement sur la position d'un client, sans vente en amont pour une créance, sans versement en amont pour un remboursement. Écriture immédiate, sans validation : le Directeur des Opérations détient ce droit par défaut. Motif obligatoire, auteur et horodatage automatiques, audit de modification. Convention de signe (§4.3) : positif = le client doit à Mata.</div>
+    <label class="rline"><input type="radio" name="fin-creances-mv" value="creance" checked>Créance sans vente<span class="rh">augmente la position du client</span></label>
+    <label class="rline"><input type="radio" name="fin-creances-mv" value="rembours">Remboursement sans versement<span class="rh">diminue la position du client</span></label>
+    <div class="fld" style="margin-top:10px"><label for="fin-creances-mv-cp">Contrepartie (Référentiel ERP)</label><select id="fin-creances-mv-cp" class="inp"></select></div>
+    <div class="fld" style="margin-top:10px"><label for="fin-creances-mv-mt">Montant (FCFA, entier positif, sans décimales)</label><input id="fin-creances-mv-mt" class="inp mono" inputmode="numeric" placeholder="0"></div>
+    <div class="fld" style="margin-top:10px"><label for="fin-creances-mv-dt">Date métier</label><input id="fin-creances-mv-dt" class="inp mono" type="date" value="2026-08-27"></div>
+    <div class="fld" style="margin-top:10px"><label for="fin-creances-mv-mo">Motif (obligatoire, audité)</label><input id="fin-creances-mv-mo" class="inp" placeholder="Ex. régularisation d'une livraison hors circuit Ventes Mata"></div>
+    <div class="note-strip"><svg><use href="#i-alert"/></svg><span>Au-delà du seuil d'ajustement inhabituel, <span class="amt" data-amt="500000" data-nocur></span> par écriture ou 3 par jour, l'alerte critique non désactivable part au DG et au Super Admin. Elle ne bloque pas la saisie.</span></div>
+    <div class="note-strip" style="margin-top:10px"><svg><use href="#i-clock"/></svg><span><b>Circuit transitoire.</b> Décision de périmètre V1, hors cahier. Il disparaît une fois la refonte terminée, quand toutes les créances naîtront des ventes reçues de Ventes Mata, seule origine prévue par le cahier (§6.1).</span></div>
+    <div class="acts"><button class="btn ghost" data-close>Annuler</button><button class="btn pri" data-perm="finance.creances.saisir" data-act="mv-ok"><svg><use href="#i-check"/></svg>Enregistrer</button></div>
+  </div></div>
+
   <!-- Modale : aide contextuelle -->
   <div class="mback" data-ov="help-fin-creances"><div class="modal wide" role="dialog" aria-modal="true" aria-label="Comment ça marche : Créances clients">
     <h3><svg><use href="#i-info"/></svg>Comment ça marche : Créances clients</h3>
@@ -147,6 +163,7 @@
       <li><b>Sens du montant</b> — positif = le client doit à Mata, négatif = une avance absorbée par ses ventes futures ; seule Touba Viandes est en négatif, à −150 000 (§4.3).</li>
       <li><b>Contrepartie reliée au Référentiel ERP</b> — chaque compte Créance pointe vers un identifiant existant, jamais recréé ici ; MaaS Keur Massar porte entity_id MAAS-KM (§4.5).</li>
       <li><b>Créance créée à 100 %</b> — une vente Mata reçue par API crée aussitôt une créance pour son montant plein ; les Ventes du jour totalisent <span class="amt" data-amt="6200000" data-nocur></span> sur le périmètre affiché (§6.1).</li>
+      <li><b>Saisie manuelle, circuit transitoire</b> — une créance sans vente ou un remboursement sans versement s'enregistre directement sur la position, sans validation : le Directeur des Opérations détient ce droit par défaut, motif obligatoire, auteur et horodatage automatiques, audit de modification. La position bouge aussitôt, ainsi que le total des créances : Restaurant Le Baobab part de <span class="amt" data-amt="2400000" data-nocur></span>. Ce circuit disparaît quand toutes les créances naîtront des ventes reçues de Ventes Mata (§6.1).</li>
       <li><b>« Encaissements collectés » vérifiés à deux sources</b> — un remboursement n'est affecté au compte client que si la somme des déclarations (Source A) égale la déclaration du collecteur (Source B) ; ici <span class="amt" data-amt="4725000" data-nocur></span> = <span class="amt" data-amt="4725000" data-nocur></span>, validé le 27/08 à 02:04 (§6.3).</li>
       <li><b>Réconciliation des ventes du jour</b> — l'écran vérifie que Ventes Mata du jour = Versements + Paiements Bictorys + Créances nettes nouvelles − Remboursements à neutraliser ; <span class="amt" data-amt="6200000" data-nocur></span> = <span class="amt" data-amt="3100000" data-nocur></span> + <span class="amt" data-amt="1250000" data-nocur></span> + <span class="amt" data-amt="2450000" data-nocur></span> − 600 000, écart 0 (§6.4).</li>
     </ul>
@@ -160,18 +177,19 @@ ERP.register('fin-creances', function (root, ctx) {
   var $ = function (s, el) { return (el || root).querySelector(s); };
   var $$ = function (s, el) { return Array.prototype.slice.call((el || root).querySelectorAll(s)); };
   var tbody = $('[data-rows]'), emptyRow = $('[data-empty]'), tfoot = $('tfoot'), drawer = $('[data-ov="fin-creances-fiche"]');
-  var sel = $('#fin-creances-acc-cp'), cur = 'tous', isMaas = false, curRef = 'MAAS-KM';
+  var sel = $('#fin-creances-acc-cp'), selMv = $('#fin-creances-mv-cp'), cur = 'tous', isMaas = false, curRef = 'MAAS-KM';
   var rows = function () { return $$('tr[data-ref]', tbody); };
   var num = function (tr, k) { return parseInt(tr.getAttribute('data-' + k), 10) || 0; };
   var fmt = function (n) { return (n < 0 ? '−' : '') + String(Math.abs(n)).replace(/\B(?=(\d{3})+(?!\d))/g, ' '); };
   var setAmt = function (el, v) { if (el) { el.setAttribute('data-amt', v); el.classList.toggle('neg', v < 0); } };
   var denied = function (b) { return !b || b.disabled || b.classList.contains('denied') || b.getAttribute('aria-disabled') === 'true'; };
   var icon = function (n) { return '<svg><use href="#i-' + n + '"/></svg>'; };
-  var mvt = function (id, meta, m) { return '<div class="mvt"><span class="sign ' + (m < 0 ? 'm' : 'p') + '">' + (m < 0 ? '−' : '+') + '</span><div class="tx"><b>' + id + '</b><small>' + meta + '</small></div><span class="amt" data-amt="' + m + '" data-nocur></span></div>'; };
+  var esc = function (s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); };
+  var ratio = function (v) { var r = $('[data-ratio="cre"]'); if (r) r.textContent = (v / 452000000 * 100).toFixed(1).replace('.', ','); }, mvt = function (id, meta, m) { return '<div class="mvt"><span class="sign ' + (m < 0 ? 'm' : 'p') + '">' + (m < 0 ? '−' : '+') + '</span><div class="tx"><b>' + id + '</b><small>' + meta + '</small></div><span class="amt" data-amt="' + m + '" data-nocur></span></div>'; };
 
   rows().forEach(function (tr) {
-    var o = document.createElement('option'); o.value = tr.getAttribute('data-ref');
-    o.textContent = tr.getAttribute('data-name') + ' · ' + tr.getAttribute('data-ref'); sel.appendChild(o);
+    var ref = tr.getAttribute('data-ref'), lbl = tr.getAttribute('data-name') + ' · ' + ref;
+    [sel, selMv].forEach(function (s) { var o = document.createElement('option'); o.value = ref; o.textContent = lbl; s.appendChild(o); });
   });
 
   function applyFilter() {
@@ -187,11 +205,12 @@ ERP.register('fin-creances', function (root, ctx) {
     Object.keys(t).forEach(function (k) { setAmt($('[data-tot="' + k + '"]'), t[k]); });
     $('[data-tot-n]').textContent = n + (n > 1 ? ' contreparties affichées' : ' contrepartie affichée');
     ctx.formatAmounts(tfoot);
+    ctx.refreshTall(tbody);
   }
   function updateKpis() {
     var cre = 0, adv = 0;
     rows().forEach(function (tr) { var p = num(tr, 'pos'); cre += Math.max(p, 0); adv += Math.max(-p, 0); });
-    setAmt($('[data-kpi="cre"]'), cre); setAmt($('[data-kpi="adv"]'), adv);
+    setAmt($('[data-kpi="cre"]'), cre); setAmt($('[data-kpi="adv"]'), adv); ratio(cre);
     setAmt($('[data-kpi="km"]'), num($('tr[data-ref="MAAS-KM"]', tbody), 'pos'));
     $$('.statstrip').forEach(function (s) { ctx.formatAmounts(s); });
   }
@@ -239,9 +258,26 @@ ERP.register('fin-creances', function (root, ctx) {
     if (!motif) { ctx.toast('Motif obligatoire : toute écriture manuelle est tracée dans l\'audit'); return; }
     var tr = $('tr[data-ref="' + ref + '"]', tbody), cell = $('td', tr), old = $('[data-acc]', cell), dt = ($('#fin-creances-acc-dt').value || '').split('-').reverse().join('/');
     if (old) old.remove();
-    cell.insertAdjacentHTML('beforeend', '<div data-acc><span class="st warn">' + icon('note') + 'Crédit autorisé jusqu\'à ' + fmt(mt) + ' · valable jusqu\'au ' + dt + '</span> <span class="hint">' + motif + '</span></div>');
+    cell.insertAdjacentHTML('beforeend', '<div data-acc><span class="st warn">' + icon('note') + 'Crédit autorisé jusqu\'à ' + fmt(mt) + ' · valable jusqu\'au ' + dt + '</span> <span class="hint">' + esc(motif) + '</span></div>');
     ctx.close('fin-creances-accorder'); $('#fin-creances-acc-mt').value = ''; $('#fin-creances-acc-mo').value = '';
     ctx.toast('Autorisation de créance enregistrée pour ' + tr.getAttribute('data-name') + ' (plafond ' + fmt(mt) + ' FCFA, jusqu\'au ' + dt + ') · la position n\'évolue qu\'à la réception des ventes par Ventes Mata (§6.1) · tracée dans l\'audit');
+  }
+  /* Saisie manuelle (R-10) : écriture directe sur la position, sans validation, motif obligatoire et
+     audité. Circuit transitoire, retiré quand toutes les créances naîtront de Ventes Mata (§6.1). */
+  function mouvement(btn) {
+    if (denied(btn)) return;
+    var mt = parseInt(($('#fin-creances-mv-mt').value || '').replace(/\D/g, ''), 10), motif = $('#fin-creances-mv-mo').value.trim();
+    if (!mt) { ctx.toast('Montant requis : entier positif en FCFA, sans décimales'); return; }
+    if (!motif) { ctx.toast('Motif obligatoire : toute écriture manuelle est tracée dans l\'audit'); return; }
+    var rb = $('input[name="fin-creances-mv"]:checked').value === 'rembours', lbl = rb ? 'Remboursement' : 'Créance', part = rb ? 'saisi' : 'saisie';
+    var dt = ($('#fin-creances-mv-dt').value || '').split('-').reverse().join('/');
+    var tr = $('tr[data-ref="' + selMv.value + '"]', tbody), pos = num(tr, 'pos') + (rb ? -mt : mt);
+    tr.setAttribute('data-pos', pos); setAmt($('[data-cell="pos"]', tr), pos); ctx.formatAmounts(tr);
+    var cell = $('td', tr), old = $('[data-mv]', cell); if (old) old.remove();
+    cell.insertAdjacentHTML('beforeend', '<div data-mv><span class="st info">' + icon('note') + lbl + ' ' + part + ' · ' + dt + ' · ' + fmt(mt) + '</span> <span class="hint">' + esc(motif) + '</span></div>');
+    applyFilter(); updateKpis();
+    ctx.close('fin-creances-manuel'); $('#fin-creances-mv-mt').value = ''; $('#fin-creances-mv-mo').value = '';
+    ctx.toast(lbl + ' de ' + fmt(mt) + ' FCFA sur ' + tr.getAttribute('data-name') + ' · position portée à ' + fmt(pos) + ' FCFA · écriture directe sans validation, circuit transitoire V1 · created_at et updated_by automatiques, audit de modification.' + (mt > 500000 ? ' Au-delà du seuil de ' + fmt(500000) + ' FCFA : alerte « Ajustement inhabituel » au DG et au Super Admin (critique, non désactivable).' : ''));
   }
   $$('.chip[data-filter]').forEach(function (c) {
     ctx.on(c, 'click', function () { $$('.chip[data-filter]').forEach(function (x) { x.classList.toggle('on', x === c); }); cur = c.getAttribute('data-filter'); applyFilter(); });
@@ -251,6 +287,7 @@ ERP.register('fin-creances', function (root, ctx) {
   ctx.on(bF, 'click', function () { if (denied(bF)) return; ctx.toast('Facture ' + $('[data-d="name"]', drawer).textContent + ' : document généré par le service documentaire commun · disponible 7 jours, régénérable (§5.7, §9.2)'); });
   ctx.on(bO, 'click', function () { if (denied(bO)) return; sel.value = curRef; ctx.close('fin-creances-fiche'); ctx.open('fin-creances-accorder'); });
   ctx.on(bK, 'click', function () { accorder(bK); });
+  var bM = $('[data-act="mv-ok"]'); ctx.on(bM, 'click', function () { mouvement(bM); });
   ctx.on(bX, 'click', function () { if (denied(bX)) return; ctx.toast('Export CSV des positions clients filtrées : service commun d\'export, disponible 7 jours (§9.2) · export audité'); });
   document.addEventListener('erp:profile', function (e) { setView(e.detail && e.detail.id); });
   setView(ctx.profile && typeof ctx.profile === 'object' ? ctx.profile.id : ctx.profile);

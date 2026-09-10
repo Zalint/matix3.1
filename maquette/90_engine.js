@@ -11,7 +11,7 @@ var PERSONAS=[
  {id:'sa',user:'Saliou Doucouré',short:'S. Doucouré',av:'SD',profile:'Super Admin',entity:'MG',cat:'Interne — Employé',perms:['core.*','finance.*']},
  {id:'sa-mlc',user:'Saliou Doucouré',short:'S. Doucouré',av:'SD',profile:'Directeur financier MLC',entity:'MLC',cat:'Interne — Employé',perms:[],off:'Entité MLC à migrer : ce profil ne peut pas être activé'},
  {id:'dg',user:'Ousmane Seck',short:'O. Seck',av:'OS',profile:'DG Mata',entity:'MG',cat:'Interne — Employé',perms:['core.entites.view','core.utilisateurs.view','core.demandes.view','core.demandes.valider','core.audit.view','core.agents.view','core.notifications.view','core.alertes.view','core.incidents.view'].concat(VIEW_FIN,['finance.transferts.initier','finance.transferts.valider','finance.validations.agir','finance.ajustements.valider','finance.reconciliation.valider','finance.comptes.desactiver','finance.export','core.export'])},
- {id:'dirops',user:'Fatou Sarr',short:'F. Sarr',av:'FS',profile:'Directeur des Opérations',entity:'MG',cat:'Interne — Employé',perms:VIEW_CORE_BASE.concat(['core.demandes.view','core.demandes.initier','finance.dashboard.view','finance.comptes.view','finance.depenses.view','finance.depenses.creer','finance.depenses.modifier','finance.fournisseurs.view','finance.fournisseurs.payer','finance.creances.view','finance.creances.accorder','finance.creances.facturer','finance.reconciliation.view','finance.transferts.view','finance.transferts.initier','finance.validations.view','finance.pnl.view','finance.charges.view','finance.historique.view','finance.stock.view','finance.declarations.view','finance.declarations.declarer'])},
+ {id:'dirops',user:'Fatou Sarr',short:'F. Sarr',av:'FS',profile:'Directeur des Opérations',entity:'MG',cat:'Interne — Employé',perms:VIEW_CORE_BASE.concat(['core.demandes.view','core.demandes.initier','finance.dashboard.view','finance.comptes.view','finance.depenses.view','finance.depenses.creer','finance.depenses.modifier','finance.fournisseurs.view','finance.fournisseurs.payer','finance.creances.view','finance.creances.accorder','finance.creances.facturer','finance.creances.saisir','finance.reconciliation.view','finance.transferts.view','finance.transferts.initier','finance.validations.view','finance.pnl.view','finance.charges.view','finance.historique.view','finance.stock.view','finance.declarations.view','finance.declarations.declarer'])},
  {id:'caisse',user:'Moussa Diop',short:'M. Diop',av:'MD',profile:'Gestionnaire de caisse',entity:'MG',cat:'Interne — Employé',perms:VIEW_CORE_BASE.concat(['finance.declarations.view','finance.declarations.declarer','finance.comptes.view','finance.depenses.view','finance.depenses.creer','finance.reconciliation.view'])},
  {id:'collecteur',user:'Abdou Ndiaye',short:'A. Ndiaye',av:'AN',profile:'Collecteur',entity:'MG',cat:'Interne — Employé',perms:VIEW_CORE_BASE.concat(['finance.declarations.view','finance.declarations.declarer','finance.reconciliation.view'])},
  {id:'invest',user:'Ibrahima Kane',short:'I. Kane',av:'IK',profile:'Investisseur',entity:'MG',cat:'Externe — Investisseur',perms:['core.notifications.view','finance.dashboard.view','finance.pnl.view','finance.historique.view'],readonly:true},
@@ -27,7 +27,7 @@ var ENTITIES=[
  {id:'MAAS-ALL',name:'11 autres MaaS',type:'MaaS',st:'mut',lbl:'À activer',off:'Ouakam, Pikine, Rufisque, Grand Yoff, Parcelles, Médina, Yoff, Ngor, Thiaroye, Guédiawaye, HLM'}
 ];
 var NOTIFS=[
- {t:'21:15',crit:true,ic:'alert',cls:'bad',txt:'Écart −25 000 sur Sous-caisse Marché (déclaré par M. Diop)',go:'fin-reconciliation'},
+ {t:'21:15',crit:true,ic:'alert',cls:'bad',txt:'Écart −25 000 sur Sous-caisse Marché (déclaré par M. Diop)',blind:'scm',txtb:'Écart constaté sur Sous-caisse Marché · montant transmis à l\u2019Admin, au DG et au Collecteur (§3)',go:'fin-reconciliation'},
  {t:'19:02',crit:true,ic:'check',cls:'warn',txt:'Ajustement +180 000 Caisse générale : 2e validation requise',go:'fin-validations'},
  {t:'18:05',crit:true,ic:'swap',cls:'info',txt:'Transfert 600 000 BOA → Caisse générale proposé par F. Sarr',go:'fin-validations'},
  {t:'17:30',crit:true,ic:'clock',cls:'bad',txt:'Échéance dépassée : MATA VOLAILLE ŒUFS 1 150 000 (25/08)',go:'fin-fournisseurs'},
@@ -122,6 +122,163 @@ function go(id){
   try{history.replaceState(null,'',location.pathname+(id==='hub'?'':'#'+id));}catch(x){}
   if(!inited[id]){inited[id]=true;formatAmounts(sec);if(registry[id]){try{registry[id](sec,ctx);}catch(e){console.error('init '+id,e);}}}
   drawCharts(sec);setTimeout(function(){drawCharts(sec);},60);
+  seriesSwatches(sec);applyBlind(sec);tableTools(sec);tallTables(sec);buildFolds(sec);
+}
+/* En-tetes figes (R-02) : position:sticky n'agit que dans un conteneur qui defile vraiment.
+   .tbl-scroll ne defile qu'en X, on lui plafonne donc la hauteur des qu'un tableau depasse
+   TALL_MIN lignes visibles. Rappele apres chaque filtrage d'ecran via ERP.refreshTall. */
+var TALL_MIN=15;
+function refreshTall(el){
+  var w=el&&el.closest?el.closest('.tbl-scroll'):null;
+  tallTables(w||$('.scr[data-scr="'+state.screen+'"]')||document);
+}
+function tallTables(sec){
+  if(sec.classList&&sec.classList.contains('tbl-scroll'))return tallOne(sec);
+  $$('.tbl-scroll',sec).forEach(tallOne);
+}
+function tallOne(w){
+  var tb=$('tbody',w);
+  var n=tb?visibleRows(tb).length:0;
+  w.classList.toggle('tall',n>TALL_MIN);
+}
+function visibleRows(tb){return $$('tr',tb).filter(function(r){return !r.hidden&&!r.classList.contains('f-out')&&!r.hasAttribute('data-empty');});}
+
+/* ===== Filtre par colonne et recherche (R-03) =====
+   Comportement standard de tous les tableaux, Mata Core compris. Les ecrans continuent
+   d'ecrire tr.hidden pour leurs propres puces de filtre ; ce filtre-ci passe par la classe
+   f-out. Les deux se composent au lieu de s'ecraser : une ligne s'affiche si aucun des deux
+   ne l'ecarte. Une colonne est filtrable si elle porte 2 a FCOL_MAX valeurs distinctes,
+   courtes, sans montant ni bouton. <th data-nofilter> exclut explicitement une colonne. */
+var FCOL_MAX=10,FROW_MIN=5,FVAL_MAX=32;
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+/* Valeur de filtre d'une cellule : le statut ou l'etiquette s'il y en a un, sinon le texte
+   principal debarrasse de ses qualificatifs .hint et small, que textContent collerait au
+   libelle (« Créance client » + « MaaS » donnait « Créance clientMaaS »). Memorisee sur le noeud. */
+function cellVal(td){
+  var t=td.querySelector('.st,.tag'),v;
+  if(t)v=t.textContent;
+  else{var c=td.cloneNode(true);$$('.hint,small,svg,.av',c).forEach(function(x){x.remove();});v=c.textContent;}
+  return (v||'').replace(/\s+/g,' ').trim();
+}
+function bodyRows(tb){return $$('tr',tb).filter(function(r){return !r.hasAttribute('data-empty')&&r.querySelector('td');});}
+function filterCols(rows,ths){
+  var cols=[];
+  ths.forEach(function(th,i){
+    if(th.hasAttribute('data-nofilter'))return;
+    var vals=[],ok=true;
+    rows.forEach(function(r){
+      var td=r.children[i];
+      if(!td||td.hasAttribute('colspan')||td.querySelector('.amt')){ok=false;return;}
+      if(td.querySelector('button')&&!td.querySelector('.st,.tag')){ok=false;return;}
+      var v=cellVal(td);
+      if(!v||v.length>FVAL_MAX){ok=false;return;}
+      if(vals.indexOf(v)<0)vals.push(v);
+    });
+    if(ok&&vals.length>1&&vals.length<=FCOL_MAX)cols.push({i:i,lb:(th.textContent||'').replace(/\s+/g,' ').trim(),vals:vals.sort()});
+  });
+  return cols;
+}
+function buildTools(w){
+  if(w.dataset.tools||w.closest('.drawer')||w.closest('.modal'))return;
+  var table=$('table',w),tb=table&&$('tbody',table),ths=table?$$('thead th',table):[];
+  if(!tb||!ths.length)return;
+  var rows=bodyRows(tb);
+  if(rows.length<FROW_MIN)return;
+  var cols=filterCols(rows,ths);
+  w.dataset.tools='1';
+  var bar=document.createElement('div');
+  bar.className='tfilt';
+  bar.innerHTML='<label class="tfilt-q"><svg><use href="#i-search"/></svg>'
+    +'<input type="search" data-fq placeholder="Rechercher dans le tableau" aria-label="Rechercher dans le tableau"></label>'
+    +cols.map(function(c){return '<select class="inp" data-fcol="'+c.i+'" aria-label="Filtrer sur '+esc(c.lb)+'"><option value="">'+esc(c.lb)+' : tous</option>'
+      +c.vals.map(function(v){return '<option value="'+esc(v)+'">'+esc(v)+'</option>';}).join('')+'</select>';}).join('')
+    +'<span class="sp"></span><span class="hint" data-fcount></span>'
+    +'<button class="linkish" data-freset hidden>Réinitialiser</button>';
+  w.parentNode.insertBefore(bar,w);
+  function apply(){
+    var q=($('[data-fq]',bar).value||'').toLowerCase().trim();
+    var sel=$$('[data-fcol]',bar).map(function(s){return {i:+s.dataset.fcol,v:s.value};}).filter(function(s){return s.v;});
+    bodyRows(tb).forEach(function(r){
+      var out=sel.some(function(s){var td=r.children[s.i];return !td||cellVal(td)!==s.v;});
+      if(!out&&q)out=(r.textContent||'').toLowerCase().indexOf(q)<0;
+      r.classList.toggle('f-out',out);
+    });
+    var n=visibleRows(tb).length,actif=!!q||!!sel.length;
+    $('[data-fcount]',bar).textContent=n+(n>1?' lignes affichées':' ligne affichée');
+    $('[data-freset]',bar).hidden=!actif;
+    /* La ligne « aucun résultat » suit le nombre de lignes réellement affichées, filtre actif
+       ou non : ne la piloter que pendant le filtrage la laissait ouverte après réinitialisation. */
+    var empty=$('tr[data-empty]',tb);
+    if(empty)empty.hidden=n>0;
+    refreshTall(w);
+  }
+  bar.addEventListener('input',apply);bar.addEventListener('change',apply);
+  $('[data-freset]',bar).addEventListener('click',function(){$('[data-fq]',bar).value='';$$('[data-fcol]',bar).forEach(function(s){s.value='';});apply();});
+  apply();
+}
+function tableTools(sec){$$('.tbl-scroll',sec).forEach(buildTools);}
+
+/* ===== Aveugle par périmètre (R-16) =====
+   Masquer le théorique sur l'écran Déclarations ne suffit pas : le même déclarant le retrouve
+   sur les autres écrans de son périmètre. Un élément portant data-blind="<périmètre>" est
+   remplacé par un cache pour les profils qui doivent déclarer ce périmètre. Un périmètre déjà
+   réconcilié (déclaré = théorique) n'a plus rien de secret et n'est donc pas listé : seuls le
+   restent Caisse générale et Sous-caisse Marché pour M. Diop, les positions fournisseurs encore
+   attendues pour F. Sarr, et la Source A pour le collecteur (FIXTURES §3, §6).
+   data-blind se pose sur un conteneur, jamais sur l'élément [data-amt] lui-même. */
+/* Clés de périmètre, à ne jamais confondre avec les clés de profil que l'écran Réconciliation
+   utilise dans son propre data-blind local (voir CONTRACT §5). Le collecteur n'apparaît pas
+   ici : la Source A n'est affichée que sur Réconciliation, couverte par ce mécanisme local. */
+var BLIND={caisse:['cg','scm'],dirops:['f4','f5']};
+function isBlind(k){return (BLIND[state.persona.id]||[]).indexOf(k)>=0;}
+/* Le cache se pose par une classe, jamais en remplacant le contenu : les scripts d'ecran
+   continuent d'ecrire dans leurs noeuds (recalc de Fournisseurs, applyView de P&L) sans
+   trouver le DOM ampute, et le contenu reapparait tel quel au changement de profil. */
+function applyBlind(scope){
+  $$('[data-blind]',scope||document).forEach(function(el){
+    el.classList.toggle('blinded',el.getAttribute('data-blind').split(/\s+/).some(isBlind));
+  });
+}
+
+/* Temoin de couleur devant chaque case du selecteur de series : cinq courbes superposees pour
+   trois couleurs CVD validees, la distinction se fait aussi au trait. Sans temoin, la legende
+   ne dit pas quelle courbe est laquelle. */
+function seriesSwatches(sec){
+  $$('.serpick [data-series-toggle]',sec).forEach(function(c){
+    var s=SERIES[c.getAttribute('data-series-toggle')];
+    if(!s||c.dataset.sw)return;
+    c.dataset.sw='1';
+    var i=document.createElement('i');
+    i.className='swatch'+(s.dash?' dash':'');
+    i.style.setProperty('--sc','var('+s.c+')');
+    c.parentNode.insertBefore(i,c.nextSibling);
+  });
+}
+
+/* ===== Repli d'une carte (R-09) =====
+   data-fold="closed|open" sur une .card : le moteur pose le bouton dans son en-tete et masque
+   tout ce qui suit. data-fold-sum donne la ligne de resume lue quand la carte est repliee.
+   Appele apres tableTools pour que la barre de filtre soit repliee avec le tableau. */
+function buildFolds(sec){
+  $$('.card[data-fold]',sec).forEach(function(c){
+    if(c.dataset.foldReady)return;
+    var ch=$('.ch',c); if(!ch)return;
+    c.dataset.foldReady='1';
+    var body=Array.prototype.slice.call(c.children).filter(function(x){return x!==ch;});
+    var sum=c.getAttribute('data-fold-sum'),sEl=null;
+    if(sum){sEl=document.createElement('span');sEl.className='hint foldsum';sEl.textContent=sum;ch.appendChild(sEl);}
+    var b=document.createElement('button');b.type='button';b.className='foldb';ch.appendChild(b);
+    function set(open){
+      c.classList.toggle('folded',!open);
+      body.forEach(function(x){x.hidden=!open;});
+      if(sEl)sEl.hidden=open;
+      b.setAttribute('aria-expanded',open?'true':'false');
+      b.innerHTML='<svg><use href="#i-chevd"/></svg>'+(open?'Replier':'Déplier');
+      if(open){drawCharts(c);tallTables(c);}
+    }
+    b.addEventListener('click',function(){set(c.classList.contains('folded'));});
+    set(c.getAttribute('data-fold')!=='closed');
+  });
 }
 
 /* ================= HUB / PERSONA ================= */
@@ -147,7 +304,7 @@ function renderHub(){
     var rows=[];
     if(hasPerm('finance.validations.agir'))rows.push(['4 validations en attente','Transfert, ajustement, correction, désactivation','fin-validations','warn','À valider']);
     if(hasPerm('finance.declarations.declarer'))rows.push([state.persona.id==='collecteur'?'Collecte du 27/08 à déclarer ce soir':'Caisse générale à déclarer','Réconciliation en aveugle avant 23:59','fin-declarations','mut','À déclarer']);
-    if(hasPerm('finance.reconciliation.view'))rows.push(['Écart Sous-caisse Marché −25 000','Investigation puis Ajustement si nécessaire','fin-reconciliation','bad','Écart']);
+    if(hasPerm('finance.reconciliation.view'))rows.push([isBlind('scm')?'Écart constaté sur Sous-caisse Marché':'Écart Sous-caisse Marché −25 000',isBlind('scm')?'Montant transmis à l\u2019Admin, au DG et au Collecteur (§3)':'Investigation puis Ajustement si nécessaire','fin-reconciliation','bad','Écart']);
     if(hasPerm('finance.fournisseurs.view'))rows.push(['2 échéances fournisseurs dépassées','1 950 000 · ŒUFS et Aliments Sénégal','fin-fournisseurs','bad','Dépassées']);
     if(hasPerm('core.demandes.valider'))rows.push(['DEM-031 en attente','Création utilisateur demandée par B. Fall','core-demandes','warn','À traiter']);
     if(hasPerm('core.demandes.initier')&&!hasPerm('core.demandes.valider'))rows.push(['DEM-030 retournée','Préciser date de fin et périmètre','core-demandes','warn','À corriger']);
@@ -166,6 +323,7 @@ function setPersona(p){
   var hc=$('[data-hub-cat]');if(hc)hc.textContent=p.cat;
   applyPerms();renderHub();renderPops();
   try{document.dispatchEvent(new CustomEvent('erp:profile',{detail:p}));}catch(e){}
+  applyBlind();/* apres l'evenement : un ecran qui se re-rend sur changement de profil effacerait le cache pose avant */
   var cur=$('.scr[data-scr="'+state.screen+'"]');
   if(cur&&cur.getAttribute('data-perm')&&!hasPerm(cur.getAttribute('data-perm'))){go('hub');toast('Profil '+p.profile+' : l’écran précédent n’est pas dans votre périmètre, retour à l’accueil.');}
   else if(setPersona.ready)toast('Profil actif : '+p.profile+' — menu et permissions recalculés');
@@ -184,8 +342,9 @@ function renderPops(){
   }).join('');
   var nl=$('[data-notif-list]');
   if(nl)nl.innerHTML=NOTIFS.map(function(n){
+    var ntxt=(n.blind&&isBlind(n.blind))?n.txtb:n.txt;
     var bg={bad:'var(--bad-bg)',warn:'var(--warn-bg)',info:'var(--red-tint)'}[n.cls],fg={bad:'var(--bad)',warn:'var(--warn)',info:'var(--red)'}[n.cls];
-    return '<button class="ni2" data-goto="'+n.go+'"><div style="width:26px;height:26px;border-radius:7px;display:grid;place-items:center;background:'+bg+';color:'+fg+';flex:none"><svg style="width:13px;height:13px"><use href="#i-'+n.ic+'"/></svg></div><div style="font-size:12px;line-height:1.45"><b>'+n.txt+'</b><small style="display:block;color:var(--mut);font-size:10.5px">'+n.t+(n.crit?' · critique, non désactivable':'')+'</small></div></button>';
+    return '<button class="ni2" data-goto="'+n.go+'"><div style="width:26px;height:26px;border-radius:7px;display:grid;place-items:center;background:'+bg+';color:'+fg+';flex:none"><svg style="width:13px;height:13px"><use href="#i-'+n.ic+'"/></svg></div><div style="font-size:12px;line-height:1.45"><b>'+ntxt+'</b><small style="display:block;color:var(--mut);font-size:10.5px">'+n.t+(n.crit?' · critique, non désactivable':'')+'</small></div></button>';
   }).join('');
 }
 
@@ -223,6 +382,17 @@ document.addEventListener('click',function(e){
   if(!t.closest('.pop,.notifpop,[data-sel],[data-notif]'))$$('.pop.on,.notifpop.on').forEach(function(o){o.classList.remove('on');});
   if(t.closest('.denied')&&!t.closest('.ni')){var d=t.closest('.denied');if(d.title)toast(d.title);}
 });
+/* Vue production (R-04, R-05) : masque la pédagogie propre à la maquette. */
+(function(){
+  var b=$('[data-prod-toggle]');if(!b)return;
+  b.addEventListener('click',function(){
+    var on=!app.classList.contains('prod');
+    app.classList.toggle('prod',on);
+    b.setAttribute('aria-pressed',on?'true':'false');
+    $('[data-prod-lbl]',b).textContent=on?'Vue maquette':'Vue production';
+    toast(on?'Vue production : la pédagogie de la maquette est masquée. Les explications fonctionnelles restent dans les infobulles « ? ».':'Vue maquette : la pédagogie est réaffichée.');
+  });
+})();
 document.addEventListener('keydown',function(e){if(e.key==='Escape')closeAll();});
 document.addEventListener('click',function(e){var o=e.target.closest('[data-open="ov-signaler"]');if(o){var c=$('[data-sig-ctx]');if(c)c.textContent=(MODULE_LABEL[state.module]||'Accueil')+' · '+state.screen+' · '+state.persona.profile+' · '+state.persona.entity+' · v0.9.0';}},true);
 
@@ -239,9 +409,14 @@ function showTip(btn){
   tip.style.left=x+'px';tip.style.top=y+'px';
 }
 function hideTip(){tip.classList.remove('on');tipFor=null;setTimeout(function(){if(!tipFor)tip.hidden=true;},160);}
-document.addEventListener('mouseover',function(e){var b=e.target.closest('.fx');if(b&&tipFor!==b)showTip(b);});
-document.addEventListener('mouseout',function(e){var b=e.target.closest('.fx');if(b&&!b.contains(e.relatedTarget))hideTip();});
-document.addEventListener('focusin',function(e){var b=e.target.closest('.fx');if(b)showTip(b);});
+/* Survol reserve a la souris : sur tactile, le tap emet aussi un mouseover synthetique, qui
+   ouvrait l'infobulle juste avant que le clic du meme tap ne la referme. L'aide etait donc
+   inatteignable au doigt. pointerType filtre le cas ; le tap passe par le gestionnaire de clic. */
+document.addEventListener('pointerover',function(e){if(e.pointerType!=='mouse')return;var b=e.target.closest('.fx');if(b&&tipFor!==b)showTip(b);});
+document.addEventListener('pointerout',function(e){if(e.pointerType!=='mouse')return;var b=e.target.closest('.fx');if(b&&!b.contains(e.relatedTarget))hideTip();});
+/* Focus clavier seulement : au tap, le bouton prend le focus et ouvrait l'infobulle juste avant
+   que le clic du meme tap ne la referme. :focus-visible ne repond pas au focus tactile. */
+document.addEventListener('focusin',function(e){var b=e.target.closest('.fx');if(b&&b.matches(':focus-visible'))showTip(b);});
 document.addEventListener('focusout',function(e){if(e.target.closest&&e.target.closest('.fx'))hideTip();});
 document.addEventListener('click',function(e){var b=e.target.closest('.fx');if(b){e.stopPropagation();if(tipFor===b)hideTip();else showTip(b);}else if(tipFor)hideTip();},true);
 
@@ -254,8 +429,19 @@ var SERIES={
  creances:{name:'Créances clients',c:'--d3',dash:false,v:[16.9,17.2,17.0,17.6,17.9,17.5,18.1,18.4,18.2,18.0,18.6,18.9,18.5,19.0,18.8,19.3,19.1,18.9,19.4,19.7,19.5,19.2,19.6,19.9,19.7,20.0,19.8,20.1,19.9,20.075]},
  pnl:{name:'P&L Global (cumul)',c:'--d1',dash:true,v:[1.1,2.0,2.8,3.9,4.7,5.6,6.8,7.5,8.6,9.4,10.3,11.5,12.2,13.4,14.1,15.3,16.0,16.8,17.9,18.9,19.6,20.4,21.5,22.3,23.2,23.9,24.4,25.1,25.5,25.835]},
  ventes:{name:'Ventes Mata (cumul)',c:'--d2',dash:true,v:[16,32,49,66,82,99,116,133,149,165,182,199,215,232,249,265,282,299,316,332,349,366,382,399,416,424,433,441,447,452]},
- burn:{name:'Cash burn (cumul dépenses)',c:'--d3',dash:true,v:[15.2,30.4,46.1,61.8,77.0,93.1,109.0,124.6,140.1,155.7,171.4,187.2,202.6,218.4,234.1,249.6,265.5,281.2,296.9,312.4,328.3,344.0,359.5,375.2,390.8,398.6,405.9,412.7,417.9,421.5]}
+ burn:{name:'Cash burn (cumul dépenses)',c:'--d3',dash:true,v:[15.2,30.4,46.1,61.8,77.0,93.1,109.0,124.6,140.1,155.7,171.4,187.2,202.6,218.4,234.1,249.6,265.5,281.2,296.9,312.4,328.3,344.0,359.5,375.2,390.8,398.6,405.9,412.7,417.9,421.5]},
+ transit:{name:'Trésorerie en transit',c:'--d3',dash:false,v:[0.9,1.2,0.8,1.5,2.1,1.7,1.1,0.6,1.9,2.4,1.3,0.7,1.6,2.2,1.8,1.0,0.5,1.4,2.0,2.6,1.5,0.9,1.7,2.3,1.2,0.8,1.6,2.1,2.5,2.85]}
 };
+/* Les cinq séries de trésorerie du tableau de bord (R-08) doivent rester cohérentes entre elles
+   à chaque point, pas seulement au dernier. On les dérive donc des séries de base au lieu de les
+   saisir à la main : disponible = totale − transit, nette fournisseur = totale − dettes, position
+   financière nette = totale + avances fournisseurs + créances − dettes − avances clients (§8.1).
+   Palette limitée aux trois couleurs CVD validées : au-delà, on distingue par le trait. */
+var AV_F=0.35,AV_C=0.15;
+function derive(f){return SERIES.treso.v.map(function(t,i){return +f(t,i).toFixed(3);});}
+SERIES.dispo={name:'Trésorerie disponible',c:'--d2',dash:false,v:derive(function(t,i){return t-SERIES.transit.v[i];})};
+SERIES.netfou={name:'Trésorerie nette fournisseur',c:'--d2',dash:true,v:derive(function(t,i){return t-SERIES.dettes.v[i];})};
+SERIES.pfn={name:'Position financière nette',c:'--d1',dash:true,v:derive(function(t,i){return t+AV_F+SERIES.creances.v[i]-SERIES.dettes.v[i]-AV_C;})};
 var NS='http://www.w3.org/2000/svg';
 function E(n,a){var el=document.createElementNS(NS,n);for(var k in a)el.setAttribute(k,a[k]);return el;}
 function colorOf(tok){return getComputedStyle(app).getPropertyValue(tok).trim();}
@@ -292,14 +478,14 @@ function drawSeries(box,keys){
 }
 function drawCharts(scope){
   $$('.linechart',scope||document).forEach(function(b){if(b.closest('.scr')&&!b.closest('.scr').classList.contains('on'))return;var k=(b.getAttribute('data-series')||'treso').split(',').filter(function(x){return SERIES[x];});drawSeries(b,k);});
-  $$('.multichart',scope||document).forEach(function(b){var sec=b.closest('.scr');if(sec&&!sec.classList.contains('on'))return;var keys=$$('[data-series-toggle]',sec||document).filter(function(c){return c.checked&&SERIES[c.getAttribute('data-series-toggle')];}).map(function(c){return c.getAttribute('data-series-toggle');});if(!keys.length)keys=(b.getAttribute('data-series')||'treso').split(',');drawSeries(b,keys);});
+  $$('.multichart',scope||document).forEach(function(b){var sec=b.closest('.scr');if(sec&&!sec.classList.contains('on'))return;var tg=$$('[data-series-toggle]',sec||document);var keys=tg.filter(function(c){return c.checked&&SERIES[c.getAttribute('data-series-toggle')];}).map(function(c){return c.getAttribute('data-series-toggle');});if(!keys.length&&!tg.length)keys=(b.getAttribute('data-series')||'treso').split(',');drawSeries(b,keys);});
 }
 document.addEventListener('change',function(e){if(e.target.hasAttribute('data-series-toggle')){var sec=e.target.closest('.scr');drawCharts(sec);}});
 var rT=null;window.addEventListener('resize',function(){clearTimeout(rT);rT=setTimeout(function(){drawCharts(document);},120);});
 
 /* ================= API ÉCRANS ================= */
-function filterRows(tbody,attr,value){$$('tr',tbody).forEach(function(r){var v=r.getAttribute('data-'+attr);if(v===null)return;r.hidden=!(value==='tous'||v===value);});}
-var ctx={get profile(){return state.persona;},get entity(){return state.persona.entity;},hasPerm:hasPerm,toast:toast,fmt:fmt,formatAmounts:formatAmounts,go:go,open:openOv,close:function(id){closeOv($('[data-ov="'+id+'"]'));},filterRows:filterRows,on:function(el,ev,fn){if(el)el.addEventListener(ev,fn);},applyPerms:applyPerms,drawCharts:drawCharts,series:SERIES};
+function filterRows(tbody,attr,value){$$('tr',tbody).forEach(function(r){var v=r.getAttribute('data-'+attr);if(v===null)return;r.hidden=!(value==='tous'||v===value);});refreshTall(tbody);}
+var ctx={get profile(){return state.persona;},get entity(){return state.persona.entity;},hasPerm:hasPerm,toast:toast,fmt:fmt,formatAmounts:formatAmounts,go:go,open:openOv,close:function(id){closeOv($('[data-ov="'+id+'"]'));},filterRows:filterRows,refreshTall:refreshTall,on:function(el,ev,fn){if(el)el.addEventListener(ev,fn);},applyPerms:applyPerms,drawCharts:drawCharts,series:SERIES};
 var pre=window.ERP;
 window.ERP={register:function(id,fn){registry[id]=fn;},go:go,toast:toast,hasPerm:hasPerm,ctx:ctx,state:state};
 if(pre&&pre._q)pre._q.forEach(function(x){registry[x[0]]=x[1];});

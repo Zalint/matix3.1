@@ -14,6 +14,7 @@
     #app [data-scr="core-droits"] .modal .rline{display:flex;text-transform:none;font-size:12.5px;font-weight:600;letter-spacing:0;color:var(--ink);margin-bottom:8px}
     #app [data-scr="core-droits"] .modal .rline .rh{font-weight:500;color:var(--mut);font-size:11px;margin-left:auto;text-align:right}
     #app [data-scr="core-droits"] .modal select.inp,#app [data-scr="core-droits"] .modal input.inp{font-family:var(--body);font-size:13px;margin-bottom:12px}
+    #app [data-scr="core-droits"] .fld>label{display:flex;align-items:center;gap:6px}
   </style>
   <div class="scr-head">
     <div>
@@ -31,7 +32,7 @@
 
   <div class="statstrip four">
     <div class="card stat">
-      <div class="lb">Niveaux de résolution</div>
+      <div class="lb">Niveaux de résolution<button class="fx" data-f="Le droit effectif se calcule en descendant les 7 niveaux, toujours dans le même ordre : Interdiction explicite → Override utilisateur → Override contexte → Permission rôle → Règle catégorie → Règle globale → Refus par défaut ; le premier niveau qui tranche l'emporte, les suivants ne sont plus regardés (§3.5)" data-c="Scénario « S. Doucouré · valider VAL-114 » : le niveau 1 tranche (l'initiateur ne valide jamais sa propre opération), la Permission rôle du Super Admin n'est jamais atteinte · la même question sans objet concerné répondrait « autorisé » au niveau 4" data-src="Mata Core §3.5 · chaîne lue à l'instant, sans cache (Architecture technique §7)" aria-label="Voir la règle"><svg><use href="#i-info"/></svg></button></div>
       <div class="v">7</div>
       <div class="sub2">Interdiction explicite → Override utilisateur → Override contexte → Permission rôle → Règle catégorie → Règle globale → Refus par défaut (§3.5)</div>
     </div>
@@ -41,12 +42,12 @@
       <div class="sub2">lignes du tableau « Exceptions et interdictions » · toutes auditées · une interdiction explicite de sécurité invalide le cache immédiatement</div>
     </div>
     <div class="card stat">
-      <div class="lb">Comptes et profils</div>
+      <div class="lb">Comptes et profils<button class="fx" data-f="Un compte par personne ; un compte déjà utilisé est désactivé, jamais supprimé, afin de conserver l'historique (§3.1, §10.2)" data-c="9 comptes dans le sélecteur Utilisateur, 8 actifs · M. Gueye, désactivé le 30/06/2026, reste sélectionnable ici, ses droits gelés par une interdiction explicite au lieu d'être effacés · 1 profil non activable : Directeur financier MLC, entité à migrer" data-src="Mata Core §3.1, §10.2 · registre des comptes et des profils · FIXTURES §2" aria-label="Voir la règle"><svg><use href="#i-info"/></svg></button></div>
       <div class="v">9 comptes · 8 actifs</div>
       <div class="sub2">1 désactivé (M. Gueye, 30/06/2026, jamais supprimé) · 1 profil non activable (Directeur financier MLC, entité à migrer)</div>
     </div>
     <div class="card stat">
-      <div class="lb">Dernier recalcul</div>
+      <div class="lb">Dernier recalcul<button class="fx" data-f="État réellement en vigueur, jamais une valeur mise en cache (Architecture technique §7) : chaque explication traverse la chaîne complète par lecture directe des interdictions, exceptions, rôles et règles" data-c="Dernier recalcul 27/08 · 21:30, obtenu par lecture directe · ailleurs dans l'application, le cache de session est calculé une fois par changement de contexte (connexion, changement de profil, modification d'un override) puis invalidé à la prochaine modification pertinente ; une interdiction explicite de sécurité l'invalide immédiatement" data-src="Architecture technique Mata Core §7 · chaîne de résolution lue à l'instant" aria-label="Voir la règle"><svg><use href="#i-info"/></svg></button></div>
       <div class="v"><span data-stat="last">27/08 · 21:30</span></div>
       <div class="sub2">chaîne complète, lecture directe · cache de session non utilisé par cet écran (Technique §7)</div>
     </div>
@@ -64,7 +65,7 @@
         <div class="fld"><label for="core-droits-action">Action (permission)</label><select id="core-droits-action" class="inp mono" data-q="action"></select></div>
         <div class="fld"><label for="core-droits-entite">Entité</label>
           <select id="core-droits-entite" class="inp" data-q="entite"><option value="MG">Mata Group · Active</option><option value="MLC">MLC · à migrer</option><option value="MV">Mata Volaille · à migrer</option><option value="KB">Keur Bally · à activer</option><option value="MAAS-KM">MaaS Keur Massar · à activer</option><option value="MAAS-OU">MaaS Ouakam · à activer</option></select></div>
-        <div class="fld"><label for="core-droits-objet">Objet concerné (facultatif)</label>
+        <div class="fld"><label for="core-droits-objet">Objet concerné (facultatif)<button class="fx" data-f="Objet concerné = l'opération précise sur laquelle porte la question de droit : une validation financière en attente ou une demande administrative. Facultatif : laissé sur « Aucun », la question porte sur l'action en général, sans opération de rattachement" data-c="On y saisit la référence de l'objet — VAL-114 à VAL-118 pour les validations financières, DEM-030 ou DEM-031 pour les demandes. Exemple : VAL-114, transfert de 1 500 000 de la Caisse générale vers la Banque BOA initié par S. Doucouré · renseigner cet objet fait apparaître l'interdiction explicite de niveau 1 (l'initiateur ne valide jamais sa propre opération, §4.2), là où la même question sans objet répondrait « autorisé » au niveau Permission rôle" data-src="Mata Core · validations et demandes en cours au 27/08/2026 · FIXTURES §9, §10 · liste lue à l'instant" aria-label="Voir l'aide du champ Objet concerné"><svg><use href="#i-info"/></svg></button></label>
           <select id="core-droits-objet" class="inp" data-q="objet"><option value="">Aucun</option><option value="VAL-118">VAL-118 · Transfert BOA → CG · init. F. Sarr</option><option value="VAL-117">VAL-117 · Ajustement CG · init. M. Diop · 1re validation O. Seck</option><option value="VAL-116">VAL-116 · Correction BOA · init. F. Sarr</option><option value="VAL-115">VAL-115 · Désactivation Sous-caisse Abattoir · init. F. Sarr</option><option value="VAL-114">VAL-114 · Transfert CG → BOA · init. S. Doucouré</option><option value="DEM-031">DEM-031 · Création utilisateur · init. B. Fall</option><option value="DEM-030">DEM-030 · Prolongation C. Mbaye · init. F. Sarr</option></select></div>
         <button class="btn pri" data-run><svg><use href="#i-search"/></svg>Expliquer</button>
       </div>
@@ -108,7 +109,7 @@
         <div class="row-m"><span>Action</span><b data-k="act">—</b></div>
         <div class="row-m"><span>Sensibilité de l'action</span><b data-k="sens">—</b></div>
         <div class="row-m"><span>Niveau de validation</span><b data-k="val">—</b></div>
-        <div class="row-m"><span>Objet</span><b><span data-k="obj">—</span> <span class="amt" data-k-amt data-nocur hidden></span></b></div>
+        <div class="row-m"><span>Objet concerné</span><b><span data-k="obj">—</span> <span class="amt" data-k-amt data-nocur hidden></span></b></div>
         <div class="fld"><label>Qui a donné quel droit à qui, quand et sous quel profil ? (§5.4)</label><div class="fcode" data-k="audit">—</div></div>
         <div class="fld"><label>Sources lues pour ce calcul</label>
           <div class="row-m"><span>Interdictions explicites</span><b data-k="bans">table lue à l'instant</b></div>
@@ -130,13 +131,13 @@
       </table></div>
     </div>
     <div class="card">
-      <div class="ch"><h3>Exceptions et interdictions enregistrées</h3><div class="hint-r"><div class="chips"><button class="chip on" data-filter="tous">Toutes</button><button class="chip" data-filter="sel">Utilisateur sélectionné</button></div></div></div>
+      <div class="ch"><h3>Exceptions et interdictions enregistrées<button class="fx" data-f="Une exception peut autoriser ou interdire spécifiquement une action pour un utilisateur ou un périmètre, éventuellement pour une durée limitée (§3.5)" data-c="5 lignes dérogent ici au rôle : 1 override contexte (B. Fall, finance.creances.view, MaaS Keur Massar), 1 accès temporaire (C. Mbaye, 01/09/2026 → 30/09/2026), 3 interdictions explicites (S. Doucouré sur VAL-114, O. Seck sur la 2e validation de VAL-117, M. Gueye compte désactivé)" data-src="Mata Core §3.5 · registre des droits lu à l'instant (Architecture technique §7) · Audit central du 27/08" aria-label="Voir la règle"><svg><use href="#i-info"/></svg></button></h3><div class="hint-r"><div class="chips"><button class="chip on" data-filter="tous">Toutes</button><button class="chip" data-filter="sel">Utilisateur sélectionné</button></div></div></div>
       <div class="tbl-scroll"><table>
         <thead><tr><th>Niveau</th><th>Bénéficiaire</th><th>Action</th><th>Périmètre</th><th>Sens</th><th>Origine / motif</th><th>Validité</th><th></th></tr></thead>
         <tbody data-x="rows">
           <tr data-user="u8" data-qs="u8|0|finance.creances.view|MAAS-KM|"><td><span class="st mut">Override contexte</span></td><td><b>B. Fall</b><div class="hint">Gérant MaaS Keur Massar</div></td><td>finance.creances.view</td><td>MaaS Keur Massar</td><td><span class="st ok"><svg><use href="#i-check"/></svg>Autoriser</span></td><td>Restriction de périmètre : sa position MaaS Keur Massar uniquement (FIXTURES §2)</td><td>Sans date de fin</td><td><button class="btn ghost sm" data-explain><svg><use href="#i-eye"/></svg>Expliquer</button></td></tr>
           <tr data-user="u7" data-qs="u7|0|finance.comptes.view|MG|"><td><span class="st warn">Accès temporaire</span></td><td><b>C. Mbaye</b><div class="hint">Comptable externe</div></td><td>profil Comptable externe</td><td>Mata Group</td><td><span class="st ok"><svg><use href="#i-check"/></svg>Autoriser</span></td><td>Attribué par S. Doucouré sous le profil Super Admin, 27/08 · 11:20 (Audit central)</td><td>01/09/2026 → 30/09/2026 · non commencé au 27/08 · expire automatiquement (§3.2)</td><td><button class="btn ghost sm" data-explain><svg><use href="#i-eye"/></svg>Expliquer</button></td></tr>
-          <tr data-user="u1" data-qs="u1|0|finance.transferts.valider|MG|VAL-114"><td><span class="st bad">Interdiction explicite</span></td><td><b>S. Doucouré</b><div class="hint">Super Admin Mata Group</div></td><td>finance.transferts.valider</td><td>VAL-114</td><td><span class="st bad"><svg><use href="#i-x"/></svg>Interdire</span></td><td>Séparation initiateur / validateur (§4.2) · le Super Admin ne contourne pas cette règle</td><td>Tant que VAL-114 est En attente</td><td><button class="btn ghost sm" data-explain><svg><use href="#i-eye"/></svg>Expliquer</button></td></tr>
+          <tr data-user="u1" data-qs="u1|0|finance.transferts.valider|MG|VAL-114"><td><span class="st bad">Interdiction explicite</span></td><td><b>S. Doucouré</b><div class="hint">Super Admin Mata Group</div></td><td>finance.transferts.valider</td><td>VAL-114<button class="fx" data-f="Séparation initiateur / validateur : l'initiateur ne valide jamais sa propre opération, et le Super Admin ne contourne pas cette règle (Core §4.2)" data-c="VAL-114, transfert de 1 500 000 de la Caisse générale vers la Banque BOA via le compte Relais, a été initié par S. Doucouré le 27/08 à 16:42 : Valider et Refuser lui sont interdits sur cette opération tant qu'elle est En attente, un autre validateur habilité doit agir" data-src="Mata Core §4.2 · Mata Finance §7.2 · validations en cours au 27/08 · FIXTURES §9" aria-label="Voir la règle"><svg><use href="#i-info"/></svg></button></td><td><span class="st bad"><svg><use href="#i-x"/></svg>Interdire</span></td><td>Séparation initiateur / validateur (§4.2) · le Super Admin ne contourne pas cette règle</td><td>Tant que VAL-114 est En attente</td><td><button class="btn ghost sm" data-explain><svg><use href="#i-eye"/></svg>Expliquer</button></td></tr>
           <tr data-user="u2" data-qs="u2|0|finance.validations.agir|MG|VAL-117"><td><span class="st bad">Interdiction explicite</span></td><td><b>O. Seck</b><div class="hint">DG Mata</div></td><td>finance.validations.agir</td><td>VAL-117 · 2e validation</td><td><span class="st bad"><svg><use href="#i-x"/></svg>Interdire</span></td><td>1re validation donnée le 27/08 · 19:02 · les deux validateurs sont distincts entre eux (§4.2)</td><td>Tant que VAL-117 est En attente</td><td><button class="btn ghost sm" data-explain><svg><use href="#i-eye"/></svg>Expliquer</button></td></tr>
           <tr data-user="u9" data-qs="u9|0|finance.depenses.creer|MG|"><td><span class="st bad">Interdiction explicite</span></td><td><b>M. Gueye</b><div class="hint">Administrateur Mata Finance</div></td><td>toutes actions</td><td>Toutes entités</td><td><span class="st bad"><svg><use href="#i-x"/></svg>Interdire</span></td><td>Compte désactivé le 30/06/2026, jamais supprimé (§3.1) · cache invalidé immédiatement (Technique §7)</td><td>Permanente</td><td><button class="btn ghost sm" data-explain><svg><use href="#i-eye"/></svg>Expliquer</button></td></tr>
         </tbody>

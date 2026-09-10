@@ -95,7 +95,7 @@
 /* ---- Content / cards ---- */
 #app .ct{padding:20px 26px 60px;max-width:1460px;width:100%;min-width:0;margin:0 auto}
 #app .card{background:var(--card);border:1px solid var(--line);border-radius:13px;box-shadow:var(--sh)}
-#app .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+#app .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px}
 #app .kpi{padding:15px 16px 13px;position:relative;overflow:hidden}
 #app .kpi::before{content:"";position:absolute;left:0;top:12px;bottom:12px;width:3px;border-radius:0 3px 3px 0;background:var(--line-2)}
 #app .kpi.hero::before{background:var(--red)}
@@ -207,11 +207,17 @@
 /* modal */
 #app .mback{position:fixed;inset:0;background:rgba(12,10,9,.52);z-index:100;display:none;align-items:center;justify-content:center;padding:18px}
 #app .mback.on{display:flex}
-#app .modal{background:var(--card);border:1px solid var(--line);border-radius:15px;box-shadow:0 24px 64px rgba(0,0,0,.35);width:min(430px,100%);padding:20px}
+/* max-height + overflow : sans eux, une modale plus haute que l'écran déborde du centrage flex
+   et ses actions deviennent inatteignables, le scroll de page ne l'atteignant pas (RETOURS_MAQUETTE R-01). */
+#app .modal{background:var(--card);border:1px solid var(--line);border-radius:15px;box-shadow:0 24px 64px rgba(0,0,0,.35);width:min(430px,100%);padding:20px;max-height:calc(100dvh - 36px);overflow-y:auto;overscroll-behavior:contain}
 #app .modal h3{font-family:var(--head);font-size:15.5px;font-weight:600;display:flex;align-items:center;gap:9px}
 #app .modal h3 svg{width:17px;height:17px;color:var(--red)}
 #app .modal .exp{font-size:12px;color:var(--ink-2);background:var(--red-tint);border:1px solid var(--red-line);border-radius:9px;padding:10px 12px;margin:13px 0;line-height:1.5}
 #app .modal label{display:block;font-size:11px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-2);margin-bottom:5px}
+/* Une case radio dans une modale garde la présentation .rline : sans cela le style de label ci-dessus
+   la passe en bloc majuscule et colle son aide .rh au libellé. */
+#app .modal label.rline{display:flex;text-transform:none;letter-spacing:0;font-size:12.5px;font-weight:700;color:var(--ink);margin:0 0 8px}
+#app .modal .rline .rh{font-weight:500;text-align:right}
 #app .modal input{width:100%;background:var(--card-2);border:1px solid var(--line-2);border-radius:9px;padding:10px 12px;font-family:'Fira Code',monospace;font-size:14px;min-height:40px}
 #app .modal input:focus{border-color:var(--red);outline:none;box-shadow:0 0 0 3px var(--red-tint)}
 #app .modal .row-m{display:flex;justify-content:space-between;align-items:center;font-size:12px;color:var(--mut);border:1px dashed var(--line-2);border-radius:9px;padding:9px 12px;margin-bottom:13px}
@@ -310,8 +316,57 @@
 /* ---------- C : Studio ---------- */
 
 /* tables horizontales scrollables (mockup, petits écrans) */
+/* Sélecteur de séries du graphique de trésorerie (R-08). */
+#app .serpick{display:flex;flex-wrap:wrap;gap:6px 16px;margin-bottom:12px}
+#app .serpick label{display:flex;align-items:center;gap:7px;font-size:12px;color:var(--ink-2);cursor:pointer}
+#app .serpick input{accent-color:var(--red);width:14px;height:14px;flex:none}
+#app .serpick .swatch{width:18px;border-top:2.5px solid var(--sc);flex:none;align-self:center}
+#app .serpick .swatch.dash{border-top-style:dashed}
+/* Aveugle par périmètre (R-16) : le contenu est caché, pas détruit. font-size:0 neutralise
+   aussi les nœuds texte nus que le sélecteur enfant ne peut pas atteindre. */
+#app [data-blind].blinded{font-size:0;color:transparent}
+#app [data-blind].blinded>*{display:none!important}
+#app [data-blind].blinded[data-blind-lbl]::after{content:attr(data-blind-lbl);background:none;padding:0}
+#app [data-blind].blinded::after{content:"Masqué";display:inline-block;font-family:var(--body);font-size:10.5px;font-weight:700;letter-spacing:.02em;line-height:1.6;background:var(--card-3);color:var(--ink-2);border-radius:6px;padding:1px 8px;white-space:nowrap}
+/* Vue production (R-04, R-05) : la maquette porte une pédagogie qui n'est pas livrée, les
+   panneaux « Comment ça marche ? », les paragraphes d'explication en tête d'écran et les blocs
+   qui décrivent la maquette elle-même. Les explications fonctionnelles restent dans les
+   infobulles « ? ». Ce basculement montre ce que reçoit réellement la production. */
+#app.prod [data-open^="help-"],
+#app.prod .scr-head .scr-sub,
+#app.prod .hub .hsub,
+#app.prod [data-maquette-only]{display:none!important}
+#app .prodb{display:flex;align-items:center;gap:6px;padding:5px 10px;border:1px solid var(--line-2);border-radius:8px;font-size:11.5px;font-weight:700;color:var(--ink-2);min-height:32px;white-space:nowrap}
+#app .prodb:hover{border-color:var(--red-line);color:var(--red)}
+#app .prodb svg{width:14px;height:14px}
+#app .prodb[aria-pressed="true"]{background:var(--red-tint);border-color:var(--red-line);color:var(--red)}
+@media (max-width:900px){#app .prodb span{display:none}}
+/* Carte repliable (R-09) : affichage progressif du tableau de bord. */
+#app .foldb{display:flex;align-items:center;gap:5px;margin-left:8px;padding:4px 9px;border:1px solid var(--line-2);border-radius:7px;font-size:11px;font-weight:700;color:var(--ink-2);white-space:nowrap}
+#app .foldb:hover{border-color:var(--red-line);color:var(--red)}
+#app .foldb svg{width:13px;height:13px;transition:transform .18s}
+#app .card.folded .foldb svg{transform:rotate(-90deg)}
+#app .ch .foldsum{margin-left:auto;text-align:right}
+#app .card.folded{background:var(--card)}
+/* Filtre par colonne et recherche (R-03) : barre posée par le moteur au-dessus de chaque
+   tableau assez long. f-out écarte une ligne sans toucher à tr.hidden, que les écrans
+   utilisent pour leurs propres puces : les deux filtres se composent. */
+#app tr.f-out{display:none}
+#app .tfilt{display:flex;flex-wrap:wrap;align-items:center;gap:8px;padding:11px 16px;border-bottom:1px solid var(--line)}
+#app .tfilt .sp{flex:1}
+#app .tfilt select.inp{min-height:32px;padding:5px 26px 5px 9px;font-size:12px;max-width:210px}
+#app .tfilt-q{display:flex;align-items:center;gap:7px;background:var(--card-2);border:1px solid var(--line-2);border-radius:8px;padding:0 10px;min-height:32px;flex:0 1 240px;min-width:160px}
+#app .tfilt-q:focus-within{border-color:var(--red);box-shadow:0 0 0 3px var(--red-tint)}
+#app .tfilt-q svg{width:14px;height:14px;color:var(--mut);flex:none}
+#app .tfilt-q input{-webkit-appearance:none;appearance:none;background:none;border:none;outline:none;font:inherit;font-size:12px;color:inherit;width:100%;min-width:0;padding:0}
+@media (max-width:640px){#app .tfilt{padding:10px 12px}#app .tfilt-q,#app .tfilt select.inp{flex:1 1 100%;max-width:none}#app .tfilt .sp{display:none}}
 #app .tbl-scroll{overflow-x:auto}
 #app .tbl-scroll table{min-width:760px}
+/* Tableau long : il defile dans son cadre, seule construction ou l'en-tete tient au defilement.
+   La bordure basse passe en box-shadow, une bordure sur un element sticky ne suit pas. */
+#app .tbl-scroll.tall{max-height:min(68dvh,600px);overflow-y:auto}
+#app .tbl-scroll.tall thead th{position:sticky;top:0;z-index:2;background:var(--card);border-bottom:none;box-shadow:inset 0 -1px 0 var(--line)}
+#app .tbl-scroll.tall tfoot td{position:sticky;bottom:0;z-index:2;background:var(--card);box-shadow:inset 0 1px 0 var(--line)}
 #app .hint{font-size:11px;color:var(--mut);font-weight:500}
 /* mobile : aucun défilement horizontal de page */
 #app{overflow-x:clip}
