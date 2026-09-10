@@ -39,10 +39,14 @@ La section qui détaille les 27 écrans et le bloc de contexte qui explique la m
 Correction : plutôt que de retirer cette pédagogie de la maquette, qui reste le support de validation, un basculement « Vue production » dans la barre du haut la masque et montre exactement ce que reçoit la production. Ce qui disparaît : les boutons et panneaux « Comment ça marche ? », les paragraphes d'explication en tête d'écran, le texte de présentation de l'accueil, et tout élément marqué `data-maquette-only`.
 La règle est donc démontrable au lieu d'être seulement écrite : la spec de développement dit que la production ne reçoit pas ce que la vue production masque.
 
-**R-05 · Blocs explicatifs dans les écrans.** Statut : **En cours**, arbitré le 10/09.
+**R-05 · Blocs explicatifs dans les écrans.** Statut : **Corrigé**, arbitré le 10/09.
 Décision : le contenu des panneaux « Comment ça marche ? » est redécoupé en infobulles « ? » rattachées aux éléments qu'elles expliquent. Rien du contenu validé n'est perdu.
 Le mécanisme « ? » existe déjà, c'est le bouton `.fx` du §3 du contrat, avec survol sur desktop et tap sur mobile.
-Couverture mesurée écran par écran, pédagogie masquée : 191 infobulles pour 155 points d'aide. La plupart des écrans ne perdent rien. Quatre font exception et sont en cours d'enrichissement : Entités (0 infobulle pour 5 points), Validations (1 pour 6), Profils et rôles (2 pour 6), Droits effectifs (2 pour 5).
+Couverture mesurée écran par écran, pédagogie masquée : 191 infobulles pour 155 points d'aide. La plupart des écrans ne perdent rien. Quatre faisaient exception et ont été enrichis de 22 infobulles : Entités 0 → 5, Validations 1 → 7, Profils et rôles 2 → 8, Droits effectifs 2 → 7. Chaque point d'aide de ces écrans a trouvé son ancrage, aucun panneau n'a été supprimé.
+
+**Défaut trouvé en vérifiant l'exigence tactile, et corrigé.** Le retour demandait « une interaction équivalente adaptée au mobile ». Elle ne fonctionnait pas : au tap, l'infobulle s'ouvrait puis se refermait aussitôt. Le tap donne le focus au bouton, `focusin` ouvrait l'infobulle, et le clic du même tap la refermait en croyant à une seconde pression. L'aide « ? » était donc inatteignable au doigt sur les 27 écrans.
+Correction dans le moteur : le survol passe de `mouseover` à `pointerover` filtré sur `pointerType === 'mouse'`, et l'ouverture au focus est réservée au focus clavier via `:focus-visible`. Le tap passe désormais par le gestionnaire de clic, seul responsable sur tactile.
+Vérifié sur profil iPhone 12 tactile et en desktop : le tap ouvre puis referme, le survol souris ouvre, la navigation clavier ouvre.
 
 ### Règles métier
 

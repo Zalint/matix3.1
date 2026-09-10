@@ -408,9 +408,14 @@ function showTip(btn){
   tip.style.left=x+'px';tip.style.top=y+'px';
 }
 function hideTip(){tip.classList.remove('on');tipFor=null;setTimeout(function(){if(!tipFor)tip.hidden=true;},160);}
-document.addEventListener('mouseover',function(e){var b=e.target.closest('.fx');if(b&&tipFor!==b)showTip(b);});
-document.addEventListener('mouseout',function(e){var b=e.target.closest('.fx');if(b&&!b.contains(e.relatedTarget))hideTip();});
-document.addEventListener('focusin',function(e){var b=e.target.closest('.fx');if(b)showTip(b);});
+/* Survol reserve a la souris : sur tactile, le tap emet aussi un mouseover synthetique, qui
+   ouvrait l'infobulle juste avant que le clic du meme tap ne la referme. L'aide etait donc
+   inatteignable au doigt. pointerType filtre le cas ; le tap passe par le gestionnaire de clic. */
+document.addEventListener('pointerover',function(e){if(e.pointerType!=='mouse')return;var b=e.target.closest('.fx');if(b&&tipFor!==b)showTip(b);});
+document.addEventListener('pointerout',function(e){if(e.pointerType!=='mouse')return;var b=e.target.closest('.fx');if(b&&!b.contains(e.relatedTarget))hideTip();});
+/* Focus clavier seulement : au tap, le bouton prend le focus et ouvrait l'infobulle juste avant
+   que le clic du meme tap ne la referme. :focus-visible ne repond pas au focus tactile. */
+document.addEventListener('focusin',function(e){var b=e.target.closest('.fx');if(b&&b.matches(':focus-visible'))showTip(b);});
 document.addEventListener('focusout',function(e){if(e.target.closest&&e.target.closest('.fx'))hideTip();});
 document.addEventListener('click',function(e){var b=e.target.closest('.fx');if(b){e.stopPropagation();if(tipFor===b)hideTip();else showTip(b);}else if(tipFor)hideTip();},true);
 
