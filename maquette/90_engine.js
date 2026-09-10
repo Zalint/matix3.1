@@ -122,7 +122,7 @@ function go(id){
   try{history.replaceState(null,'',location.pathname+(id==='hub'?'':'#'+id));}catch(x){}
   if(!inited[id]){inited[id]=true;formatAmounts(sec);if(registry[id]){try{registry[id](sec,ctx);}catch(e){console.error('init '+id,e);}}}
   drawCharts(sec);setTimeout(function(){drawCharts(sec);},60);
-  tallTables(sec);
+  tableTools(sec);tallTables(sec);
 }
 /* En-tetes figes (R-02) : position:sticky n'agit que dans un conteneur qui defile vraiment.
    .tbl-scroll ne defile qu'en X, on lui plafonne donc la hauteur des qu'un tableau depasse
@@ -138,9 +138,84 @@ function tallTables(sec){
 }
 function tallOne(w){
   var tb=$('tbody',w);
-  var n=tb?$$('tr',tb).filter(function(tr){return !tr.hidden;}).length:0;
+  var n=tb?visibleRows(tb).length:0;
   w.classList.toggle('tall',n>TALL_MIN);
 }
+function visibleRows(tb){return $$('tr',tb).filter(function(r){return !r.hidden&&!r.classList.contains('f-out');});}
+
+/* ===== Filtre par colonne et recherche (R-03) =====
+   Comportement standard de tous les tableaux, Mata Core compris. Les ecrans continuent
+   d'ecrire tr.hidden pour leurs propres puces de filtre ; ce filtre-ci passe par la classe
+   f-out. Les deux se composent au lieu de s'ecraser : une ligne s'affiche si aucun des deux
+   ne l'ecarte. Une colonne est filtrable si elle porte 2 a FCOL_MAX valeurs distinctes,
+   courtes, sans montant ni bouton. <th data-nofilter> exclut explicitement une colonne. */
+var FCOL_MAX=10,FROW_MIN=5,FVAL_MAX=32;
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+/* Valeur de filtre d'une cellule : le statut ou l'etiquette s'il y en a un, sinon le texte
+   principal debarrasse de ses qualificatifs .hint et small, que textContent collerait au
+   libelle (« Créance client » + « MaaS » donnait « Créance clientMaaS »). Memorisee sur le noeud. */
+function cellVal(td){
+  if(td._fv!=null)return td._fv;
+  var t=td.querySelector('.st,.tag'),v;
+  if(t)v=t.textContent;
+  else{var c=td.cloneNode(true);$$('.hint,small,svg',c).forEach(function(x){x.remove();});v=c.textContent;}
+  return (td._fv=(v||'').replace(/\s+/g,' ').trim());
+}
+function bodyRows(tb){return $$('tr',tb).filter(function(r){return !r.hasAttribute('data-empty')&&r.querySelector('td');});}
+function filterCols(rows,ths){
+  var cols=[];
+  ths.forEach(function(th,i){
+    if(th.hasAttribute('data-nofilter'))return;
+    var vals=[],ok=true;
+    rows.forEach(function(r){
+      var td=r.children[i];
+      if(!td||td.hasAttribute('colspan')||td.querySelector('.amt')){ok=false;return;}
+      if(td.querySelector('button')&&!td.querySelector('.st,.tag')){ok=false;return;}
+      var v=cellVal(td);
+      if(!v||v.length>FVAL_MAX){ok=false;return;}
+      if(vals.indexOf(v)<0)vals.push(v);
+    });
+    if(ok&&vals.length>1&&vals.length<=FCOL_MAX)cols.push({i:i,lb:(th.textContent||'').replace(/\s+/g,' ').trim(),vals:vals.sort()});
+  });
+  return cols;
+}
+function buildTools(w){
+  if(w.dataset.tools||w.closest('.drawer')||w.closest('.modal'))return;
+  var table=$('table',w),tb=table&&$('tbody',table),ths=table?$$('thead th',table):[];
+  if(!tb||!ths.length)return;
+  var rows=bodyRows(tb);
+  if(rows.length<FROW_MIN)return;
+  var cols=filterCols(rows,ths);
+  w.dataset.tools='1';
+  var bar=document.createElement('div');
+  bar.className='tfilt';
+  bar.innerHTML='<label class="tfilt-q"><svg><use href="#i-search"/></svg>'
+    +'<input type="search" data-fq placeholder="Rechercher dans le tableau" aria-label="Rechercher dans le tableau"></label>'
+    +cols.map(function(c){return '<select class="inp" data-fcol="'+c.i+'" aria-label="Filtrer sur '+esc(c.lb)+'"><option value="">'+esc(c.lb)+' : tous</option>'
+      +c.vals.map(function(v){return '<option value="'+esc(v)+'">'+esc(v)+'</option>';}).join('')+'</select>';}).join('')
+    +'<span class="sp"></span><span class="hint" data-fcount></span>'
+    +'<button class="linkish" data-freset hidden>Réinitialiser</button>';
+  w.parentNode.insertBefore(bar,w);
+  function apply(){
+    var q=($('[data-fq]',bar).value||'').toLowerCase().trim();
+    var sel=$$('[data-fcol]',bar).map(function(s){return {i:+s.dataset.fcol,v:s.value};}).filter(function(s){return s.v;});
+    bodyRows(tb).forEach(function(r){
+      var out=sel.some(function(s){var td=r.children[s.i];return !td||cellVal(td)!==s.v;});
+      if(!out&&q)out=(r.textContent||'').toLowerCase().indexOf(q)<0;
+      r.classList.toggle('f-out',out);
+    });
+    var n=visibleRows(tb).length,actif=!!q||!!sel.length;
+    $('[data-fcount]',bar).textContent=n+(n>1?' lignes affichées':' ligne affichée');
+    $('[data-freset]',bar).hidden=!actif;
+    var empty=$('tr[data-empty]',tb);
+    if(empty&&actif)empty.hidden=n>0;
+    refreshTall(w);
+  }
+  bar.addEventListener('input',apply);bar.addEventListener('change',apply);
+  $('[data-freset]',bar).addEventListener('click',function(){$('[data-fq]',bar).value='';$$('[data-fcol]',bar).forEach(function(s){s.value='';});apply();});
+  apply();
+}
+function tableTools(sec){$$('.tbl-scroll',sec).forEach(buildTools);}
 
 /* ================= HUB / PERSONA ================= */
 function renderHub(){
