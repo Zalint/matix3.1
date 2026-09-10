@@ -29,12 +29,12 @@
 
   <div class="statstrip four">
     <div class="card stat">
-      <div class="lb">Entités référencées</div>
+      <div class="lb">Entités référencées<button class="fx" data-f="Jamais de suppression physique : un référentiel déjà utilisé est désactivé afin de conserver l'historique, son identifiant est conservé avec l'historique (Core §2)" data-c="16 entités recensées, aucune supprimée : 1 entité mère, 3 filiales, 12 MaaS · une entité retirée du service passe au statut Désactivée et reste dans le référentiel" data-src="Mata Core · référentiel des entités (§2) · FIXTURES §1 · état au 27/08" aria-label="Voir la règle"><svg><use href="#i-info"/></svg></button></div>
       <div class="v" data-stat="total">16</div>
       <div class="sub2" data-stat="total-sub">1 entité mère · 3 filiales · 12 MaaS · aucune supprimée</div>
     </div>
     <div class="card stat">
-      <div class="lb">Actives</div>
+      <div class="lb">Actives<button class="fx" data-f="Mata Group est le premier périmètre activé (Finance §2.3) · les filiales et les MaaS sont créés par configuration et activés plus tard, aucune nouvelle entité ne nécessite de fork applicatif (Core §1)" data-c="1 entité active sur 16 référencées : Mata Group, seule entité sélectionnable à ce jour · 0 désactivée · les 15 autres sont visibles, non sélectionnables" data-src="Mata Core · référentiel des entités (§2) · Mata Finance §2.3 · FIXTURES §1" aria-label="Voir la règle"><svg><use href="#i-info"/></svg></button></div>
       <div class="v" data-stat="active">1</div>
       <div class="sub2" data-stat="active-sub">Mata Group · premier périmètre activé (Finance §2.3) · seule sélectionnable à ce jour · 0 désactivée</div>
     </div>
@@ -44,7 +44,7 @@
       <div class="sub2">MLC, Mata Volaille · référentiels à migrer avant activation · visibles, non sélectionnables</div>
     </div>
     <div class="card stat">
-      <div class="lb">À activer</div>
+      <div class="lb">À activer<button class="fx" data-f="L'activation d'une entité se fait par configuration : ni base, ni schéma, ni serveur, ni déploiement dédié par entité ; dérogation uniquement pour contrainte réglementaire, de sécurité ou de charge démontrée (Architecture technique §3)" data-c="13 entités À activer : Keur Bally et les 12 MaaS · 2 entités À migrer (MLC, Mata Volaille) dont les référentiels doivent être migrés avant toute activation : le bouton Activer y reste visible et refusé" data-src="Mata Core · référentiel des entités (§2) · Architecture technique §3" aria-label="Voir la règle"><svg><use href="#i-info"/></svg></button></div>
       <div class="v" data-stat="activer">13</div>
       <div class="sub2">Keur Bally + 12 MaaS · par configuration, sans fork applicatif (§1)</div>
     </div>
@@ -88,7 +88,7 @@
 
   <div class="grid2b">
     <div class="card">
-      <div class="ch"><h3>Contexte d'entité du profil actif</h3><span class="hint-r">recalculé à chaque changement de profil (§3.3)</span></div>
+      <div class="ch"><h3>Contexte d'entité du profil actif<button class="fx" data-f="Scoping central par entity_id : toute requête sans contexte d'entité est refusée par défaut, hors opérations globales explicitement autorisées (Architecture technique §3)" data-c="Le profil actif détermine entité, rôles, modules, périmètre, données visibles, permissions et validations disponibles ; les droits de plusieurs profils ne sont jamais additionnés (§3.3) · le Gérant MaaS a MaaS Keur Massar imposé comme contexte, sans héritage vers d'autres entités (§3.4)" data-src="Mata Core §3.3, §3.4 · Architecture technique §3 · recalculé à chaque changement de profil" aria-label="Voir la règle"><svg><use href="#i-info"/></svg></button></h3><span class="hint-r">recalculé à chaque changement de profil (§3.3)</span></div>
       <div class="cb">
         <div class="kv"><span>Profil actif</span><b data-cx="prof">—</b></div>
         <div class="kv"><span>Catégorie(s)</span><b data-cx="cat">—</b></div>
@@ -104,7 +104,7 @@
         <div class="row"><div class="nm">Mata Group est l'entité mère<small>filiales et MaaS sont créés par configuration ; aucune nouvelle filiale, activité ou MaaS ne nécessite de fork applicatif (§1)</small></div><span class="st ok"><svg><use href="#i-check"/></svg>Config.</span></div>
         <div class="row"><div class="nm">Un MaaS est une entité opérationnelle<small>pouvant être reliée à ses propriétaires, employés, commerciaux, bouchers, investisseurs ou autres utilisateurs</small></div><span class="st mut"><svg><use href="#i-users"/></svg>Liens</span></div>
         <div class="row"><div class="nm">Jamais de suppression physique<small>un référentiel déjà utilisé est désactivé afin de conserver l'historique ; identifiant conservé avec l'historique</small></div><span class="st warn"><svg><use href="#i-lock"/></svg>Désactivation</span></div>
-        <div class="row"><div class="nm">Référencement par identifiant<small>les modules métier référencent les objets Mata Core par leur identifiant et ne créent pas de référentiels parallèles (§2, §5.1)</small></div><span class="st mut"><svg><use href="#i-layers"/></svg>entity_id</span></div>
+        <div class="row"><div class="nm">Référencement par identifiant<button class="fx" data-f="Les modules métier référencent les objets Mata Core par leur identifiant et ne créent pas de référentiels parallèles (Core §2, §5.1)" data-c="Le compte Créance client C1 de MaaS Keur Massar, 3 250 000 FCFA, est relié à l'entité MAAS-KM par son entity_id : Mata Finance lit cet identifiant, elle ne recrée pas l'entité de son côté" data-src="Mata Core · référentiel des entités (§2, §5.1) · Mata Finance · comptes Créance client (§4.5) · FIXTURES §3" aria-label="Voir la règle"><svg><use href="#i-info"/></svg></button><small>les modules métier référencent les objets Mata Core par leur identifiant et ne créent pas de référentiels parallèles (§2, §5.1)</small></div><span class="st mut"><svg><use href="#i-layers"/></svg>entity_id</span></div>
         <div class="row"><div class="nm">Infrastructure mutualisée<small>ni base, ni schéma, ni serveur, ni déploiement dédié par entité ; dérogation uniquement pour contrainte réglementaire, de sécurité ou de charge démontrée (Technique §3)</small></div><span class="st mut"><svg><use href="#i-building"/></svg>Technique §3</span></div>
       </div>
     </div>

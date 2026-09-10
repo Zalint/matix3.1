@@ -3439,7 +3439,7 @@ ERP.register('fin-transferts', function (root, ctx) {
 
   <div class="statstrip four">
     <div class="card stat">
-      <div class="lb">À valider</div>
+      <div class="lb">À valider<button class="fx" data-f="Écran unique centralisant les validations financières en cours (§7.3) : transferts, ajustements, contrepassations, corrections de Positions externes, désactivations sensibles · chaque utilisateur ne voit que les demandes de son périmètre et les actions pour lesquelles il est habilité" data-c="4 demandes À valider pour le profil Super Admin, périmètre Mata Group, dont 2 en double validation (VAL-117 ajustement, VAL-116 correction de Position externe) · même total dans le compteur du menu « Validations (4) »" data-src="Mata Finance §7.3 · demandes En attente au 27/08 · 21:15" aria-label="Voir la règle"><svg><use href="#i-info"/></svg></button></div>
       <div class="v" data-stat="pending">4</div>
       <div class="sub2">dont <span data-stat="double">2</span> en double validation · compteur menu « Validations (<span data-stat="menu">4</span>) » (§7.3)</div>
     </div>
@@ -3449,7 +3449,7 @@ ERP.register('fin-transferts', function (root, ctx) {
       <div class="sub2">aucun solde modifié avant validation · effet atomique à la validation (§7.1)</div>
     </div>
     <div class="card stat">
-      <div class="lb">Mes demandes</div>
+      <div class="lb">Mes demandes<button class="fx" data-f="« Mes demandes » suit les demandes initiées par l'utilisateur connecté et leur statut : En attente, Validée, Refusée ou Annulée (§7.3) · elles n'apparaissent jamais dans « À valider » pour lui (§7.2)" data-c="4 demandes de S. Doucouré : VAL-114 En attente, VAL-109 Validée, VAL-103 Refusée, VAL-098 Annulée · une demande En attente peut être annulée par son initiateur ; une demande Validée ne se corrige que par contrepassation, l'opération originale restant visible (§7.2)" data-src="Mata Finance §7.2, §7.3 · demandes de l'utilisateur connecté au 27/08" aria-label="Voir la règle"><svg><use href="#i-info"/></svg></button></div>
       <div class="v">4</div>
       <div class="sub2" data-stat="mine-sub">1 En attente · 1 Validée · 1 Refusée · 1 Annulée (§7.3)</div>
     </div>
@@ -3482,7 +3482,7 @@ ERP.register('fin-transferts', function (root, ctx) {
     <div class="card">
       <div class="ch"><h3>À valider — demandes sur lesquelles vous pouvez agir</h3><span class="hint-r" data-stat="pending-hint">4 demandes · périmètre Mata Group · profil Super Admin</span></div>
       <div class="tbl-scroll"><table>
-        <thead><tr><th>Réf.</th><th>Type</th><th>Initiateur</th><th>Sensibilité</th><th>Niveau de validation</th><th>Montant</th><th>Décision</th></tr></thead>
+        <thead><tr><th>Réf.</th><th>Type</th><th>Initiateur<button class="fx" data-f="L'initiateur ne valide jamais sa propre opération ; le Super Admin ne contourne pas cette règle (Core §4.2)" data-c="VAL-118, VAL-116 et VAL-115 ont été proposées par F. Sarr : connecté sous son identité, Valider et Refuser lui sont refusés sur ces lignes, avec le motif affiché · VAL-114, initiée par S. Doucouré, ne figure pas ici mais dans « Mes demandes »" data-src="Mata Core §4.2 · Mata Finance §7.2 · moteur transverse de séparation initiateur / validateur" aria-label="Voir la règle"><svg><use href="#i-info"/></svg></button></th><th>Sensibilité</th><th>Niveau de validation<button class="fx" data-f="Le niveau de validation dépend du type d'opération : validation simple pour un transfert ou une désactivation de compte, double validation pour un ajustement ou une correction de Position externe (§10.1)" data-c="VAL-118, transfert de 600 000 de Banque BOA vers Caisse générale : un seul validateur, distinct de l'initiateur (§7.2) · VAL-115, désactivation de la Sous-caisse Abattoir : un second acteur habilité, sans montant, le compte n'étant jamais supprimé" data-src="Mata Finance §7.2, §10.1 · demandes En attente au 27/08" aria-label="Voir la règle"><svg><use href="#i-info"/></svg></button></th><th>Montant</th><th>Décision</th></tr></thead>
         <tbody data-rows="avalider">
           <tr data-type="transfert" data-val="VAL-118">
             <td><b>VAL-118</b><div class="hint">27/08 · 18:05</div></td>
@@ -3498,7 +3498,7 @@ ERP.register('fin-transferts', function (root, ctx) {
             <td><b>Ajustement</b><div class="hint">Caisse générale · motif « écart de comptage du 26/08 » · contrepartie compte Ajustement</div></td>
             <td>M. Diop<div class="hint">Gestionnaire de caisse</div></td>
             <td><span class="sens hs"><svg><use href="#i-shield"/></svg>Hautement sensible</span></td>
-            <td data-cell="niveau">Double validation <b data-prog-lbl>1/2</b><div class="prog"><i data-prog style="width:50%"></i></div><div class="hint" data-prog-hint>1re : O. Seck · 19:02 · 2e requise par un validateur distinct de l'initiateur et du 1er validateur (§4.7)</div></td>
+            <td data-cell="niveau">Double validation <b data-prog-lbl>1/2</b><button class="fx" data-f="Un ajustement exige un motif obligatoire et une double validation par deux validateurs distincts de l'initiateur et l'un de l'autre (§4.7)" data-c="VAL-117, +180 000 sur Caisse générale, motif « écart de comptage du 26/08 », initié par M. Diop · 1re validation donnée par O. Seck le 27/08 à 19:02, progression 1/2 · O. Seck ne peut pas donner la 2e · contrepartie sur le compte Ajustement, exclu des agrégats" data-src="Mata Finance §4.7 · chaîne de validation de VAL-117 · Audit central du 27/08 · 19:02" aria-label="Voir la règle"><svg><use href="#i-info"/></svg></button><div class="prog"><i data-prog style="width:50%"></i></div><div class="hint" data-prog-hint>1re : O. Seck · 19:02 · 2e requise par un validateur distinct de l'initiateur et du 1er validateur (§4.7)</div></td>
             <td>+<span class="amt" data-amt="180000" data-nocur></span></td>
             <td data-cell="decision"><div class="acts-c"><button class="btn ghost sm" data-open="fin-validations-detail" data-val="VAL-117"><svg><use href="#i-eye"/></svg>Détail</button><button class="btn pri sm" data-act="valider" data-val="VAL-117" data-perm="finance.validations.agir" data-initiator="M. Diop" data-validated-by="O. Seck"><svg><use href="#i-check"/></svg>Valider</button><button class="btn ghost sm" data-act="refuser" data-val="VAL-117" data-perm="finance.validations.agir" data-initiator="M. Diop" data-validated-by="O. Seck"><svg><use href="#i-x"/></svg>Refuser</button></div></td>
           </tr>
@@ -3507,7 +3507,7 @@ ERP.register('fin-transferts', function (root, ctx) {
             <td><b>Correction Position externe</b><div class="hint">Banque BOA · motif « frais bancaires non importés » · matérialisée par un ajustement validé (§4.2)</div></td>
             <td>F. Sarr<div class="hint">Directeur des Opérations</div></td>
             <td><span class="sens hs"><svg><use href="#i-shield"/></svg>Hautement sensible</span></td>
-            <td data-cell="niveau">Double validation <b data-prog-lbl>0/2</b><div class="prog"><i data-prog style="width:0%"></i></div><div class="hint" data-prog-hint>deux validateurs distincts de l'initiateur et l'un de l'autre (§10.1)</div></td>
+            <td data-cell="niveau">Double validation <b data-prog-lbl>0/2</b><button class="fx" data-f="Une correction de Position externe est matérialisée par un ajustement validé (§4.2) et suit donc la même double validation, hautement sensible (§10.1)" data-c="VAL-116, Banque BOA −45 000, motif « frais bancaires non importés », initiée par F. Sarr · progression 0/2 : les deux validateurs restent à désigner · la valeur reçue du dernier import et la correction manuelle sont conservées toutes deux (§4.9)" data-src="Mata Finance §4.2, §4.9, §10.1 · demande En attente au 27/08" aria-label="Voir la règle"><svg><use href="#i-info"/></svg></button><div class="prog"><i data-prog style="width:0%"></i></div><div class="hint" data-prog-hint>deux validateurs distincts de l'initiateur et l'un de l'autre (§10.1)</div></td>
             <td><span class="amt" data-amt="-45000" data-nocur></span></td>
             <td data-cell="decision"><div class="acts-c"><button class="btn ghost sm" data-open="fin-validations-detail" data-val="VAL-116"><svg><use href="#i-eye"/></svg>Détail</button><button class="btn pri sm" data-act="valider" data-val="VAL-116" data-perm="finance.validations.agir" data-initiator="F. Sarr"><svg><use href="#i-check"/></svg>Valider</button><button class="btn ghost sm" data-act="refuser" data-val="VAL-116" data-perm="finance.validations.agir" data-initiator="F. Sarr"><svg><use href="#i-x"/></svg>Refuser</button></div></td>
           </tr>
@@ -5417,12 +5417,12 @@ ERP.register('fin-import', function (root, ctx) {
 
   <div class="statstrip four">
     <div class="card stat">
-      <div class="lb">Entités référencées</div>
+      <div class="lb">Entités référencées<button class="fx" data-f="Jamais de suppression physique : un référentiel déjà utilisé est désactivé afin de conserver l'historique, son identifiant est conservé avec l'historique (Core §2)" data-c="16 entités recensées, aucune supprimée : 1 entité mère, 3 filiales, 12 MaaS · une entité retirée du service passe au statut Désactivée et reste dans le référentiel" data-src="Mata Core · référentiel des entités (§2) · FIXTURES §1 · état au 27/08" aria-label="Voir la règle"><svg><use href="#i-info"/></svg></button></div>
       <div class="v" data-stat="total">16</div>
       <div class="sub2" data-stat="total-sub">1 entité mère · 3 filiales · 12 MaaS · aucune supprimée</div>
     </div>
     <div class="card stat">
-      <div class="lb">Actives</div>
+      <div class="lb">Actives<button class="fx" data-f="Mata Group est le premier périmètre activé (Finance §2.3) · les filiales et les MaaS sont créés par configuration et activés plus tard, aucune nouvelle entité ne nécessite de fork applicatif (Core §1)" data-c="1 entité active sur 16 référencées : Mata Group, seule entité sélectionnable à ce jour · 0 désactivée · les 15 autres sont visibles, non sélectionnables" data-src="Mata Core · référentiel des entités (§2) · Mata Finance §2.3 · FIXTURES §1" aria-label="Voir la règle"><svg><use href="#i-info"/></svg></button></div>
       <div class="v" data-stat="active">1</div>
       <div class="sub2" data-stat="active-sub">Mata Group · premier périmètre activé (Finance §2.3) · seule sélectionnable à ce jour · 0 désactivée</div>
     </div>
@@ -5432,7 +5432,7 @@ ERP.register('fin-import', function (root, ctx) {
       <div class="sub2">MLC, Mata Volaille · référentiels à migrer avant activation · visibles, non sélectionnables</div>
     </div>
     <div class="card stat">
-      <div class="lb">À activer</div>
+      <div class="lb">À activer<button class="fx" data-f="L'activation d'une entité se fait par configuration : ni base, ni schéma, ni serveur, ni déploiement dédié par entité ; dérogation uniquement pour contrainte réglementaire, de sécurité ou de charge démontrée (Architecture technique §3)" data-c="13 entités À activer : Keur Bally et les 12 MaaS · 2 entités À migrer (MLC, Mata Volaille) dont les référentiels doivent être migrés avant toute activation : le bouton Activer y reste visible et refusé" data-src="Mata Core · référentiel des entités (§2) · Architecture technique §3" aria-label="Voir la règle"><svg><use href="#i-info"/></svg></button></div>
       <div class="v" data-stat="activer">13</div>
       <div class="sub2">Keur Bally + 12 MaaS · par configuration, sans fork applicatif (§1)</div>
     </div>
@@ -5476,7 +5476,7 @@ ERP.register('fin-import', function (root, ctx) {
 
   <div class="grid2b">
     <div class="card">
-      <div class="ch"><h3>Contexte d'entité du profil actif</h3><span class="hint-r">recalculé à chaque changement de profil (§3.3)</span></div>
+      <div class="ch"><h3>Contexte d'entité du profil actif<button class="fx" data-f="Scoping central par entity_id : toute requête sans contexte d'entité est refusée par défaut, hors opérations globales explicitement autorisées (Architecture technique §3)" data-c="Le profil actif détermine entité, rôles, modules, périmètre, données visibles, permissions et validations disponibles ; les droits de plusieurs profils ne sont jamais additionnés (§3.3) · le Gérant MaaS a MaaS Keur Massar imposé comme contexte, sans héritage vers d'autres entités (§3.4)" data-src="Mata Core §3.3, §3.4 · Architecture technique §3 · recalculé à chaque changement de profil" aria-label="Voir la règle"><svg><use href="#i-info"/></svg></button></h3><span class="hint-r">recalculé à chaque changement de profil (§3.3)</span></div>
       <div class="cb">
         <div class="kv"><span>Profil actif</span><b data-cx="prof">—</b></div>
         <div class="kv"><span>Catégorie(s)</span><b data-cx="cat">—</b></div>
@@ -5492,7 +5492,7 @@ ERP.register('fin-import', function (root, ctx) {
         <div class="row"><div class="nm">Mata Group est l'entité mère<small>filiales et MaaS sont créés par configuration ; aucune nouvelle filiale, activité ou MaaS ne nécessite de fork applicatif (§1)</small></div><span class="st ok"><svg><use href="#i-check"/></svg>Config.</span></div>
         <div class="row"><div class="nm">Un MaaS est une entité opérationnelle<small>pouvant être reliée à ses propriétaires, employés, commerciaux, bouchers, investisseurs ou autres utilisateurs</small></div><span class="st mut"><svg><use href="#i-users"/></svg>Liens</span></div>
         <div class="row"><div class="nm">Jamais de suppression physique<small>un référentiel déjà utilisé est désactivé afin de conserver l'historique ; identifiant conservé avec l'historique</small></div><span class="st warn"><svg><use href="#i-lock"/></svg>Désactivation</span></div>
-        <div class="row"><div class="nm">Référencement par identifiant<small>les modules métier référencent les objets Mata Core par leur identifiant et ne créent pas de référentiels parallèles (§2, §5.1)</small></div><span class="st mut"><svg><use href="#i-layers"/></svg>entity_id</span></div>
+        <div class="row"><div class="nm">Référencement par identifiant<button class="fx" data-f="Les modules métier référencent les objets Mata Core par leur identifiant et ne créent pas de référentiels parallèles (Core §2, §5.1)" data-c="Le compte Créance client C1 de MaaS Keur Massar, 3 250 000 FCFA, est relié à l'entité MAAS-KM par son entity_id : Mata Finance lit cet identifiant, elle ne recrée pas l'entité de son côté" data-src="Mata Core · référentiel des entités (§2, §5.1) · Mata Finance · comptes Créance client (§4.5) · FIXTURES §3" aria-label="Voir la règle"><svg><use href="#i-info"/></svg></button><small>les modules métier référencent les objets Mata Core par leur identifiant et ne créent pas de référentiels parallèles (§2, §5.1)</small></div><span class="st mut"><svg><use href="#i-layers"/></svg>entity_id</span></div>
         <div class="row"><div class="nm">Infrastructure mutualisée<small>ni base, ni schéma, ni serveur, ni déploiement dédié par entité ; dérogation uniquement pour contrainte réglementaire, de sécurité ou de charge démontrée (Technique §3)</small></div><span class="st mut"><svg><use href="#i-building"/></svg>Technique §3</span></div>
       </div>
     </div>
@@ -6003,7 +6003,7 @@ ERP.register('core-utilisateurs', function (root, ctx) {
       <div class="sub2">1 override contexte · 1 accès temporaire non commencé · 0 interdiction explicite · toutes auditées (§5.4) · détail dans Droits effectifs</div>
     </div>
     <div class="card stat">
-      <div class="lb">Profil actif connecté</div>
+      <div class="lb">Profil actif connecté<button class="fx" data-f="Un seul profil est actif à la fois : les droits de plusieurs profils ne sont jamais additionnés implicitement, et le menu comme les permissions sont immédiatement recalculés au changement de profil (§3.3)" data-c="Profil actif Super Admin — S. Doucouré : sa colonne est surlignée dans la matrice permissions × profils · S. Doucouré porte aussi le profil Directeur financier MLC, non activable tant que l'entité est à migrer" data-src="Mata Core §3.3 · profil actif de la session · FIXTURES §2" aria-label="Voir la règle"><svg><use href="#i-info"/></svg></button></div>
       <div class="v" data-me>Super Admin — S. Doucouré</div>
       <div class="sub2">un seul profil actif à la fois · les droits de plusieurs profils ne sont jamais additionnés implicitement (§3.3) · colonne surlignée dans la matrice</div>
     </div>
@@ -6012,14 +6012,14 @@ ERP.register('core-utilisateurs', function (root, ctx) {
   <div class="card">
     <div class="ch"><h3>Profils de démonstration</h3><div class="hint-r"><div class="chips"><button class="chip on" data-filter="tous">Tous</button><button class="chip" data-filter="int">Internes</button><button class="chip" data-filter="ext">Externes</button><button class="chip" data-filter="off">Non activable ou sans titulaire</button></div></div></div>
     <div class="tbl-scroll"><table>
-      <thead><tr><th>Profil · catégorie requise</th><th>Entité</th><th>Titulaire(s)</th><th>Mata Core</th><th>Mata Finance</th><th>Export</th><th>Sensibilité max consultable</th><th>Statut</th></tr></thead>
+      <thead><tr><th>Profil · catégorie requise</th><th>Entité</th><th>Titulaire(s)</th><th>Mata Core</th><th>Mata Finance<button class="fx" data-f="Un droit peut être limité à une entité, une filiale, un MaaS, plusieurs périmètres déterminés, ou à un module et une fonctionnalité précise (§3.4)" data-c="C. Mbaye, Comptable externe, lit Comptes, Dépenses, Fournisseurs, P&amp;L et Historique, mais Transferts, Validations et Audit lui restent interdits : la limite porte ici sur des fonctionnalités, pas sur une entité · le Gérant MaaS, lui, est limité à sa seule position MaaS Keur Massar" data-src="Mata Core §3.4 · périmètres de démonstration par profil (FIXTURES §2)" aria-label="Voir la règle"><svg><use href="#i-info"/></svg></button></th><th>Export<button class="fx" data-f="Consulter et Exporter sont deux permissions différentes ; le droit d'export reste distinct du droit de consultation (§3.4, §6.3)" data-c="F. Sarr, Directeur des Opérations, consulte les Dépenses mais son Export est « Non (refusé : permission Exporter distincte) » · sa demande DEM-028 de permission temporaire Exporter dépenses a été refusée par O. Seck le 24/08 : aucune exception n'a été créée (§4.1)" data-src="Mata Core §3.4, §4.1, §6.3 · périmètres de démonstration par profil (FIXTURES §2)" aria-label="Voir la règle"><svg><use href="#i-info"/></svg></button></th><th>Sensibilité max consultable</th><th>Statut</th></tr></thead>
       <tbody data-list><tr><td colspan="8" class="hint">Liste construite à l'ouverture</td></tr></tbody>
     </table></div>
     <div class="legend"><span>Clic sur une ligne : fiche du profil, permissions de rôle et attribution</span><span>·</span><span>Refus par défaut ailleurs : ce qui n'est pas explicitement autorisé est interdit (§1)</span><div class="sp"></div><button class="btn ghost sm" data-goto="core-utilisateurs"><svg><use href="#i-users"/></svg>Utilisateurs</button><button class="btn ghost sm" data-goto="core-droits"><svg><use href="#i-eye"/></svg>Droits effectifs</button></div>
   </div>
 
   <div class="card" style="margin-top:14px">
-    <div class="ch"><h3>Matrice permissions × profils</h3><span class="hint-r" data-mx-sub>permissions de rôle, niveau 4 de la chaîne (§3.5)</span></div>
+    <div class="ch"><h3>Matrice permissions × profils<button class="fx" data-f="Les permissions sont définies par action — consulter, créer, modifier, valider, refuser, désactiver, importer, exporter, administrer, lancer une simulation — et aucun contrôle critique n'est codé sur le nom d'un rôle lorsqu'une permission suffit (§3.4)" data-c="10 actions croisées avec 27 domaines d'écran : seules les cases pertinentes sont renseignées, les autres portent « — : action sans objet dans ce domaine » · ce croisement effectif donne les 61 permissions distinctes de la carte Permissions granulaires" data-src="Mata Core §3.4 · registre des écrans et des actions de la maquette (CONTRACT §6, §7)" aria-label="Voir la règle"><svg><use href="#i-info"/></svg></button></h3><span class="hint-r" data-mx-sub>permissions de rôle, niveau 4 de la chaîne (§3.5)</span></div>
     <div class="cb" style="padding-bottom:0">
       <div class="actionbar">
         <div class="fld" style="min-width:260px"><label for="core-profils-dom">Domaine</label><select id="core-profils-dom" class="inp" data-dom></select></div>
@@ -7361,7 +7361,7 @@ ERP.register('core-audit', function (root, ctx) {
     <div class="acts"><button class="btn ghost" data-close>Annuler</button><button class="btn pri" data-perm="core.agents.override" data-act="ov-save"><svg><use href="#i-check"/></svg>Activer l'override</button></div>
   </div></div>
 
-  <div class="mback" data-ov="core-agents-nouveau"><div class="modal wide" role="dialog" aria-modal="true" aria-label="Nouvel agent : parcours guide">
+  <div class="mback" data-ov="core-agents-nouveau"><div class="modal wide" role="dialog" aria-modal="true" aria-label="Nouvel agent : parcours guidé">
     <h3><svg><use href="#i-bot"/></svg>Nouvel agent — parcours guidé</h3>
     <ol class="steps" data-w="steps"><li class="on">Besoin</li><li>Modèle</li><li>Création</li></ol>
     <div data-pane="1">

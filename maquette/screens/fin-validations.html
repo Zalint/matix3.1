@@ -24,7 +24,7 @@
 
   <div class="statstrip four">
     <div class="card stat">
-      <div class="lb">À valider</div>
+      <div class="lb">À valider<button class="fx" data-f="Écran unique centralisant les validations financières en cours (§7.3) : transferts, ajustements, contrepassations, corrections de Positions externes, désactivations sensibles · chaque utilisateur ne voit que les demandes de son périmètre et les actions pour lesquelles il est habilité" data-c="4 demandes À valider pour le profil Super Admin, périmètre Mata Group, dont 2 en double validation (VAL-117 ajustement, VAL-116 correction de Position externe) · même total dans le compteur du menu « Validations (4) »" data-src="Mata Finance §7.3 · demandes En attente au 27/08 · 21:15" aria-label="Voir la règle"><svg><use href="#i-info"/></svg></button></div>
       <div class="v" data-stat="pending">4</div>
       <div class="sub2">dont <span data-stat="double">2</span> en double validation · compteur menu « Validations (<span data-stat="menu">4</span>) » (§7.3)</div>
     </div>
@@ -34,7 +34,7 @@
       <div class="sub2">aucun solde modifié avant validation · effet atomique à la validation (§7.1)</div>
     </div>
     <div class="card stat">
-      <div class="lb">Mes demandes</div>
+      <div class="lb">Mes demandes<button class="fx" data-f="« Mes demandes » suit les demandes initiées par l'utilisateur connecté et leur statut : En attente, Validée, Refusée ou Annulée (§7.3) · elles n'apparaissent jamais dans « À valider » pour lui (§7.2)" data-c="4 demandes de S. Doucouré : VAL-114 En attente, VAL-109 Validée, VAL-103 Refusée, VAL-098 Annulée · une demande En attente peut être annulée par son initiateur ; une demande Validée ne se corrige que par contrepassation, l'opération originale restant visible (§7.2)" data-src="Mata Finance §7.2, §7.3 · demandes de l'utilisateur connecté au 27/08" aria-label="Voir la règle"><svg><use href="#i-info"/></svg></button></div>
       <div class="v">4</div>
       <div class="sub2" data-stat="mine-sub">1 En attente · 1 Validée · 1 Refusée · 1 Annulée (§7.3)</div>
     </div>
@@ -67,7 +67,7 @@
     <div class="card">
       <div class="ch"><h3>À valider — demandes sur lesquelles vous pouvez agir</h3><span class="hint-r" data-stat="pending-hint">4 demandes · périmètre Mata Group · profil Super Admin</span></div>
       <div class="tbl-scroll"><table>
-        <thead><tr><th>Réf.</th><th>Type</th><th>Initiateur</th><th>Sensibilité</th><th>Niveau de validation</th><th>Montant</th><th>Décision</th></tr></thead>
+        <thead><tr><th>Réf.</th><th>Type</th><th>Initiateur<button class="fx" data-f="L'initiateur ne valide jamais sa propre opération ; le Super Admin ne contourne pas cette règle (Core §4.2)" data-c="VAL-118, VAL-116 et VAL-115 ont été proposées par F. Sarr : connecté sous son identité, Valider et Refuser lui sont refusés sur ces lignes, avec le motif affiché · VAL-114, initiée par S. Doucouré, ne figure pas ici mais dans « Mes demandes »" data-src="Mata Core §4.2 · Mata Finance §7.2 · moteur transverse de séparation initiateur / validateur" aria-label="Voir la règle"><svg><use href="#i-info"/></svg></button></th><th>Sensibilité</th><th>Niveau de validation<button class="fx" data-f="Le niveau de validation dépend du type d'opération : validation simple pour un transfert ou une désactivation de compte, double validation pour un ajustement ou une correction de Position externe (§10.1)" data-c="VAL-118, transfert de 600 000 de Banque BOA vers Caisse générale : un seul validateur, distinct de l'initiateur (§7.2) · VAL-115, désactivation de la Sous-caisse Abattoir : un second acteur habilité, sans montant, le compte n'étant jamais supprimé" data-src="Mata Finance §7.2, §10.1 · demandes En attente au 27/08" aria-label="Voir la règle"><svg><use href="#i-info"/></svg></button></th><th>Montant</th><th>Décision</th></tr></thead>
         <tbody data-rows="avalider">
           <tr data-type="transfert" data-val="VAL-118">
             <td><b>VAL-118</b><div class="hint">27/08 · 18:05</div></td>
@@ -83,7 +83,7 @@
             <td><b>Ajustement</b><div class="hint">Caisse générale · motif « écart de comptage du 26/08 » · contrepartie compte Ajustement</div></td>
             <td>M. Diop<div class="hint">Gestionnaire de caisse</div></td>
             <td><span class="sens hs"><svg><use href="#i-shield"/></svg>Hautement sensible</span></td>
-            <td data-cell="niveau">Double validation <b data-prog-lbl>1/2</b><div class="prog"><i data-prog style="width:50%"></i></div><div class="hint" data-prog-hint>1re : O. Seck · 19:02 · 2e requise par un validateur distinct de l'initiateur et du 1er validateur (§4.7)</div></td>
+            <td data-cell="niveau">Double validation <b data-prog-lbl>1/2</b><button class="fx" data-f="Un ajustement exige un motif obligatoire et une double validation par deux validateurs distincts de l'initiateur et l'un de l'autre (§4.7)" data-c="VAL-117, +180 000 sur Caisse générale, motif « écart de comptage du 26/08 », initié par M. Diop · 1re validation donnée par O. Seck le 27/08 à 19:02, progression 1/2 · O. Seck ne peut pas donner la 2e · contrepartie sur le compte Ajustement, exclu des agrégats" data-src="Mata Finance §4.7 · chaîne de validation de VAL-117 · Audit central du 27/08 · 19:02" aria-label="Voir la règle"><svg><use href="#i-info"/></svg></button><div class="prog"><i data-prog style="width:50%"></i></div><div class="hint" data-prog-hint>1re : O. Seck · 19:02 · 2e requise par un validateur distinct de l'initiateur et du 1er validateur (§4.7)</div></td>
             <td>+<span class="amt" data-amt="180000" data-nocur></span></td>
             <td data-cell="decision"><div class="acts-c"><button class="btn ghost sm" data-open="fin-validations-detail" data-val="VAL-117"><svg><use href="#i-eye"/></svg>Détail</button><button class="btn pri sm" data-act="valider" data-val="VAL-117" data-perm="finance.validations.agir" data-initiator="M. Diop" data-validated-by="O. Seck"><svg><use href="#i-check"/></svg>Valider</button><button class="btn ghost sm" data-act="refuser" data-val="VAL-117" data-perm="finance.validations.agir" data-initiator="M. Diop" data-validated-by="O. Seck"><svg><use href="#i-x"/></svg>Refuser</button></div></td>
           </tr>
@@ -92,7 +92,7 @@
             <td><b>Correction Position externe</b><div class="hint">Banque BOA · motif « frais bancaires non importés » · matérialisée par un ajustement validé (§4.2)</div></td>
             <td>F. Sarr<div class="hint">Directeur des Opérations</div></td>
             <td><span class="sens hs"><svg><use href="#i-shield"/></svg>Hautement sensible</span></td>
-            <td data-cell="niveau">Double validation <b data-prog-lbl>0/2</b><div class="prog"><i data-prog style="width:0%"></i></div><div class="hint" data-prog-hint>deux validateurs distincts de l'initiateur et l'un de l'autre (§10.1)</div></td>
+            <td data-cell="niveau">Double validation <b data-prog-lbl>0/2</b><button class="fx" data-f="Une correction de Position externe est matérialisée par un ajustement validé (§4.2) et suit donc la même double validation, hautement sensible (§10.1)" data-c="VAL-116, Banque BOA −45 000, motif « frais bancaires non importés », initiée par F. Sarr · progression 0/2 : les deux validateurs restent à désigner · la valeur reçue du dernier import et la correction manuelle sont conservées toutes deux (§4.9)" data-src="Mata Finance §4.2, §4.9, §10.1 · demande En attente au 27/08" aria-label="Voir la règle"><svg><use href="#i-info"/></svg></button><div class="prog"><i data-prog style="width:0%"></i></div><div class="hint" data-prog-hint>deux validateurs distincts de l'initiateur et l'un de l'autre (§10.1)</div></td>
             <td><span class="amt" data-amt="-45000" data-nocur></span></td>
             <td data-cell="decision"><div class="acts-c"><button class="btn ghost sm" data-open="fin-validations-detail" data-val="VAL-116"><svg><use href="#i-eye"/></svg>Détail</button><button class="btn pri sm" data-act="valider" data-val="VAL-116" data-perm="finance.validations.agir" data-initiator="F. Sarr"><svg><use href="#i-check"/></svg>Valider</button><button class="btn ghost sm" data-act="refuser" data-val="VAL-116" data-perm="finance.validations.agir" data-initiator="F. Sarr"><svg><use href="#i-x"/></svg>Refuser</button></div></td>
           </tr>
