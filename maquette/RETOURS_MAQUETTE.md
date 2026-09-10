@@ -140,7 +140,8 @@ Vérifié dans Chromium, profil par profil, en parcourant tous les écrans acces
 
 ## Revues avant merge (PR #1)
 
-Trois revues indépendantes en contexte vierge, exigées par `CLAUDE.md` : ce lot dépasse 300 lignes, touche les permissions et la réconciliation, et modifie le contrat.
+Trois revues indépendantes en contexte vierge, exigées par `CLAUDE.md` : ce lot dépasse 300 lignes, touche les permissions et la réconciliation, et modifie le contrat. Une relecture de code générale, une revue adversariale sur les règles métier, une revue adversariale sur la robustesse ayant parcouru les 27 écrans avec les 8 profils.
+Aucune erreur JavaScript sur 28 écrans par 8 profils, aucun débordement horizontal en 1440 ni en 375, clair et sombre. 22 constats corrigés.
 
 **Corrigé à la suite des revues :**
 
@@ -162,12 +163,19 @@ Trois revues indépendantes en contexte vierge, exigées par `CLAUDE.md` : ce lo
 | Clé de périmètre `srca` morte, laissant croire que le collecteur était couvert par le mécanisme transverse | Retirée, avec la raison en commentaire |
 | Contrat non mis à jour pour les sept mécanismes transverses ajoutés | Nouvelle section §5a |
 | Chiffres faux dans ce suivi : 65 filtres au lieu de 72, 41 marques mélangeant deux mécanismes | Recomptés |
+| En 375 px, cinq des six boutons « Déplier » du tableau de bord sortaient de l'écran, un n'offrait plus que 10 px de cible | L'en-tête de carte passe à la ligne sous 640 px, le résumé prend toute la largeur et le bouton reste à droite |
+| Sur Dépenses, la barre pilotait la première des sept lignes « aucun résultat » de l'écran : deux messages contradictoires empilés, ou un message sans rapport avec la recherche | La barre ne touche plus aux lignes vides de l'écran. Elle les neutralise le temps de son filtrage, pose la sienne, et leur rend leur état exact ensuite |
+| Un filtre de colonne était abandonné au changement de profil, le sélecteur affichant toujours sa valeur | Le filtrage est rejoué après l'événement de changement de profil |
+| Une ligne créée après coup échappait au filtre actif | Un observateur sur le corps du tableau rejoue le filtrage à toute ligne ajoutée ou retirée |
+| Compteur de lignes à 3,09:1 de contraste, sous le 4,5:1 exigé, et résultat du filtrage jamais annoncé | Couleur remontée à 5,98:1 en clair et 7,82:1 en sombre, et `role="status" aria-live="polite"` |
+| Repli imbriqué : l'Échéancier, déjà à l'intérieur de la carte Fournisseurs, portait son propre bouton | Retiré, il se replie avec sa carte parente |
 
 **Constats laissés ouverts, à trancher :**
 
 1. **Déduction par soustraction.** Le Directeur des Opérations voit les cinq indicateurs de tête et la décomposition du P&L. Position financière nette, trésorerie totale, créances, dettes et avances clients étant toutes visibles, l'avance d'Abattoirs Dakar se retrouve par soustraction ; de même la dette de Bétail Thiès se déduit du total des dettes moins les quatre autres fournisseurs, tous visibles. Masquer un champ ne suffit pas quand l'agrégat qui le contient reste affiché. Trois issues : retirer le tableau de bord et le P&L aux profils déclarants, masquer les agrégats concernés tant qu'une déclaration est attendue, ou accepter la déduction et l'écrire. La question rejoint le point 1 des questions de revue de `AMBIGUITES_PANEL.md`, resté ouvert.
 2. **Échéancier fournisseur.** Les deux tranches de Bétail Thiès, 1 600 000 et 3 000 000, redonnent sa position. Les masquer prive le Directeur des Opérations de la planification des paiements, qui est son métier. Même arbitrage que le point 1.
-3. **R-10 codé avant validation du DG.** `CLAUDE.md` demande la validation de Saliou et d'Ousmane avant toute ligne de code. Saliou a arbitré le 10/09, Ousmane n'a pas vu R-06 ni R-10.
+3. **La recherche lit le texte masqué.** Le cache par périmètre est visuel : le texte reste dans le DOM, donc la recherche plein texte de la barre le voit. Aucune des marques posées ne se trouve aujourd'hui dans une colonne indexée, mais un déclarant pourrait sonder une valeur par le compteur si cela changeait. Même arbitrage que les points 1 et 2 : tant que la donnée est envoyée au navigateur, aucun masquage d'interface n'est étanche.
+4. **R-10 codé avant validation du DG.** `CLAUDE.md` demande la validation de Saliou et d'Ousmane avant toute ligne de code. Saliou a arbitré le 10/09, Ousmane n'a pas vu R-06 ni R-10.
 
 ## Arbitrages rendus
 

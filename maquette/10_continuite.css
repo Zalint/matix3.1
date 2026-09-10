@@ -347,6 +347,7 @@
 #app .foldb svg{width:13px;height:13px;transition:transform .18s}
 #app .card.folded .foldb svg{transform:rotate(-90deg)}
 #app .ch .foldsum{margin-left:auto;text-align:right}
+@media (max-width:640px){#app .ch{flex-wrap:wrap}#app .ch .foldsum{flex:1 1 100%;margin-left:0;text-align:left;order:3}#app .foldb{margin-left:auto}}
 #app .card.folded{background:var(--card)}
 /* Filtre par colonne et recherche (R-03) : barre posée par le moteur au-dessus de chaque
    tableau assez long. f-out écarte une ligne sans toucher à tr.hidden, que les écrans
@@ -354,6 +355,7 @@
 #app tr.f-out{display:none}
 #app .tfilt{display:flex;flex-wrap:wrap;align-items:center;gap:8px;padding:11px 16px;border-bottom:1px solid var(--line)}
 #app .tfilt .sp{flex:1}
+#app .tfilt [data-fcount]{color:var(--ink-2)}
 #app .tfilt select.inp{min-height:32px;padding:5px 26px 5px 9px;font-size:12px;max-width:210px}
 #app .tfilt-q{display:flex;align-items:center;gap:7px;background:var(--card-2);border:1px solid var(--line-2);border-radius:8px;padding:0 10px;min-height:32px;flex:0 1 240px;min-width:160px}
 #app .tfilt-q:focus-within{border-color:var(--red);box-shadow:0 0 0 3px var(--red-tint)}

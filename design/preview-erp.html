@@ -391,6 +391,7 @@ svg{display:block;flex:none}
 #app .foldb svg{width:13px;height:13px;transition:transform .18s}
 #app .card.folded .foldb svg{transform:rotate(-90deg)}
 #app .ch .foldsum{margin-left:auto;text-align:right}
+@media (max-width:640px){#app .ch{flex-wrap:wrap}#app .ch .foldsum{flex:1 1 100%;margin-left:0;text-align:left;order:3}#app .foldb{margin-left:auto}}
 #app .card.folded{background:var(--card)}
 /* Filtre par colonne et recherche (R-03) : barre posée par le moteur au-dessus de chaque
    tableau assez long. f-out écarte une ligne sans toucher à tr.hidden, que les écrans
@@ -398,6 +399,7 @@ svg{display:block;flex:none}
 #app tr.f-out{display:none}
 #app .tfilt{display:flex;flex-wrap:wrap;align-items:center;gap:8px;padding:11px 16px;border-bottom:1px solid var(--line)}
 #app .tfilt .sp{flex:1}
+#app .tfilt [data-fcount]{color:var(--ink-2)}
 #app .tfilt select.inp{min-height:32px;padding:5px 26px 5px 9px;font-size:12px;max-width:210px}
 #app .tfilt-q{display:flex;align-items:center;gap:7px;background:var(--card-2);border:1px solid var(--line-2);border-radius:8px;padding:0 10px;min-height:32px;flex:0 1 240px;min-width:160px}
 #app .tfilt-q:focus-within{border-color:var(--red);box-shadow:0 0 0 3px var(--red-tint)}
@@ -956,7 +958,7 @@ svg{display:block;flex:none}
         <div class="card stat"><div class="lb">Dettes fournisseurs<span data-blind="f4"><button class="fx" data-f="Σ max(− Position fournisseur ; 0)." data-c="AGNEAUX 12 400 000 · MATA VOLAILLE CHAIR 4 300 000 · Bétail Thiès 4 600 000 · MATA VOLAILLE ŒUFS 1 150 000 · Aliments Sénégal 800 000" data-src="Comptes Fournisseur CALCULÉ · Position fournisseur = Position précédente + Paiements/avances − Dépenses ± Ajustements validés (§4.3)" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></span></div><div class="v amt" data-amt="23250000"></div><div class="sub2" data-ratio-of="23250000">5,1 % du CA de référence · août au 27</div></div>
         <div class="card stat"><div class="lb">Avances fournisseurs<span data-blind="f5"><button class="fx" data-f="Σ max(Position fournisseur ; 0)." data-c="Abattoirs Dakar +350 000" data-src="Comptes Fournisseur CALCULÉ · une avance est consommée par les achats futurs avant toute dette (§4.3)" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></span></div><div data-blind="f5"><div class="v amt" data-amt="350000"></div></div><div class="sub2">Abattoirs Dakar · réconciliation en attente (frais d’abattage <span class="amt" data-amt="150000" data-nocur></span>)</div></div>
       </div>
-      <div class="card" data-fold="closed" data-fold-sum="échéances à venir et échéances dépassées">
+      <div class="card">
         <div class="ch"><h3>Échéancier</h3><div class="chips" data-ech-chips><button class="chip on" data-filter="tous">Toutes</button><button class="chip" data-filter="dep">Dépassées</button><button class="chip" data-filter="proch">Prochaine</button><button class="chip" data-filter="avenir">À venir</button></div><span class="hint-r" data-ech-count>8 échéances · total <span class="amt" data-amt="23250000" data-nocur></span> = Dettes fournisseurs</span></div>
         <div class="tbl-scroll"><table>
           <thead><tr><th>État</th><th>Fournisseur</th><th>Dépense / lot</th><th>Montant restant</th><th>Date souhaitée au plus tard</th><th>Compte de paiement de référence</th></tr></thead>
@@ -9311,7 +9313,7 @@ function tallOne(w){
   var n=tb?visibleRows(tb).length:0;
   w.classList.toggle('tall',n>TALL_MIN);
 }
-function visibleRows(tb){return $$('tr',tb).filter(function(r){return !r.hidden&&!r.classList.contains('f-out')&&!r.hasAttribute('data-empty');});}
+function visibleRows(tb){return $$('tr',tb).filter(function(r){return !r.hidden&&!r.classList.contains('f-out')&&!r.hasAttribute('data-empty')&&!r.hasAttribute('data-fempty');});}
 
 /* ===== Filtre par colonne et recherche (R-03) =====
    Comportement standard de tous les tableaux, Mata Core compris. Les ecrans continuent
@@ -9330,7 +9332,7 @@ function cellVal(td){
   else{var c=td.cloneNode(true);$$('.hint,small,svg,.av',c).forEach(function(x){x.remove();});v=c.textContent;}
   return (v||'').replace(/\s+/g,' ').trim();
 }
-function bodyRows(tb){return $$('tr',tb).filter(function(r){return !r.hasAttribute('data-empty')&&r.querySelector('td');});}
+function bodyRows(tb){return $$('tr',tb).filter(function(r){return !r.hasAttribute('data-empty')&&!r.hasAttribute('data-fempty')&&r.querySelector('td');});}
 function filterCols(rows,ths){
   var cols=[];
   ths.forEach(function(th,i){
@@ -9362,9 +9364,14 @@ function buildTools(w){
     +'<input type="search" data-fq placeholder="Rechercher dans le tableau" aria-label="Rechercher dans le tableau"></label>'
     +cols.map(function(c){return '<select class="inp" data-fcol="'+c.i+'" aria-label="Filtrer sur '+esc(c.lb)+'"><option value="">'+esc(c.lb)+' : tous</option>'
       +c.vals.map(function(v){return '<option value="'+esc(v)+'">'+esc(v)+'</option>';}).join('')+'</select>';}).join('')
-    +'<span class="sp"></span><span class="hint" data-fcount></span>'
+    +'<span class="sp"></span><span class="hint" data-fcount role="status" aria-live="polite"></span>'
     +'<button class="linkish" data-freset hidden>Réinitialiser</button>';
   w.parentNode.insertBefore(bar,w);
+  var mine=document.createElement('tr');
+  mine.setAttribute('data-fempty','');
+  mine.hidden=true;
+  mine.innerHTML='<td colspan="'+ths.length+'"><span class="hint">Aucune ligne ne correspond à ce filtre.</span></td>';
+  tb.appendChild(mine);
   function apply(){
     var q=($('[data-fq]',bar).value||'').toLowerCase().trim();
     var sel=$$('[data-fcol]',bar).map(function(s){return {i:+s.dataset.fcol,v:s.value};}).filter(function(s){return s.v;});
@@ -9376,16 +9383,27 @@ function buildTools(w){
     var n=visibleRows(tb).length,actif=!!q||!!sel.length;
     $('[data-fcount]',bar).textContent=n+(n>1?' lignes affichées':' ligne affichée');
     $('[data-freset]',bar).hidden=!actif;
-    /* La ligne « aucun résultat » suit le nombre de lignes réellement affichées, filtre actif
-       ou non : ne la piloter que pendant le filtrage la laissait ouverte après réinitialisation. */
-    var empty=$('tr[data-empty]',tb);
-    if(empty)empty.hidden=n>0;
+    /* Les lignes vides de l'écran lui appartiennent : il peut en avoir plusieurs, indexées par
+       puce. La barre ne les pilote donc pas, elle les neutralise le temps de son propre filtrage
+       et pose la sienne, puis leur rend leur état exact quand elle redevient inactive. */
+    var siennes=$$('tr[data-empty]',tb);
+    if(actif){
+      siennes.forEach(function(r){if(r.dataset.fwas===undefined)r.dataset.fwas=r.hidden?'1':'0';r.hidden=true;});
+      mine.hidden=n>0;
+    }else{
+      mine.hidden=true;
+      siennes.forEach(function(r){if(r.dataset.fwas!==undefined){r.hidden=r.dataset.fwas==='1';delete r.dataset.fwas;}});
+    }
     refreshTall(w);
   }
   bar.addEventListener('input',apply);bar.addEventListener('change',apply);
   $('[data-freset]',bar).addEventListener('click',function(){$('[data-fq]',bar).value='';$$('[data-fcol]',bar).forEach(function(s){s.value='';});apply();});
+  w._fapply=apply;
+  var pending=0;
+  new MutationObserver(function(){clearTimeout(pending);pending=setTimeout(apply,0);}).observe(tb,{childList:true});
   apply();
 }
+function refilter(scope){$$('.tbl-scroll',scope||document).forEach(function(w){if(w._fapply)w._fapply();});}
 function tableTools(sec){$$('.tbl-scroll',sec).forEach(buildTools);}
 
 /* ===== Aveugle par périmètre (R-16) =====
@@ -9493,7 +9511,7 @@ function setPersona(p){
   var hc=$('[data-hub-cat]');if(hc)hc.textContent=p.cat;
   applyPerms();renderHub();renderPops();
   try{document.dispatchEvent(new CustomEvent('erp:profile',{detail:p}));}catch(e){}
-  applyBlind();/* apres l'evenement : un ecran qui se re-rend sur changement de profil effacerait le cache pose avant */
+  applyBlind();refilter();/* apres l'evenement : un ecran qui se re-rend sur changement de profil effacerait le cache pose avant */
   var cur=$('.scr[data-scr="'+state.screen+'"]');
   if(cur&&cur.getAttribute('data-perm')&&!hasPerm(cur.getAttribute('data-perm'))){go('hub');toast('Profil '+p.profile+' : l’écran précédent n’est pas dans votre périmètre, retour à l’accueil.');}
   else if(setPersona.ready)toast('Profil actif : '+p.profile+' — menu et permissions recalculés');

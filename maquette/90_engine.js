@@ -141,7 +141,7 @@ function tallOne(w){
   var n=tb?visibleRows(tb).length:0;
   w.classList.toggle('tall',n>TALL_MIN);
 }
-function visibleRows(tb){return $$('tr',tb).filter(function(r){return !r.hidden&&!r.classList.contains('f-out')&&!r.hasAttribute('data-empty');});}
+function visibleRows(tb){return $$('tr',tb).filter(function(r){return !r.hidden&&!r.classList.contains('f-out')&&!r.hasAttribute('data-empty')&&!r.hasAttribute('data-fempty');});}
 
 /* ===== Filtre par colonne et recherche (R-03) =====
    Comportement standard de tous les tableaux, Mata Core compris. Les ecrans continuent
@@ -160,7 +160,7 @@ function cellVal(td){
   else{var c=td.cloneNode(true);$$('.hint,small,svg,.av',c).forEach(function(x){x.remove();});v=c.textContent;}
   return (v||'').replace(/\s+/g,' ').trim();
 }
-function bodyRows(tb){return $$('tr',tb).filter(function(r){return !r.hasAttribute('data-empty')&&r.querySelector('td');});}
+function bodyRows(tb){return $$('tr',tb).filter(function(r){return !r.hasAttribute('data-empty')&&!r.hasAttribute('data-fempty')&&r.querySelector('td');});}
 function filterCols(rows,ths){
   var cols=[];
   ths.forEach(function(th,i){
@@ -192,9 +192,14 @@ function buildTools(w){
     +'<input type="search" data-fq placeholder="Rechercher dans le tableau" aria-label="Rechercher dans le tableau"></label>'
     +cols.map(function(c){return '<select class="inp" data-fcol="'+c.i+'" aria-label="Filtrer sur '+esc(c.lb)+'"><option value="">'+esc(c.lb)+' : tous</option>'
       +c.vals.map(function(v){return '<option value="'+esc(v)+'">'+esc(v)+'</option>';}).join('')+'</select>';}).join('')
-    +'<span class="sp"></span><span class="hint" data-fcount></span>'
+    +'<span class="sp"></span><span class="hint" data-fcount role="status" aria-live="polite"></span>'
     +'<button class="linkish" data-freset hidden>Réinitialiser</button>';
   w.parentNode.insertBefore(bar,w);
+  var mine=document.createElement('tr');
+  mine.setAttribute('data-fempty','');
+  mine.hidden=true;
+  mine.innerHTML='<td colspan="'+ths.length+'"><span class="hint">Aucune ligne ne correspond à ce filtre.</span></td>';
+  tb.appendChild(mine);
   function apply(){
     var q=($('[data-fq]',bar).value||'').toLowerCase().trim();
     var sel=$$('[data-fcol]',bar).map(function(s){return {i:+s.dataset.fcol,v:s.value};}).filter(function(s){return s.v;});
@@ -206,16 +211,27 @@ function buildTools(w){
     var n=visibleRows(tb).length,actif=!!q||!!sel.length;
     $('[data-fcount]',bar).textContent=n+(n>1?' lignes affichées':' ligne affichée');
     $('[data-freset]',bar).hidden=!actif;
-    /* La ligne « aucun résultat » suit le nombre de lignes réellement affichées, filtre actif
-       ou non : ne la piloter que pendant le filtrage la laissait ouverte après réinitialisation. */
-    var empty=$('tr[data-empty]',tb);
-    if(empty)empty.hidden=n>0;
+    /* Les lignes vides de l'écran lui appartiennent : il peut en avoir plusieurs, indexées par
+       puce. La barre ne les pilote donc pas, elle les neutralise le temps de son propre filtrage
+       et pose la sienne, puis leur rend leur état exact quand elle redevient inactive. */
+    var siennes=$$('tr[data-empty]',tb);
+    if(actif){
+      siennes.forEach(function(r){if(r.dataset.fwas===undefined)r.dataset.fwas=r.hidden?'1':'0';r.hidden=true;});
+      mine.hidden=n>0;
+    }else{
+      mine.hidden=true;
+      siennes.forEach(function(r){if(r.dataset.fwas!==undefined){r.hidden=r.dataset.fwas==='1';delete r.dataset.fwas;}});
+    }
     refreshTall(w);
   }
   bar.addEventListener('input',apply);bar.addEventListener('change',apply);
   $('[data-freset]',bar).addEventListener('click',function(){$('[data-fq]',bar).value='';$$('[data-fcol]',bar).forEach(function(s){s.value='';});apply();});
+  w._fapply=apply;
+  var pending=0;
+  new MutationObserver(function(){clearTimeout(pending);pending=setTimeout(apply,0);}).observe(tb,{childList:true});
   apply();
 }
+function refilter(scope){$$('.tbl-scroll',scope||document).forEach(function(w){if(w._fapply)w._fapply();});}
 function tableTools(sec){$$('.tbl-scroll',sec).forEach(buildTools);}
 
 /* ===== Aveugle par périmètre (R-16) =====
@@ -323,7 +339,7 @@ function setPersona(p){
   var hc=$('[data-hub-cat]');if(hc)hc.textContent=p.cat;
   applyPerms();renderHub();renderPops();
   try{document.dispatchEvent(new CustomEvent('erp:profile',{detail:p}));}catch(e){}
-  applyBlind();/* apres l'evenement : un ecran qui se re-rend sur changement de profil effacerait le cache pose avant */
+  applyBlind();refilter();/* apres l'evenement : un ecran qui se re-rend sur changement de profil effacerait le cache pose avant */
   var cur=$('.scr[data-scr="'+state.screen+'"]');
   if(cur&&cur.getAttribute('data-perm')&&!hasPerm(cur.getAttribute('data-perm'))){go('hub');toast('Profil '+p.profile+' : l’écran précédent n’est pas dans votre périmètre, retour à l’accueil.');}
   else if(setPersona.ready)toast('Profil actif : '+p.profile+' — menu et permissions recalculés');
