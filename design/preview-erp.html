@@ -2671,12 +2671,13 @@ ERP.register('fin-reconciliation', function (root, ctx) {
     #app [data-scr="fin-declarations"] .cb .actionbar>.hint{flex:1;min-width:220px}
     #app [data-scr="fin-declarations"] .ch{flex-wrap:wrap}
     #app [data-scr="fin-declarations"] .ch .chips{margin-left:6px}
-    @media (max-width:640px){#app [data-scr="fin-declarations"] .declform,#app [data-scr="fin-declarations"] .declres.four{grid-template-columns:1fr}}
+    #app [data-scr="fin-declarations"] .declres.two{grid-template-columns:1fr 1fr}
+    @media (max-width:640px){#app [data-scr="fin-declarations"] .declform,#app [data-scr="fin-declarations"] .declres.four,#app [data-scr="fin-declarations"] .declres.two{grid-template-columns:1fr}}
   </style>
   <div class="scr-head">
     <div>
       <h2>Déclarations</h2>
-      <p class="scr-sub">Réconciliation en aveugle (§3) : lorsqu'un déclarant constitue une source de contrôle, il ne voit pas la valeur théorique avant sa déclaration · Caisses (§4.8), positions fournisseurs (§5.5), encaissements collectés (§6.3) · jeudi 27 août 2026 · gel « À réconcilier » à 23:59 GMT (§3.1)</p>
+      <p class="scr-sub">Réconciliation en aveugle (§3) : lorsqu'un déclarant constitue une source de contrôle, il ne voit jamais la valeur théorique, ni avant ni après sa déclaration · Caisses (§4.8), positions fournisseurs (§5.5), encaissements collectés (§6.3) · jeudi 27 août 2026 · gel « À réconcilier » à 23:59 GMT (§3.1)</p>
     </div>
     <div class="scr-meta">
       <button class="linkish" data-open="help-fin-declarations"><svg><use href="#i-info"/></svg>Comment ça marche ?</button>
@@ -2737,17 +2738,19 @@ ERP.register('fin-reconciliation', function (root, ctx) {
             <div class="hint" style="margin-top:8px">Le gestionnaire saisit en aveugle le solde réellement détenu. Égalité : le compte est réconcilié. Écart : le compte reste « À réconcilier » et l'écart est investigué ; une correction éventuelle passe par Ajustement (§4.8). Date métier 27/08/2026 · auteur et horodatage automatiques · audit de modification.</div>
           </div>
           <div data-res="cg" hidden>
-            <div class="declres four"><div><div class="k">Déclaré</div><div class="val" data-r-decl></div></div><div><div class="k">Solde théorique</div><div class="val" data-r-theo></div></div><div><div class="k">Écart</div><div class="val" data-r-ecart></div></div><div><div class="k">Statut</div><div class="val sm" data-r-st></div></div></div>
-            <div class="actionbar"><span class="hint" data-after-ok>Égalité : le compte est réconcilié. Solde comparé : Dernier solde réconcilié + Somme algébrique des mouvements depuis cette réconciliation (§4.8).</span><span class="hint" data-after-ko hidden>Écart : le compte reste « À réconcilier » et l'écart est investigué ; une correction éventuelle passe par Ajustement (motif obligatoire, deux validateurs distincts, §4.7). Notification critique envoyée à Admin, DG et Collecteur.</span><div class="sp"></div><button class="btn ghost" data-goto="fin-reconciliation" data-after-ko hidden><svg><use href="#i-search"/></svg>Investiguer</button><button class="btn pri" data-perm="finance.ajustements.initier" data-goto="fin-reconciliation" data-after-ko hidden><svg><use href="#i-scale"/></svg>Corriger par Ajustement</button></div>
+            <div class="declres two"><div><div class="k">Votre déclaration</div><div class="val" data-r-decl></div></div><div><div class="k">Statut</div><div class="val sm" data-r-st></div></div></div>
+            <div class="maskbox" style="margin-top:10px"><svg><use href="#i-lock"/></svg>Solde système et écart <span class="dots">••••••••</span> jamais affichés au déclarant, ni avant ni après (§3)</div>
+            <div class="actionbar"><span class="hint" data-after-ok>Votre déclaration est égale au solde système : le compte est réconcilié. Le montant comparé ne vous est pas communiqué (§3).</span><span class="hint" data-after-ko hidden>Votre déclaration diffère du solde système : le compte reste « À réconcilier » et l'écart est investigué par l'Admin, le DG et le Collecteur, seuls destinataires du montant. Une correction éventuelle passe par Ajustement (motif obligatoire, deux validateurs distincts, §4.7).</span><div class="sp"></div><button class="btn ghost" data-goto="fin-reconciliation" data-after-ko hidden><svg><use href="#i-search"/></svg>Investiguer</button><button class="btn pri" data-perm="finance.ajustements.initier" data-goto="fin-reconciliation" data-after-ko hidden><svg><use href="#i-scale"/></svg>Corriger par Ajustement</button></div>
           </div>
         </div>
       </div>
       <div class="card">
-        <div class="ch"><h3>Sous-caisse Marché</h3><span class="st bad"><svg><use href="#i-alert"/></svg>Écart · À réconcilier</span><span class="hint-r">SCM · déclarée 21:12 · théorique révélé après déclaration</span></div>
+        <div class="ch"><h3>Sous-caisse Marché</h3><span class="st bad"><svg><use href="#i-alert"/></svg>Écart · À réconcilier</span><span class="hint-r">SCM · déclarée 21:12 · solde système et écart jamais affichés au déclarant (§3)</span></div>
         <div class="cb">
-          <div class="declres four"><div><div class="k">Déclaré</div><div class="val"><span class="amt" data-amt="1250000" data-nocur></span></div></div><div><div class="k">Solde théorique</div><div class="val"><span class="amt" data-amt="1275000" data-nocur></span></div></div><div><div class="k">Écart</div><div class="val bad"><span class="amt" data-amt="-25000" data-nocur></span></div></div><div><div class="k">Statut</div><div class="val sm">À réconcilier</div></div></div>
+          <div class="declres two"><div><div class="k">Votre déclaration</div><div class="val"><span class="amt" data-amt="1250000" data-nocur></span></div></div><div><div class="k">Statut</div><div class="val sm">À réconcilier</div></div></div>
+          <div class="maskbox" style="margin-top:10px"><svg><use href="#i-lock"/></svg>Solde système et écart <span class="dots">••••••••</span> transmis à l'Admin, au DG et au Collecteur, jamais au déclarant (§3)</div>
           <div class="tl" style="margin-top:14px">
-            <div class="ev on"><b>21:12 · déclaration en aveugle</b> — M. Diop · déclaré <span class="amt" data-amt="1250000" data-nocur></span><small>Comparaison au théorique après déclaration : écart <span class="amt" data-amt="-25000" data-nocur></span> · statut « À réconcilier » · audit de modification (Hautement sensible)</small></div>
+            <div class="ev on"><b>21:12 · déclaration en aveugle</b> — M. Diop · déclaré <span class="amt" data-amt="1250000" data-nocur></span><small>Comparaison au solde système hors de votre vue : statut « À réconcilier » · audit de modification (Hautement sensible)</small></div>
             <div class="ev"><b>21:15 · notification critique</b><small>Écart de réconciliation → Admin, DG, Collecteur (règle non désactivable)</small></div>
             <div class="ev"><b>Suite</b><small>L'écart est investigué ; une correction éventuelle passe par Ajustement : motif obligatoire, deux validateurs distincts de l'initiateur et l'un de l'autre (§4.7) · gel « À réconcilier » à 23:59 si non résolu</small></div>
           </div>
@@ -2756,10 +2759,10 @@ ERP.register('fin-reconciliation', function (root, ctx) {
       </div>
     </div>
     <div class="card">
-      <div class="ch"><h3>Mes déclarations</h3><span class="hint-r">M. Diop · Caisse générale, Sous-caisse Marché · le théorique n'apparaît qu'après chaque déclaration</span></div>
-      <div class="tbl-scroll"><table><thead><tr><th>Date métier</th><th>Compte</th><th>Déclaré</th><th>Solde théorique</th><th>Écart</th><th>Statut</th></tr></thead><tbody data-hist="caisse">
-        <tr><td>27/08 · 21:12</td><td><b>Sous-caisse Marché</b></td><td><span class="amt" data-amt="1250000" data-nocur></span></td><td><span class="amt" data-amt="1275000" data-nocur></span></td><td><span class="amt" data-amt="-25000" data-nocur></span></td><td><span class="st bad"><svg><use href="#i-alert"/></svg>Écart · À réconcilier</span></td></tr>
-        <tr><td>26/08</td><td><b>Caisse générale</b><br><span class="hint">VAL-117 · Ajustement +<span class="amt" data-amt="180000" data-nocur></span>, motif « écart de comptage du 26/08 » · 1re validation O. Seck 27/08 19:02, 2e requise · aucun effet avant deux validations (§4.7) · correction post-clôture, approbation Super Admin (§3.1)</span></td><td><span class="amt" data-amt="7980000" data-nocur></span></td><td><span class="amt" data-amt="7980000" data-nocur></span></td><td><span class="amt" data-amt="0" data-nocur></span></td><td><span class="st ok"><svg><use href="#i-check"/></svg>Réconciliée</span></td></tr>
+      <div class="ch"><h3>Mes déclarations</h3><span class="hint-r">M. Diop · Caisse générale, Sous-caisse Marché · seuls votre déclaration et le statut vous sont visibles (§3)</span></div>
+      <div class="tbl-scroll"><table><thead><tr><th>Date métier</th><th>Compte</th><th>Déclaré</th><th>Statut</th></tr></thead><tbody data-hist="caisse">
+        <tr><td>27/08 · 21:12</td><td><b>Sous-caisse Marché</b></td><td><span class="amt" data-amt="1250000" data-nocur></span></td><td><span class="st bad"><svg><use href="#i-alert"/></svg>Écart · À réconcilier</span></td></tr>
+        <tr><td>26/08</td><td><b>Caisse générale</b><br><span class="hint">VAL-117 · Ajustement +<span class="amt" data-amt="180000" data-nocur></span>, motif « écart de comptage du 26/08 » · 1re validation O. Seck 27/08 19:02, 2e requise · aucun effet avant deux validations (§4.7) · correction post-clôture, approbation Super Admin (§3.1)</span></td><td><span class="amt" data-amt="7980000" data-nocur></span></td><td><span class="st ok"><svg><use href="#i-check"/></svg>Réconciliée</span></td></tr>
       </tbody></table></div>
     </div>
   </div>
@@ -2780,15 +2783,16 @@ ERP.register('fin-reconciliation', function (root, ctx) {
           <div class="hint" style="margin-top:8px">Si les sources sont complètes, à jour et égales, la collecte est validée, la Caisse est créditée et les remboursements sont affectés aux comptes clients. En cas d'écart, aucune auto-validation n'est possible (§6.3). Une source Manquante, En erreur ou Non à jour bloque l'auto-validation mais peut rester visible avec son horodatage (§6.5).</div>
         </div>
         <div data-res="collecte" hidden>
-          <div class="declres four" style="margin-top:12px"><div><div class="k">Source B · votre déclaration</div><div class="val" data-r-decl></div></div><div><div class="k">Source A · Σ 12 déclarations MaaS</div><div class="val" data-r-theo></div></div><div><div class="k">Écart</div><div class="val" data-r-ecart></div></div><div><div class="k">Statut</div><div class="val sm" data-r-st></div></div></div>
-          <div class="actionbar"><span class="hint" data-after-ok>Sources complètes, à jour et égales : la collecte sera validée automatiquement vers 02:00, la Caisse générale créditée et les remboursements affectés aux 12 comptes clients MaaS (§6.3).</span><span class="hint" data-after-ko hidden>Écart : aucune auto-validation possible ; la collecte reste ouverte, l'écart est notifié à Admin, DG et Collecteur (règle critique non désactivable) et investigué avant toute correction.</span><div class="sp"></div><button class="btn ghost" data-goto="fin-reconciliation" data-after-ko hidden><svg><use href="#i-search"/></svg>Investiguer</button></div>
+          <div class="declres two" style="margin-top:12px"><div><div class="k">Source B · votre déclaration</div><div class="val" data-r-decl></div></div><div><div class="k">Statut</div><div class="val sm" data-r-st></div></div></div>
+          <div class="maskbox" style="margin-top:10px"><svg><use href="#i-lock"/></svg>Source A et écart <span class="dots">••••••••</span> jamais affichés à la Source B, ni avant ni après (§3, §6.3)</div>
+          <div class="actionbar"><span class="hint" data-after-ok>Les deux sources concordent : la collecte sera validée automatiquement vers 02:00, la Caisse générale créditée et les remboursements affectés aux 12 comptes clients MaaS. Le montant de la Source A ne vous est pas communiqué (§3, §6.3).</span><span class="hint" data-after-ko hidden>Les deux sources divergent : aucune auto-validation possible, la collecte reste ouverte. Le montant de l'écart part à l'Admin et au DG (règle critique non désactivable) et l'investigation est menée hors de votre vue.</span><div class="sp"></div><button class="btn ghost" data-goto="fin-reconciliation" data-after-ko hidden><svg><use href="#i-search"/></svg>Investiguer</button></div>
         </div>
       </div>
     </div>
     <div class="card">
-      <div class="ch"><h3>Mes déclarations</h3><span class="hint-r">A. Ndiaye · Collecteur · Source B · la Source A n'apparaît qu'après chaque déclaration</span></div>
-      <div class="tbl-scroll"><table><thead><tr><th>Date métier</th><th>Collecte</th><th>Source B · déclaré</th><th>Source A · Σ MaaS</th><th>Écart</th><th>Statut</th></tr></thead><tbody data-hist="collecte">
-        <tr><td>26/08</td><td><b>Collecte du 26/08</b><br><span class="hint">12 MaaS · 12 / 12 déclarations</span></td><td><span class="amt" data-amt="4725000" data-nocur></span></td><td><span class="amt" data-amt="4725000" data-nocur></span></td><td><span class="amt" data-amt="0" data-nocur></span></td><td><span class="st ok"><svg><use href="#i-check"/></svg>Validée 27/08 02:04</span><br><span class="hint">Caisse créditée · remboursements affectés aux 12 comptes clients</span></td></tr>
+      <div class="ch"><h3>Mes déclarations</h3><span class="hint-r">A. Ndiaye · Collecteur · Source B · seuls votre déclaration et le statut vous sont visibles (§3)</span></div>
+      <div class="tbl-scroll"><table><thead><tr><th>Date métier</th><th>Collecte</th><th>Source B · déclaré</th><th>Statut</th></tr></thead><tbody data-hist="collecte">
+        <tr><td>26/08</td><td><b>Collecte du 26/08</b><br><span class="hint">12 MaaS · 12 / 12 déclarations</span></td><td><span class="amt" data-amt="4725000" data-nocur></span></td><td><span class="st ok"><svg><use href="#i-check"/></svg>Validée 27/08 02:04</span><br><span class="hint">Caisse créditée · remboursements affectés aux 12 comptes clients</span></td></tr>
       </tbody></table></div>
     </div>
   </div>
@@ -2820,25 +2824,26 @@ ERP.register('fin-reconciliation', function (root, ctx) {
   <!-- ===== Vue Directeur des Opérations (F. Sarr) : Sous-caisse Livraisons réconciliée + positions fournisseurs (§5.5) ===== -->
   <div data-view="dirops" hidden>
     <div class="card">
-      <div class="ch"><h3>Sous-caisse Livraisons</h3><span class="st ok"><svg><use href="#i-check"/></svg>Réconciliée 20:48</span><span class="hint-r">SCL · Trésorerie · déclarée par F. Sarr · théorique révélé après déclaration (§4.8)</span></div>
+      <div class="ch"><h3>Sous-caisse Livraisons</h3><span class="st ok"><svg><use href="#i-check"/></svg>Réconciliée 20:48</span><span class="hint-r">SCL · Trésorerie · déclarée par F. Sarr · solde système et écart jamais affichés au déclarant (§3)</span></div>
       <div class="cb">
-        <div class="declres four"><div><div class="k">Déclaré</div><div class="val"><span class="amt" data-amt="640000" data-nocur></span></div></div><div><div class="k">Solde théorique</div><div class="val"><span class="amt" data-amt="640000" data-nocur></span></div></div><div><div class="k">Écart</div><div class="val ok"><span class="amt" data-amt="0" data-nocur></span></div></div><div><div class="k">Statut</div><div class="val sm">Réconciliée</div></div></div>
+        <div class="declres two"><div><div class="k">Votre déclaration</div><div class="val"><span class="amt" data-amt="640000" data-nocur></span></div></div><div><div class="k">Statut</div><div class="val sm">Réconciliée</div></div></div>
+        <div class="maskbox" style="margin-top:10px"><svg><use href="#i-lock"/></svg>Solde système et écart <span class="dots">••••••••</span> jamais affichés au déclarant, ni avant ni après (§3)</div>
         <div class="note-strip" style="margin-top:12px"><svg><use href="#i-alert"/></svg><span><b>Clôture du périmètre suspendue.</b> La dépense « Pas sûr » Carburant véhicule livraison (<span class="amt" data-amt="85000" data-nocur></span>, montant payé inconnu) bloque uniquement le périmètre Sous-caisse Livraisons ; notification à 23:00 au Directeur des Opérations, aux Admins et au Super Admin si non résolue (§5.1).</span></div>
         <div class="actionbar"><div class="sp"></div><button class="btn ghost" data-goto="fin-depenses" data-perm="finance.depenses.modifier"><svg><use href="#i-receipt"/></svg>Résoudre la dépense « Pas sûr »</button></div>
       </div>
     </div>
     <div class="card">
-      <div class="ch"><h3>Mes périmètres — positions fournisseurs</h3><span class="st ok"><svg><use href="#i-check"/></svg><span data-cnt-f="rec">3</span> validées</span><span class="st mut"><svg><use href="#i-eyeoff"/></svg><span data-cnt-f="dec">2</span> à déclarer</span><span class="st bad" hidden><svg><use href="#i-alert"/></svg><span data-cnt-f="ec">0</span> en écart</span><span class="st mut">1 sans mouvement</span><span class="hint-r">§5.5 · réconciliation quotidienne · déclaration en aveugle dès qu'un mouvement a affecté le compte · signe §4.3 : négatif = Mata doit</span></div>
+      <div class="ch"><h3>Mes périmètres — positions fournisseurs</h3><span class="st ok"><svg><use href="#i-check"/></svg><span data-cnt-f="rec">3</span> validées</span><span class="st mut"><svg><use href="#i-eyeoff"/></svg><span data-cnt-f="dec">2</span> à déclarer</span><span class="st bad" hidden><svg><use href="#i-alert"/></svg><span data-cnt-f="ec">0</span> en écart</span><span class="st mut">1 sans mouvement</span><span class="hint-r">§5.5 · réconciliation quotidienne · déclaration en aveugle dès qu'un mouvement a affecté le compte · position théorique et écart jamais affichés au déclarant (§3) · signe §4.3 : négatif = Mata doit</span></div>
       <div class="cb" style="padding-bottom:0"><div class="fcode" style="margin-top:0">Position théorique = Dernière position réconciliée + Paiements/avances − Dépenses ± Ajustements validés</div></div>
-      <div class="tbl-scroll"><table><thead><tr><th>Fournisseur</th><th>Mouvement du jour</th><th>Heure</th><th>Position déclarée</th><th>Position théorique</th><th>Écart</th><th>Statut</th><th>Action</th></tr></thead><tbody>
-        <tr data-key="f1"><td><b>AGNEAUX</b><br><span class="hint">F1 · plafond <span class="amt" data-amt="10000000" data-nocur></span> dépassé : alerte, aucun blocage</span></td><td>Achat bœuf lot BV-260827-04 · <span class="amt" data-amt="850000" data-nocur></span> impayé</td><td class="hint" data-c-heure>18:30</td><td data-c-decl><span class="amt" data-amt="-12400000" data-nocur></span></td><td data-c-theo><span class="amt" data-amt="-12400000" data-nocur></span></td><td data-c-ecart><span class="amt" data-amt="0" data-nocur></span></td><td data-c-st><span class="st ok"><svg><use href="#i-check"/></svg>Validée</span></td><td class="hint" data-c-act>—</td></tr>
-        <tr data-key="f2"><td><b>MATA VOLAILLE CHAIR</b><br><span class="hint">F2 · plafond <span class="amt" data-amt="8000000" data-nocur></span></span></td><td>Achat volaille · <span class="amt" data-amt="420000" data-nocur></span> payé immédiatement : position inchangée</td><td class="hint" data-c-heure>17:50</td><td data-c-decl><span class="amt" data-amt="-4300000" data-nocur></span></td><td data-c-theo><span class="amt" data-amt="-4300000" data-nocur></span></td><td data-c-ecart><span class="amt" data-amt="0" data-nocur></span></td><td data-c-st><span class="st ok"><svg><use href="#i-check"/></svg>Validée</span></td><td class="hint" data-c-act>—</td></tr>
-        <tr data-key="f3"><td><b>MATA VOLAILLE ŒUFS</b><br><span class="hint">F3 · échéance dépassée 25/08 (2 j)</span></td><td class="hint">Mouvement du jour non détaillé · déclaration reçue 17:20 après l'import Achat de 17:00</td><td class="hint" data-c-heure>17:20</td><td data-c-decl><span class="amt" data-amt="-1150000" data-nocur></span></td><td data-c-theo><span class="amt" data-amt="-1150000" data-nocur></span></td><td data-c-ecart><span class="amt" data-amt="0" data-nocur></span></td><td data-c-st><span class="st ok"><svg><use href="#i-check"/></svg>Validée</span></td><td class="hint" data-c-act>—</td></tr>
-        <tr data-key="f4"><td><b>Bétail Thiès</b><br><span class="hint">F4 · plafond <span class="amt" data-amt="6000000" data-nocur></span></span></td><td>Achat agneau lot AG-260827-02 · <span class="amt" data-amt="262000" data-nocur></span> impayé</td><td class="hint" data-c-heure>—</td><td data-c-decl><span class="tag lock"><svg><use href="#i-clock"/></svg>Attendue</span></td><td data-c-theo><span class="tag lock"><svg><use href="#i-eyeoff"/></svg>Masquée · à déclarer</span></td><td class="hint" data-c-ecart>—</td><td data-c-st><span class="st mut"><svg><use href="#i-eyeoff"/></svg>À déclarer</span></td><td data-c-act><button class="btn pri" data-perm="finance.declarations.declarer" data-open="fin-declarations-fourn" data-fourn="f4"><svg><use href="#i-eyeoff"/></svg>Déclarer en aveugle</button></td></tr>
-        <tr data-key="f5"><td><b>Abattoirs Dakar</b><br><span class="hint">F5 · plafond <span class="amt" data-amt="2000000" data-nocur></span></span></td><td>Frais d'abattage · <span class="amt" data-amt="150000" data-nocur></span> payés immédiatement</td><td class="hint" data-c-heure>—</td><td data-c-decl><span class="tag lock"><svg><use href="#i-clock"/></svg>Attendue</span></td><td data-c-theo><span class="tag lock"><svg><use href="#i-eyeoff"/></svg>Masquée · à déclarer</span></td><td class="hint" data-c-ecart>—</td><td data-c-st><span class="st mut"><svg><use href="#i-eyeoff"/></svg>À déclarer</span></td><td data-c-act><button class="btn pri" data-perm="finance.declarations.declarer" data-open="fin-declarations-fourn" data-fourn="f5"><svg><use href="#i-eyeoff"/></svg>Déclarer en aveugle</button></td></tr>
-        <tr><td><b>Aliments Sénégal</b><br><span class="hint">F6 · échéance dépassée 20/08 (7 j)</span></td><td class="hint">Aucun mouvement depuis la dernière réconciliation</td><td class="hint">—</td><td class="hint">Non requise</td><td class="hint">Dernière position réconciliée inchangée</td><td class="hint">—</td><td><span class="st mut"><svg><use href="#i-check"/></svg>Sans mouvement · non bloquant</span></td><td class="hint">—</td></tr>
+      <div class="tbl-scroll"><table><thead><tr><th>Fournisseur</th><th>Mouvement du jour</th><th>Heure</th><th>Position déclarée</th><th>Statut</th><th>Action</th></tr></thead><tbody>
+        <tr data-key="f1"><td><b>AGNEAUX</b><br><span class="hint">F1 · plafond <span class="amt" data-amt="10000000" data-nocur></span> dépassé : alerte, aucun blocage</span></td><td>Achat bœuf lot BV-260827-04 · <span class="amt" data-amt="850000" data-nocur></span> impayé</td><td class="hint" data-c-heure>18:30</td><td data-c-decl><span class="amt" data-amt="-12400000" data-nocur></span></td><td data-c-st><span class="st ok"><svg><use href="#i-check"/></svg>Validée</span></td><td class="hint" data-c-act>—</td></tr>
+        <tr data-key="f2"><td><b>MATA VOLAILLE CHAIR</b><br><span class="hint">F2 · plafond <span class="amt" data-amt="8000000" data-nocur></span></span></td><td>Achat volaille · <span class="amt" data-amt="420000" data-nocur></span> payé immédiatement : position inchangée</td><td class="hint" data-c-heure>17:50</td><td data-c-decl><span class="amt" data-amt="-4300000" data-nocur></span></td><td data-c-st><span class="st ok"><svg><use href="#i-check"/></svg>Validée</span></td><td class="hint" data-c-act>—</td></tr>
+        <tr data-key="f3"><td><b>MATA VOLAILLE ŒUFS</b><br><span class="hint">F3 · échéance dépassée 25/08 (2 j)</span></td><td class="hint">Mouvement du jour non détaillé · déclaration reçue 17:20 après l'import Achat de 17:00</td><td class="hint" data-c-heure>17:20</td><td data-c-decl><span class="amt" data-amt="-1150000" data-nocur></span></td><td data-c-st><span class="st ok"><svg><use href="#i-check"/></svg>Validée</span></td><td class="hint" data-c-act>—</td></tr>
+        <tr data-key="f4"><td><b>Bétail Thiès</b><br><span class="hint">F4 · plafond <span class="amt" data-amt="6000000" data-nocur></span></span></td><td>Achat agneau lot AG-260827-02 · <span class="amt" data-amt="262000" data-nocur></span> impayé</td><td class="hint" data-c-heure>—</td><td data-c-decl><span class="tag lock"><svg><use href="#i-clock"/></svg>Attendue</span></td><td data-c-st><span class="st mut"><svg><use href="#i-eyeoff"/></svg>À déclarer</span></td><td data-c-act><button class="btn pri" data-perm="finance.declarations.declarer" data-open="fin-declarations-fourn" data-fourn="f4"><svg><use href="#i-eyeoff"/></svg>Déclarer en aveugle</button></td></tr>
+        <tr data-key="f5"><td><b>Abattoirs Dakar</b><br><span class="hint">F5 · plafond <span class="amt" data-amt="2000000" data-nocur></span></span></td><td>Frais d'abattage · <span class="amt" data-amt="150000" data-nocur></span> payés immédiatement</td><td class="hint" data-c-heure>—</td><td data-c-decl><span class="tag lock"><svg><use href="#i-clock"/></svg>Attendue</span></td><td data-c-st><span class="st mut"><svg><use href="#i-eyeoff"/></svg>À déclarer</span></td><td data-c-act><button class="btn pri" data-perm="finance.declarations.declarer" data-open="fin-declarations-fourn" data-fourn="f5"><svg><use href="#i-eyeoff"/></svg>Déclarer en aveugle</button></td></tr>
+        <tr><td><b>Aliments Sénégal</b><br><span class="hint">F6 · échéance dépassée 20/08 (7 j)</span></td><td class="hint">Aucun mouvement depuis la dernière réconciliation</td><td class="hint">—</td><td class="hint">Non requise</td><td><span class="st mut"><svg><use href="#i-check"/></svg>Sans mouvement · non bloquant</span></td><td class="hint">—</td></tr>
       </tbody></table></div>
-      <div class="cb"><div class="hint">En l'absence de mouvement, la non-déclaration n'est pas bloquante (§5.5). Une position déclarée égale à la théorique est validée ; un écart laisse le compte « À réconcilier », investigué puis corrigé uniquement par Ajustement (§4.7).</div></div>
+      <div class="cb"><div class="hint">En l'absence de mouvement, la non-déclaration n'est pas bloquante (§5.5). Une position déclarée égale à la position système est validée ; sinon le compte reste « À réconcilier », investigué puis corrigé uniquement par Ajustement (§4.7). Le déclarant reçoit le statut, jamais le montant système ni l'écart (§3).</div></div>
     </div>
   </div>
 
@@ -2851,22 +2856,22 @@ ERP.register('fin-reconciliation', function (root, ctx) {
     <div class="exp">Lorsqu'au moins un mouvement a affecté le compte depuis la dernière réconciliation, un déclarant autorisé fournit en aveugle la position qu'il constate. Mata Finance la compare à la position théorique reconstruite à partir des mouvements (§5.5). Convention de signe (§4.3) : négatif = Mata doit au fournisseur ; positif = avance de Mata chez le fournisseur.</div>
     <div class="row-m" style="margin-bottom:12px"><span>Fournisseur</span><b data-f-name>—</b></div>
     <label for="fin-declarations-f-montant">Position constatée (FCFA, signée, sans décimales)</label><input id="fin-declarations-f-montant" inputmode="numeric" placeholder="Montant signé" data-f-inp>
-    <div class="row-m"><span>Position théorique</span><span class="amt">••••••••</span></div>
+    <div class="row-m"><span>Position théorique · jamais affichée (§3)</span><span class="amt">••••••••</span></div>
     <div class="acts"><button class="btn ghost" data-close>Annuler</button><button class="btn pri" data-perm="finance.declarations.declarer" data-f-save><svg><use href="#i-eyeoff"/></svg>Déclarer</button></div>
   </div></div>
 
   <!-- Modale : aide contextuelle -->
   <div class="mback" data-ov="help-fin-declarations"><div class="modal wide" role="dialog" aria-modal="true" aria-label="Comment ça marche : Déclarations">
     <h3><svg><use href="#i-info"/></svg>Comment ça marche : Déclarations</h3>
-    <div class="exp">Cet écran fait réconcilier chaque périmètre ayant bougé aujourd'hui : le déclarant (gestionnaire de caisse, collecteur, gérant MaaS, directeur des opérations) saisit en aveugle ce qu'il constate, sans voir le solde système ; le Super Admin et le DG, qui ne déclarent pas, voient le théorique et pilotent les écarts.</div>
+    <div class="exp">Cet écran fait réconcilier chaque périmètre ayant bougé aujourd'hui : le déclarant (gestionnaire de caisse, collecteur, gérant MaaS, directeur des opérations) saisit ce qu'il constate et ne voit jamais le solde système, ni avant ni après. Le Super Admin et le DG, qui ne déclarent pas, voient le théorique et pilotent les écarts.</div>
     <ul class="help-list">
-      <li><b>Déclaration en aveugle</b> — avant la déclaration, seul un bandeau « Solde système masqué » apparaît ; une fois F. Sarr déclaré à 20:48, l'écran affiche <span class="amt" data-amt="640000" data-nocur></span> déclarés pour <span class="amt" data-amt="640000" data-nocur></span> de théorique, écart nul (§3).</li>
-      <li><b>Solde théorique d'une caisse</b> — dernier solde réconcilié + mouvements du jour. Sur Sous-caisse Marché, <span class="amt" data-amt="1250000" data-nocur></span> déclarés contre <span class="amt" data-amt="1275000" data-nocur></span> de théorique laissent un écart de <span class="amt" data-amt="-25000" data-nocur></span> : le compte reste « À réconcilier », corrigé seulement par Ajustement (§4.8).</li>
-      <li><b>Position théorique d'un fournisseur</b> — dernière position réconciliée + paiements/avances − dépenses ± ajustements. Sur AGNEAUX, l'achat bœuf de <span class="amt" data-amt="850000" data-nocur></span> impayé laisse déclaré et théorique égaux à <span class="amt" data-amt="-12400000" data-nocur></span>, écart nul, position validée (§5.5).</li>
+      <li><b>Déclaration en aveugle</b> — le déclarant ne voit jamais le solde système, ni avant ni après. F. Sarr a déclaré <span class="amt" data-amt="640000" data-nocur></span> à 20:48 sur Sous-caisse Livraisons et reçoit le seul statut « Réconciliée » ; le montant comparé et l'écart restent hors de sa vue (§3).</li>
+      <li><b>Solde théorique d'une caisse</b> — dernier solde réconcilié + mouvements du jour, calculé par le moteur. M. Diop a déclaré <span class="amt" data-amt="1250000" data-nocur></span> sur Sous-caisse Marché et voit « À réconcilier » sans le chiffre : l'écart part à l'Admin, au DG et au Collecteur, qui l'investiguent et le corrigent par Ajustement (§4.8).</li>
+      <li><b>Position théorique d'un fournisseur</b> — dernière position réconciliée + paiements/avances − dépenses ± ajustements. Sur AGNEAUX, l'achat bœuf de <span class="amt" data-amt="850000" data-nocur></span> impayé est déjà pris en compte : F. Sarr a déclaré <span class="amt" data-amt="-12400000" data-nocur></span> et obtient « Validée », sans voir la position reconstruite (§5.5).</li>
       <li><b>Mouvement non bloquant</b> — 5 fournisseurs ayant bougé sont attendus aujourd'hui ; Aliments Sénégal, sans mouvement depuis sa dernière réconciliation, reste « Sans mouvement · non bloquant » et n'est pas compté (§5.5).</li>
-      <li><b>Deux sources pour une collecte</b> — Source A (Σ des 12 déclarations MaaS) comparée à la Source B (déclaration du collecteur). Le 26/08, les deux étaient à <span class="amt" data-amt="4725000" data-nocur></span> : sources égales, collecte validée automatiquement à 02:04 ; en cas d'écart, aucune validation automatique n'a lieu (§6.3).</li>
+      <li><b>Deux sources cloisonnées</b> — Source A (Σ des 12 déclarations MaaS) et Source B (déclaration du collecteur) sont comparées par le moteur, jamais l'une par l'autre : aucun déclarant ne voit le montant de l'autre source. Le 26/08 A. Ndiaye a déclaré <span class="amt" data-amt="4725000" data-nocur></span>, les sources concordaient et la collecte a été validée à 02:04 ; en cas d'écart, aucune validation automatique n'a lieu (§6.3).</li>
     </ul>
-    <div class="note-strip"><svg><use href="#i-shield"/></svg>Réconciliation en aveugle : le déclarant ne voit le solde ou la position théorique qu'après avoir soumis sa propre déclaration, jamais avant (§3).</div>
+    <div class="note-strip"><svg><use href="#i-shield"/></svg>Réconciliation en aveugle : le déclarant ne voit jamais le solde système, la position théorique ni l'écart, ni avant ni après sa déclaration. Une source ne voit jamais le montant d'une autre source. Seuls les profils qui ne déclarent pas (Super Admin, DG) accèdent au théorique et pilotent les écarts (§3).</div>
     <div class="hint">Sources : Cahier Mata Finance §3, §4.8, §5.5, §6.3</div>
     <div class="acts"><button class="btn ghost" data-close>Fermer</button></div>
   </div></div>
@@ -2876,14 +2881,14 @@ ERP.register('fin-declarations', function (root, ctx) {
   var q = function (s, el) { return (el || root).querySelector(s); };
   var qa = function (s, el) { return Array.prototype.slice.call((el || root).querySelectorAll(s)); };
   var num = function (v) { return parseInt(String(v == null ? '' : v).replace(/−/g, '-').replace(/[^\d-]/g, ''), 10); };
-  /* Valeurs théoriques : uniquement en mémoire, injectées dans le DOM après déclaration ou pour les profils qui ne déclarent pas (§3) */
+  /* Valeurs théoriques : uniquement en mémoire, injectées dans le DOM pour les seuls profils qui ne déclarent pas (§3) */
   var THEO = { scm: 1275000, scl: 640000, cg: 8450000, collecte: 3100000, srca: 3100000, f1: -12400000, f2: -4300000, f3: -1150000, f4: -4600000, f5: 350000, f6: -800000 };
   var NAME = { cg: 'Caisse générale', collecte: 'Collecte du 27/08', f4: 'Bétail Thiès', f5: 'Abattoirs Dakar' };
   var CIRC = { cg: 'caisse', collecte: 'collecte', f4: 'fourn', f5: 'fourn' };
   var OKL = { caisse: 'Réconciliée', collecte: 'Sources égales · auto-validation vers 02:00', fourn: 'Validée' };
   var KOL = { caisse: 'Écart · À réconcilier', collecte: 'Écart · aucune auto-validation', fourn: 'Écart · À réconcilier' };
   var VIEWS = { sa: 'sa', dg: 'sa', caisse: 'caisse', collecteur: 'collecteur', maas: 'maas', dirops: 'dirops' };
-  var WHO = { sa: 'contrôle des déclarations du jour · le solde théorique est visible car ce profil ne déclare pas (§3)', caisse: 'périmètre Caisse générale et Sous-caisse Marché · solde théorique masqué jusqu\'à chaque déclaration (§3, §4.8)', collecteur: 'Source B de la collecte · Σ des déclarations MaaS masquée jusqu\'à votre déclaration (§3, §6.3)', maas: 'versements du MaaS Keur Massar · périmètre limité à votre entité (§6.3)', dirops: 'Sous-caisse Livraisons et positions fournisseurs · position théorique masquée jusqu\'à déclaration (§4.8, §5.5)', none: 'aucun périmètre de déclaration' };
+  var WHO = { sa: 'contrôle des déclarations du jour · le solde théorique est visible car ce profil ne déclare pas (§3)', caisse: 'périmètre Caisse générale et Sous-caisse Marché · solde système et écart jamais affichés (§3, §4.8)', collecteur: 'Source B de la collecte · Source A et écart jamais affichés (§3, §6.3)', maas: 'versements du MaaS Keur Massar · périmètre limité à votre entité (§6.3)', dirops: 'Sous-caisse Livraisons et positions fournisseurs · position système et écart jamais affichés (§3, §5.5)', none: 'aucun périmètre de déclaration' };
   var LOCK_MAAS = 'Versement du 27/08 déjà déclaré à 18:20 : une déclaration reçue n\'est pas écrasée (§3, Correction : correction par contrepassation ou ajustement traçable) ; l\'écart éventuel est traité par la réconciliation des encaissements collectés (§6.3).';
   var amt = function (v) { return '<span class="amt" data-amt="' + v + '" data-nocur></span>'; };
   var st = function (ok, t) { return '<span class="st ' + (ok ? 'ok' : 'bad') + '"><svg><use href="#i-' + (ok ? 'check' : 'alert') + '"/></svg>' + t + '</span>'; };
@@ -2927,7 +2932,9 @@ ERP.register('fin-declarations', function (root, ctx) {
     qa('tr[data-etat]', q('[data-sa-rows]')).forEach(function (tr) { tr.hidden = !!f && f.indexOf(tr.dataset.etat) < 0; });
   }); });
 
-  /* Déclaration en aveugle : comparaison au théorique révélée seulement après soumission (§4.8, §5.5, §6.3) */
+  /* Déclaration en aveugle (§3) : le théorique et l'écart n'entrent que dans la table de contrôle
+     [data-sa-rows], lue par le Super Admin et le DG qui ne déclarent pas. Les vues déclarantes n'ont
+     pas ces cellules ; put() les ignore, le déclarant ne reçoit que son montant et le statut. */
   function settle(key, declared) {
     var theo = THEO[key], ec = declared - theo, ok = ec === 0, c = CIRC[key], h = now(), lbl = ok ? OKL[c] : KOL[c];
     qa('[data-key="' + key + '"]').forEach(function (tr) {
@@ -2940,14 +2947,13 @@ ERP.register('fin-declarations', function (root, ctx) {
     var res = q('[data-res="' + key + '"]');
     if (res) {
       q('[data-form="' + key + '"]').hidden = true; res.hidden = false;
-      q('[data-r-decl]', res).innerHTML = amt(declared); q('[data-r-theo]', res).innerHTML = amt(theo);
-      var e = q('[data-r-ecart]', res); e.innerHTML = amt(ec); e.className = 'val ' + (ok ? 'ok' : 'bad');
+      q('[data-r-decl]', res).innerHTML = amt(declared);
       q('[data-r-st]', res).innerHTML = st(ok, lbl);
       qa('[data-after-ok]', res).forEach(function (x) { x.hidden = !ok; }); qa('[data-after-ko]', res).forEach(function (x) { x.hidden = ok; });
     }
     var hd = q('[data-st-head="' + key + '"]'); if (hd) hd.innerHTML = st(ok, lbl);
     var hist = q('[data-hist="' + c + '"]');
-    if (hist) hist.insertAdjacentHTML('afterbegin', '<tr><td>27/08 · ' + h + '</td><td><b>' + NAME[key] + '</b></td><td>' + amt(declared) + '</td><td>' + amt(theo) + '</td><td>' + amt(ec) + '</td><td>' + st(ok, lbl) + '</td></tr>');
+    if (hist) hist.insertAdjacentHTML('afterbegin', '<tr><td>27/08 · ' + h + '</td><td><b>' + NAME[key] + '</b></td><td>' + amt(declared) + '</td><td>' + st(ok, lbl) + '</td></tr>');
     ctx.formatAmounts(root); ctx.applyPerms(); lockMaas(); count();
     return ok;
   }
@@ -2955,7 +2961,7 @@ ERP.register('fin-declarations', function (root, ctx) {
     var key = b.dataset.decl, inp = q('[data-inp="' + key + '"]'), v = num(inp.value);
     if (inp.value.trim() === '' || isNaN(v)) { ctx.toast('Saisir le montant réellement constaté, en FCFA sans décimales.'); inp.focus(); return; }
     var ok = settle(key, v);
-    ctx.toast(NAME[key] + ' : déclaré ' + ctx.fmt(v) + ' FCFA par ' + esc(ctx.profile.short) + ' · ' + (ok ? (key === 'collecte' ? 'sources égales, validation automatique vers 02:00' : 'égalité, compte réconcilié') : 'écart constaté, ' + (key === 'collecte' ? 'aucune auto-validation, ' : '') + 'notification Admin, DG, Collecteur') + ' · created_at et updated_by automatiques.');
+    ctx.toast(NAME[key] + ' : déclaré ' + ctx.fmt(v) + ' FCFA par ' + esc(ctx.profile.short) + ' · ' + (ok ? (key === 'collecte' ? 'sources égales, validation automatique vers 02:00' : 'déclaration conforme, compte réconcilié') : 'écart constaté, ' + (key === 'collecte' ? 'aucune auto-validation, ' : '') + 'notification Admin, DG, Collecteur') + ' · created_at et updated_by automatiques.');
   }); });
 
   /* Modale fournisseur (§5.5) : le déclarant choisit le compte, la position théorique reste masquée jusqu'à la déclaration */
@@ -7765,7 +7771,7 @@ ERP.register('core-notifications', function (root, ctx) {
     <div class="scr-meta">
       <button class="linkish" data-open="help-core-alertes"><svg><use href="#i-info"/></svg>Comment ça marche ?</button>
       <span class="sens std"><svg><use href="#i-shield"/></svg>Standard</span>
-      <span class="hint">Permissions normales (Core §5.3) · aucune validation : activation, désactivation motivée et création de règle sont enregistrées sous le profil actif, historisées (§6.4) et tracées dans l'Audit central (§5.4) · les règles critiques à destinataires imposés par le cahier ne sont pas désactivables</span>
+      <span class="hint">Permissions normales (Core §5.3) · aucune validation : activation et désactivation motivée sont enregistrées sous le profil actif, historisées (§6.4) et tracées dans l'Audit central (§5.4) · catalogue de règles fermé en V1 · les règles critiques à destinataires imposés par le cahier ne sont pas désactivables</span>
     </div>
   </div>
 
@@ -7798,9 +7804,8 @@ ERP.register('core-notifications', function (root, ctx) {
     <div class="sp"></div>
     <button class="btn ghost" data-goto="core-notifications" data-perm="core.notifications.view"><svg><use href="#i-inbox"/></svg>Centre de notifications</button>
     <button class="btn ghost" data-goto="core-parametres" data-perm="core.parametres.view"><svg><use href="#i-sliders"/></svg>Seuils (Paramètres)</button>
-    <button class="btn pri" data-open="core-alertes-nouvelle" data-perm="core.alertes.modifier"><svg><use href="#i-plus"/></svg>Nouvelle règle</button>
   </div>
-  <div class="note-strip" style="margin-top:0"><svg><use href="#i-info"/></svg><span><b>Cet écran configure les règles.</b> La boîte de réception est le <button class="linkish" data-goto="core-notifications" data-perm="core.notifications.view">centre de notifications</button> ; les seuils (gel 23:59, notification « Pas sûr » 23:00, relais ancien 2 jours, ajustement inhabituel <span class="amt" data-amt="500000" data-nocur></span> et 3 par jour, sauvegarde tous les 3 jours) sont des paramètres transverses réglés dans <button class="linkish" data-goto="core-parametres" data-perm="core.parametres.view">Paramètres</button> (Core §6.4, §17), jamais ici.</span></div>
+  <div class="note-strip" style="margin-top:0"><svg><use href="#i-info"/></svg><span><b>Cet écran configure les règles, il n'en crée pas.</b> Le catalogue est fermé en V1 : les 10 règles du cahier sont livrées telles quelles, sans création ni suppression (Core §6.1) ; seules l'activation et la désactivation motivée se règlent ici. La boîte de réception est le <button class="linkish" data-goto="core-notifications" data-perm="core.notifications.view">centre de notifications</button> ; les seuils (gel 23:59, notification « Pas sûr » 23:00, relais ancien 2 jours, ajustement inhabituel <span class="amt" data-amt="500000" data-nocur></span> et 3 par jour, sauvegarde tous les 3 jours) sont des paramètres transverses réglés dans <button class="linkish" data-goto="core-parametres" data-perm="core.parametres.view">Paramètres</button> (Core §6.4, §17), jamais ici.</span></div>
 
   <div class="grid2">
     <div>
@@ -7883,13 +7888,13 @@ ERP.register('core-notifications', function (root, ctx) {
           </tbody>
         </table></div>
       </div>
-      <div class="deny-note"><svg><use href="#i-lock"/></svg><b>Refus par défaut</b> : Consulter (core.alertes.view) et Modifier (core.alertes.modifier) sont deux permissions distinctes. Le DG consulte les règles en lecture ; seul le Super Admin active, désactive (motif obligatoire) ou crée une règle. Les trois règles critiques à destinataires imposés par le cahier restent verrouillées pour tout profil, Super Admin compris. Une action refusée reste visible, désactivée avec son motif au survol et au clic.</div>
+      <div class="deny-note"><svg><use href="#i-lock"/></svg><b>Refus par défaut</b> : Consulter (core.alertes.view) et Modifier (core.alertes.modifier) sont deux permissions distinctes. Le DG consulte les règles en lecture ; seul le Super Admin active ou désactive (motif obligatoire) une règle ; en V1 le catalogue est fermé, aucun profil ne crée ni ne supprime de règle. Les trois règles critiques à destinataires imposés par le cahier restent verrouillées pour tout profil, Super Admin compris. Une action refusée reste visible, désactivée avec son motif au survol et au clic.</div>
     </div>
     <div>
       <div class="card">
         <div class="ch"><h3>Signaux de qualité financière</h3><span class="hint-r">Finance §10.4 · couverture par les règles</span></div>
         <div class="cb">
-          <div class="kv"><span>Caisses à réconcilier</span><b>Aucune règle de notification · signal visible au Dashboard, bloc Contrôles (§8.5) · gel « À réconcilier » à 23:59 (§3.1) · Caisse générale à déclarer ce soir<button class="btn ghost sm" data-open="core-alertes-nouvelle" data-preset="Caisses à réconcilier" data-preset-name="Caisse à déclarer avant le gel de 23:59" data-perm="core.alertes.modifier"><svg><use href="#i-plus"/></svg>Créer la règle</button></b></div>
+          <div class="kv"><span>Caisses à réconcilier</span><b>Aucune règle de notification · signal visible au Dashboard, bloc Contrôles (§8.5) · gel « À réconcilier » à 23:59 (§3.1) · Caisse générale à déclarer ce soir · catalogue fermé en V1 : aucune règle à créer pour ce signal</b></div>
           <div class="kv"><span>Écarts de collecte/ventes</span><b>Écart de réconciliation · Email + centre · Critique</b></div>
           <div class="kv"><span>Dépenses Pas sûr</span><b>Dépense « Pas sûr » à 23:00 · Email + centre · Critique</b></div>
           <div class="kv"><span>Sources non à jour</span><b>Source non à jour · Centre · Haute</b></div>
@@ -7906,7 +7911,7 @@ ERP.register('core-notifications', function (root, ctx) {
           <div class="kv"><span>Profil et droits</span><b>Les notifications respectent le profil et les droits (Core §6.1) : un destinataire ne reçoit que les signaux de son périmètre ; un Externe ne reçoit aucune alerte Hautement sensible (Core §5.3)</b></div>
           <div class="kv"><span>Canaux</span><b>Email et centre de notifications en V1 · WhatsApp, SMS ultérieurement (Core §6.1)</b></div>
           <div class="kv"><span>Seuils</span><b>Paramètres transverses (Core §6.4, §17), jamais dans la règle : 23:00 · 2 jours · <span class="amt" data-amt="500000" data-nocur></span> et 3 par jour · 80 % · tous les 3 jours<button class="linkish" data-goto="core-parametres" data-perm="core.parametres.view">Paramètres</button></b></div>
-          <div class="kv"><span>Traçabilité</span><b>Configurations sensibles historisées (Core §6.4) · activation, désactivation motivée et création tracées dans l'Audit central avec acteur, profil, horodatage et motif (Core §5.4)<button class="linkish" data-goto="core-audit" data-perm="core.audit.view">Audit central</button></b></div>
+          <div class="kv"><span>Traçabilité</span><b>Configurations sensibles historisées (Core §6.4) · activation et désactivation motivée tracées dans l'Audit central avec acteur, profil, horodatage et motif (Core §5.4)<button class="linkish" data-goto="core-audit" data-perm="core.audit.view">Audit central</button></b></div>
         </div>
       </div>
     </div>
@@ -7935,50 +7940,30 @@ ERP.register('core-notifications', function (root, ctx) {
     <div class="acts"><button class="btn ghost" data-close>Annuler</button><button class="btn pri" data-act="off-confirm" data-perm="core.alertes.modifier"><svg><use href="#i-check"/></svg>Confirmer la désactivation</button></div>
   </div></div>
 
-  <!-- Modale : nouvelle règle -->
-  <div class="mback" data-ov="core-alertes-nouvelle"><div class="modal wide" role="dialog" aria-modal="true" aria-label="Nouvelle règle d'alerte">
-    <h3><svg><use href="#i-bell"/></svg>Nouvelle règle d'alerte</h3>
-    <div class="exp">Relie un signal (Finance §10.4 · Core §8.2) à un canal, des destinataires et une criticité · créée <b>active</b> sous le profil actif et tracée dans l'Audit central (Core §5.4) · les seuils se règlent dans Paramètres (Core §6.4, §17), jamais ici · les notifications respectent le profil et les droits des destinataires (Core §6.1).</div>
-    <div class="fld"><label for="core-alertes-n-sig">Signal</label><select id="core-alertes-n-sig" class="inp" data-n="sig">
-      <optgroup label="Mata Finance — signaux de qualité financière (§10.4)"><option data-mod="finance" data-orig="Réconciliation · §4.8 · §8.5">Caisses à réconcilier</option><option data-mod="finance" data-orig="Réconciliation · §6.3 · §6.4">Écarts de collecte/ventes</option><option data-mod="finance" data-orig="Dépenses · §5.2">Dépenses Pas sûr</option><option data-mod="finance" data-orig="Sources · §6.5">Sources non à jour</option><option data-mod="finance" data-orig="Ajustements · §4.7">Ajustements inhabituels</option><option data-mod="finance" data-orig="Fournisseurs · §5.3">Échéances fournisseurs dépassées</option><option data-mod="finance" data-orig="Clôture · §3.1">Corrections post-clôture</option></optgroup>
-      <optgroup label="Mata Core — supervision (§8.2) et agents (§7.2)"><option data-mod="core" data-orig="Exploitation · §8.1">Sauvegardes</option><option data-mod="core" data-orig="Supervision technique · §8.2">Services et interfaces</option><option data-mod="core" data-orig="Supervision fonctionnelle · §8.2">Données manquantes</option><option data-mod="core" data-orig="Supervision fonctionnelle · §8.2">Processus ou validations anormalement bloqués</option><option data-mod="core" data-orig="Agents IA · §7.2">Budget agent IA</option></optgroup>
-    </select><span class="hint" data-n="modhint">Module d'origine : Mata Finance · Réconciliation · §4.8 · §8.5</span><span class="hint">Un signal peut porter plusieurs règles (canaux ou destinataires différents) · module d'origine déduit du signal</span></div>
-    <div class="fld"><label for="core-alertes-n-name">Libellé de la règle</label><input id="core-alertes-n-name" class="inp" data-n="name" placeholder="Ex. Caisse à déclarer avant le gel de 23:59"></div>
-    <div class="grid2b" style="margin-top:0">
-      <div class="fld"><label for="core-alertes-n-ch">Canal</label><select id="core-alertes-n-ch" class="inp" data-n="ch"><option>Centre</option><option>Email</option><option>Email + centre</option></select><span class="hint">Email et centre en V1 · WhatsApp, SMS ultérieurement (Core §6.1)</span></div>
-      <div class="fld"><label>Criticité</label>
-        <label class="rline"><input type="radio" name="core-alertes-crit" value="critique">Critique<span class="rh">Email recommandé</span></label>
-        <label class="rline"><input type="radio" name="core-alertes-crit" value="haute" checked>Haute<span class="rh">action attendue</span></label>
-        <label class="rline"><input type="radio" name="core-alertes-crit" value="info">Informative<span class="rh">sans blocage</span></label>
-        <span class="hint">« Non désactivable » est réservé aux règles à destinataires imposés par le cahier</span></div>
-    </div>
-    <div class="fld"><label>Destinataires (profils)</label><div class="dest" data-n="dest"><label><input type="checkbox" value="Super Admin" checked>Super Admin</label><label><input type="checkbox" value="DG">DG</label><label><input type="checkbox" value="Admin">Admin</label><label><input type="checkbox" value="Directeur des Opérations">Directeur des Opérations</label><label><input type="checkbox" value="Collecteur">Collecteur</label><label><input type="checkbox" value="Gestionnaire de caisse">Gestionnaire de caisse</label></div><span class="hint">Chaque destinataire ne reçoit que les signaux de son périmètre et de ses droits (Core §6.1) · Investisseur et Comptable externe : jamais destinataires d'un signal Hautement sensible (Core §5.3)</span></div>
-    <div class="acts"><button class="btn ghost" data-close>Annuler</button><button class="btn pri" data-act="new-save" data-perm="core.alertes.modifier"><svg><use href="#i-check"/></svg>Créer la règle (active)</button></div>
-  </div></div>
-
   <!-- Modale : aide contextuelle -->
   <div class="mback" data-ov="help-core-alertes"><div class="modal wide" role="dialog" aria-modal="true" aria-label="Comment ça marche : Alertes">
     <h3><svg><use href="#i-info"/></svg>Comment ça marche : Alertes</h3>
-    <div class="exp">Cet écran configure les règles qui relient un signal de qualité financière ou de supervision à un canal, des destinataires et une criticité. Le Super Admin active, désactive ou crée une règle ; les autres profils la consultent en lecture, dans la limite de leur périmètre.</div>
+    <div class="exp">Cet écran configure les règles qui relient un signal de qualité financière ou de supervision à un canal, des destinataires et une criticité. Le Super Admin active ou désactive une règle ; les autres profils la consultent en lecture, dans la limite de leur périmètre.</div>
     <ul class="help-list">
       <li><b>Règles actives</b> — chaque signal transverse (écarts, dépenses Pas sûr, sources non à jour…) porte une règle qui respecte le profil et les droits du destinataire, jamais un envoi générique : <b>10</b> règles actives sur 10, dont 8 Mata Finance et 2 Mata Core (§6.1).</li>
       <li><b>Signaux de qualité financière</b> — le Dashboard et les notifications doivent rendre visibles les signaux de qualité (écarts, dépenses Pas sûr, sources non à jour, ajustements inhabituels, échéances dépassées, corrections post-clôture) ; ceux couverts par une règle sont horodatés dès qu'ils surviennent, comme les <b>4</b> déclenchements du 27/08 — 21:15 Écart de réconciliation, 17:30 Échéance fournisseur dépassée, 15:24 Plafond d'encours dépassé, 12:00 Relais ouvert au-delà du seuil (§10.4).</li>
       <li><b>Dépense « Pas sûr » à 23:00</b> — s'il reste une dépense du jour « Pas sûr », une notification part à 23:00 vers le Directeur des Opérations, les Admins concernés et le Super Admin, avec accès à la liste à résoudre : ici Carburant véhicule livraison <span class="amt" data-amt="85000" data-nocur></span> (Sous-caisse Livraisons) (§5.2).</li>
       <li><b>Relais ouvert au-delà du seuil</b> — un solde relais resté ouvert au-delà d'un seuil configurable génère une alerte : « Bictorys → Banque en cours » <span class="amt" data-amt="350000" data-nocur></span>, créé 24/08, âge 3 jours au-dessus du seuil de 2 jours (§4.6).</li>
+      <li><b>Catalogue fermé en V1</b> — les 10 règles listées sont celles du cahier : aucune ne peut être ajoutée ni supprimée ; seules l'activation, la désactivation motivée et les seuils, réglés dans Paramètres, restent configurables (§6.1, §6.4).</li>
       <li><b>Plafond d'encours dépassé</b> — un dépassement du plafond fournisseur déclenche une alerte informative sans bloquer la saisie : AGNEAUX, dette <span class="amt" data-amt="12400000" data-nocur></span> pour un plafond de <span class="amt" data-amt="10000000" data-nocur></span> (§5.4).</li>
     </ul>
-    <div class="note-strip"><svg><use href="#i-shield"/></svg><b>Refus par défaut.</b> Consulter et modifier sont deux permissions distinctes : le DG consulte les règles, seul le Super Admin les active, les désactive avec motif ou en crée de nouvelles.</div>
-    <div class="hint">Sources : Cahier Mata Core §6.1 · Mata Finance §10.4, §4.6, §5.2, §5.4</div>
+    <div class="note-strip"><svg><use href="#i-shield"/></svg><b>Refus par défaut.</b> Consulter et modifier sont deux permissions distinctes : le DG consulte les règles, seul le Super Admin les active ou les désactive avec motif — sans jamais en créer, le catalogue étant fermé en V1.</div>
+    <div class="hint">Sources : Cahier Mata Core §6.1, §6.4 · Mata Finance §10.4, §4.6, §5.2, §5.4</div>
     <div class="acts"><button class="btn ghost" data-close>Fermer</button></div>
   </div></div>
 </section>
 <script data-screen="core-alertes">
 ERP.register('core-alertes', function (root, ctx) {
   var q = function (s, r) { return (r || root).querySelector(s); }, qa = function (s, r) { return Array.prototype.slice.call((r || root).querySelectorAll(s)); };
-  var clock = 21 * 60 + 30, fm = 'tous', fc = 'tous', cur = 'R1', pend = '', seq = 11, H = {};
+  var clock = 21 * 60 + 30, fm = 'tous', fc = 'tous', cur = 'R1', pend = '', H = {};
   var CRIT = { critique: ['bad', 'alert', 'Critique'], haute: ['warn', 'flag', 'Haute'], info: ['info', 'info', 'Informative'] };
   var LOCK = 'Critique (non désactivable) : destinataires explicitement imposés par une règle métier du cahier (Finance §3, Permissions · Core §6.1) · la règle reste active pour tout profil, Super Admin compris';
-  var D = q('[data-ov="core-alertes-fiche"]'), M = q('[data-ov="core-alertes-off"]'), N = q('[data-ov="core-alertes-nouvelle"]'), tb = q('[data-rows]');
+  var D = q('[data-ov="core-alertes-fiche"]'), M = q('[data-ov="core-alertes-off"]'), tb = q('[data-rows]');
   function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
   function now() { var m = clock++; return '27/08 · ' + ('0' + Math.floor(m / 60)).slice(-2) + ':' + ('0' + m % 60).slice(-2); }
   function who() { return ctx.profile.short + ' (' + ctx.profile.profile + ')'; }
@@ -8019,7 +8004,7 @@ ERP.register('core-alertes', function (root, ctx) {
     if (!on) kv.push(['Désactivation', g('off-at') + ' · ' + g('off-by') + ' · motif « ' + g('off-motif') + ' »']);
     q('[data-d="kv"]', D).innerHTML = kv.map(function (x) { return '<div class="kv"><span>' + x[0] + '</span><b>' + esc(x[1]) + '</b></div>'; }).join('');
     q('[data-d="last"]', D).innerHTML = q('[data-last]', tr).innerHTML;
-    q('[data-d="tl"]', D).innerHTML = (H[id] || []).slice().reverse().map(function (e) { return '<div class="ev' + (e.on ? ' on' : '') + '"><b>' + esc(e.x) + '</b><small>' + esc(e.a) + ' · ' + e.t + '</small></div>'; }).join('') + (tr.hasAttribute('data-new') ? '' : '<div class="ev"><b>Règle définie au cadrage V13</b><small>Mata Core v0.8.0 · règle initiale · destinataires et criticité du cahier</small></div>');
+    q('[data-d="tl"]', D).innerHTML = (H[id] || []).slice().reverse().map(function (e) { return '<div class="ev' + (e.on ? ' on' : '') + '"><b>' + esc(e.x) + '</b><small>' + esc(e.a) + ' · ' + e.t + '</small></div>'; }).join('') + '<div class="ev"><b>Règle définie au cadrage V13</b><small>Mata Core v0.8.0 · règle initiale du catalogue fermé · destinataires et criticité du cahier</small></div>';
     var b = q('[data-d="tog"]', D); b.innerHTML = '<svg><use href="#i-' + (on ? 'eyeoff' : 'check') + '"/></svg>' + (on ? 'Désactiver' : 'Activer');
     perms(); if (lock) { b.classList.add('denied'); b.title = LOCK; }
   }
@@ -8031,34 +8016,19 @@ ERP.register('core-alertes', function (root, ctx) {
   }
   function askOff(id) { var tr = row(id); pend = id; q('[data-m="name"]', M).textContent = tr.getAttribute('data-name'); q('[data-m="dest"]', M).textContent = tr.getAttribute('data-dest'); q('[data-m="motif"]', M).value = ''; ctx.open('core-alertes-off'); perms(); q('[data-m="motif"]', M).focus(); }
   function confirmOff() { var m = q('[data-m="motif"]', M).value.trim(); if (!m) { ctx.toast('Le motif est obligatoire : la désactivation est historisée et auditée (Core §6.4, §5.4)'); return; } ctx.close('core-alertes-off'); setOn(pend, false, m); pend = ''; }
-  function modHint() { var s = q('[data-n="sig"]', N), o = s.options[s.selectedIndex]; q('[data-n="modhint"]', N).textContent = 'Module d\'origine : ' + (o.getAttribute('data-mod') === 'core' ? 'Mata Core' : 'Mata Finance') + ' · ' + o.getAttribute('data-orig'); }
-  /* Nouvelle règle : signal (§10.4 / §8.2) → module d'origine déduit, canal, destinataires (≥ 1), criticité ; créée active, auditée */
-  function addRule() {
-    var s = q('[data-n="sig"]', N), o = s.options[s.selectedIndex], name = q('[data-n="name"]', N).value.trim(), ch = q('[data-n="ch"]', N).value, cr = q('input[name="core-alertes-crit"]:checked', N).value, dest = qa('[data-n="dest"] input:checked', N).map(function (i) { return i.value; });
-    if (!name) { ctx.toast('Le libellé de la règle est obligatoire'); return; }
-    if (!dest.length) { ctx.toast('Au moins un destinataire est requis : une règle sans destinataire ne notifie personne'); return; }
-    var id = 'R' + seq++, mod = o.getAttribute('data-mod'), orig = o.getAttribute('data-orig'), t = now(), dl = dest.join(', ');
-    tb.insertAdjacentHTML('beforeend', '<tr data-rule="' + id + '" data-new data-mod="' + mod + '" data-crit="' + cr + '" data-on="1" data-name="' + esc(name) + '" data-ch="' + esc(ch) + '" data-dest="' + esc(dl) + '" data-orig="' + esc(o.value + ' · ' + orig) + '" data-seuil="Paramètres transverses (Core §6.4, §17) · aucun seuil propre à la règle" data-n27="0"><td><button class="linkish" data-open="core-alertes-fiche">' + esc(name) + '</button><div class="hint" data-last>Aucun déclenchement · règle créée ' + t + ' par ' + esc(who()) + '</div></td><td>' + (mod === 'core' ? 'Mata Core' : 'Mata Finance') + '<div class="hint">' + esc(orig) + '</div></td><td>' + chan(ch) + '</td><td>' + esc(dl) + '<div class="hint">signal : ' + esc(o.value) + '</div></td><td>' + crit(cr) + '<div class="hint">désactivable avec motif, audité</div></td><td><button class="btn sm pri" data-toggle data-perm="core.alertes.modifier" aria-label="Règle active : ' + esc(name) + '">Oui</button><div class="hint" data-off-note hidden></div></td></tr>');
-    log(id, 'Règle créée · signal « ' + o.value + ' » · ' + ch + ' · ' + dl + ' · ' + CRIT[cr][2], true);
-    q('[data-n="name"]', N).value = ''; ctx.close('core-alertes-nouvelle'); ctx.formatAmounts(tb); perms(); stats(); filter();
-    ctx.toast('« ' + name + ' » créée · active · ' + ch + ' → ' + dl + ' · ' + CRIT[cr][2] + ' · tracée dans l\'Audit central');
-  }
   ctx.on(root, 'click', function (e) {
-    var t = e.target, ch = t.closest('.chip[data-filter]'), op = t.closest('[data-open="core-alertes-fiche"]'), pre = t.closest('[data-preset]'), tog = t.closest('[data-toggle]'), act = t.closest('[data-act]');
+    var t = e.target, ch = t.closest('.chip[data-filter]'), op = t.closest('[data-open="core-alertes-fiche"]'), tog = t.closest('[data-toggle]'), act = t.closest('[data-act]');
     if (ch) { var g = ch.closest('[data-fg]'); qa('.chip', g).forEach(function (x) { x.classList.toggle('on', x === ch); }); if (g.getAttribute('data-fg') === 'mod') fm = ch.getAttribute('data-filter'); else fc = ch.getAttribute('data-filter'); filter(); return; }
     if (op) { var tr = op.closest('tr[data-rule]'); fill(tr ? tr.getAttribute('data-rule') : cur); return; }
-    if (pre && !pre.disabled && !pre.classList.contains('denied')) { q('[data-n="sig"]', N).value = pre.getAttribute('data-preset'); q('[data-n="name"]', N).value = pre.getAttribute('data-preset-name') || ''; modHint(); return; }
     /* Bouton actif/inactif : réactivation immédiate ; désactivation via motif obligatoire (le bouton reste sur « Oui » jusqu'à confirmation) */
     if (tog) { if (tog.disabled || tog.classList.contains('denied')) { ctx.toast(tog.title); return; } var id = tog.closest('tr[data-rule]').getAttribute('data-rule'); if (row(id).getAttribute('data-on') === '1') askOff(id); else setOn(id, true); return; }
     if (!act || act.disabled || act.classList.contains('denied')) return;
     var k = act.getAttribute('data-act');
     if (k === 'off-confirm') confirmOff();
-    else if (k === 'new-save') addRule();
     else if (k === 'drawer-toggle') { if (row(cur).getAttribute('data-on') === '1') { ctx.close('core-alertes-fiche'); askOff(cur); } else setOn(cur, true); }
   });
-  ctx.on(root, 'change', function (e) { if (e.target === q('[data-n="sig"]', N)) modHint(); });
   document.addEventListener('erp:profile', function () { setTimeout(function () { perms(); if (D.classList.contains('on')) fill(cur); }, 0); });
-  qa('tr[data-rule]', tb).forEach(paint); stats(); filter(); modHint(); ctx.formatAmounts(root); perms();
+  qa('tr[data-rule]', tb).forEach(paint); stats(); filter(); ctx.formatAmounts(root); perms();
 });
 </script>
 

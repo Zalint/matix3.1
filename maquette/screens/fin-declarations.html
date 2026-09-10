@@ -11,12 +11,13 @@
     #app [data-scr="fin-declarations"] .cb .actionbar>.hint{flex:1;min-width:220px}
     #app [data-scr="fin-declarations"] .ch{flex-wrap:wrap}
     #app [data-scr="fin-declarations"] .ch .chips{margin-left:6px}
-    @media (max-width:640px){#app [data-scr="fin-declarations"] .declform,#app [data-scr="fin-declarations"] .declres.four{grid-template-columns:1fr}}
+    #app [data-scr="fin-declarations"] .declres.two{grid-template-columns:1fr 1fr}
+    @media (max-width:640px){#app [data-scr="fin-declarations"] .declform,#app [data-scr="fin-declarations"] .declres.four,#app [data-scr="fin-declarations"] .declres.two{grid-template-columns:1fr}}
   </style>
   <div class="scr-head">
     <div>
       <h2>Déclarations</h2>
-      <p class="scr-sub">Réconciliation en aveugle (§3) : lorsqu'un déclarant constitue une source de contrôle, il ne voit pas la valeur théorique avant sa déclaration · Caisses (§4.8), positions fournisseurs (§5.5), encaissements collectés (§6.3) · jeudi 27 août 2026 · gel « À réconcilier » à 23:59 GMT (§3.1)</p>
+      <p class="scr-sub">Réconciliation en aveugle (§3) : lorsqu'un déclarant constitue une source de contrôle, il ne voit jamais la valeur théorique, ni avant ni après sa déclaration · Caisses (§4.8), positions fournisseurs (§5.5), encaissements collectés (§6.3) · jeudi 27 août 2026 · gel « À réconcilier » à 23:59 GMT (§3.1)</p>
     </div>
     <div class="scr-meta">
       <button class="linkish" data-open="help-fin-declarations"><svg><use href="#i-info"/></svg>Comment ça marche ?</button>
@@ -77,17 +78,19 @@
             <div class="hint" style="margin-top:8px">Le gestionnaire saisit en aveugle le solde réellement détenu. Égalité : le compte est réconcilié. Écart : le compte reste « À réconcilier » et l'écart est investigué ; une correction éventuelle passe par Ajustement (§4.8). Date métier 27/08/2026 · auteur et horodatage automatiques · audit de modification.</div>
           </div>
           <div data-res="cg" hidden>
-            <div class="declres four"><div><div class="k">Déclaré</div><div class="val" data-r-decl></div></div><div><div class="k">Solde théorique</div><div class="val" data-r-theo></div></div><div><div class="k">Écart</div><div class="val" data-r-ecart></div></div><div><div class="k">Statut</div><div class="val sm" data-r-st></div></div></div>
-            <div class="actionbar"><span class="hint" data-after-ok>Égalité : le compte est réconcilié. Solde comparé : Dernier solde réconcilié + Somme algébrique des mouvements depuis cette réconciliation (§4.8).</span><span class="hint" data-after-ko hidden>Écart : le compte reste « À réconcilier » et l'écart est investigué ; une correction éventuelle passe par Ajustement (motif obligatoire, deux validateurs distincts, §4.7). Notification critique envoyée à Admin, DG et Collecteur.</span><div class="sp"></div><button class="btn ghost" data-goto="fin-reconciliation" data-after-ko hidden><svg><use href="#i-search"/></svg>Investiguer</button><button class="btn pri" data-perm="finance.ajustements.initier" data-goto="fin-reconciliation" data-after-ko hidden><svg><use href="#i-scale"/></svg>Corriger par Ajustement</button></div>
+            <div class="declres two"><div><div class="k">Votre déclaration</div><div class="val" data-r-decl></div></div><div><div class="k">Statut</div><div class="val sm" data-r-st></div></div></div>
+            <div class="maskbox" style="margin-top:10px"><svg><use href="#i-lock"/></svg>Solde système et écart <span class="dots">••••••••</span> jamais affichés au déclarant, ni avant ni après (§3)</div>
+            <div class="actionbar"><span class="hint" data-after-ok>Votre déclaration est égale au solde système : le compte est réconcilié. Le montant comparé ne vous est pas communiqué (§3).</span><span class="hint" data-after-ko hidden>Votre déclaration diffère du solde système : le compte reste « À réconcilier » et l'écart est investigué par l'Admin, le DG et le Collecteur, seuls destinataires du montant. Une correction éventuelle passe par Ajustement (motif obligatoire, deux validateurs distincts, §4.7).</span><div class="sp"></div><button class="btn ghost" data-goto="fin-reconciliation" data-after-ko hidden><svg><use href="#i-search"/></svg>Investiguer</button><button class="btn pri" data-perm="finance.ajustements.initier" data-goto="fin-reconciliation" data-after-ko hidden><svg><use href="#i-scale"/></svg>Corriger par Ajustement</button></div>
           </div>
         </div>
       </div>
       <div class="card">
-        <div class="ch"><h3>Sous-caisse Marché</h3><span class="st bad"><svg><use href="#i-alert"/></svg>Écart · À réconcilier</span><span class="hint-r">SCM · déclarée 21:12 · théorique révélé après déclaration</span></div>
+        <div class="ch"><h3>Sous-caisse Marché</h3><span class="st bad"><svg><use href="#i-alert"/></svg>Écart · À réconcilier</span><span class="hint-r">SCM · déclarée 21:12 · solde système et écart jamais affichés au déclarant (§3)</span></div>
         <div class="cb">
-          <div class="declres four"><div><div class="k">Déclaré</div><div class="val"><span class="amt" data-amt="1250000" data-nocur></span></div></div><div><div class="k">Solde théorique</div><div class="val"><span class="amt" data-amt="1275000" data-nocur></span></div></div><div><div class="k">Écart</div><div class="val bad"><span class="amt" data-amt="-25000" data-nocur></span></div></div><div><div class="k">Statut</div><div class="val sm">À réconcilier</div></div></div>
+          <div class="declres two"><div><div class="k">Votre déclaration</div><div class="val"><span class="amt" data-amt="1250000" data-nocur></span></div></div><div><div class="k">Statut</div><div class="val sm">À réconcilier</div></div></div>
+          <div class="maskbox" style="margin-top:10px"><svg><use href="#i-lock"/></svg>Solde système et écart <span class="dots">••••••••</span> transmis à l'Admin, au DG et au Collecteur, jamais au déclarant (§3)</div>
           <div class="tl" style="margin-top:14px">
-            <div class="ev on"><b>21:12 · déclaration en aveugle</b> — M. Diop · déclaré <span class="amt" data-amt="1250000" data-nocur></span><small>Comparaison au théorique après déclaration : écart <span class="amt" data-amt="-25000" data-nocur></span> · statut « À réconcilier » · audit de modification (Hautement sensible)</small></div>
+            <div class="ev on"><b>21:12 · déclaration en aveugle</b> — M. Diop · déclaré <span class="amt" data-amt="1250000" data-nocur></span><small>Comparaison au solde système hors de votre vue : statut « À réconcilier » · audit de modification (Hautement sensible)</small></div>
             <div class="ev"><b>21:15 · notification critique</b><small>Écart de réconciliation → Admin, DG, Collecteur (règle non désactivable)</small></div>
             <div class="ev"><b>Suite</b><small>L'écart est investigué ; une correction éventuelle passe par Ajustement : motif obligatoire, deux validateurs distincts de l'initiateur et l'un de l'autre (§4.7) · gel « À réconcilier » à 23:59 si non résolu</small></div>
           </div>
@@ -96,10 +99,10 @@
       </div>
     </div>
     <div class="card">
-      <div class="ch"><h3>Mes déclarations</h3><span class="hint-r">M. Diop · Caisse générale, Sous-caisse Marché · le théorique n'apparaît qu'après chaque déclaration</span></div>
-      <div class="tbl-scroll"><table><thead><tr><th>Date métier</th><th>Compte</th><th>Déclaré</th><th>Solde théorique</th><th>Écart</th><th>Statut</th></tr></thead><tbody data-hist="caisse">
-        <tr><td>27/08 · 21:12</td><td><b>Sous-caisse Marché</b></td><td><span class="amt" data-amt="1250000" data-nocur></span></td><td><span class="amt" data-amt="1275000" data-nocur></span></td><td><span class="amt" data-amt="-25000" data-nocur></span></td><td><span class="st bad"><svg><use href="#i-alert"/></svg>Écart · À réconcilier</span></td></tr>
-        <tr><td>26/08</td><td><b>Caisse générale</b><br><span class="hint">VAL-117 · Ajustement +<span class="amt" data-amt="180000" data-nocur></span>, motif « écart de comptage du 26/08 » · 1re validation O. Seck 27/08 19:02, 2e requise · aucun effet avant deux validations (§4.7) · correction post-clôture, approbation Super Admin (§3.1)</span></td><td><span class="amt" data-amt="7980000" data-nocur></span></td><td><span class="amt" data-amt="7980000" data-nocur></span></td><td><span class="amt" data-amt="0" data-nocur></span></td><td><span class="st ok"><svg><use href="#i-check"/></svg>Réconciliée</span></td></tr>
+      <div class="ch"><h3>Mes déclarations</h3><span class="hint-r">M. Diop · Caisse générale, Sous-caisse Marché · seuls votre déclaration et le statut vous sont visibles (§3)</span></div>
+      <div class="tbl-scroll"><table><thead><tr><th>Date métier</th><th>Compte</th><th>Déclaré</th><th>Statut</th></tr></thead><tbody data-hist="caisse">
+        <tr><td>27/08 · 21:12</td><td><b>Sous-caisse Marché</b></td><td><span class="amt" data-amt="1250000" data-nocur></span></td><td><span class="st bad"><svg><use href="#i-alert"/></svg>Écart · À réconcilier</span></td></tr>
+        <tr><td>26/08</td><td><b>Caisse générale</b><br><span class="hint">VAL-117 · Ajustement +<span class="amt" data-amt="180000" data-nocur></span>, motif « écart de comptage du 26/08 » · 1re validation O. Seck 27/08 19:02, 2e requise · aucun effet avant deux validations (§4.7) · correction post-clôture, approbation Super Admin (§3.1)</span></td><td><span class="amt" data-amt="7980000" data-nocur></span></td><td><span class="st ok"><svg><use href="#i-check"/></svg>Réconciliée</span></td></tr>
       </tbody></table></div>
     </div>
   </div>
@@ -120,15 +123,16 @@
           <div class="hint" style="margin-top:8px">Si les sources sont complètes, à jour et égales, la collecte est validée, la Caisse est créditée et les remboursements sont affectés aux comptes clients. En cas d'écart, aucune auto-validation n'est possible (§6.3). Une source Manquante, En erreur ou Non à jour bloque l'auto-validation mais peut rester visible avec son horodatage (§6.5).</div>
         </div>
         <div data-res="collecte" hidden>
-          <div class="declres four" style="margin-top:12px"><div><div class="k">Source B · votre déclaration</div><div class="val" data-r-decl></div></div><div><div class="k">Source A · Σ 12 déclarations MaaS</div><div class="val" data-r-theo></div></div><div><div class="k">Écart</div><div class="val" data-r-ecart></div></div><div><div class="k">Statut</div><div class="val sm" data-r-st></div></div></div>
-          <div class="actionbar"><span class="hint" data-after-ok>Sources complètes, à jour et égales : la collecte sera validée automatiquement vers 02:00, la Caisse générale créditée et les remboursements affectés aux 12 comptes clients MaaS (§6.3).</span><span class="hint" data-after-ko hidden>Écart : aucune auto-validation possible ; la collecte reste ouverte, l'écart est notifié à Admin, DG et Collecteur (règle critique non désactivable) et investigué avant toute correction.</span><div class="sp"></div><button class="btn ghost" data-goto="fin-reconciliation" data-after-ko hidden><svg><use href="#i-search"/></svg>Investiguer</button></div>
+          <div class="declres two" style="margin-top:12px"><div><div class="k">Source B · votre déclaration</div><div class="val" data-r-decl></div></div><div><div class="k">Statut</div><div class="val sm" data-r-st></div></div></div>
+          <div class="maskbox" style="margin-top:10px"><svg><use href="#i-lock"/></svg>Source A et écart <span class="dots">••••••••</span> jamais affichés à la Source B, ni avant ni après (§3, §6.3)</div>
+          <div class="actionbar"><span class="hint" data-after-ok>Les deux sources concordent : la collecte sera validée automatiquement vers 02:00, la Caisse générale créditée et les remboursements affectés aux 12 comptes clients MaaS. Le montant de la Source A ne vous est pas communiqué (§3, §6.3).</span><span class="hint" data-after-ko hidden>Les deux sources divergent : aucune auto-validation possible, la collecte reste ouverte. Le montant de l'écart part à l'Admin et au DG (règle critique non désactivable) et l'investigation est menée hors de votre vue.</span><div class="sp"></div><button class="btn ghost" data-goto="fin-reconciliation" data-after-ko hidden><svg><use href="#i-search"/></svg>Investiguer</button></div>
         </div>
       </div>
     </div>
     <div class="card">
-      <div class="ch"><h3>Mes déclarations</h3><span class="hint-r">A. Ndiaye · Collecteur · Source B · la Source A n'apparaît qu'après chaque déclaration</span></div>
-      <div class="tbl-scroll"><table><thead><tr><th>Date métier</th><th>Collecte</th><th>Source B · déclaré</th><th>Source A · Σ MaaS</th><th>Écart</th><th>Statut</th></tr></thead><tbody data-hist="collecte">
-        <tr><td>26/08</td><td><b>Collecte du 26/08</b><br><span class="hint">12 MaaS · 12 / 12 déclarations</span></td><td><span class="amt" data-amt="4725000" data-nocur></span></td><td><span class="amt" data-amt="4725000" data-nocur></span></td><td><span class="amt" data-amt="0" data-nocur></span></td><td><span class="st ok"><svg><use href="#i-check"/></svg>Validée 27/08 02:04</span><br><span class="hint">Caisse créditée · remboursements affectés aux 12 comptes clients</span></td></tr>
+      <div class="ch"><h3>Mes déclarations</h3><span class="hint-r">A. Ndiaye · Collecteur · Source B · seuls votre déclaration et le statut vous sont visibles (§3)</span></div>
+      <div class="tbl-scroll"><table><thead><tr><th>Date métier</th><th>Collecte</th><th>Source B · déclaré</th><th>Statut</th></tr></thead><tbody data-hist="collecte">
+        <tr><td>26/08</td><td><b>Collecte du 26/08</b><br><span class="hint">12 MaaS · 12 / 12 déclarations</span></td><td><span class="amt" data-amt="4725000" data-nocur></span></td><td><span class="st ok"><svg><use href="#i-check"/></svg>Validée 27/08 02:04</span><br><span class="hint">Caisse créditée · remboursements affectés aux 12 comptes clients</span></td></tr>
       </tbody></table></div>
     </div>
   </div>
@@ -160,25 +164,26 @@
   <!-- ===== Vue Directeur des Opérations (F. Sarr) : Sous-caisse Livraisons réconciliée + positions fournisseurs (§5.5) ===== -->
   <div data-view="dirops" hidden>
     <div class="card">
-      <div class="ch"><h3>Sous-caisse Livraisons</h3><span class="st ok"><svg><use href="#i-check"/></svg>Réconciliée 20:48</span><span class="hint-r">SCL · Trésorerie · déclarée par F. Sarr · théorique révélé après déclaration (§4.8)</span></div>
+      <div class="ch"><h3>Sous-caisse Livraisons</h3><span class="st ok"><svg><use href="#i-check"/></svg>Réconciliée 20:48</span><span class="hint-r">SCL · Trésorerie · déclarée par F. Sarr · solde système et écart jamais affichés au déclarant (§3)</span></div>
       <div class="cb">
-        <div class="declres four"><div><div class="k">Déclaré</div><div class="val"><span class="amt" data-amt="640000" data-nocur></span></div></div><div><div class="k">Solde théorique</div><div class="val"><span class="amt" data-amt="640000" data-nocur></span></div></div><div><div class="k">Écart</div><div class="val ok"><span class="amt" data-amt="0" data-nocur></span></div></div><div><div class="k">Statut</div><div class="val sm">Réconciliée</div></div></div>
+        <div class="declres two"><div><div class="k">Votre déclaration</div><div class="val"><span class="amt" data-amt="640000" data-nocur></span></div></div><div><div class="k">Statut</div><div class="val sm">Réconciliée</div></div></div>
+        <div class="maskbox" style="margin-top:10px"><svg><use href="#i-lock"/></svg>Solde système et écart <span class="dots">••••••••</span> jamais affichés au déclarant, ni avant ni après (§3)</div>
         <div class="note-strip" style="margin-top:12px"><svg><use href="#i-alert"/></svg><span><b>Clôture du périmètre suspendue.</b> La dépense « Pas sûr » Carburant véhicule livraison (<span class="amt" data-amt="85000" data-nocur></span>, montant payé inconnu) bloque uniquement le périmètre Sous-caisse Livraisons ; notification à 23:00 au Directeur des Opérations, aux Admins et au Super Admin si non résolue (§5.1).</span></div>
         <div class="actionbar"><div class="sp"></div><button class="btn ghost" data-goto="fin-depenses" data-perm="finance.depenses.modifier"><svg><use href="#i-receipt"/></svg>Résoudre la dépense « Pas sûr »</button></div>
       </div>
     </div>
     <div class="card">
-      <div class="ch"><h3>Mes périmètres — positions fournisseurs</h3><span class="st ok"><svg><use href="#i-check"/></svg><span data-cnt-f="rec">3</span> validées</span><span class="st mut"><svg><use href="#i-eyeoff"/></svg><span data-cnt-f="dec">2</span> à déclarer</span><span class="st bad" hidden><svg><use href="#i-alert"/></svg><span data-cnt-f="ec">0</span> en écart</span><span class="st mut">1 sans mouvement</span><span class="hint-r">§5.5 · réconciliation quotidienne · déclaration en aveugle dès qu'un mouvement a affecté le compte · signe §4.3 : négatif = Mata doit</span></div>
+      <div class="ch"><h3>Mes périmètres — positions fournisseurs</h3><span class="st ok"><svg><use href="#i-check"/></svg><span data-cnt-f="rec">3</span> validées</span><span class="st mut"><svg><use href="#i-eyeoff"/></svg><span data-cnt-f="dec">2</span> à déclarer</span><span class="st bad" hidden><svg><use href="#i-alert"/></svg><span data-cnt-f="ec">0</span> en écart</span><span class="st mut">1 sans mouvement</span><span class="hint-r">§5.5 · réconciliation quotidienne · déclaration en aveugle dès qu'un mouvement a affecté le compte · position théorique et écart jamais affichés au déclarant (§3) · signe §4.3 : négatif = Mata doit</span></div>
       <div class="cb" style="padding-bottom:0"><div class="fcode" style="margin-top:0">Position théorique = Dernière position réconciliée + Paiements/avances − Dépenses ± Ajustements validés</div></div>
-      <div class="tbl-scroll"><table><thead><tr><th>Fournisseur</th><th>Mouvement du jour</th><th>Heure</th><th>Position déclarée</th><th>Position théorique</th><th>Écart</th><th>Statut</th><th>Action</th></tr></thead><tbody>
-        <tr data-key="f1"><td><b>AGNEAUX</b><br><span class="hint">F1 · plafond <span class="amt" data-amt="10000000" data-nocur></span> dépassé : alerte, aucun blocage</span></td><td>Achat bœuf lot BV-260827-04 · <span class="amt" data-amt="850000" data-nocur></span> impayé</td><td class="hint" data-c-heure>18:30</td><td data-c-decl><span class="amt" data-amt="-12400000" data-nocur></span></td><td data-c-theo><span class="amt" data-amt="-12400000" data-nocur></span></td><td data-c-ecart><span class="amt" data-amt="0" data-nocur></span></td><td data-c-st><span class="st ok"><svg><use href="#i-check"/></svg>Validée</span></td><td class="hint" data-c-act>—</td></tr>
-        <tr data-key="f2"><td><b>MATA VOLAILLE CHAIR</b><br><span class="hint">F2 · plafond <span class="amt" data-amt="8000000" data-nocur></span></span></td><td>Achat volaille · <span class="amt" data-amt="420000" data-nocur></span> payé immédiatement : position inchangée</td><td class="hint" data-c-heure>17:50</td><td data-c-decl><span class="amt" data-amt="-4300000" data-nocur></span></td><td data-c-theo><span class="amt" data-amt="-4300000" data-nocur></span></td><td data-c-ecart><span class="amt" data-amt="0" data-nocur></span></td><td data-c-st><span class="st ok"><svg><use href="#i-check"/></svg>Validée</span></td><td class="hint" data-c-act>—</td></tr>
-        <tr data-key="f3"><td><b>MATA VOLAILLE ŒUFS</b><br><span class="hint">F3 · échéance dépassée 25/08 (2 j)</span></td><td class="hint">Mouvement du jour non détaillé · déclaration reçue 17:20 après l'import Achat de 17:00</td><td class="hint" data-c-heure>17:20</td><td data-c-decl><span class="amt" data-amt="-1150000" data-nocur></span></td><td data-c-theo><span class="amt" data-amt="-1150000" data-nocur></span></td><td data-c-ecart><span class="amt" data-amt="0" data-nocur></span></td><td data-c-st><span class="st ok"><svg><use href="#i-check"/></svg>Validée</span></td><td class="hint" data-c-act>—</td></tr>
-        <tr data-key="f4"><td><b>Bétail Thiès</b><br><span class="hint">F4 · plafond <span class="amt" data-amt="6000000" data-nocur></span></span></td><td>Achat agneau lot AG-260827-02 · <span class="amt" data-amt="262000" data-nocur></span> impayé</td><td class="hint" data-c-heure>—</td><td data-c-decl><span class="tag lock"><svg><use href="#i-clock"/></svg>Attendue</span></td><td data-c-theo><span class="tag lock"><svg><use href="#i-eyeoff"/></svg>Masquée · à déclarer</span></td><td class="hint" data-c-ecart>—</td><td data-c-st><span class="st mut"><svg><use href="#i-eyeoff"/></svg>À déclarer</span></td><td data-c-act><button class="btn pri" data-perm="finance.declarations.declarer" data-open="fin-declarations-fourn" data-fourn="f4"><svg><use href="#i-eyeoff"/></svg>Déclarer en aveugle</button></td></tr>
-        <tr data-key="f5"><td><b>Abattoirs Dakar</b><br><span class="hint">F5 · plafond <span class="amt" data-amt="2000000" data-nocur></span></span></td><td>Frais d'abattage · <span class="amt" data-amt="150000" data-nocur></span> payés immédiatement</td><td class="hint" data-c-heure>—</td><td data-c-decl><span class="tag lock"><svg><use href="#i-clock"/></svg>Attendue</span></td><td data-c-theo><span class="tag lock"><svg><use href="#i-eyeoff"/></svg>Masquée · à déclarer</span></td><td class="hint" data-c-ecart>—</td><td data-c-st><span class="st mut"><svg><use href="#i-eyeoff"/></svg>À déclarer</span></td><td data-c-act><button class="btn pri" data-perm="finance.declarations.declarer" data-open="fin-declarations-fourn" data-fourn="f5"><svg><use href="#i-eyeoff"/></svg>Déclarer en aveugle</button></td></tr>
-        <tr><td><b>Aliments Sénégal</b><br><span class="hint">F6 · échéance dépassée 20/08 (7 j)</span></td><td class="hint">Aucun mouvement depuis la dernière réconciliation</td><td class="hint">—</td><td class="hint">Non requise</td><td class="hint">Dernière position réconciliée inchangée</td><td class="hint">—</td><td><span class="st mut"><svg><use href="#i-check"/></svg>Sans mouvement · non bloquant</span></td><td class="hint">—</td></tr>
+      <div class="tbl-scroll"><table><thead><tr><th>Fournisseur</th><th>Mouvement du jour</th><th>Heure</th><th>Position déclarée</th><th>Statut</th><th>Action</th></tr></thead><tbody>
+        <tr data-key="f1"><td><b>AGNEAUX</b><br><span class="hint">F1 · plafond <span class="amt" data-amt="10000000" data-nocur></span> dépassé : alerte, aucun blocage</span></td><td>Achat bœuf lot BV-260827-04 · <span class="amt" data-amt="850000" data-nocur></span> impayé</td><td class="hint" data-c-heure>18:30</td><td data-c-decl><span class="amt" data-amt="-12400000" data-nocur></span></td><td data-c-st><span class="st ok"><svg><use href="#i-check"/></svg>Validée</span></td><td class="hint" data-c-act>—</td></tr>
+        <tr data-key="f2"><td><b>MATA VOLAILLE CHAIR</b><br><span class="hint">F2 · plafond <span class="amt" data-amt="8000000" data-nocur></span></span></td><td>Achat volaille · <span class="amt" data-amt="420000" data-nocur></span> payé immédiatement : position inchangée</td><td class="hint" data-c-heure>17:50</td><td data-c-decl><span class="amt" data-amt="-4300000" data-nocur></span></td><td data-c-st><span class="st ok"><svg><use href="#i-check"/></svg>Validée</span></td><td class="hint" data-c-act>—</td></tr>
+        <tr data-key="f3"><td><b>MATA VOLAILLE ŒUFS</b><br><span class="hint">F3 · échéance dépassée 25/08 (2 j)</span></td><td class="hint">Mouvement du jour non détaillé · déclaration reçue 17:20 après l'import Achat de 17:00</td><td class="hint" data-c-heure>17:20</td><td data-c-decl><span class="amt" data-amt="-1150000" data-nocur></span></td><td data-c-st><span class="st ok"><svg><use href="#i-check"/></svg>Validée</span></td><td class="hint" data-c-act>—</td></tr>
+        <tr data-key="f4"><td><b>Bétail Thiès</b><br><span class="hint">F4 · plafond <span class="amt" data-amt="6000000" data-nocur></span></span></td><td>Achat agneau lot AG-260827-02 · <span class="amt" data-amt="262000" data-nocur></span> impayé</td><td class="hint" data-c-heure>—</td><td data-c-decl><span class="tag lock"><svg><use href="#i-clock"/></svg>Attendue</span></td><td data-c-st><span class="st mut"><svg><use href="#i-eyeoff"/></svg>À déclarer</span></td><td data-c-act><button class="btn pri" data-perm="finance.declarations.declarer" data-open="fin-declarations-fourn" data-fourn="f4"><svg><use href="#i-eyeoff"/></svg>Déclarer en aveugle</button></td></tr>
+        <tr data-key="f5"><td><b>Abattoirs Dakar</b><br><span class="hint">F5 · plafond <span class="amt" data-amt="2000000" data-nocur></span></span></td><td>Frais d'abattage · <span class="amt" data-amt="150000" data-nocur></span> payés immédiatement</td><td class="hint" data-c-heure>—</td><td data-c-decl><span class="tag lock"><svg><use href="#i-clock"/></svg>Attendue</span></td><td data-c-st><span class="st mut"><svg><use href="#i-eyeoff"/></svg>À déclarer</span></td><td data-c-act><button class="btn pri" data-perm="finance.declarations.declarer" data-open="fin-declarations-fourn" data-fourn="f5"><svg><use href="#i-eyeoff"/></svg>Déclarer en aveugle</button></td></tr>
+        <tr><td><b>Aliments Sénégal</b><br><span class="hint">F6 · échéance dépassée 20/08 (7 j)</span></td><td class="hint">Aucun mouvement depuis la dernière réconciliation</td><td class="hint">—</td><td class="hint">Non requise</td><td><span class="st mut"><svg><use href="#i-check"/></svg>Sans mouvement · non bloquant</span></td><td class="hint">—</td></tr>
       </tbody></table></div>
-      <div class="cb"><div class="hint">En l'absence de mouvement, la non-déclaration n'est pas bloquante (§5.5). Une position déclarée égale à la théorique est validée ; un écart laisse le compte « À réconcilier », investigué puis corrigé uniquement par Ajustement (§4.7).</div></div>
+      <div class="cb"><div class="hint">En l'absence de mouvement, la non-déclaration n'est pas bloquante (§5.5). Une position déclarée égale à la position système est validée ; sinon le compte reste « À réconcilier », investigué puis corrigé uniquement par Ajustement (§4.7). Le déclarant reçoit le statut, jamais le montant système ni l'écart (§3).</div></div>
     </div>
   </div>
 
@@ -191,22 +196,22 @@
     <div class="exp">Lorsqu'au moins un mouvement a affecté le compte depuis la dernière réconciliation, un déclarant autorisé fournit en aveugle la position qu'il constate. Mata Finance la compare à la position théorique reconstruite à partir des mouvements (§5.5). Convention de signe (§4.3) : négatif = Mata doit au fournisseur ; positif = avance de Mata chez le fournisseur.</div>
     <div class="row-m" style="margin-bottom:12px"><span>Fournisseur</span><b data-f-name>—</b></div>
     <label for="fin-declarations-f-montant">Position constatée (FCFA, signée, sans décimales)</label><input id="fin-declarations-f-montant" inputmode="numeric" placeholder="Montant signé" data-f-inp>
-    <div class="row-m"><span>Position théorique</span><span class="amt">••••••••</span></div>
+    <div class="row-m"><span>Position théorique · jamais affichée (§3)</span><span class="amt">••••••••</span></div>
     <div class="acts"><button class="btn ghost" data-close>Annuler</button><button class="btn pri" data-perm="finance.declarations.declarer" data-f-save><svg><use href="#i-eyeoff"/></svg>Déclarer</button></div>
   </div></div>
 
   <!-- Modale : aide contextuelle -->
   <div class="mback" data-ov="help-fin-declarations"><div class="modal wide" role="dialog" aria-modal="true" aria-label="Comment ça marche : Déclarations">
     <h3><svg><use href="#i-info"/></svg>Comment ça marche : Déclarations</h3>
-    <div class="exp">Cet écran fait réconcilier chaque périmètre ayant bougé aujourd'hui : le déclarant (gestionnaire de caisse, collecteur, gérant MaaS, directeur des opérations) saisit en aveugle ce qu'il constate, sans voir le solde système ; le Super Admin et le DG, qui ne déclarent pas, voient le théorique et pilotent les écarts.</div>
+    <div class="exp">Cet écran fait réconcilier chaque périmètre ayant bougé aujourd'hui : le déclarant (gestionnaire de caisse, collecteur, gérant MaaS, directeur des opérations) saisit ce qu'il constate et ne voit jamais le solde système, ni avant ni après. Le Super Admin et le DG, qui ne déclarent pas, voient le théorique et pilotent les écarts.</div>
     <ul class="help-list">
-      <li><b>Déclaration en aveugle</b> — avant la déclaration, seul un bandeau « Solde système masqué » apparaît ; une fois F. Sarr déclaré à 20:48, l'écran affiche <span class="amt" data-amt="640000" data-nocur></span> déclarés pour <span class="amt" data-amt="640000" data-nocur></span> de théorique, écart nul (§3).</li>
-      <li><b>Solde théorique d'une caisse</b> — dernier solde réconcilié + mouvements du jour. Sur Sous-caisse Marché, <span class="amt" data-amt="1250000" data-nocur></span> déclarés contre <span class="amt" data-amt="1275000" data-nocur></span> de théorique laissent un écart de <span class="amt" data-amt="-25000" data-nocur></span> : le compte reste « À réconcilier », corrigé seulement par Ajustement (§4.8).</li>
-      <li><b>Position théorique d'un fournisseur</b> — dernière position réconciliée + paiements/avances − dépenses ± ajustements. Sur AGNEAUX, l'achat bœuf de <span class="amt" data-amt="850000" data-nocur></span> impayé laisse déclaré et théorique égaux à <span class="amt" data-amt="-12400000" data-nocur></span>, écart nul, position validée (§5.5).</li>
+      <li><b>Déclaration en aveugle</b> — le déclarant ne voit jamais le solde système, ni avant ni après. F. Sarr a déclaré <span class="amt" data-amt="640000" data-nocur></span> à 20:48 sur Sous-caisse Livraisons et reçoit le seul statut « Réconciliée » ; le montant comparé et l'écart restent hors de sa vue (§3).</li>
+      <li><b>Solde théorique d'une caisse</b> — dernier solde réconcilié + mouvements du jour, calculé par le moteur. M. Diop a déclaré <span class="amt" data-amt="1250000" data-nocur></span> sur Sous-caisse Marché et voit « À réconcilier » sans le chiffre : l'écart part à l'Admin, au DG et au Collecteur, qui l'investiguent et le corrigent par Ajustement (§4.8).</li>
+      <li><b>Position théorique d'un fournisseur</b> — dernière position réconciliée + paiements/avances − dépenses ± ajustements. Sur AGNEAUX, l'achat bœuf de <span class="amt" data-amt="850000" data-nocur></span> impayé est déjà pris en compte : F. Sarr a déclaré <span class="amt" data-amt="-12400000" data-nocur></span> et obtient « Validée », sans voir la position reconstruite (§5.5).</li>
       <li><b>Mouvement non bloquant</b> — 5 fournisseurs ayant bougé sont attendus aujourd'hui ; Aliments Sénégal, sans mouvement depuis sa dernière réconciliation, reste « Sans mouvement · non bloquant » et n'est pas compté (§5.5).</li>
-      <li><b>Deux sources pour une collecte</b> — Source A (Σ des 12 déclarations MaaS) comparée à la Source B (déclaration du collecteur). Le 26/08, les deux étaient à <span class="amt" data-amt="4725000" data-nocur></span> : sources égales, collecte validée automatiquement à 02:04 ; en cas d'écart, aucune validation automatique n'a lieu (§6.3).</li>
+      <li><b>Deux sources cloisonnées</b> — Source A (Σ des 12 déclarations MaaS) et Source B (déclaration du collecteur) sont comparées par le moteur, jamais l'une par l'autre : aucun déclarant ne voit le montant de l'autre source. Le 26/08 A. Ndiaye a déclaré <span class="amt" data-amt="4725000" data-nocur></span>, les sources concordaient et la collecte a été validée à 02:04 ; en cas d'écart, aucune validation automatique n'a lieu (§6.3).</li>
     </ul>
-    <div class="note-strip"><svg><use href="#i-shield"/></svg>Réconciliation en aveugle : le déclarant ne voit le solde ou la position théorique qu'après avoir soumis sa propre déclaration, jamais avant (§3).</div>
+    <div class="note-strip"><svg><use href="#i-shield"/></svg>Réconciliation en aveugle : le déclarant ne voit jamais le solde système, la position théorique ni l'écart, ni avant ni après sa déclaration. Une source ne voit jamais le montant d'une autre source. Seuls les profils qui ne déclarent pas (Super Admin, DG) accèdent au théorique et pilotent les écarts (§3).</div>
     <div class="hint">Sources : Cahier Mata Finance §3, §4.8, §5.5, §6.3</div>
     <div class="acts"><button class="btn ghost" data-close>Fermer</button></div>
   </div></div>
@@ -216,14 +221,14 @@ ERP.register('fin-declarations', function (root, ctx) {
   var q = function (s, el) { return (el || root).querySelector(s); };
   var qa = function (s, el) { return Array.prototype.slice.call((el || root).querySelectorAll(s)); };
   var num = function (v) { return parseInt(String(v == null ? '' : v).replace(/−/g, '-').replace(/[^\d-]/g, ''), 10); };
-  /* Valeurs théoriques : uniquement en mémoire, injectées dans le DOM après déclaration ou pour les profils qui ne déclarent pas (§3) */
+  /* Valeurs théoriques : uniquement en mémoire, injectées dans le DOM pour les seuls profils qui ne déclarent pas (§3) */
   var THEO = { scm: 1275000, scl: 640000, cg: 8450000, collecte: 3100000, srca: 3100000, f1: -12400000, f2: -4300000, f3: -1150000, f4: -4600000, f5: 350000, f6: -800000 };
   var NAME = { cg: 'Caisse générale', collecte: 'Collecte du 27/08', f4: 'Bétail Thiès', f5: 'Abattoirs Dakar' };
   var CIRC = { cg: 'caisse', collecte: 'collecte', f4: 'fourn', f5: 'fourn' };
   var OKL = { caisse: 'Réconciliée', collecte: 'Sources égales · auto-validation vers 02:00', fourn: 'Validée' };
   var KOL = { caisse: 'Écart · À réconcilier', collecte: 'Écart · aucune auto-validation', fourn: 'Écart · À réconcilier' };
   var VIEWS = { sa: 'sa', dg: 'sa', caisse: 'caisse', collecteur: 'collecteur', maas: 'maas', dirops: 'dirops' };
-  var WHO = { sa: 'contrôle des déclarations du jour · le solde théorique est visible car ce profil ne déclare pas (§3)', caisse: 'périmètre Caisse générale et Sous-caisse Marché · solde théorique masqué jusqu\'à chaque déclaration (§3, §4.8)', collecteur: 'Source B de la collecte · Σ des déclarations MaaS masquée jusqu\'à votre déclaration (§3, §6.3)', maas: 'versements du MaaS Keur Massar · périmètre limité à votre entité (§6.3)', dirops: 'Sous-caisse Livraisons et positions fournisseurs · position théorique masquée jusqu\'à déclaration (§4.8, §5.5)', none: 'aucun périmètre de déclaration' };
+  var WHO = { sa: 'contrôle des déclarations du jour · le solde théorique est visible car ce profil ne déclare pas (§3)', caisse: 'périmètre Caisse générale et Sous-caisse Marché · solde système et écart jamais affichés (§3, §4.8)', collecteur: 'Source B de la collecte · Source A et écart jamais affichés (§3, §6.3)', maas: 'versements du MaaS Keur Massar · périmètre limité à votre entité (§6.3)', dirops: 'Sous-caisse Livraisons et positions fournisseurs · position système et écart jamais affichés (§3, §5.5)', none: 'aucun périmètre de déclaration' };
   var LOCK_MAAS = 'Versement du 27/08 déjà déclaré à 18:20 : une déclaration reçue n\'est pas écrasée (§3, Correction : correction par contrepassation ou ajustement traçable) ; l\'écart éventuel est traité par la réconciliation des encaissements collectés (§6.3).';
   var amt = function (v) { return '<span class="amt" data-amt="' + v + '" data-nocur></span>'; };
   var st = function (ok, t) { return '<span class="st ' + (ok ? 'ok' : 'bad') + '"><svg><use href="#i-' + (ok ? 'check' : 'alert') + '"/></svg>' + t + '</span>'; };
@@ -267,7 +272,9 @@ ERP.register('fin-declarations', function (root, ctx) {
     qa('tr[data-etat]', q('[data-sa-rows]')).forEach(function (tr) { tr.hidden = !!f && f.indexOf(tr.dataset.etat) < 0; });
   }); });
 
-  /* Déclaration en aveugle : comparaison au théorique révélée seulement après soumission (§4.8, §5.5, §6.3) */
+  /* Déclaration en aveugle (§3) : le théorique et l'écart n'entrent que dans la table de contrôle
+     [data-sa-rows], lue par le Super Admin et le DG qui ne déclarent pas. Les vues déclarantes n'ont
+     pas ces cellules ; put() les ignore, le déclarant ne reçoit que son montant et le statut. */
   function settle(key, declared) {
     var theo = THEO[key], ec = declared - theo, ok = ec === 0, c = CIRC[key], h = now(), lbl = ok ? OKL[c] : KOL[c];
     qa('[data-key="' + key + '"]').forEach(function (tr) {
@@ -280,14 +287,13 @@ ERP.register('fin-declarations', function (root, ctx) {
     var res = q('[data-res="' + key + '"]');
     if (res) {
       q('[data-form="' + key + '"]').hidden = true; res.hidden = false;
-      q('[data-r-decl]', res).innerHTML = amt(declared); q('[data-r-theo]', res).innerHTML = amt(theo);
-      var e = q('[data-r-ecart]', res); e.innerHTML = amt(ec); e.className = 'val ' + (ok ? 'ok' : 'bad');
+      q('[data-r-decl]', res).innerHTML = amt(declared);
       q('[data-r-st]', res).innerHTML = st(ok, lbl);
       qa('[data-after-ok]', res).forEach(function (x) { x.hidden = !ok; }); qa('[data-after-ko]', res).forEach(function (x) { x.hidden = ok; });
     }
     var hd = q('[data-st-head="' + key + '"]'); if (hd) hd.innerHTML = st(ok, lbl);
     var hist = q('[data-hist="' + c + '"]');
-    if (hist) hist.insertAdjacentHTML('afterbegin', '<tr><td>27/08 · ' + h + '</td><td><b>' + NAME[key] + '</b></td><td>' + amt(declared) + '</td><td>' + amt(theo) + '</td><td>' + amt(ec) + '</td><td>' + st(ok, lbl) + '</td></tr>');
+    if (hist) hist.insertAdjacentHTML('afterbegin', '<tr><td>27/08 · ' + h + '</td><td><b>' + NAME[key] + '</b></td><td>' + amt(declared) + '</td><td>' + st(ok, lbl) + '</td></tr>');
     ctx.formatAmounts(root); ctx.applyPerms(); lockMaas(); count();
     return ok;
   }
@@ -295,7 +301,7 @@ ERP.register('fin-declarations', function (root, ctx) {
     var key = b.dataset.decl, inp = q('[data-inp="' + key + '"]'), v = num(inp.value);
     if (inp.value.trim() === '' || isNaN(v)) { ctx.toast('Saisir le montant réellement constaté, en FCFA sans décimales.'); inp.focus(); return; }
     var ok = settle(key, v);
-    ctx.toast(NAME[key] + ' : déclaré ' + ctx.fmt(v) + ' FCFA par ' + esc(ctx.profile.short) + ' · ' + (ok ? (key === 'collecte' ? 'sources égales, validation automatique vers 02:00' : 'égalité, compte réconcilié') : 'écart constaté, ' + (key === 'collecte' ? 'aucune auto-validation, ' : '') + 'notification Admin, DG, Collecteur') + ' · created_at et updated_by automatiques.');
+    ctx.toast(NAME[key] + ' : déclaré ' + ctx.fmt(v) + ' FCFA par ' + esc(ctx.profile.short) + ' · ' + (ok ? (key === 'collecte' ? 'sources égales, validation automatique vers 02:00' : 'déclaration conforme, compte réconcilié') : 'écart constaté, ' + (key === 'collecte' ? 'aucune auto-validation, ' : '') + 'notification Admin, DG, Collecteur') + ' · created_at et updated_by automatiques.');
   }); });
 
   /* Modale fournisseur (§5.5) : le déclarant choisit le compte, la position théorique reste masquée jusqu'à la déclaration */
