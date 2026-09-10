@@ -204,6 +204,7 @@ ERP.register('fin-creances', function (root, ctx) {
     Object.keys(t).forEach(function (k) { setAmt($('[data-tot="' + k + '"]'), t[k]); });
     $('[data-tot-n]').textContent = n + (n > 1 ? ' contreparties affichées' : ' contrepartie affichée');
     ctx.formatAmounts(tfoot);
+    ctx.refreshTall(tbody);
   }
   function updateKpis() {
     var cre = 0, adv = 0;

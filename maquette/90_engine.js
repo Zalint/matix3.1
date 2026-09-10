@@ -122,6 +122,24 @@ function go(id){
   try{history.replaceState(null,'',location.pathname+(id==='hub'?'':'#'+id));}catch(x){}
   if(!inited[id]){inited[id]=true;formatAmounts(sec);if(registry[id]){try{registry[id](sec,ctx);}catch(e){console.error('init '+id,e);}}}
   drawCharts(sec);setTimeout(function(){drawCharts(sec);},60);
+  tallTables(sec);
+}
+/* En-tetes figes (R-02) : position:sticky n'agit que dans un conteneur qui defile vraiment.
+   .tbl-scroll ne defile qu'en X, on lui plafonne donc la hauteur des qu'un tableau depasse
+   TALL_MIN lignes visibles. Rappele apres chaque filtrage d'ecran via ERP.refreshTall. */
+var TALL_MIN=15;
+function refreshTall(el){
+  var w=el&&el.closest?el.closest('.tbl-scroll'):null;
+  tallTables(w||$('.scr[data-scr="'+state.screen+'"]')||document);
+}
+function tallTables(sec){
+  if(sec.classList&&sec.classList.contains('tbl-scroll'))return tallOne(sec);
+  $$('.tbl-scroll',sec).forEach(tallOne);
+}
+function tallOne(w){
+  var tb=$('tbody',w);
+  var n=tb?$$('tr',tb).filter(function(tr){return !tr.hidden;}).length:0;
+  w.classList.toggle('tall',n>TALL_MIN);
 }
 
 /* ================= HUB / PERSONA ================= */
@@ -298,8 +316,8 @@ document.addEventListener('change',function(e){if(e.target.hasAttribute('data-se
 var rT=null;window.addEventListener('resize',function(){clearTimeout(rT);rT=setTimeout(function(){drawCharts(document);},120);});
 
 /* ================= API ÉCRANS ================= */
-function filterRows(tbody,attr,value){$$('tr',tbody).forEach(function(r){var v=r.getAttribute('data-'+attr);if(v===null)return;r.hidden=!(value==='tous'||v===value);});}
-var ctx={get profile(){return state.persona;},get entity(){return state.persona.entity;},hasPerm:hasPerm,toast:toast,fmt:fmt,formatAmounts:formatAmounts,go:go,open:openOv,close:function(id){closeOv($('[data-ov="'+id+'"]'));},filterRows:filterRows,on:function(el,ev,fn){if(el)el.addEventListener(ev,fn);},applyPerms:applyPerms,drawCharts:drawCharts,series:SERIES};
+function filterRows(tbody,attr,value){$$('tr',tbody).forEach(function(r){var v=r.getAttribute('data-'+attr);if(v===null)return;r.hidden=!(value==='tous'||v===value);});refreshTall(tbody);}
+var ctx={get profile(){return state.persona;},get entity(){return state.persona.entity;},hasPerm:hasPerm,toast:toast,fmt:fmt,formatAmounts:formatAmounts,go:go,open:openOv,close:function(id){closeOv($('[data-ov="'+id+'"]'));},filterRows:filterRows,refreshTall:refreshTall,on:function(el,ev,fn){if(el)el.addEventListener(ev,fn);},applyPerms:applyPerms,drawCharts:drawCharts,series:SERIES};
 var pre=window.ERP;
 window.ERP={register:function(id,fn){registry[id]=fn;},go:go,toast:toast,hasPerm:hasPerm,ctx:ctx,state:state};
 if(pre&&pre._q)pre._q.forEach(function(x){registry[x[0]]=x[1];});

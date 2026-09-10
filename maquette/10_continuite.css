@@ -318,6 +318,11 @@
 /* tables horizontales scrollables (mockup, petits écrans) */
 #app .tbl-scroll{overflow-x:auto}
 #app .tbl-scroll table{min-width:760px}
+/* Tableau long : il defile dans son cadre, seule construction ou l'en-tete tient au defilement.
+   La bordure basse passe en box-shadow, une bordure sur un element sticky ne suit pas. */
+#app .tbl-scroll.tall{max-height:min(68dvh,600px);overflow-y:auto}
+#app .tbl-scroll.tall thead th{position:sticky;top:0;z-index:2;background:var(--card);border-bottom:none;box-shadow:inset 0 -1px 0 var(--line)}
+#app .tbl-scroll.tall tfoot td{position:sticky;bottom:0;z-index:2;background:var(--card);box-shadow:inset 0 1px 0 var(--line)}
 #app .hint{font-size:11px;color:var(--mut);font-weight:500}
 /* mobile : aucun défilement horizontal de page */
 #app{overflow-x:clip}

@@ -17,10 +17,12 @@ Une modale plus haute que l'écran débordait du centrage flex sans jamais deven
 Correction : `max-height:calc(100dvh - 36px)`, `overflow-y:auto` et `overscroll-behavior:contain` sur `#app .modal` (`10_continuite.css`). Une seule règle couvre tous les écrans.
 Vérifié en 1440x700, 1440x560 et 375x667 : la modale tient dans l'écran, défile en interne, et « Créer le compte » est atteignable.
 
-**R-02 · En-têtes de colonnes figés sur les tableaux longs.** Statut : **À faire**, arbitré le 10/09.
-Décision : option 1, hauteur plafonnée et défilement dans le cadre, à partir de 15 lignes, desktop et mobile.
+**R-02 · En-têtes de colonnes figés sur les tableaux longs.** Statut : **Corrigé**, arbitré le 10/09.
+Décision : hauteur plafonnée et défilement dans le cadre, au-delà de 15 lignes, desktop et mobile.
 Demande : au défilement vertical, les en-têtes restent visibles.
 Diagnostic mesuré dans Chromium : le conteneur `.tbl-scroll` porte `overflow-x:auto`, ce qui fait calculer `overflow-y:auto` par le navigateur. Il devient donc le scrollport de référence pour `position:sticky`, alors qu'il ne défile jamais verticalement. Un en-tête `sticky` y est inerte : au défilement de page il part à -306 px, hors écran. Le figeage ne s'obtient pas en ajoutant deux lignes de CSS.
+Correction : le moteur marque `.tall` tout `.tbl-scroll` dont le corps dépasse 15 lignes visibles, à l'ouverture de l'écran et après chaque filtrage (`filterRows`, et `ctx.refreshTall` pour les écrans qui filtrent eux-mêmes). Le CSS lui donne alors un plafond de `min(68dvh, 600px)` avec en-tête et pied de tableau collés. La bordure basse de l'en-tête passe en `box-shadow` : une bordure sur un élément `sticky` ne suit pas le défilement.
+Trois tableaux franchissent le seuil : Comptes (29 lignes), Entités (16) et Créances (15, sous le seuil, donc inchangé). Vérifié en 1440 et 375, thèmes clair et sombre : l'en-tête tient au défilement du cadre, aucun débordement horizontal de la page, aucune erreur JS.
 
 **R-03 · Filtres par colonne et recherche textuelle sur tous les tableaux.** Statut : **À faire**, arbitré le 10/09.
 Décision : les puces de filtre déjà présentes (Déclarations, Alertes) sont conservées comme raccourcis au-dessus du tableau, en plus du filtre par colonne.
