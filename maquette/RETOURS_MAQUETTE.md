@@ -113,7 +113,7 @@ Limite assumée : la maquette n'a aucun mécanisme de lien profond, `data-goto` 
 
 ### Constat issu de la vérification de R-06
 
-**R-16 · Le solde système fuit aux déclarants par les autres écrans.** Statut : **Arbitrage**.
+**R-16 · Le solde système fuit aux déclarants par les autres écrans.** Statut : **Corrigé**, option 2 retenue.
 Corriger l'écran Déclarations ne suffit pas à tenir la règle : le même déclarant retrouve son solde théorique et son écart sur les autres écrans de son périmètre. Mesuré dans Chromium en parcourant tous les écrans que chaque profil peut ouvrir :
 
 | Profil | Écrans accessibles | Écrans qui révèlent le théorique ou l'écart de son périmètre |
@@ -126,7 +126,15 @@ La question rejoint celle déjà ouverte au panel sur le tableau de bord et les 
 1. Retirer aux profils déclarants les permissions de consultation qui exposent leur propre périmètre, tant qu'une déclaration est attendue. C'est une décision de matrice de permissions, pas d'interface.
 2. Masquer, écran par écran, les seules lignes du périmètre que le profil doit déclarer, en réutilisant le mécanisme déjà en place sur le tableau de bord.
 3. Assumer que la règle ne vaut que sur l'écran de déclaration, ce qui la vide de son sens puisque le montant reste à deux clics.
-Aucun code n'a été écrit sur ce point : il touche le moteur de permissions et six écrans.
+Option 2 retenue : retirer les permissions de consultation aurait empêché ces profils de travailler, et s'en tenir à l'écran de déclaration aurait vidé la règle de son sens.
+
+Le comptage initial de 61 occurrences était trompeur. Un périmètre déjà réconcilié n'a plus rien de secret : le déclarant connaît son propre chiffre et sait qu'il correspondait. Sous-caisse Livraisons et les positions AGNEAUX, MATA VOLAILLE CHAIR et MATA VOLAILLE ŒUFS sortent donc du périmètre. Il ne reste réellement secrets que la Caisse générale et la Sous-caisse Marché pour M. Diop, Bétail Thiès et Abattoirs Dakar pour F. Sarr, et la Source A pour le collecteur.
+
+Correction : mécanisme transverse `data-blind="<périmètre>"` dans le moteur, 41 marques posées sur Réconciliation, Comptes, Dépenses, Fournisseurs, Tableau de bord, P&L, Notifications et Incidents. Le cache passe par une classe, jamais en remplaçant le contenu : les scripts d'écran continuent d'écrire dans leurs nœuds, ce qui évitait un plantage au prochain paiement fournisseur, et le contenu réapparaît intact au changement de profil. `applyBlind` est appelé après l'événement `erp:profile`, faute de quoi un écran qui se re-rend effaçait le cache posé avant lui. La cloche de notifications masque le montant de l'écart au déclarant du périmètre concerné, en gardant le fait qu'un écart existe.
+
+Quatre textes d'écran promettaient encore que le montant réapparaît après déclaration, reste de la règle d'avant l'arbitrage R-06. Ils sont réécrits.
+
+Vérifié dans Chromium, profil par profil, en parcourant tous les écrans accessibles : aucun montant système visible pour le gestionnaire de caisse, le directeur des opérations et le collecteur ; le Super Admin garde tout ; un paiement fournisseur ne provoque plus d'erreur ; le cache tient au changement de profil sans quitter l'écran.
 
 ---
 

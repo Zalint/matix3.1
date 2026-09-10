@@ -322,6 +322,12 @@
 #app .serpick input{accent-color:var(--red);width:14px;height:14px;flex:none}
 #app .serpick .swatch{width:18px;border-top:2.5px solid var(--sc);flex:none;align-self:center}
 #app .serpick .swatch.dash{border-top-style:dashed}
+/* Aveugle par périmètre (R-16) : le contenu est caché, pas détruit. font-size:0 neutralise
+   aussi les nœuds texte nus que le sélecteur enfant ne peut pas atteindre. */
+#app [data-blind].blinded{font-size:0;color:transparent}
+#app [data-blind].blinded>*{display:none!important}
+#app [data-blind].blinded[data-blind-lbl]::after{content:attr(data-blind-lbl);background:none;padding:0}
+#app [data-blind].blinded::after{content:"Masqué (§3)";display:inline-block;font-family:var(--body);font-size:10.5px;font-weight:700;letter-spacing:.02em;line-height:1.6;background:var(--card-3);color:var(--ink-2);border-radius:6px;padding:1px 8px;white-space:nowrap}
 /* Vue production (R-04, R-05) : la maquette porte une pédagogie qui n'est pas livrée, les
    panneaux « Comment ça marche ? », les paragraphes d'explication en tête d'écran et les blocs
    qui décrivent la maquette elle-même. Les explications fonctionnelles restent dans les

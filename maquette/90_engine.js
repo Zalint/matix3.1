@@ -27,7 +27,7 @@ var ENTITIES=[
  {id:'MAAS-ALL',name:'11 autres MaaS',type:'MaaS',st:'mut',lbl:'À activer',off:'Ouakam, Pikine, Rufisque, Grand Yoff, Parcelles, Médina, Yoff, Ngor, Thiaroye, Guédiawaye, HLM'}
 ];
 var NOTIFS=[
- {t:'21:15',crit:true,ic:'alert',cls:'bad',txt:'Écart −25 000 sur Sous-caisse Marché (déclaré par M. Diop)',go:'fin-reconciliation'},
+ {t:'21:15',crit:true,ic:'alert',cls:'bad',txt:'Écart −25 000 sur Sous-caisse Marché (déclaré par M. Diop)',blind:'scm',txtb:'Écart constaté sur Sous-caisse Marché · montant transmis à l\u2019Admin, au DG et au Collecteur (§3)',go:'fin-reconciliation'},
  {t:'19:02',crit:true,ic:'check',cls:'warn',txt:'Ajustement +180 000 Caisse générale : 2e validation requise',go:'fin-validations'},
  {t:'18:05',crit:true,ic:'swap',cls:'info',txt:'Transfert 600 000 BOA → Caisse générale proposé par F. Sarr',go:'fin-validations'},
  {t:'17:30',crit:true,ic:'clock',cls:'bad',txt:'Échéance dépassée : MATA VOLAILLE ŒUFS 1 150 000 (25/08)',go:'fin-fournisseurs'},
@@ -226,18 +226,13 @@ function tableTools(sec){$$('.tbl-scroll',sec).forEach(buildTools);}
    attendues pour F. Sarr, et la Source A pour le collecteur (FIXTURES §3, §6).
    data-blind se pose sur un conteneur, jamais sur l'élément [data-amt] lui-même. */
 var BLIND={caisse:['cg','scm'],dirops:['f4','f5'],collecteur:['srca']};
+function isBlind(k){return (BLIND[state.persona.id]||[]).indexOf(k)>=0;}
+/* Le cache se pose par une classe, jamais en remplacant le contenu : les scripts d'ecran
+   continuent d'ecrire dans leurs noeuds (recalc de Fournisseurs, applyView de P&L) sans
+   trouver le DOM ampute, et le contenu reapparait tel quel au changement de profil. */
 function applyBlind(scope){
-  var l=BLIND[state.persona.id]||[];
   $$('[data-blind]',scope||document).forEach(function(el){
-    var hide=el.getAttribute('data-blind').split(/\s+/).some(function(k){return l.indexOf(k)>=0;});
-    if(hide&&!el.dataset.blindOn){
-      el.dataset.blindOn='1';el.dataset.blindHtml=el.innerHTML;
-      el.innerHTML='<span class="tag lock"><svg><use href="#i-eyeoff"/></svg>Masqué (§3)</span>';
-    }else if(!hide&&el.dataset.blindOn){
-      el.innerHTML=el.dataset.blindHtml;
-      delete el.dataset.blindOn;delete el.dataset.blindHtml;
-      formatAmounts(el);
-    }
+    el.classList.toggle('blinded',el.getAttribute('data-blind').split(/\s+/).some(isBlind));
   });
 }
 
@@ -322,8 +317,9 @@ function setPersona(p){
   $$('[data-profile-name],[data-hub-profile]').forEach(function(e){e.textContent=p.profile+' — '+p.short;});
   $$('[data-entity-name],[data-hub-entity],[data-sb-entity]').forEach(function(e){e.textContent=ent.name;});
   var hc=$('[data-hub-cat]');if(hc)hc.textContent=p.cat;
-  applyPerms();applyBlind();renderHub();renderPops();
+  applyPerms();renderHub();renderPops();
   try{document.dispatchEvent(new CustomEvent('erp:profile',{detail:p}));}catch(e){}
+  applyBlind();/* apres l'evenement : un ecran qui se re-rend sur changement de profil effacerait le cache pose avant */
   var cur=$('.scr[data-scr="'+state.screen+'"]');
   if(cur&&cur.getAttribute('data-perm')&&!hasPerm(cur.getAttribute('data-perm'))){go('hub');toast('Profil '+p.profile+' : l’écran précédent n’est pas dans votre périmètre, retour à l’accueil.');}
   else if(setPersona.ready)toast('Profil actif : '+p.profile+' — menu et permissions recalculés');
@@ -342,8 +338,9 @@ function renderPops(){
   }).join('');
   var nl=$('[data-notif-list]');
   if(nl)nl.innerHTML=NOTIFS.map(function(n){
+    var ntxt=(n.blind&&isBlind(n.blind))?n.txtb:n.txt;
     var bg={bad:'var(--bad-bg)',warn:'var(--warn-bg)',info:'var(--red-tint)'}[n.cls],fg={bad:'var(--bad)',warn:'var(--warn)',info:'var(--red)'}[n.cls];
-    return '<button class="ni2" data-goto="'+n.go+'"><div style="width:26px;height:26px;border-radius:7px;display:grid;place-items:center;background:'+bg+';color:'+fg+';flex:none"><svg style="width:13px;height:13px"><use href="#i-'+n.ic+'"/></svg></div><div style="font-size:12px;line-height:1.45"><b>'+n.txt+'</b><small style="display:block;color:var(--mut);font-size:10.5px">'+n.t+(n.crit?' · critique, non désactivable':'')+'</small></div></button>';
+    return '<button class="ni2" data-goto="'+n.go+'"><div style="width:26px;height:26px;border-radius:7px;display:grid;place-items:center;background:'+bg+';color:'+fg+';flex:none"><svg style="width:13px;height:13px"><use href="#i-'+n.ic+'"/></svg></div><div style="font-size:12px;line-height:1.45"><b>'+ntxt+'</b><small style="display:block;color:var(--mut);font-size:10.5px">'+n.t+(n.crit?' · critique, non désactivable':'')+'</small></div></button>';
   }).join('');
 }
 
