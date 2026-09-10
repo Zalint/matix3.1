@@ -58,10 +58,12 @@ Le tableau de bord doit permettre de suivre l'évolution des types de trésoreri
 Les informations présentes sont toutes utiles, la densité est trop forte. Travail attendu sur la hiérarchisation, les regroupements et l'affichage progressif. Les graphiques de trésorerie restent visibles sans repli.
 À noter : R-07 et R-08 ajoutent un indicateur et un sélecteur de séries sur cet écran. Traiter l'allègement dans le même lot pour ne pas densifier puis dédensifier.
 
-**R-10 · Saisie manuelle des créances et des remboursements.** Statut : **À faire**, arbitré le 10/09.
+**R-10 · Saisie manuelle des créances et des remboursements.** Statut : **Corrigé**, arbitré le 10/09.
 Décision : écriture directe, sans validation. Le Directeur des Opérations détient ce droit par défaut. Création d'une créance sans vente et enregistrement d'un remboursement sans versement, tous deux couverts par l'audit de modification. Mesure transitoire assumée : une fois la refonte terminée, toutes les créances naîtront des ventes et ce circuit manuel sera retiré. À écrire comme telle dans les specs pour qu'elle ne survive pas à la refonte.
 L'écran Créances doit permettre d'enregistrer une nouvelle créance et le remboursement d'une créance existante. Aujourd'hui il ne propose que « Accorder une créance », modélisé comme une autorisation de crédit sans effet sur la position.
 Point déjà ouvert au panel (`AMBIGUITES_PANEL.md`, questions de revue, point 2) et clos par cet arbitrage.
+Correction : bouton « Saisie manuelle » et modale à deux modes, créance sans vente ou remboursement sans versement, avec contrepartie, montant, date métier et motif obligatoire. L'écriture agit tout de suite sur la position du client, sur le total des créances et sur les indicateurs, ce que « Accorder une créance » ne fait pas. Nouvelle permission `finance.creances.saisir`, accordée par défaut au Directeur des Opérations et au Super Admin ; les autres profils voient le bouton désactivé avec son motif de refus. Un encart rappelle dans la modale et dans l'aide que le circuit est transitoire.
+Vérifié dans Chromium : créance de 500 000 puis remboursement de 200 000 sur Restaurant Le Baobab, position 2 400 000 → 2 900 000 → 2 700 000 et total des créances suivi à chaque écriture ; saisie sans motif refusée ; bouton désactivé pour le Gérant MaaS ; motif contenant du HTML échappé et non interprété.
 
 ### Périmètre V1
 

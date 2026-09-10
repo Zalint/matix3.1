@@ -258,6 +258,10 @@ svg{display:block;flex:none}
 #app .modal h3 svg{width:17px;height:17px;color:var(--red)}
 #app .modal .exp{font-size:12px;color:var(--ink-2);background:var(--red-tint);border:1px solid var(--red-line);border-radius:9px;padding:10px 12px;margin:13px 0;line-height:1.5}
 #app .modal label{display:block;font-size:11px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-2);margin-bottom:5px}
+/* Une case radio dans une modale garde la présentation .rline : sans cela le style de label ci-dessus
+   la passe en bloc majuscule et colle son aide .rh au libellé. */
+#app .modal label.rline{display:flex;text-transform:none;letter-spacing:0;font-size:12.5px;font-weight:700;color:var(--ink);margin:0 0 8px}
+#app .modal .rline .rh{font-weight:500;text-align:right}
 #app .modal input{width:100%;background:var(--card-2);border:1px solid var(--line-2);border-radius:9px;padding:10px 12px;font-family:'Fira Code',monospace;font-size:14px;min-height:40px}
 #app .modal input:focus{border-color:var(--red);outline:none;box-shadow:0 0 0 3px var(--red-tint)}
 #app .modal .row-m{display:flex;justify-content:space-between;align-items:center;font-size:12px;color:var(--mut);border:1px dashed var(--line-2);border-radius:9px;padding:9px 12px;margin-bottom:13px}
@@ -2129,6 +2133,7 @@ ERP.register('fin-fournisseurs', function (root, ctx) {
     <div class="sp"></div>
     <button class="btn ghost" data-perm="finance.reconciliation.view" data-goto="fin-reconciliation"><svg><use href="#i-refresh"/></svg>Voir la réconciliation</button>
     <button class="btn ghost" data-perm="finance.export" data-act="export"><svg><use href="#i-dl"/></svg>Exporter</button>
+    <button class="btn ghost" data-perm="finance.creances.saisir" data-open="fin-creances-manuel"><svg><use href="#i-note"/></svg>Saisie manuelle</button>
     <button class="btn pri" data-perm="finance.creances.accorder" data-open="fin-creances-accorder"><svg><use href="#i-plus"/></svg>Accorder une créance</button>
   </div>
 
@@ -2194,6 +2199,20 @@ ERP.register('fin-fournisseurs', function (root, ctx) {
     <div class="acts"><button class="btn ghost" data-close>Annuler</button><button class="btn pri" data-perm="finance.creances.accorder" data-act="acc-ok"><svg><use href="#i-check"/></svg>Accorder</button></div>
   </div></div>
 
+  <!-- Modale : saisie manuelle d'une créance ou d'un remboursement (R-10, circuit transitoire) -->
+  <div class="mback" data-ov="fin-creances-manuel"><div class="modal" role="dialog" aria-modal="true" aria-label="Saisie manuelle d'un mouvement de position client">
+    <h3><svg><use href="#i-note"/></svg>Saisie manuelle d'un mouvement</h3>
+    <div class="exp">Enregistre directement un mouvement sur la position d'un client, sans vente en amont pour une créance, sans versement en amont pour un remboursement. Écriture immédiate, sans validation : le Directeur des Opérations détient ce droit par défaut. Motif obligatoire, auteur et horodatage automatiques, audit de modification. Convention de signe (§4.3) : positif = le client doit à Mata.</div>
+    <label class="rline"><input type="radio" name="fin-creances-mv" value="creance" checked>Créance sans vente<span class="rh">augmente la position du client</span></label>
+    <label class="rline"><input type="radio" name="fin-creances-mv" value="rembours">Remboursement sans versement<span class="rh">diminue la position du client</span></label>
+    <div class="fld" style="margin-top:10px"><label for="fin-creances-mv-cp">Contrepartie (Référentiel ERP)</label><select id="fin-creances-mv-cp" class="inp"></select></div>
+    <div class="fld" style="margin-top:10px"><label for="fin-creances-mv-mt">Montant (FCFA, entier positif, sans décimales)</label><input id="fin-creances-mv-mt" class="inp mono" inputmode="numeric" placeholder="0"></div>
+    <div class="fld" style="margin-top:10px"><label for="fin-creances-mv-dt">Date métier</label><input id="fin-creances-mv-dt" class="inp mono" type="date" value="2026-08-27"></div>
+    <div class="fld" style="margin-top:10px"><label for="fin-creances-mv-mo">Motif (obligatoire, audité)</label><input id="fin-creances-mv-mo" class="inp" placeholder="Ex. régularisation d'une livraison hors circuit Ventes Mata"></div>
+    <div class="note-strip" style="margin-top:12px"><svg><use href="#i-clock"/></svg><span><b>Circuit transitoire.</b> Il disparaît une fois la refonte terminée, quand toutes les créances naîtront des ventes reçues de Ventes Mata (§6.1).</span></div>
+    <div class="acts"><button class="btn ghost" data-close>Annuler</button><button class="btn pri" data-perm="finance.creances.saisir" data-act="mv-ok"><svg><use href="#i-check"/></svg>Enregistrer</button></div>
+  </div></div>
+
   <!-- Modale : aide contextuelle -->
   <div class="mback" data-ov="help-fin-creances"><div class="modal wide" role="dialog" aria-modal="true" aria-label="Comment ça marche : Créances clients">
     <h3><svg><use href="#i-info"/></svg>Comment ça marche : Créances clients</h3>
@@ -2203,6 +2222,7 @@ ERP.register('fin-fournisseurs', function (root, ctx) {
       <li><b>Sens du montant</b> — positif = le client doit à Mata, négatif = une avance absorbée par ses ventes futures ; seule Touba Viandes est en négatif, à −150 000 (§4.3).</li>
       <li><b>Contrepartie reliée au Référentiel ERP</b> — chaque compte Créance pointe vers un identifiant existant, jamais recréé ici ; MaaS Keur Massar porte entity_id MAAS-KM (§4.5).</li>
       <li><b>Créance créée à 100 %</b> — une vente Mata reçue par API crée aussitôt une créance pour son montant plein ; les Ventes du jour totalisent <span class="amt" data-amt="6200000" data-nocur></span> sur le périmètre affiché (§6.1).</li>
+      <li><b>Saisie manuelle, circuit transitoire</b> — une créance sans vente ou un remboursement sans versement s'enregistre directement sur la position, sans validation : le Directeur des Opérations détient ce droit par défaut, motif obligatoire, auteur et horodatage automatiques, audit de modification. La position bouge aussitôt, ainsi que le total des créances : Restaurant Le Baobab part de <span class="amt" data-amt="2400000" data-nocur></span>. Ce circuit disparaît quand toutes les créances naîtront des ventes reçues de Ventes Mata (§6.1).</li>
       <li><b>« Encaissements collectés » vérifiés à deux sources</b> — un remboursement n'est affecté au compte client que si la somme des déclarations (Source A) égale la déclaration du collecteur (Source B) ; ici <span class="amt" data-amt="4725000" data-nocur></span> = <span class="amt" data-amt="4725000" data-nocur></span>, validé le 27/08 à 02:04 (§6.3).</li>
       <li><b>Réconciliation des ventes du jour</b> — l'écran vérifie que Ventes Mata du jour = Versements + Paiements Bictorys + Créances nettes nouvelles − Remboursements à neutraliser ; <span class="amt" data-amt="6200000" data-nocur></span> = <span class="amt" data-amt="3100000" data-nocur></span> + <span class="amt" data-amt="1250000" data-nocur></span> + <span class="amt" data-amt="2450000" data-nocur></span> − 600 000, écart 0 (§6.4).</li>
     </ul>
@@ -2216,18 +2236,19 @@ ERP.register('fin-creances', function (root, ctx) {
   var $ = function (s, el) { return (el || root).querySelector(s); };
   var $$ = function (s, el) { return Array.prototype.slice.call((el || root).querySelectorAll(s)); };
   var tbody = $('[data-rows]'), emptyRow = $('[data-empty]'), tfoot = $('tfoot'), drawer = $('[data-ov="fin-creances-fiche"]');
-  var sel = $('#fin-creances-acc-cp'), cur = 'tous', isMaas = false, curRef = 'MAAS-KM';
+  var sel = $('#fin-creances-acc-cp'), selMv = $('#fin-creances-mv-cp'), cur = 'tous', isMaas = false, curRef = 'MAAS-KM';
   var rows = function () { return $$('tr[data-ref]', tbody); };
   var num = function (tr, k) { return parseInt(tr.getAttribute('data-' + k), 10) || 0; };
   var fmt = function (n) { return (n < 0 ? '−' : '') + String(Math.abs(n)).replace(/\B(?=(\d{3})+(?!\d))/g, ' '); };
   var setAmt = function (el, v) { if (el) { el.setAttribute('data-amt', v); el.classList.toggle('neg', v < 0); } };
   var denied = function (b) { return !b || b.disabled || b.classList.contains('denied') || b.getAttribute('aria-disabled') === 'true'; };
   var icon = function (n) { return '<svg><use href="#i-' + n + '"/></svg>'; };
+  var esc = function (s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); };
   var mvt = function (id, meta, m) { return '<div class="mvt"><span class="sign ' + (m < 0 ? 'm' : 'p') + '">' + (m < 0 ? '−' : '+') + '</span><div class="tx"><b>' + id + '</b><small>' + meta + '</small></div><span class="amt" data-amt="' + m + '" data-nocur></span></div>'; };
 
   rows().forEach(function (tr) {
-    var o = document.createElement('option'); o.value = tr.getAttribute('data-ref');
-    o.textContent = tr.getAttribute('data-name') + ' · ' + tr.getAttribute('data-ref'); sel.appendChild(o);
+    var ref = tr.getAttribute('data-ref'), lbl = tr.getAttribute('data-name') + ' · ' + ref;
+    [sel, selMv].forEach(function (s) { var o = document.createElement('option'); o.value = ref; o.textContent = lbl; s.appendChild(o); });
   });
 
   function applyFilter() {
@@ -2295,9 +2316,26 @@ ERP.register('fin-creances', function (root, ctx) {
     if (!motif) { ctx.toast('Motif obligatoire : toute écriture manuelle est tracée dans l\'audit'); return; }
     var tr = $('tr[data-ref="' + ref + '"]', tbody), cell = $('td', tr), old = $('[data-acc]', cell), dt = ($('#fin-creances-acc-dt').value || '').split('-').reverse().join('/');
     if (old) old.remove();
-    cell.insertAdjacentHTML('beforeend', '<div data-acc><span class="st warn">' + icon('note') + 'Crédit autorisé jusqu\'à ' + fmt(mt) + ' · valable jusqu\'au ' + dt + '</span> <span class="hint">' + motif + '</span></div>');
+    cell.insertAdjacentHTML('beforeend', '<div data-acc><span class="st warn">' + icon('note') + 'Crédit autorisé jusqu\'à ' + fmt(mt) + ' · valable jusqu\'au ' + dt + '</span> <span class="hint">' + esc(motif) + '</span></div>');
     ctx.close('fin-creances-accorder'); $('#fin-creances-acc-mt').value = ''; $('#fin-creances-acc-mo').value = '';
     ctx.toast('Autorisation de créance enregistrée pour ' + tr.getAttribute('data-name') + ' (plafond ' + fmt(mt) + ' FCFA, jusqu\'au ' + dt + ') · la position n\'évolue qu\'à la réception des ventes par Ventes Mata (§6.1) · tracée dans l\'audit');
+  }
+  /* Saisie manuelle (R-10) : écriture directe sur la position, sans validation, motif obligatoire et
+     audité. Circuit transitoire, retiré quand toutes les créances naîtront de Ventes Mata (§6.1). */
+  function mouvement(btn) {
+    if (denied(btn)) return;
+    var mt = parseInt(($('#fin-creances-mv-mt').value || '').replace(/\D/g, ''), 10), motif = $('#fin-creances-mv-mo').value.trim();
+    if (!mt) { ctx.toast('Montant requis : entier positif en FCFA, sans décimales'); return; }
+    if (!motif) { ctx.toast('Motif obligatoire : toute écriture manuelle est tracée dans l\'audit'); return; }
+    var rb = $('input[name="fin-creances-mv"]:checked').value === 'rembours', lbl = rb ? 'Remboursement' : 'Créance', part = rb ? 'saisi' : 'saisie';
+    var dt = ($('#fin-creances-mv-dt').value || '').split('-').reverse().join('/');
+    var tr = $('tr[data-ref="' + selMv.value + '"]', tbody), pos = num(tr, 'pos') + (rb ? -mt : mt);
+    tr.setAttribute('data-pos', pos); setAmt($('[data-cell="pos"]', tr), pos); ctx.formatAmounts(tr);
+    var cell = $('td', tr), old = $('[data-mv]', cell); if (old) old.remove();
+    cell.insertAdjacentHTML('beforeend', '<div data-mv><span class="st info">' + icon('note') + lbl + ' ' + part + ' · ' + dt + ' · ' + fmt(mt) + '</span> <span class="hint">' + esc(motif) + '</span></div>');
+    applyFilter(); updateKpis();
+    ctx.close('fin-creances-manuel'); $('#fin-creances-mv-mt').value = ''; $('#fin-creances-mv-mo').value = '';
+    ctx.toast(lbl + ' de ' + fmt(mt) + ' FCFA sur ' + tr.getAttribute('data-name') + ' · position portée à ' + fmt(pos) + ' FCFA · écriture directe sans validation (§4.3) · created_at et updated_by automatiques, audit de modification.');
   }
   $$('.chip[data-filter]').forEach(function (c) {
     ctx.on(c, 'click', function () { $$('.chip[data-filter]').forEach(function (x) { x.classList.toggle('on', x === c); }); cur = c.getAttribute('data-filter'); applyFilter(); });
@@ -2307,6 +2345,7 @@ ERP.register('fin-creances', function (root, ctx) {
   ctx.on(bF, 'click', function () { if (denied(bF)) return; ctx.toast('Facture ' + $('[data-d="name"]', drawer).textContent + ' : document généré par le service documentaire commun · disponible 7 jours, régénérable (§5.7, §9.2)'); });
   ctx.on(bO, 'click', function () { if (denied(bO)) return; sel.value = curRef; ctx.close('fin-creances-fiche'); ctx.open('fin-creances-accorder'); });
   ctx.on(bK, 'click', function () { accorder(bK); });
+  var bM = $('[data-act="mv-ok"]'); ctx.on(bM, 'click', function () { mouvement(bM); });
   ctx.on(bX, 'click', function () { if (denied(bX)) return; ctx.toast('Export CSV des positions clients filtrées : service commun d\'export, disponible 7 jours (§9.2) · export audité'); });
   document.addEventListener('erp:profile', function (e) { setView(e.detail && e.detail.id); });
   setView(ctx.profile && typeof ctx.profile === 'object' ? ctx.profile.id : ctx.profile);
@@ -7148,8 +7187,6 @@ ERP.register('core-audit', function (root, ctx) {
     #app [data-scr="core-agents"] .rules li:last-child{border-bottom:none}
     #app [data-scr="core-agents"] .rules b{color:var(--ink)}
     #app [data-scr="core-agents"] .modal .fld{margin-bottom:10px}
-    #app [data-scr="core-agents"] .modal label.rline{display:flex;text-transform:none;letter-spacing:0;font-size:12.5px;font-weight:700;color:var(--ink);margin:0 0 8px}
-    #app [data-scr="core-agents"] .modal .rline .rh{font-weight:500;text-align:right}
     #app [data-scr="core-agents"] .modal .note-strip{margin-top:10px}
     #app [data-scr="core-agents"] .drawer .kv b{max-width:62%}
     #app [data-scr="core-agents"] .drawer h4{font-family:var(--head);font-size:11.5px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-2);margin:16px 0 6px}
@@ -9094,7 +9131,7 @@ var PERSONAS=[
  {id:'sa',user:'Saliou Doucouré',short:'S. Doucouré',av:'SD',profile:'Super Admin',entity:'MG',cat:'Interne — Employé',perms:['core.*','finance.*']},
  {id:'sa-mlc',user:'Saliou Doucouré',short:'S. Doucouré',av:'SD',profile:'Directeur financier MLC',entity:'MLC',cat:'Interne — Employé',perms:[],off:'Entité MLC à migrer : ce profil ne peut pas être activé'},
  {id:'dg',user:'Ousmane Seck',short:'O. Seck',av:'OS',profile:'DG Mata',entity:'MG',cat:'Interne — Employé',perms:['core.entites.view','core.utilisateurs.view','core.demandes.view','core.demandes.valider','core.audit.view','core.agents.view','core.notifications.view','core.alertes.view','core.incidents.view'].concat(VIEW_FIN,['finance.transferts.initier','finance.transferts.valider','finance.validations.agir','finance.ajustements.valider','finance.reconciliation.valider','finance.comptes.desactiver','finance.export','core.export'])},
- {id:'dirops',user:'Fatou Sarr',short:'F. Sarr',av:'FS',profile:'Directeur des Opérations',entity:'MG',cat:'Interne — Employé',perms:VIEW_CORE_BASE.concat(['core.demandes.view','core.demandes.initier','finance.dashboard.view','finance.comptes.view','finance.depenses.view','finance.depenses.creer','finance.depenses.modifier','finance.fournisseurs.view','finance.fournisseurs.payer','finance.creances.view','finance.creances.accorder','finance.creances.facturer','finance.reconciliation.view','finance.transferts.view','finance.transferts.initier','finance.validations.view','finance.pnl.view','finance.charges.view','finance.historique.view','finance.stock.view','finance.declarations.view','finance.declarations.declarer'])},
+ {id:'dirops',user:'Fatou Sarr',short:'F. Sarr',av:'FS',profile:'Directeur des Opérations',entity:'MG',cat:'Interne — Employé',perms:VIEW_CORE_BASE.concat(['core.demandes.view','core.demandes.initier','finance.dashboard.view','finance.comptes.view','finance.depenses.view','finance.depenses.creer','finance.depenses.modifier','finance.fournisseurs.view','finance.fournisseurs.payer','finance.creances.view','finance.creances.accorder','finance.creances.facturer','finance.creances.saisir','finance.reconciliation.view','finance.transferts.view','finance.transferts.initier','finance.validations.view','finance.pnl.view','finance.charges.view','finance.historique.view','finance.stock.view','finance.declarations.view','finance.declarations.declarer'])},
  {id:'caisse',user:'Moussa Diop',short:'M. Diop',av:'MD',profile:'Gestionnaire de caisse',entity:'MG',cat:'Interne — Employé',perms:VIEW_CORE_BASE.concat(['finance.declarations.view','finance.declarations.declarer','finance.comptes.view','finance.depenses.view','finance.depenses.creer','finance.reconciliation.view'])},
  {id:'collecteur',user:'Abdou Ndiaye',short:'A. Ndiaye',av:'AN',profile:'Collecteur',entity:'MG',cat:'Interne — Employé',perms:VIEW_CORE_BASE.concat(['finance.declarations.view','finance.declarations.declarer','finance.reconciliation.view'])},
  {id:'invest',user:'Ibrahima Kane',short:'I. Kane',av:'IK',profile:'Investisseur',entity:'MG',cat:'Externe — Investisseur',perms:['core.notifications.view','finance.dashboard.view','finance.pnl.view','finance.historique.view'],readonly:true},
