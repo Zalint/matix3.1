@@ -29,7 +29,7 @@ Décision : les puces de filtre déjà présentes (Déclarations, Alertes) sont 
 Comportement standard des tableaux de l'application, Mata Core inclus, pas une fonctionnalité d'écran. Filtre par colonne quand il est pertinent, recherche textuelle quand elle est pertinente. Exemple cité : filtrer sur État = OK dans le tableau de réconciliation.
 Correction : le moteur pose une barre au-dessus de chaque tableau d'au moins 5 lignes, hors tiroirs et modales, avec une recherche plein texte, un menu par colonne filtrable et le compte des lignes affichées. Une colonne est retenue si elle porte de 2 à 10 valeurs distinctes, courtes, sans montant ni bouton ; `<th data-nofilter>` l'exclut explicitement. La valeur de filtre d'une cellule est son statut ou son étiquette, sinon son texte principal débarrassé des qualificatifs `.hint` et `small`.
 Les deux mécanismes de filtrage cohabitent sans se marcher dessus : les écrans continuent d'écrire `tr.hidden` pour leurs puces, la barre passe par la classe `f-out`, et une ligne s'affiche si aucun des deux ne l'écarte. Les puces existantes sont donc conservées comme raccourcis, conformément à l'arbitrage.
-Résultat : 21 écrans sur 27 reçoivent une barre, 65 filtres de colonne au total. Vérifié en 1440 et 375, thèmes clair et sombre : recherche, filtre, combinaison des deux, réinitialisation, recalcul du plafond de hauteur de R-02, aucun débordement horizontal, aucune erreur JS.
+Résultat : 21 écrans sur 27 reçoivent une barre, 27 barres et 72 filtres de colonne au total. Vérifié en 1440 et 375, thèmes clair et sombre : recherche, filtre, combinaison des deux, réinitialisation, recalcul du plafond de hauteur de R-02, aucun débordement horizontal, aucune erreur JS.
 À noter sur l'exemple cité : la colonne État du tableau des sources de Réconciliation ne reçoit pas de filtre, ses 7 lignes valant toutes « OK ». Filtrer une colonne à valeur unique n'apporte rien. Le second tableau du même écran reçoit bien un filtre « Statut », et l'écran Fournisseurs un filtre « État ».
 
 ### Pédagogie de la maquette, à retirer en production
@@ -130,13 +130,44 @@ Option 2 retenue : retirer les permissions de consultation aurait empêché ces 
 
 Le comptage initial de 61 occurrences était trompeur. Un périmètre déjà réconcilié n'a plus rien de secret : le déclarant connaît son propre chiffre et sait qu'il correspondait. Sous-caisse Livraisons et les positions AGNEAUX, MATA VOLAILLE CHAIR et MATA VOLAILLE ŒUFS sortent donc du périmètre. Il ne reste réellement secrets que la Caisse générale et la Sous-caisse Marché pour M. Diop, Bétail Thiès et Abattoirs Dakar pour F. Sarr, et la Source A pour le collecteur.
 
-Correction : mécanisme transverse `data-blind="<périmètre>"` dans le moteur, 41 marques posées sur Réconciliation, Comptes, Dépenses, Fournisseurs, Tableau de bord, P&L, Notifications et Incidents. Le cache passe par une classe, jamais en remplaçant le contenu : les scripts d'écran continuent d'écrire dans leurs nœuds, ce qui évitait un plantage au prochain paiement fournisseur, et le contenu réapparaît intact au changement de profil. `applyBlind` est appelé après l'événement `erp:profile`, faute de quoi un écran qui se re-rend effaçait le cache posé avant lui. La cloche de notifications masque le montant de l'écart au déclarant du périmètre concerné, en gardant le fait qu'un écart existe.
+Correction : mécanisme transverse `data-blind="<périmètre>"` dans le moteur, 24 marques posées sur Comptes, Dépenses, Fournisseurs, Tableau de bord, P&L, Notifications et Incidents, auxquelles s'ajoutent les 19 marques du mécanisme local déjà présent sur Réconciliation, qui indexe par profil et non par périmètre. Le cache passe par une classe, jamais en remplaçant le contenu : les scripts d'écran continuent d'écrire dans leurs nœuds, ce qui évitait un plantage au prochain paiement fournisseur, et le contenu réapparaît intact au changement de profil. `applyBlind` est appelé après l'événement `erp:profile`, faute de quoi un écran qui se re-rend effaçait le cache posé avant lui. La cloche de notifications masque le montant de l'écart au déclarant du périmètre concerné, en gardant le fait qu'un écart existe.
 
 Quatre textes d'écran promettaient encore que le montant réapparaît après déclaration, reste de la règle d'avant l'arbitrage R-06. Ils sont réécrits.
 
 Vérifié dans Chromium, profil par profil, en parcourant tous les écrans accessibles : aucun montant système visible pour le gestionnaire de caisse, le directeur des opérations et le collecteur ; le Super Admin garde tout ; un paiement fournisseur ne provoque plus d'erreur ; le cache tient au changement de profil sans quitter l'écran.
 
 ---
+
+## Revues avant merge (PR #1)
+
+Trois revues indépendantes en contexte vierge, exigées par `CLAUDE.md` : ce lot dépasse 300 lignes, touche les permissions et la réconciliation, et modifie le contrat.
+
+**Corrigé à la suite des revues :**
+
+| Constat | Correction |
+|---|---|
+| Fournisseurs : la dette et son pourcentage réaffichaient la position masquée de Bétail Thiès | `blind()` masque aussi `[data-enc]`, `[data-pct]` et la barre d'encours |
+| Fournisseurs : l'avance d'Abattoirs Dakar restait en clair dans le bandeau | La carte entière porte la marque, plus seulement son infobulle |
+| Accueil : la tuile « Écart Sous-caisse Marché −25 000 » s'affichait au déclarant du périmètre | Texte aveuglé comme celui de la cloche |
+| La ligne « aucun résultat » se comptait elle-même : compteur faux, message qui restait ouvert après réinitialisation | `visibleRows` l'exclut, et la ligne suit le nombre réel, filtre actif ou non |
+| Décocher les cinq séries du graphique en redessinait deux | Aucune case cochée n'affiche aucune courbe ; le repli sur `data-series` ne vaut que si l'écran n'a aucune case |
+| La valeur de filtre d'une cellule était mémorisée sans invalidation : filtre faux dès qu'un écran réécrivait la cellule | Cache retiré, les tableaux sont assez courts |
+| Options de filtre collées, « ANAbdou Ndiaye » | L'avatar `.av` est retiré comme `.hint` et `small` |
+| Témoins de couleur parasites sur Visualisation, qui dessine déjà les siens | Les témoins ne se posent que dans un `.serpick` |
+| Bandeau Fournisseurs du tableau de bord à 2 cartes dans une grille de 3 | `.statstrip two` |
+| Le ratio du KPI Créances était figé en dur et mentait après une écriture manuelle | Recalculé à chaque mouvement |
+| Une écriture manuelle de 9 000 000 ne déclenchait aucune alerte | Au-delà du seuil d'ajustement inhabituel, l'alerte critique non désactivable est annoncée, sans bloquer la saisie |
+| Références au cahier posées sur des décisions de périmètre : `(§4.3)` sur l'écriture directe, `(§6.1)` sur le circuit transitoire, `(§3)` sur « ni avant ni après » alors que le cahier ne couvre que l'avant | Citations qualifiées « durci en V1 » ou « décision de périmètre V1, hors cahier » ; la pastille générée ne cite plus de paragraphe |
+| Deux textes de Fournisseurs promettaient encore la révélation après déclaration | Réécrits |
+| Clé de périmètre `srca` morte, laissant croire que le collecteur était couvert par le mécanisme transverse | Retirée, avec la raison en commentaire |
+| Contrat non mis à jour pour les sept mécanismes transverses ajoutés | Nouvelle section §5a |
+| Chiffres faux dans ce suivi : 65 filtres au lieu de 72, 41 marques mélangeant deux mécanismes | Recomptés |
+
+**Constats laissés ouverts, à trancher :**
+
+1. **Déduction par soustraction.** Le Directeur des Opérations voit les cinq indicateurs de tête et la décomposition du P&L. Position financière nette, trésorerie totale, créances, dettes et avances clients étant toutes visibles, l'avance d'Abattoirs Dakar se retrouve par soustraction ; de même la dette de Bétail Thiès se déduit du total des dettes moins les quatre autres fournisseurs, tous visibles. Masquer un champ ne suffit pas quand l'agrégat qui le contient reste affiché. Trois issues : retirer le tableau de bord et le P&L aux profils déclarants, masquer les agrégats concernés tant qu'une déclaration est attendue, ou accepter la déduction et l'écrire. La question rejoint le point 1 des questions de revue de `AMBIGUITES_PANEL.md`, resté ouvert.
+2. **Échéancier fournisseur.** Les deux tranches de Bétail Thiès, 1 600 000 et 3 000 000, redonnent sa position. Les masquer prive le Directeur des Opérations de la planification des paiements, qui est son métier. Même arbitrage que le point 1.
+3. **R-10 codé avant validation du DG.** `CLAUDE.md` demande la validation de Saliou et d'Ousmane avant toute ligne de code. Saliou a arbitré le 10/09, Ousmane n'a pas vu R-06 ni R-10.
 
 ## Arbitrages rendus
 

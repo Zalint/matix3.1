@@ -371,7 +371,7 @@ svg{display:block;flex:none}
 #app [data-blind].blinded{font-size:0;color:transparent}
 #app [data-blind].blinded>*{display:none!important}
 #app [data-blind].blinded[data-blind-lbl]::after{content:attr(data-blind-lbl);background:none;padding:0}
-#app [data-blind].blinded::after{content:"Masqué (§3)";display:inline-block;font-family:var(--body);font-size:10.5px;font-weight:700;letter-spacing:.02em;line-height:1.6;background:var(--card-3);color:var(--ink-2);border-radius:6px;padding:1px 8px;white-space:nowrap}
+#app [data-blind].blinded::after{content:"Masqué";display:inline-block;font-family:var(--body);font-size:10.5px;font-weight:700;letter-spacing:.02em;line-height:1.6;background:var(--card-3);color:var(--ink-2);border-radius:6px;padding:1px 8px;white-space:nowrap}
 /* Vue production (R-04, R-05) : la maquette porte une pédagogie qui n'est pas livrée, les
    panneaux « Comment ça marche ? », les paragraphes d'explication en tête d'écran et les blocs
    qui décrivent la maquette elle-même. Les explications fonctionnelles restent dans les
@@ -952,7 +952,7 @@ svg{display:block;flex:none}
         <div class="card stat"><div class="lb">Prochaine date de paiement due<button class="fx" data-f="Le Dashboard affiche en priorité les échéances déjà dépassées, puis la prochaine date de paiement due et le montant total correspondant." data-c="02/09/2026 · Bétail Thiès · Lot AG-260820-01 · 1 600 000 · compte de paiement de référence : Caisse générale" data-src="Échéancier fournisseurs (§5.6) · paiements affectés par défaut aux échéances les plus proches (§5.3)" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></div><div class="v amt" data-amt="1600000"></div><div class="sub2">02/09/2026 · Bétail Thiès · lot AG-260820-01 · compte de paiement de référence : Caisse générale</div></div>
         <div class="card stat"><div class="lb">Encours AGNEAUX / plafond<button class="fx" data-f="La dette utilisée pour ce contrôle est : max(0 ; − Position fournisseur)." data-c="AGNEAUX : max(0 ; 12 400 000) = 12 400 000 · plafond 10 000 000 · 124 %" data-src="§5.4 · alerte informative 15:24 (Directeur des Opérations, DG) · aucun blocage de la saisie en V1" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></div><div class="v amt" data-amt="12400000"></div><div class="encbar"><i class="over" style="width:100%"></i></div><div class="sub2">plafond <span class="amt" data-amt="10000000" data-nocur></span> · 124 % · alerte informative, aucun blocage en V1 (§5.4)</div></div>
       </div>
-      <div class="statstrip">
+      <div class="statstrip two">
         <div class="card stat"><div class="lb">Dettes fournisseurs<span data-blind="f4"><button class="fx" data-f="Σ max(− Position fournisseur ; 0)." data-c="AGNEAUX 12 400 000 · MATA VOLAILLE CHAIR 4 300 000 · Bétail Thiès 4 600 000 · MATA VOLAILLE ŒUFS 1 150 000 · Aliments Sénégal 800 000" data-src="Comptes Fournisseur CALCULÉ · Position fournisseur = Position précédente + Paiements/avances − Dépenses ± Ajustements validés (§4.3)" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></span></div><div class="v amt" data-amt="23250000"></div><div class="sub2" data-ratio-of="23250000">5,1 % du CA de référence · août au 27</div></div>
         <div class="card stat"><div class="lb">Avances fournisseurs<span data-blind="f5"><button class="fx" data-f="Σ max(Position fournisseur ; 0)." data-c="Abattoirs Dakar +350 000" data-src="Comptes Fournisseur CALCULÉ · une avance est consommée par les achats futurs avant toute dette (§4.3)" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></span></div><div data-blind="f5"><div class="v amt" data-amt="350000"></div></div><div class="sub2">Abattoirs Dakar · réconciliation en attente (frais d’abattage <span class="amt" data-amt="150000" data-nocur></span>)</div></div>
       </div>
@@ -1825,7 +1825,7 @@ ERP.register('fin-depenses', function (root, ctx) {
 
   <div class="statstrip four">
     <div class="card stat"><div class="lb">Dettes fournisseurs<span data-blind="f4"><button class="fx" data-f="Dettes fournisseurs = Σ max(− Position fournisseur ; 0)" data-c="AGNEAUX 12 400 000 · MATA VOLAILLE CHAIR 4 300 000 · MATA VOLAILLE ŒUFS 1 150 000 · Bétail Thiès 4 600 000 · Aliments Sénégal 800 000" data-src="Moteur financier · 6 comptes Fournisseur CALCULÉ · import Achat 27/08 17:00 (5 achats, 0 doublon)" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></span></div><div class="v amt" data-amt="23250000" data-kpi="dettes"></div><div class="sub2">5,1 % du CA de référence (août, au 27) · 5 fournisseurs à payer</div></div>
-    <div class="card stat"><div class="lb">Avances fournisseurs<span data-blind="f5"><button class="fx" data-f="Avances fournisseurs = Σ max(Position fournisseur ; 0)" data-c="Abattoirs Dakar +350 000" data-src="Moteur financier · compte F5 CALCULÉ · réconciliation du jour en attente" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></span></div><div class="v amt" data-amt="350000" data-kpi="avances"></div><div class="sub2">Abattoirs Dakar · consommée par les achats futurs avant toute dette (§4.3)</div></div>
+    <div class="card stat" data-blind="f5"><div class="lb">Avances fournisseurs<span><button class="fx" data-f="Avances fournisseurs = Σ max(Position fournisseur ; 0)" data-c="Abattoirs Dakar +350 000" data-src="Moteur financier · compte F5 CALCULÉ · réconciliation du jour en attente" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></span></div><div class="v amt" data-amt="350000" data-kpi="avances"></div><div class="sub2">Abattoirs Dakar · consommée par les achats futurs avant toute dette (§4.3)</div></div>
     <div class="card stat"><div class="lb">Échéances dépassées <span class="st bad" data-kpi-depn>2</span><button class="fx" data-f="Échéances dépassées = Σ montant restant des dépenses ou lots impayés dont la date de paiement souhaitée au plus tard est dépassée (§5.3, §5.6)" data-c="MATA VOLAILLE ŒUFS 1 150 000 (25/08/2026, 2 j) · Aliments Sénégal 800 000 (20/08/2026, 7 j)" data-src="Échéancier fournisseurs · date de référence 27/08/2026 · notification Directeur des Opérations 17:30" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></div><div class="v amt" data-amt="1950000" data-kpi="dep"></div><div class="sub2">Affichées en priorité (§5.6) · alerte « Échéance fournisseur dépassée » : haute</div></div>
     <div class="card stat"><div class="lb">Prochaine échéance<button class="fx" data-f="Prochaine date de paiement due et montant total correspondant (§5.6)" data-c="Bétail Thiès · Lot AG-260820-01 · 1 600 000 · 02/09/2026" data-src="Échéancier fournisseurs · compte de paiement de référence Caisse générale" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></div><div class="v" data-kpi-next>02/09 · <span class="amt" data-amt="1600000" data-nocur></span></div><div class="sub2" data-kpi-next-sub>Bétail Thiès · Lot AG-260820-01 · Caisse générale · dans 6 jours</div></div>
   </div>
@@ -1904,7 +1904,7 @@ ERP.register('fin-depenses', function (root, ctx) {
 
     <div class="card enc" data-fourn="F4" data-flt="dette att">
       <div class="h"><h4>Bétail Thiès <span class="hint">F4 · Achat agneau</span></h4><span class="st ok" data-plst><svg><use href="#i-check"/></svg>Sous plafond</span></div>
-      <div class="cap"><span>Position fournisseur<button class="fx" data-f="Position fournisseur = Position précédente + Paiements/avances − Dépenses ± Ajustements validés" data-c="Dernière position réconciliée + Paiements/avances 0 − Dépenses du jour 262 000 (Achat agneau, lot AG-260827-02, Achat API) ± Ajustements validés 0 · résultat visible après la déclaration en aveugle" data-src="Compte F4 · Fournisseur · CALCULÉ · import Achat 27/08 17:00 · réconciliation du jour en attente" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></span><span class="amt" data-amt="-4600000" data-pos></span></div>
+      <div class="cap"><span>Position fournisseur<button class="fx" data-f="Position fournisseur = Position précédente + Paiements/avances − Dépenses ± Ajustements validés" data-c="Dernière position réconciliée + Paiements/avances 0 − Dépenses du jour 262 000 (Achat agneau, lot AG-260827-02, Achat API) ± Ajustements validés 0 · statut seul après la déclaration, sans le montant système en aveugle" data-src="Compte F4 · Fournisseur · CALCULÉ · import Achat 27/08 17:00 · réconciliation du jour en attente" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></span><span class="amt" data-amt="-4600000" data-pos></span></div>
       <div class="cap"><span>Dette / plafond d'encours<button class="fx" data-f="Dette utilisée pour le contrôle du plafond = max(0 ; − Position fournisseur)" data-c="max(0 ; 4 600 000) = 4 600 000 · plafond 6 000 000 · 77 %" data-src="§5.4" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></span><span><span class="amt" data-amt="4600000" data-nocur data-enc data-plafond="6000000"></span> / <span class="amt" data-amt="6000000" data-nocur></span> · <b data-pct>77 %</b></span></div>
       <div class="encbar"><i class="hot" style="width:77%"></i></div>
       <div class="fld"><label for="fin-fournisseurs-ref-F4">Compte de paiement de référence</label><select id="fin-fournisseurs-ref-F4" class="inp" data-ref data-perm="finance.fournisseurs.payer"><option selected>Caisse générale</option><option>Sous-caisse Marché</option><option>Sous-caisse Livraisons</option><option>Banque BOA</option></select><span class="hint">Trésorerie ou Position externe · ne réécrit aucun paiement historique (§4.4)</span></div>
@@ -2107,8 +2107,11 @@ ERP.register('fin-fournisseurs', function (root, ctx) {
     var isDecl = ctx.profile.id === 'dirops';
     ['F4', 'F5'].forEach(function (id) {
       var c = card(id), p = q('[data-pos]', c), m = q('[data-mask]', c);
-      if (isDecl && !m) p.insertAdjacentHTML('afterend', '<span class="maskbox" data-mask><svg><use href="#i-lock"/></svg>Position <span class="dots">••••••••</span> masquée jusqu\'à votre déclaration (§5.5)</span>'); else if (!isDecl && m) m.remove();
+      if (isDecl && !m) p.insertAdjacentHTML('afterend', '<span class="maskbox" data-mask><svg><use href="#i-lock"/></svg>Position <span class="dots">••••••••</span> jamais affichée, ni avant ni après (§3 durci en V1, §5.5)</span>'); else if (!isDecl && m) m.remove();
       p.hidden = isDecl; qa('.fx', c).forEach(function (b) { b.hidden = isDecl; });
+      /* dette = max(0 ; −position) et son pourcentage redonnent la position masquée : les cacher aussi.
+         On masque sans retirer les nœuds, recalc() continue d'y écrire. */
+      ['[data-enc]', '[data-pct]', '.encbar'].forEach(function (s) { var e = q(s, c); if (e) e.hidden = isDecl; });
     });
   }
   document.addEventListener('erp:profile', blind);
@@ -2141,7 +2144,7 @@ ERP.register('fin-fournisseurs', function (root, ctx) {
     <div class="card stat">
       <div class="lb">Créances clients<button class="fx" data-f="Créances clients = Σ max(Position client ; 0)" data-c="MaaS Keur Massar 3 250 000 · MaaS Ouakam 2 870 000 · MaaS Pikine 1 985 000 · Restaurant Le Baobab 2 400 000 · Boucherie des Almadies 1 730 000 · 9 autres MaaS 7 840 000 · Touba Viandes exclu (position négative)" data-src="Moteur financier · 15 comptes Créance client CALCULÉ · 27/08/2026 · compte Ajustement exclu (§8.1)" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></div>
       <div class="v amt" data-amt="20075000" data-kpi="cre"></div>
-      <div class="sub2">4,4 % du CA de référence (CA Mata août au 27 : <span class="amt" data-amt="452000000" data-nocur></span>)</div>
+      <div class="sub2"><span data-ratio="cre">4,4</span> % du CA de référence (CA Mata août au 27 : <span class="amt" data-amt="452000000" data-nocur></span>)</div>
     </div>
     <div class="card stat">
       <div class="lb">Avances clients<button class="fx" data-f="Avances clients = Σ max(− Position client ; 0)" data-c="Touba Viandes 150 000 (position −150 000)" data-src="Moteur financier · comptes Créance client CALCULÉ · 27/08/2026" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></div>
@@ -2268,7 +2271,8 @@ ERP.register('fin-fournisseurs', function (root, ctx) {
     <div class="fld" style="margin-top:10px"><label for="fin-creances-mv-mt">Montant (FCFA, entier positif, sans décimales)</label><input id="fin-creances-mv-mt" class="inp mono" inputmode="numeric" placeholder="0"></div>
     <div class="fld" style="margin-top:10px"><label for="fin-creances-mv-dt">Date métier</label><input id="fin-creances-mv-dt" class="inp mono" type="date" value="2026-08-27"></div>
     <div class="fld" style="margin-top:10px"><label for="fin-creances-mv-mo">Motif (obligatoire, audité)</label><input id="fin-creances-mv-mo" class="inp" placeholder="Ex. régularisation d'une livraison hors circuit Ventes Mata"></div>
-    <div class="note-strip" style="margin-top:12px"><svg><use href="#i-clock"/></svg><span><b>Circuit transitoire.</b> Il disparaît une fois la refonte terminée, quand toutes les créances naîtront des ventes reçues de Ventes Mata (§6.1).</span></div>
+    <div class="note-strip"><svg><use href="#i-alert"/></svg><span>Au-delà du seuil d'ajustement inhabituel, <span class="amt" data-amt="500000" data-nocur></span> par écriture ou 3 par jour, l'alerte critique non désactivable part au DG et au Super Admin. Elle ne bloque pas la saisie.</span></div>
+    <div class="note-strip" style="margin-top:10px"><svg><use href="#i-clock"/></svg><span><b>Circuit transitoire.</b> Décision de périmètre V1, hors cahier. Il disparaît une fois la refonte terminée, quand toutes les créances naîtront des ventes reçues de Ventes Mata, seule origine prévue par le cahier (§6.1).</span></div>
     <div class="acts"><button class="btn ghost" data-close>Annuler</button><button class="btn pri" data-perm="finance.creances.saisir" data-act="mv-ok"><svg><use href="#i-check"/></svg>Enregistrer</button></div>
   </div></div>
 
@@ -2303,7 +2307,7 @@ ERP.register('fin-creances', function (root, ctx) {
   var denied = function (b) { return !b || b.disabled || b.classList.contains('denied') || b.getAttribute('aria-disabled') === 'true'; };
   var icon = function (n) { return '<svg><use href="#i-' + n + '"/></svg>'; };
   var esc = function (s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); };
-  var mvt = function (id, meta, m) { return '<div class="mvt"><span class="sign ' + (m < 0 ? 'm' : 'p') + '">' + (m < 0 ? '−' : '+') + '</span><div class="tx"><b>' + id + '</b><small>' + meta + '</small></div><span class="amt" data-amt="' + m + '" data-nocur></span></div>'; };
+  var ratio = function (v) { var r = $('[data-ratio="cre"]'); if (r) r.textContent = (v / 452000000 * 100).toFixed(1).replace('.', ','); }, mvt = function (id, meta, m) { return '<div class="mvt"><span class="sign ' + (m < 0 ? 'm' : 'p') + '">' + (m < 0 ? '−' : '+') + '</span><div class="tx"><b>' + id + '</b><small>' + meta + '</small></div><span class="amt" data-amt="' + m + '" data-nocur></span></div>'; };
 
   rows().forEach(function (tr) {
     var ref = tr.getAttribute('data-ref'), lbl = tr.getAttribute('data-name') + ' · ' + ref;
@@ -2328,7 +2332,7 @@ ERP.register('fin-creances', function (root, ctx) {
   function updateKpis() {
     var cre = 0, adv = 0;
     rows().forEach(function (tr) { var p = num(tr, 'pos'); cre += Math.max(p, 0); adv += Math.max(-p, 0); });
-    setAmt($('[data-kpi="cre"]'), cre); setAmt($('[data-kpi="adv"]'), adv);
+    setAmt($('[data-kpi="cre"]'), cre); setAmt($('[data-kpi="adv"]'), adv); ratio(cre);
     setAmt($('[data-kpi="km"]'), num($('tr[data-ref="MAAS-KM"]', tbody), 'pos'));
     $$('.statstrip').forEach(function (s) { ctx.formatAmounts(s); });
   }
@@ -2395,7 +2399,7 @@ ERP.register('fin-creances', function (root, ctx) {
     cell.insertAdjacentHTML('beforeend', '<div data-mv><span class="st info">' + icon('note') + lbl + ' ' + part + ' · ' + dt + ' · ' + fmt(mt) + '</span> <span class="hint">' + esc(motif) + '</span></div>');
     applyFilter(); updateKpis();
     ctx.close('fin-creances-manuel'); $('#fin-creances-mv-mt').value = ''; $('#fin-creances-mv-mo').value = '';
-    ctx.toast(lbl + ' de ' + fmt(mt) + ' FCFA sur ' + tr.getAttribute('data-name') + ' · position portée à ' + fmt(pos) + ' FCFA · écriture directe sans validation (§4.3) · created_at et updated_by automatiques, audit de modification.');
+    ctx.toast(lbl + ' de ' + fmt(mt) + ' FCFA sur ' + tr.getAttribute('data-name') + ' · position portée à ' + fmt(pos) + ' FCFA · écriture directe sans validation, circuit transitoire V1 · created_at et updated_by automatiques, audit de modification.' + (mt > 500000 ? ' Au-delà du seuil de ' + fmt(500000) + ' FCFA : alerte « Ajustement inhabituel » au DG et au Super Admin (critique, non désactivable).' : ''));
   }
   $$('.chip[data-filter]').forEach(function (c) {
     ctx.on(c, 'click', function () { $$('.chip[data-filter]').forEach(function (x) { x.classList.toggle('on', x === c); }); cur = c.getAttribute('data-filter'); applyFilter(); });
@@ -2644,7 +2648,7 @@ ERP.register('fin-creances', function (root, ctx) {
       <li><b>Position théorique des Fournisseurs</b> — recalculée à partir de la dernière position réconciliée, des paiements/avances et des dépenses. AGNEAUX (F1) passe à <span class="amt" data-amt="-12400000" data-nocur></span> FCFA après l'achat du jour, validé sans écart ; les 6 fournisseurs se répartissent en 3 validés, 2 en attente, 1 sans mouvement (§5.5).</li>
       <li><b>Fraîcheur des sources</b> — le bandeau affiche 7 sources à l'état OK (Ventes Mata 20:30, Bictorys 08:12…) ; une source Manquante, en Erreur ou Non à jour bloquerait l'auto-validation mais resterait visible avec son horodatage (§6.5).</li>
     </ul>
-    <div class="note-strip"><svg><use href="#i-shield"/></svg>Réconciliation en aveugle : le solde théorique et l'écart ne vous sont jamais affichés sur un périmètre que vous devez déclarer, ni avant ni après votre déclaration (§3). Les périmètres dont vous n'êtes pas le déclarant restent visibles.</div>
+    <div class="note-strip"><svg><use href="#i-shield"/></svg>Réconciliation en aveugle : le solde théorique et l'écart ne vous sont jamais affichés sur un périmètre que vous devez déclarer, ni avant ni après votre déclaration (§3, durci en V1). Les périmètres dont vous n'êtes pas le déclarant restent visibles.</div>
     <div class="hint">Sources : Cahier Mata Finance §3.1, §4.8, §5.5, §6.3, §6.4, §6.5</div>
     <div class="acts"><button class="btn ghost" data-close>Fermer</button></div>
   </div></div>
@@ -2828,7 +2832,7 @@ ERP.register('fin-reconciliation', function (root, ctx) {
         <div class="ch"><h3>Caisse générale</h3><span data-st-head="cg"><span class="st mut"><svg><use href="#i-eyeoff"/></svg>À déclarer</span></span><span class="hint-r">CG · Trésorerie · CALCULÉ · a bougé aujourd'hui · dernière réconciliation 26/08</span></div>
         <div class="cb">
           <div data-form="cg">
-            <div class="maskbox"><svg><use href="#i-lock"/></svg>Solde système <span class="dots">••••••••</span> jamais affiché, ni avant ni après votre déclaration (§3)</div>
+            <div class="maskbox"><svg><use href="#i-lock"/></svg>Solde système <span class="dots">••••••••</span> jamais affiché, ni avant ni après votre déclaration (§3, durci en V1)</div>
             <div class="declform">
               <div class="fld"><label for="fin-declarations-cg-montant">Solde réellement détenu (compté)</label><input id="fin-declarations-cg-montant" class="inp mono" inputmode="numeric" placeholder="Montant compté, FCFA sans décimales" data-inp="cg"></div>
               <div class="fld"><label for="fin-declarations-cg-note">Commentaire (facultatif)</label><input id="fin-declarations-cg-note" class="inp" placeholder="Ex. : comptage à deux, coffre vérifié"></div>
@@ -2838,7 +2842,7 @@ ERP.register('fin-reconciliation', function (root, ctx) {
           </div>
           <div data-res="cg" hidden>
             <div class="declres two"><div><div class="k">Votre déclaration</div><div class="val" data-r-decl></div></div><div><div class="k">Statut</div><div class="val sm" data-r-st></div></div></div>
-            <div class="maskbox" style="margin-top:10px"><svg><use href="#i-lock"/></svg>Solde système et écart <span class="dots">••••••••</span> jamais affichés au déclarant, ni avant ni après (§3)</div>
+            <div class="maskbox" style="margin-top:10px"><svg><use href="#i-lock"/></svg>Solde système et écart <span class="dots">••••••••</span> jamais affichés au déclarant, ni avant ni après (§3, durci en V1)</div>
             <div class="actionbar"><span class="hint" data-after-ok>Votre déclaration est égale au solde système : le compte est réconcilié. Le montant comparé ne vous est pas communiqué (§3).</span><span class="hint" data-after-ko hidden>Votre déclaration diffère du solde système : le compte reste « À réconcilier » et l'écart est investigué par l'Admin, le DG et le Collecteur, seuls destinataires du montant. Une correction éventuelle passe par Ajustement (motif obligatoire, deux validateurs distincts, §4.7).</span><div class="sp"></div><button class="btn ghost" data-goto="fin-reconciliation" data-after-ko hidden><svg><use href="#i-search"/></svg>Investiguer</button><button class="btn pri" data-perm="finance.ajustements.initier" data-goto="fin-reconciliation" data-after-ko hidden><svg><use href="#i-scale"/></svg>Corriger par Ajustement</button></div>
           </div>
         </div>
@@ -2873,7 +2877,7 @@ ERP.register('fin-reconciliation', function (root, ctx) {
       <div class="cb">
         <div class="fcode" style="margin-top:0">Somme des versements déclarés = Montant déclaré par le collecteur</div>
         <div data-form="collecte">
-          <div class="maskbox" style="margin-top:12px"><svg><use href="#i-lock"/></svg>Source A · Σ des 12 déclarations MaaS <span class="dots">••••••••</span> jamais affichée, ni avant ni après votre déclaration (§3)</div>
+          <div class="maskbox" style="margin-top:12px"><svg><use href="#i-lock"/></svg>Source A · Σ des 12 déclarations MaaS <span class="dots">••••••••</span> jamais affichée, ni avant ni après votre déclaration (§3, durci en V1)</div>
           <div class="declform">
             <div class="fld"><label for="fin-declarations-col-montant">Montant total collecté (Source B)</label><input id="fin-declarations-col-montant" class="inp mono" inputmode="numeric" placeholder="Montant remis en Caisse, FCFA" data-inp="collecte"></div>
             <div class="fld"><label for="fin-declarations-col-date">Date métier de la collecte · 12 MaaS</label><input id="fin-declarations-col-date" class="inp" value="27/08/2026" disabled></div>
@@ -2883,7 +2887,7 @@ ERP.register('fin-reconciliation', function (root, ctx) {
         </div>
         <div data-res="collecte" hidden>
           <div class="declres two" style="margin-top:12px"><div><div class="k">Source B · votre déclaration</div><div class="val" data-r-decl></div></div><div><div class="k">Statut</div><div class="val sm" data-r-st></div></div></div>
-          <div class="maskbox" style="margin-top:10px"><svg><use href="#i-lock"/></svg>Source A et écart <span class="dots">••••••••</span> jamais affichés à la Source B, ni avant ni après (§3, §6.3)</div>
+          <div class="maskbox" style="margin-top:10px"><svg><use href="#i-lock"/></svg>Source A et écart <span class="dots">••••••••</span> jamais affichés à la Source B, ni avant ni après (§3 durci en V1, §6.3)</div>
           <div class="actionbar"><span class="hint" data-after-ok>Les deux sources concordent : la collecte sera validée automatiquement vers 02:00, la Caisse générale créditée et les remboursements affectés aux 12 comptes clients MaaS. Le montant de la Source A ne vous est pas communiqué (§3, §6.3).</span><span class="hint" data-after-ko hidden>Les deux sources divergent : aucune auto-validation possible, la collecte reste ouverte. Le montant de l'écart part à l'Admin et au DG (règle critique non désactivable) et l'investigation est menée hors de votre vue.</span><div class="sp"></div><button class="btn ghost" data-goto="fin-reconciliation" data-after-ko hidden><svg><use href="#i-search"/></svg>Investiguer</button></div>
         </div>
       </div>
@@ -2926,7 +2930,7 @@ ERP.register('fin-reconciliation', function (root, ctx) {
       <div class="ch"><h3>Sous-caisse Livraisons</h3><span class="st ok"><svg><use href="#i-check"/></svg>Réconciliée 20:48</span><span class="hint-r">SCL · Trésorerie · déclarée par F. Sarr · solde système et écart jamais affichés au déclarant (§3)</span></div>
       <div class="cb">
         <div class="declres two"><div><div class="k">Votre déclaration</div><div class="val"><span class="amt" data-amt="640000" data-nocur></span></div></div><div><div class="k">Statut</div><div class="val sm">Réconciliée</div></div></div>
-        <div class="maskbox" style="margin-top:10px"><svg><use href="#i-lock"/></svg>Solde système et écart <span class="dots">••••••••</span> jamais affichés au déclarant, ni avant ni après (§3)</div>
+        <div class="maskbox" style="margin-top:10px"><svg><use href="#i-lock"/></svg>Solde système et écart <span class="dots">••••••••</span> jamais affichés au déclarant, ni avant ni après (§3, durci en V1)</div>
         <div class="note-strip" style="margin-top:12px"><svg><use href="#i-alert"/></svg><span><b>Clôture du périmètre suspendue.</b> La dépense « Pas sûr » Carburant véhicule livraison (<span class="amt" data-amt="85000" data-nocur></span>, montant payé inconnu) bloque uniquement le périmètre Sous-caisse Livraisons ; notification à 23:00 au Directeur des Opérations, aux Admins et au Super Admin si non résolue (§5.1).</span></div>
         <div class="actionbar"><div class="sp"></div><button class="btn ghost" data-goto="fin-depenses" data-perm="finance.depenses.modifier"><svg><use href="#i-receipt"/></svg>Résoudre la dépense « Pas sûr »</button></div>
       </div>
@@ -9307,7 +9311,7 @@ function tallOne(w){
   var n=tb?visibleRows(tb).length:0;
   w.classList.toggle('tall',n>TALL_MIN);
 }
-function visibleRows(tb){return $$('tr',tb).filter(function(r){return !r.hidden&&!r.classList.contains('f-out');});}
+function visibleRows(tb){return $$('tr',tb).filter(function(r){return !r.hidden&&!r.classList.contains('f-out')&&!r.hasAttribute('data-empty');});}
 
 /* ===== Filtre par colonne et recherche (R-03) =====
    Comportement standard de tous les tableaux, Mata Core compris. Les ecrans continuent
@@ -9321,11 +9325,10 @@ function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp
    principal debarrasse de ses qualificatifs .hint et small, que textContent collerait au
    libelle (« Créance client » + « MaaS » donnait « Créance clientMaaS »). Memorisee sur le noeud. */
 function cellVal(td){
-  if(td._fv!=null)return td._fv;
   var t=td.querySelector('.st,.tag'),v;
   if(t)v=t.textContent;
-  else{var c=td.cloneNode(true);$$('.hint,small,svg',c).forEach(function(x){x.remove();});v=c.textContent;}
-  return (td._fv=(v||'').replace(/\s+/g,' ').trim());
+  else{var c=td.cloneNode(true);$$('.hint,small,svg,.av',c).forEach(function(x){x.remove();});v=c.textContent;}
+  return (v||'').replace(/\s+/g,' ').trim();
 }
 function bodyRows(tb){return $$('tr',tb).filter(function(r){return !r.hasAttribute('data-empty')&&r.querySelector('td');});}
 function filterCols(rows,ths){
@@ -9373,8 +9376,10 @@ function buildTools(w){
     var n=visibleRows(tb).length,actif=!!q||!!sel.length;
     $('[data-fcount]',bar).textContent=n+(n>1?' lignes affichées':' ligne affichée');
     $('[data-freset]',bar).hidden=!actif;
+    /* La ligne « aucun résultat » suit le nombre de lignes réellement affichées, filtre actif
+       ou non : ne la piloter que pendant le filtrage la laissait ouverte après réinitialisation. */
     var empty=$('tr[data-empty]',tb);
-    if(empty&&actif)empty.hidden=n>0;
+    if(empty)empty.hidden=n>0;
     refreshTall(w);
   }
   bar.addEventListener('input',apply);bar.addEventListener('change',apply);
@@ -9391,7 +9396,10 @@ function tableTools(sec){$$('.tbl-scroll',sec).forEach(buildTools);}
    restent Caisse générale et Sous-caisse Marché pour M. Diop, les positions fournisseurs encore
    attendues pour F. Sarr, et la Source A pour le collecteur (FIXTURES §3, §6).
    data-blind se pose sur un conteneur, jamais sur l'élément [data-amt] lui-même. */
-var BLIND={caisse:['cg','scm'],dirops:['f4','f5'],collecteur:['srca']};
+/* Clés de périmètre, à ne jamais confondre avec les clés de profil que l'écran Réconciliation
+   utilise dans son propre data-blind local (voir CONTRACT §5). Le collecteur n'apparaît pas
+   ici : la Source A n'est affichée que sur Réconciliation, couverte par ce mécanisme local. */
+var BLIND={caisse:['cg','scm'],dirops:['f4','f5']};
 function isBlind(k){return (BLIND[state.persona.id]||[]).indexOf(k)>=0;}
 /* Le cache se pose par une classe, jamais en remplacant le contenu : les scripts d'ecran
    continuent d'ecrire dans leurs noeuds (recalc de Fournisseurs, applyView de P&L) sans
@@ -9406,7 +9414,7 @@ function applyBlind(scope){
    trois couleurs CVD validees, la distinction se fait aussi au trait. Sans temoin, la legende
    ne dit pas quelle courbe est laquelle. */
 function seriesSwatches(sec){
-  $$('[data-series-toggle]',sec).forEach(function(c){
+  $$('.serpick [data-series-toggle]',sec).forEach(function(c){
     var s=SERIES[c.getAttribute('data-series-toggle')];
     if(!s||c.dataset.sw)return;
     c.dataset.sw='1';
@@ -9466,7 +9474,7 @@ function renderHub(){
     var rows=[];
     if(hasPerm('finance.validations.agir'))rows.push(['4 validations en attente','Transfert, ajustement, correction, désactivation','fin-validations','warn','À valider']);
     if(hasPerm('finance.declarations.declarer'))rows.push([state.persona.id==='collecteur'?'Collecte du 27/08 à déclarer ce soir':'Caisse générale à déclarer','Réconciliation en aveugle avant 23:59','fin-declarations','mut','À déclarer']);
-    if(hasPerm('finance.reconciliation.view'))rows.push(['Écart Sous-caisse Marché −25 000','Investigation puis Ajustement si nécessaire','fin-reconciliation','bad','Écart']);
+    if(hasPerm('finance.reconciliation.view'))rows.push([isBlind('scm')?'Écart constaté sur Sous-caisse Marché':'Écart Sous-caisse Marché −25 000',isBlind('scm')?'Montant transmis à l\u2019Admin, au DG et au Collecteur (§3)':'Investigation puis Ajustement si nécessaire','fin-reconciliation','bad','Écart']);
     if(hasPerm('finance.fournisseurs.view'))rows.push(['2 échéances fournisseurs dépassées','1 950 000 · ŒUFS et Aliments Sénégal','fin-fournisseurs','bad','Dépassées']);
     if(hasPerm('core.demandes.valider'))rows.push(['DEM-031 en attente','Création utilisateur demandée par B. Fall','core-demandes','warn','À traiter']);
     if(hasPerm('core.demandes.initier')&&!hasPerm('core.demandes.valider'))rows.push(['DEM-030 retournée','Préciser date de fin et périmètre','core-demandes','warn','À corriger']);
@@ -9640,7 +9648,7 @@ function drawSeries(box,keys){
 }
 function drawCharts(scope){
   $$('.linechart',scope||document).forEach(function(b){if(b.closest('.scr')&&!b.closest('.scr').classList.contains('on'))return;var k=(b.getAttribute('data-series')||'treso').split(',').filter(function(x){return SERIES[x];});drawSeries(b,k);});
-  $$('.multichart',scope||document).forEach(function(b){var sec=b.closest('.scr');if(sec&&!sec.classList.contains('on'))return;var keys=$$('[data-series-toggle]',sec||document).filter(function(c){return c.checked&&SERIES[c.getAttribute('data-series-toggle')];}).map(function(c){return c.getAttribute('data-series-toggle');});if(!keys.length)keys=(b.getAttribute('data-series')||'treso').split(',');drawSeries(b,keys);});
+  $$('.multichart',scope||document).forEach(function(b){var sec=b.closest('.scr');if(sec&&!sec.classList.contains('on'))return;var tg=$$('[data-series-toggle]',sec||document);var keys=tg.filter(function(c){return c.checked&&SERIES[c.getAttribute('data-series-toggle')];}).map(function(c){return c.getAttribute('data-series-toggle');});if(!keys.length&&!tg.length)keys=(b.getAttribute('data-series')||'treso').split(',');drawSeries(b,keys);});
 }
 document.addEventListener('change',function(e){if(e.target.hasAttribute('data-series-toggle')){var sec=e.target.closest('.scr');drawCharts(sec);}});
 var rT=null;window.addEventListener('resize',function(){clearTimeout(rT);rT=setTimeout(function(){drawCharts(document);},120);});

@@ -327,7 +327,7 @@
 #app [data-blind].blinded{font-size:0;color:transparent}
 #app [data-blind].blinded>*{display:none!important}
 #app [data-blind].blinded[data-blind-lbl]::after{content:attr(data-blind-lbl);background:none;padding:0}
-#app [data-blind].blinded::after{content:"Masqué (§3)";display:inline-block;font-family:var(--body);font-size:10.5px;font-weight:700;letter-spacing:.02em;line-height:1.6;background:var(--card-3);color:var(--ink-2);border-radius:6px;padding:1px 8px;white-space:nowrap}
+#app [data-blind].blinded::after{content:"Masqué";display:inline-block;font-family:var(--body);font-size:10.5px;font-weight:700;letter-spacing:.02em;line-height:1.6;background:var(--card-3);color:var(--ink-2);border-radius:6px;padding:1px 8px;white-space:nowrap}
 /* Vue production (R-04, R-05) : la maquette porte une pédagogie qui n'est pas livrée, les
    panneaux « Comment ça marche ? », les paragraphes d'explication en tête d'écran et les blocs
    qui décrivent la maquette elle-même. Les explications fonctionnelles restent dans les

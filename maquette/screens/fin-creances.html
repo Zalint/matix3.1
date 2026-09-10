@@ -22,7 +22,7 @@
     <div class="card stat">
       <div class="lb">Créances clients<button class="fx" data-f="Créances clients = Σ max(Position client ; 0)" data-c="MaaS Keur Massar 3 250 000 · MaaS Ouakam 2 870 000 · MaaS Pikine 1 985 000 · Restaurant Le Baobab 2 400 000 · Boucherie des Almadies 1 730 000 · 9 autres MaaS 7 840 000 · Touba Viandes exclu (position négative)" data-src="Moteur financier · 15 comptes Créance client CALCULÉ · 27/08/2026 · compte Ajustement exclu (§8.1)" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></div>
       <div class="v amt" data-amt="20075000" data-kpi="cre"></div>
-      <div class="sub2">4,4 % du CA de référence (CA Mata août au 27 : <span class="amt" data-amt="452000000" data-nocur></span>)</div>
+      <div class="sub2"><span data-ratio="cre">4,4</span> % du CA de référence (CA Mata août au 27 : <span class="amt" data-amt="452000000" data-nocur></span>)</div>
     </div>
     <div class="card stat">
       <div class="lb">Avances clients<button class="fx" data-f="Avances clients = Σ max(− Position client ; 0)" data-c="Touba Viandes 150 000 (position −150 000)" data-src="Moteur financier · comptes Créance client CALCULÉ · 27/08/2026" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></div>
@@ -149,7 +149,8 @@
     <div class="fld" style="margin-top:10px"><label for="fin-creances-mv-mt">Montant (FCFA, entier positif, sans décimales)</label><input id="fin-creances-mv-mt" class="inp mono" inputmode="numeric" placeholder="0"></div>
     <div class="fld" style="margin-top:10px"><label for="fin-creances-mv-dt">Date métier</label><input id="fin-creances-mv-dt" class="inp mono" type="date" value="2026-08-27"></div>
     <div class="fld" style="margin-top:10px"><label for="fin-creances-mv-mo">Motif (obligatoire, audité)</label><input id="fin-creances-mv-mo" class="inp" placeholder="Ex. régularisation d'une livraison hors circuit Ventes Mata"></div>
-    <div class="note-strip" style="margin-top:12px"><svg><use href="#i-clock"/></svg><span><b>Circuit transitoire.</b> Il disparaît une fois la refonte terminée, quand toutes les créances naîtront des ventes reçues de Ventes Mata (§6.1).</span></div>
+    <div class="note-strip"><svg><use href="#i-alert"/></svg><span>Au-delà du seuil d'ajustement inhabituel, <span class="amt" data-amt="500000" data-nocur></span> par écriture ou 3 par jour, l'alerte critique non désactivable part au DG et au Super Admin. Elle ne bloque pas la saisie.</span></div>
+    <div class="note-strip" style="margin-top:10px"><svg><use href="#i-clock"/></svg><span><b>Circuit transitoire.</b> Décision de périmètre V1, hors cahier. Il disparaît une fois la refonte terminée, quand toutes les créances naîtront des ventes reçues de Ventes Mata, seule origine prévue par le cahier (§6.1).</span></div>
     <div class="acts"><button class="btn ghost" data-close>Annuler</button><button class="btn pri" data-perm="finance.creances.saisir" data-act="mv-ok"><svg><use href="#i-check"/></svg>Enregistrer</button></div>
   </div></div>
 
@@ -184,7 +185,7 @@ ERP.register('fin-creances', function (root, ctx) {
   var denied = function (b) { return !b || b.disabled || b.classList.contains('denied') || b.getAttribute('aria-disabled') === 'true'; };
   var icon = function (n) { return '<svg><use href="#i-' + n + '"/></svg>'; };
   var esc = function (s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); };
-  var mvt = function (id, meta, m) { return '<div class="mvt"><span class="sign ' + (m < 0 ? 'm' : 'p') + '">' + (m < 0 ? '−' : '+') + '</span><div class="tx"><b>' + id + '</b><small>' + meta + '</small></div><span class="amt" data-amt="' + m + '" data-nocur></span></div>'; };
+  var ratio = function (v) { var r = $('[data-ratio="cre"]'); if (r) r.textContent = (v / 452000000 * 100).toFixed(1).replace('.', ','); }, mvt = function (id, meta, m) { return '<div class="mvt"><span class="sign ' + (m < 0 ? 'm' : 'p') + '">' + (m < 0 ? '−' : '+') + '</span><div class="tx"><b>' + id + '</b><small>' + meta + '</small></div><span class="amt" data-amt="' + m + '" data-nocur></span></div>'; };
 
   rows().forEach(function (tr) {
     var ref = tr.getAttribute('data-ref'), lbl = tr.getAttribute('data-name') + ' · ' + ref;
@@ -209,7 +210,7 @@ ERP.register('fin-creances', function (root, ctx) {
   function updateKpis() {
     var cre = 0, adv = 0;
     rows().forEach(function (tr) { var p = num(tr, 'pos'); cre += Math.max(p, 0); adv += Math.max(-p, 0); });
-    setAmt($('[data-kpi="cre"]'), cre); setAmt($('[data-kpi="adv"]'), adv);
+    setAmt($('[data-kpi="cre"]'), cre); setAmt($('[data-kpi="adv"]'), adv); ratio(cre);
     setAmt($('[data-kpi="km"]'), num($('tr[data-ref="MAAS-KM"]', tbody), 'pos'));
     $$('.statstrip').forEach(function (s) { ctx.formatAmounts(s); });
   }
@@ -276,7 +277,7 @@ ERP.register('fin-creances', function (root, ctx) {
     cell.insertAdjacentHTML('beforeend', '<div data-mv><span class="st info">' + icon('note') + lbl + ' ' + part + ' · ' + dt + ' · ' + fmt(mt) + '</span> <span class="hint">' + esc(motif) + '</span></div>');
     applyFilter(); updateKpis();
     ctx.close('fin-creances-manuel'); $('#fin-creances-mv-mt').value = ''; $('#fin-creances-mv-mo').value = '';
-    ctx.toast(lbl + ' de ' + fmt(mt) + ' FCFA sur ' + tr.getAttribute('data-name') + ' · position portée à ' + fmt(pos) + ' FCFA · écriture directe sans validation (§4.3) · created_at et updated_by automatiques, audit de modification.');
+    ctx.toast(lbl + ' de ' + fmt(mt) + ' FCFA sur ' + tr.getAttribute('data-name') + ' · position portée à ' + fmt(pos) + ' FCFA · écriture directe sans validation, circuit transitoire V1 · created_at et updated_by automatiques, audit de modification.' + (mt > 500000 ? ' Au-delà du seuil de ' + fmt(500000) + ' FCFA : alerte « Ajustement inhabituel » au DG et au Super Admin (critique, non désactivable).' : ''));
   }
   $$('.chip[data-filter]').forEach(function (c) {
     ctx.on(c, 'click', function () { $$('.chip[data-filter]').forEach(function (x) { x.classList.toggle('on', x === c); }); cur = c.getAttribute('data-filter'); applyFilter(); });

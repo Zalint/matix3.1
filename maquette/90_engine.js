@@ -141,7 +141,7 @@ function tallOne(w){
   var n=tb?visibleRows(tb).length:0;
   w.classList.toggle('tall',n>TALL_MIN);
 }
-function visibleRows(tb){return $$('tr',tb).filter(function(r){return !r.hidden&&!r.classList.contains('f-out');});}
+function visibleRows(tb){return $$('tr',tb).filter(function(r){return !r.hidden&&!r.classList.contains('f-out')&&!r.hasAttribute('data-empty');});}
 
 /* ===== Filtre par colonne et recherche (R-03) =====
    Comportement standard de tous les tableaux, Mata Core compris. Les ecrans continuent
@@ -155,11 +155,10 @@ function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp
    principal debarrasse de ses qualificatifs .hint et small, que textContent collerait au
    libelle (« Créance client » + « MaaS » donnait « Créance clientMaaS »). Memorisee sur le noeud. */
 function cellVal(td){
-  if(td._fv!=null)return td._fv;
   var t=td.querySelector('.st,.tag'),v;
   if(t)v=t.textContent;
-  else{var c=td.cloneNode(true);$$('.hint,small,svg',c).forEach(function(x){x.remove();});v=c.textContent;}
-  return (td._fv=(v||'').replace(/\s+/g,' ').trim());
+  else{var c=td.cloneNode(true);$$('.hint,small,svg,.av',c).forEach(function(x){x.remove();});v=c.textContent;}
+  return (v||'').replace(/\s+/g,' ').trim();
 }
 function bodyRows(tb){return $$('tr',tb).filter(function(r){return !r.hasAttribute('data-empty')&&r.querySelector('td');});}
 function filterCols(rows,ths){
@@ -207,8 +206,10 @@ function buildTools(w){
     var n=visibleRows(tb).length,actif=!!q||!!sel.length;
     $('[data-fcount]',bar).textContent=n+(n>1?' lignes affichées':' ligne affichée');
     $('[data-freset]',bar).hidden=!actif;
+    /* La ligne « aucun résultat » suit le nombre de lignes réellement affichées, filtre actif
+       ou non : ne la piloter que pendant le filtrage la laissait ouverte après réinitialisation. */
     var empty=$('tr[data-empty]',tb);
-    if(empty&&actif)empty.hidden=n>0;
+    if(empty)empty.hidden=n>0;
     refreshTall(w);
   }
   bar.addEventListener('input',apply);bar.addEventListener('change',apply);
@@ -225,7 +226,10 @@ function tableTools(sec){$$('.tbl-scroll',sec).forEach(buildTools);}
    restent Caisse générale et Sous-caisse Marché pour M. Diop, les positions fournisseurs encore
    attendues pour F. Sarr, et la Source A pour le collecteur (FIXTURES §3, §6).
    data-blind se pose sur un conteneur, jamais sur l'élément [data-amt] lui-même. */
-var BLIND={caisse:['cg','scm'],dirops:['f4','f5'],collecteur:['srca']};
+/* Clés de périmètre, à ne jamais confondre avec les clés de profil que l'écran Réconciliation
+   utilise dans son propre data-blind local (voir CONTRACT §5). Le collecteur n'apparaît pas
+   ici : la Source A n'est affichée que sur Réconciliation, couverte par ce mécanisme local. */
+var BLIND={caisse:['cg','scm'],dirops:['f4','f5']};
 function isBlind(k){return (BLIND[state.persona.id]||[]).indexOf(k)>=0;}
 /* Le cache se pose par une classe, jamais en remplacant le contenu : les scripts d'ecran
    continuent d'ecrire dans leurs noeuds (recalc de Fournisseurs, applyView de P&L) sans
@@ -240,7 +244,7 @@ function applyBlind(scope){
    trois couleurs CVD validees, la distinction se fait aussi au trait. Sans temoin, la legende
    ne dit pas quelle courbe est laquelle. */
 function seriesSwatches(sec){
-  $$('[data-series-toggle]',sec).forEach(function(c){
+  $$('.serpick [data-series-toggle]',sec).forEach(function(c){
     var s=SERIES[c.getAttribute('data-series-toggle')];
     if(!s||c.dataset.sw)return;
     c.dataset.sw='1';
@@ -300,7 +304,7 @@ function renderHub(){
     var rows=[];
     if(hasPerm('finance.validations.agir'))rows.push(['4 validations en attente','Transfert, ajustement, correction, désactivation','fin-validations','warn','À valider']);
     if(hasPerm('finance.declarations.declarer'))rows.push([state.persona.id==='collecteur'?'Collecte du 27/08 à déclarer ce soir':'Caisse générale à déclarer','Réconciliation en aveugle avant 23:59','fin-declarations','mut','À déclarer']);
-    if(hasPerm('finance.reconciliation.view'))rows.push(['Écart Sous-caisse Marché −25 000','Investigation puis Ajustement si nécessaire','fin-reconciliation','bad','Écart']);
+    if(hasPerm('finance.reconciliation.view'))rows.push([isBlind('scm')?'Écart constaté sur Sous-caisse Marché':'Écart Sous-caisse Marché −25 000',isBlind('scm')?'Montant transmis à l\u2019Admin, au DG et au Collecteur (§3)':'Investigation puis Ajustement si nécessaire','fin-reconciliation','bad','Écart']);
     if(hasPerm('finance.fournisseurs.view'))rows.push(['2 échéances fournisseurs dépassées','1 950 000 · ŒUFS et Aliments Sénégal','fin-fournisseurs','bad','Dépassées']);
     if(hasPerm('core.demandes.valider'))rows.push(['DEM-031 en attente','Création utilisateur demandée par B. Fall','core-demandes','warn','À traiter']);
     if(hasPerm('core.demandes.initier')&&!hasPerm('core.demandes.valider'))rows.push(['DEM-030 retournée','Préciser date de fin et périmètre','core-demandes','warn','À corriger']);
@@ -474,7 +478,7 @@ function drawSeries(box,keys){
 }
 function drawCharts(scope){
   $$('.linechart',scope||document).forEach(function(b){if(b.closest('.scr')&&!b.closest('.scr').classList.contains('on'))return;var k=(b.getAttribute('data-series')||'treso').split(',').filter(function(x){return SERIES[x];});drawSeries(b,k);});
-  $$('.multichart',scope||document).forEach(function(b){var sec=b.closest('.scr');if(sec&&!sec.classList.contains('on'))return;var keys=$$('[data-series-toggle]',sec||document).filter(function(c){return c.checked&&SERIES[c.getAttribute('data-series-toggle')];}).map(function(c){return c.getAttribute('data-series-toggle');});if(!keys.length)keys=(b.getAttribute('data-series')||'treso').split(',');drawSeries(b,keys);});
+  $$('.multichart',scope||document).forEach(function(b){var sec=b.closest('.scr');if(sec&&!sec.classList.contains('on'))return;var tg=$$('[data-series-toggle]',sec||document);var keys=tg.filter(function(c){return c.checked&&SERIES[c.getAttribute('data-series-toggle')];}).map(function(c){return c.getAttribute('data-series-toggle');});if(!keys.length&&!tg.length)keys=(b.getAttribute('data-series')||'treso').split(',');drawSeries(b,keys);});
 }
 document.addEventListener('change',function(e){if(e.target.hasAttribute('data-series-toggle')){var sec=e.target.closest('.scr');drawCharts(sec);}});
 var rT=null;window.addEventListener('resize',function(){clearTimeout(rT);rT=setTimeout(function(){drawCharts(document);},120);});
