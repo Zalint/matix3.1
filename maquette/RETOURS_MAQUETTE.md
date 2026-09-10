@@ -38,10 +38,12 @@ Les textes qui expliquent les entités, leur rôle et le fonctionnement des écr
 
 ### Règles métier
 
-**R-06 · Confidentialité des montants lors des déclarations.** Statut : **À faire**, arbitré le 10/09.
+**R-06 · Confidentialité des montants lors des déclarations.** Statut : **Corrigé** sur l'écran Déclarations, arbitré le 10/09. Voir R-16 pour le reste de l'application.
 Décision : le déclarant ne voit que le statut, « Réconciliée » ou « À réconcilier, en investigation ». Aucun montant théorique, aucune valeur d'écart, y compris dans l'historique « Mes déclarations » et dans le cloisonnement entre sources.
 Règle énoncée : le déclarant ne voit jamais le montant calculé par le système, ni avant ni après sa déclaration. Le cloisonnement vaut aussi entre sources : la source A ne voit jamais le montant de la source B, et réciproquement, pour que chaque déclarant travaille sans influence.
-État actuel de la maquette : le masquage avant déclaration est en place, mais le théorique est révélé après déclaration (« théorique révélé après déclaration », écran Déclarations, vues Gestionnaire et Collecteur). Le retour durcit la règle du cahier, qui ne couvrait que l'avant.
+La maquette masquait le théorique avant la déclaration et le révélait après. Le retour durcit la règle du cahier, qui ne couvrait que l'avant.
+Correction : dans les quatre vues déclarantes, le panneau de résultat se limite à « Votre déclaration » et « Statut », les colonnes Solde théorique et Écart disparaissent des historiques personnels et du tableau des positions fournisseurs, un bandeau indique que le montant part à l'Admin, au DG et au Collecteur. Le théorique n'est plus injecté que dans la table de contrôle `[data-sa-rows]`, lue par les seuls profils qui ne déclarent pas.
+Vérifié dans Chromium sur les quatre profils déclarants et sur le Super Admin, avant et après une déclaration en écart.
 
 **R-07 · Trésorerie nette fournisseur au tableau de bord.** Statut : **À faire**, arbitré le 10/09.
 Décision : Trésorerie totale contrôlée − Dettes fournisseurs brutes = 61 305 000 − 23 250 000 = 38 055 000. Les avances fournisseurs (350 000) restent affichées à part et n'entrent pas dans le calcul. Libellé retenu à l'écran : « Trésorerie nette fournisseur ».
@@ -82,6 +84,23 @@ Le libellé n'est pas explicite pour l'utilisateur. Ajouter une explication de c
 
 **R-15 · Lien vers l'objet dans le détail d'une notification.** Statut : **À cadrer**.
 Le détail d'une notification doit offrir un lien cliquable vers l'écran et vers l'objet concerné, pour aller traiter le sujet directement. Le tableau propose déjà un bouton qui ouvre l'écran ; il manque l'ouverture de l'objet précis (la ligne, la fiche, la validation en attente) et le lien dans le panneau de détail.
+
+### Constat issu de la vérification de R-06
+
+**R-16 · Le solde système fuit aux déclarants par les autres écrans.** Statut : **Arbitrage**.
+Corriger l'écran Déclarations ne suffit pas à tenir la règle : le même déclarant retrouve son solde théorique et son écart sur les autres écrans de son périmètre. Mesuré dans Chromium en parcourant tous les écrans que chaque profil peut ouvrir :
+
+| Profil | Écrans accessibles | Écrans qui révèlent le théorique ou l'écart de son périmètre |
+|---|---|---|
+| Gestionnaire de caisse (M. Diop) | 6 | Réconciliation, Comptes, Dépenses, Notifications |
+| Collecteur (A. Ndiaye) | 4 | Réconciliation, Notifications |
+| Directeur des Opérations (F. Sarr) | 16 | Tableau de bord, P&L, Réconciliation, Comptes, Dépenses |
+
+La question rejoint celle déjà ouverte au panel sur le tableau de bord et les déclarants (`AMBIGUITES_PANEL.md`, questions de revue, point 1). Trois façons de la traiter :
+1. Retirer aux profils déclarants les permissions de consultation qui exposent leur propre périmètre, tant qu'une déclaration est attendue. C'est une décision de matrice de permissions, pas d'interface.
+2. Masquer, écran par écran, les seules lignes du périmètre que le profil doit déclarer, en réutilisant le mécanisme déjà en place sur le tableau de bord.
+3. Assumer que la règle ne vaut que sur l'écran de déclaration, ce qui la vide de son sens puisque le montant reste à deux clics.
+Aucun code n'a été écrit sur ce point : il touche le moteur de permissions et six écrans.
 
 ---
 
