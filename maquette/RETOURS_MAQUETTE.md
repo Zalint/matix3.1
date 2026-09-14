@@ -138,6 +138,64 @@ Vérifié dans Chromium, profil par profil, en parcourant tous les écrans acces
 
 ---
 
+## Passage aux cahiers v1.2 / v2.3 (14/09/2026)
+
+Quatre documents reçus, tous postérieurs à ceux qui ont servi à construire la maquette : Mata Core fonctionnel v1.2 et architecture technique v1.2, Mata Finance fonctionnel v2.3 et architecture technique v1.3. La maquette avait été bâtie sur Core v1.1 et Finance v2.2.
+
+### Ce que les nouveaux cahiers valident
+
+Une large part des arbitrages rendus le 10/09 est désormais écrite dans les cahiers. Ce n'est plus une décision de périmètre, c'est la règle.
+
+| Ce qu'on avait arbitré | Où c'est écrit maintenant |
+|---|---|
+| Le déclarant ne voit ni théorique ni écart, ni avant ni après, historique compris, et aucune source ne voit la valeur d'une autre | Finance §3, §4.8, §5.5, §11.2, §11.3 |
+| Créance sans vente et remboursement sans encaissement, sans validation préalable | Finance §6.1, §6.2, §11.2 |
+| Catalogue d'alertes fermé en V1, seuls les paramètres autorisés restent réglables | Finance §10.4, Core §6.1 |
+| Filtre par colonne et recherche sur tous les tableaux, puces conservées en raccourcis | Core §6.5 |
+| En-têtes visibles au-delà de 15 lignes, avec zone de défilement propre au tableau | Core §6.5 |
+| Modales entièrement exploitables sans dézoom, contenu défilable, actions atteignables | Core §6.5 |
+| Panneaux d'aide permanents hors production, explications rattachées aux champs par un « ? » au survol et à l'équivalent tactile | Core §6.5 |
+| Contenus de maquette supprimés en production | Core §6.5 |
+| Affichage progressif du tableau de bord plutôt que tout afficher d'un coup | Finance §8.5 |
+| Création guidée d'agent par grille tâche vers modèle, double validation du changement permanent | Core §6.4, §7.2 |
+| Notification qui ouvre l'écran et l'objet concernés sans conférer de droit | Core §6.1 |
+
+Corrigé en conséquence : les mentions « durci en V1 » et « décision de périmètre V1, hors cahier » que j'avais posées sur ces règles sont retirées, puisqu'elles viennent bien du cahier désormais. Seule subsiste l'hypothèse de maquette sur la désactivation de son propre compte, que le cahier ne tranche toujours pas.
+
+### Ce que les nouveaux cahiers changent, corrigé
+
+**L'indicateur R-07 change de nom.** Le cahier le nomme « Tréso si paiement fournisseur » (Finance §8.1, §8.2, §8.5, §11.3), pas « Trésorerie nette fournisseur ». La formule est inchangée : trésorerie totale contrôlée moins dettes fournisseurs brutes, transit inclus, avances affichées à part. Renommé partout, indicateur de tête et série de graphique.
+
+**Le marquage « Manuelle » est obligatoire.** Finance §6.1 et §6.2 exigent que la créance ou le remboursement manuel soit explicitement marqué, et §6.4 qu'il ne soit jamais assimilé à une vente ou à un encaissement du jour dans la réconciliation. La ligne porte désormais une étiquette « Manuelle » et la modale le dit.
+
+**La permission n'est pas préconfigurée pour le Directeur des Opérations.** Finance §6.1 : « La politique de droits prévoit cette permission pour Directeur des Opérations, Admin et Super Admin ; en Production initiale, seul le profil Super Admin est préconfiguré par Mata Core. » La maquette garde le droit sur le profil Directeur des Opérations, qui n'est qu'un profil suggéré, mais la modale porte la précision.
+
+### Ce qu'il reste à faire
+
+**À cadrer, par ordre de poids.**
+
+**N-01 · Licences et habilitations organisationnelles.** Core §3.6 et technique §7. Entièrement absent de la maquette. Une licence rattachée à un MaaS ou à une entité fille porte au minimum un quota d'utilisateurs et un ensemble de modules ou fonctionnalités autorisés. Une permission ne peut jamais rendre accessible une fonctionnalité exclue par la licence, et une fonctionnalité licenciée ne donne aucun droit par elle-même. Un quota dépassé est refusé explicitement. Impacts : un écran ou une extension de l'écran Entités, le refus explicite à la création d'utilisateur au-delà du quota, et surtout la chaîne de résolution de l'écran Droits effectifs, qui passe de sept à huit niveaux avec « Restriction de licence » en tête.
+
+**N-02 · Profil portable.** Core §3.3 et technique §7. L'écran Profils doit permettre d'exporter une définition de profil et de la réimporter : prévisualisation, contrôle de compatibilité des rôles, permissions et paramètres, création atomique et auditée. Le fichier ne contient jamais d'utilisateur, de mot de passe, de secret ni de donnée personnelle. Format V1 : JSON versionné ne portant que des identifiants stables.
+
+**N-03 · Initialisation Production à un seul profil.** Core §3.3 et §10.2. En Production V1, seul « Super Admin » est prédéfini ; les huit profils de la maquette sont des suggestions de conception, pas un catalogue livré. À dire explicitement sur l'écran Profils, faute de quoi la maquette laisse croire le contraire.
+
+**N-04 · Catalogue des modèles LLM dans les paramètres Core.** Core §6.4. Les paramètres transverses portent le catalogue des modèles disponibles, leurs coûts de référence et la grille tâche vers modèle. Cela referme la question restée ouverte sur R-12 : les coûts existent, ils vivent dans Mata Core, et l'écran Paramètres doit les porter. L'écran Agents IA pourra alors afficher un coût réel au lieu d'un rang.
+
+**N-05 · Règle d'alerte « ajustement inhabituel » enrichie.** Finance §10.4 ajoute deux critères à celui déjà en place : fréquence anormale sur un même compte ou par un même utilisateur, et cumul dépassant un seuil configurable sur une période. La maquette ne connaît que le montant unitaire et le nombre par jour.
+
+**N-06 · Préférence d'affichage des séries de trésorerie.** Finance §8.5 : « la sélection peut être conservée comme préférence d'affichage ». Le sélecteur existe, la persistance non.
+
+**N-07 · Profils d'investigation.** Finance §3, §4.8, §5.5 et §11.3 introduisent une habilitation explicite : « les utilisateurs habilités à investiguer peuvent consulter l'écart et ses composantes ». La maquette raisonne par périmètre déclaré, pas par habilitation d'investigation. Les deux se recoupent aujourd'hui mais ne sont pas la même notion, et c'est la formulation du cahier qui fait foi.
+
+**N-08 · ARCHITECTURE.md.** `CLAUDE.md` annonce ce document comme à venir. Les deux documents techniques en fournissent le contenu : monolithe modulaire et base relationnelle unique, contrats inter-modules en processus, scoping central obligatoire par `entity_id` avec refus par défaut hors contexte, barrière base pour les tables hautement sensibles (comptes, mouvements, positions, ajustements), file de travaux en base principale avec worker séparé, verrouillage optimiste sur toute écriture sensible, montants en entiers FCFA jamais en flottant, justificatifs en stockage objet jamais en base, génération PDF sans navigateur headless, archivage à 24 mois pour les modifications et 90 jours pour les consultations, adaptateur bancaire encapsulant le CSV V1, aucun composant distribué sans justification mesurée.
+
+### Ce qui reste sans réponse
+
+La déduction par soustraction depuis les agrégats, relevée par les deux revues adversariales, n'est pas traitée par les nouveaux cahiers. Finance §3 et §11.2 disent ce que le déclarant ne doit pas voir, pas ce qu'il ne doit pas pouvoir calculer. Le tableau de bord et le P&L affichent au Directeur des Opérations tous les termes sauf un, et l'échéancier fournisseur redonne la position masquée. La question reste entière et demande un arbitrage.
+
+---
+
 ## Revues avant merge (PR #1)
 
 Trois revues indépendantes en contexte vierge, exigées par `CLAUDE.md` : ce lot dépasse 300 lignes, touche les permissions et la réconciliation, et modifie le contrat. Une relecture de code générale, une revue adversariale sur les règles métier, une revue adversariale sur la robustesse ayant parcouru les 27 écrans avec les 8 profils.

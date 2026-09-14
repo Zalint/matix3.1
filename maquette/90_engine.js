@@ -456,7 +456,7 @@ var SERIES={
 var AV_F=0.35,AV_C=0.15;
 function derive(f){return SERIES.treso.v.map(function(t,i){return +f(t,i).toFixed(3);});}
 SERIES.dispo={name:'Trésorerie disponible',c:'--d2',dash:false,v:derive(function(t,i){return t-SERIES.transit.v[i];})};
-SERIES.netfou={name:'Trésorerie nette fournisseur',c:'--d2',dash:true,v:derive(function(t,i){return t-SERIES.dettes.v[i];})};
+SERIES.netfou={name:'Tréso si paiement fournisseur',c:'--d2',dash:true,v:derive(function(t,i){return t-SERIES.dettes.v[i];})};
 SERIES.pfn={name:'Position financière nette',c:'--d1',dash:true,v:derive(function(t,i){return t+AV_F+SERIES.creances.v[i]-SERIES.dettes.v[i]-AV_C;})};
 var NS='http://www.w3.org/2000/svg';
 function E(n,a){var el=document.createElementNS(NS,n);for(var k in a)el.setAttribute(k,a[k]);return el;}

@@ -69,7 +69,7 @@
         <div class="ch"><h3>Caisse générale</h3><span data-st-head="cg"><span class="st mut"><svg><use href="#i-eyeoff"/></svg>À déclarer</span></span><span class="hint-r">CG · Trésorerie · CALCULÉ · a bougé aujourd'hui · dernière réconciliation 26/08</span></div>
         <div class="cb">
           <div data-form="cg">
-            <div class="maskbox"><svg><use href="#i-lock"/></svg>Solde système <span class="dots">••••••••</span> jamais affiché, ni avant ni après votre déclaration (§3, durci en V1)</div>
+            <div class="maskbox"><svg><use href="#i-lock"/></svg>Solde système <span class="dots">••••••••</span> jamais affiché, ni avant ni après votre déclaration (§3)</div>
             <div class="declform">
               <div class="fld"><label for="fin-declarations-cg-montant">Solde réellement détenu (compté)</label><input id="fin-declarations-cg-montant" class="inp mono" inputmode="numeric" placeholder="Montant compté, FCFA sans décimales" data-inp="cg"></div>
               <div class="fld"><label for="fin-declarations-cg-note">Commentaire (facultatif)</label><input id="fin-declarations-cg-note" class="inp" placeholder="Ex. : comptage à deux, coffre vérifié"></div>
@@ -79,7 +79,7 @@
           </div>
           <div data-res="cg" hidden>
             <div class="declres two"><div><div class="k">Votre déclaration</div><div class="val" data-r-decl></div></div><div><div class="k">Statut</div><div class="val sm" data-r-st></div></div></div>
-            <div class="maskbox" style="margin-top:10px"><svg><use href="#i-lock"/></svg>Solde système et écart <span class="dots">••••••••</span> jamais affichés au déclarant, ni avant ni après (§3, durci en V1)</div>
+            <div class="maskbox" style="margin-top:10px"><svg><use href="#i-lock"/></svg>Solde système et écart <span class="dots">••••••••</span> jamais affichés au déclarant, ni avant ni après (§3)</div>
             <div class="actionbar"><span class="hint" data-after-ok>Votre déclaration est égale au solde système : le compte est réconcilié. Le montant comparé ne vous est pas communiqué (§3).</span><span class="hint" data-after-ko hidden>Votre déclaration diffère du solde système : le compte reste « À réconcilier » et l'écart est investigué par l'Admin, le DG et le Collecteur, seuls destinataires du montant. Une correction éventuelle passe par Ajustement (motif obligatoire, deux validateurs distincts, §4.7).</span><div class="sp"></div><button class="btn ghost" data-goto="fin-reconciliation" data-after-ko hidden><svg><use href="#i-search"/></svg>Investiguer</button><button class="btn pri" data-perm="finance.ajustements.initier" data-goto="fin-reconciliation" data-after-ko hidden><svg><use href="#i-scale"/></svg>Corriger par Ajustement</button></div>
           </div>
         </div>
@@ -114,7 +114,7 @@
       <div class="cb">
         <div class="fcode" style="margin-top:0">Somme des versements déclarés = Montant déclaré par le collecteur</div>
         <div data-form="collecte">
-          <div class="maskbox" style="margin-top:12px"><svg><use href="#i-lock"/></svg>Source A · Σ des 12 déclarations MaaS <span class="dots">••••••••</span> jamais affichée, ni avant ni après votre déclaration (§3, durci en V1)</div>
+          <div class="maskbox" style="margin-top:12px"><svg><use href="#i-lock"/></svg>Source A · Σ des 12 déclarations MaaS <span class="dots">••••••••</span> jamais affichée, ni avant ni après votre déclaration (§3)</div>
           <div class="declform">
             <div class="fld"><label for="fin-declarations-col-montant">Montant total collecté (Source B)</label><input id="fin-declarations-col-montant" class="inp mono" inputmode="numeric" placeholder="Montant remis en Caisse, FCFA" data-inp="collecte"></div>
             <div class="fld"><label for="fin-declarations-col-date">Date métier de la collecte · 12 MaaS</label><input id="fin-declarations-col-date" class="inp" value="27/08/2026" disabled></div>
@@ -124,7 +124,7 @@
         </div>
         <div data-res="collecte" hidden>
           <div class="declres two" style="margin-top:12px"><div><div class="k">Source B · votre déclaration</div><div class="val" data-r-decl></div></div><div><div class="k">Statut</div><div class="val sm" data-r-st></div></div></div>
-          <div class="maskbox" style="margin-top:10px"><svg><use href="#i-lock"/></svg>Source A et écart <span class="dots">••••••••</span> jamais affichés à la Source B, ni avant ni après (§3 durci en V1, §6.3)</div>
+          <div class="maskbox" style="margin-top:10px"><svg><use href="#i-lock"/></svg>Source A et écart <span class="dots">••••••••</span> jamais affichés à la Source B, ni avant ni après (§3, §6.3)</div>
           <div class="actionbar"><span class="hint" data-after-ok>Les deux sources concordent : la collecte sera validée automatiquement vers 02:00, la Caisse générale créditée et les remboursements affectés aux 12 comptes clients MaaS. Le montant de la Source A ne vous est pas communiqué (§3, §6.3).</span><span class="hint" data-after-ko hidden>Les deux sources divergent : aucune auto-validation possible, la collecte reste ouverte. Le montant de l'écart part à l'Admin et au DG (règle critique non désactivable) et l'investigation est menée hors de votre vue.</span><div class="sp"></div><button class="btn ghost" data-goto="fin-reconciliation" data-after-ko hidden><svg><use href="#i-search"/></svg>Investiguer</button></div>
         </div>
       </div>
@@ -167,7 +167,7 @@
       <div class="ch"><h3>Sous-caisse Livraisons</h3><span class="st ok"><svg><use href="#i-check"/></svg>Réconciliée 20:48</span><span class="hint-r">SCL · Trésorerie · déclarée par F. Sarr · solde système et écart jamais affichés au déclarant (§3)</span></div>
       <div class="cb">
         <div class="declres two"><div><div class="k">Votre déclaration</div><div class="val"><span class="amt" data-amt="640000" data-nocur></span></div></div><div><div class="k">Statut</div><div class="val sm">Réconciliée</div></div></div>
-        <div class="maskbox" style="margin-top:10px"><svg><use href="#i-lock"/></svg>Solde système et écart <span class="dots">••••••••</span> jamais affichés au déclarant, ni avant ni après (§3, durci en V1)</div>
+        <div class="maskbox" style="margin-top:10px"><svg><use href="#i-lock"/></svg>Solde système et écart <span class="dots">••••••••</span> jamais affichés au déclarant, ni avant ni après (§3)</div>
         <div class="note-strip" style="margin-top:12px"><svg><use href="#i-alert"/></svg><span><b>Clôture du périmètre suspendue.</b> La dépense « Pas sûr » Carburant véhicule livraison (<span class="amt" data-amt="85000" data-nocur></span>, montant payé inconnu) bloque uniquement le périmètre Sous-caisse Livraisons ; notification à 23:00 au Directeur des Opérations, aux Admins et au Super Admin si non résolue (§5.1).</span></div>
         <div class="actionbar"><div class="sp"></div><button class="btn ghost" data-goto="fin-depenses" data-perm="finance.depenses.modifier"><svg><use href="#i-receipt"/></svg>Résoudre la dépense « Pas sûr »</button></div>
       </div>

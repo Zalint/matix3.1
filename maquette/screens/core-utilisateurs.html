@@ -215,7 +215,7 @@ ERP.register('core-utilisateurs', function (root, ctx) {
   function audit(u) { return u.audit || 'Aucune attribution de droit enregistrée le 27/08 pour ' + u.s + ' · profil en vigueur avant la journée · historique complet dans l’Audit central (§5.4).'; }
   function tagsHtml(u) { return u.cats.map(function (c) { return '<span class="tag lock"><svg><use href="#i-' + (IC[c] || 'user') + '"/></svg>' + esc(c) + '</span>'; }).join(''); }
   function dj(d) { return d < 0 ? 'expiré' : d === 0 ? 'expire aujourd’hui' : 'dans ' + d + ' jour' + (d > 1 ? 's' : ''); }
-  var SELF = 'Refus : désactivation de son propre compte non autorisée (hypothèse maquette, hors cahier) · un autre acteur habilité doit agir';
+  var SELF = 'Refus : désactivation de son propre compte non autorisée (hypothèse maquette : le cahier ne tranche pas ce cas) · un autre acteur habilité doit agir';
   function perms() { ctx.applyPerms(); qa('[data-deact]').forEach(function (b) { var u = U[b.getAttribute('data-u') || cur]; if (u && u.n === ctx.profile.user && !b.classList.contains('denied')) { b.disabled = true; b.classList.add('denied'); b.title = SELF; } }); }
   function expHtml(u) { return u.temp ? '<span class="expire"><svg><use href="#i-clock"/></svg>expire le ' + u.temp.fin + ' · ' + dj(u.temp.days) + '</span>' : '<span class="hint">—</span>'; }
   function stHtml(u) { return u.st === 'actif' ? '<span class="st ok"><svg><use href="#i-check"/></svg>Actif</span>' : '<span class="st bad"><svg><use href="#i-eyeoff"/></svg>Désactivé</span><div class="hint">le ' + u.since + ' · jamais supprimé</div>'; }

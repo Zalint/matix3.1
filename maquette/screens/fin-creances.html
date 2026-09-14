@@ -142,7 +142,7 @@
   <!-- Modale : saisie manuelle d'une créance ou d'un remboursement (R-10, circuit transitoire) -->
   <div class="mback" data-ov="fin-creances-manuel"><div class="modal" role="dialog" aria-modal="true" aria-label="Saisie manuelle d'un mouvement de position client">
     <h3><svg><use href="#i-note"/></svg>Saisie manuelle d'un mouvement</h3>
-    <div class="exp">Enregistre directement un mouvement sur la position d'un client, sans vente en amont pour une créance, sans versement en amont pour un remboursement. Écriture immédiate, sans validation : le Directeur des Opérations détient ce droit par défaut. Motif obligatoire, auteur et horodatage automatiques, audit de modification. Convention de signe (§4.3) : positif = le client doit à Mata.</div>
+    <div class="exp">Enregistre directement un mouvement sur la position d'un client, sans vente en amont pour une créance, sans encaissement en amont pour un remboursement. L'opération est marquée « Manuelle », ne passe pas par le compte Ajustement, et n'est jamais assimilée à une vente ou à un encaissement du jour dans la réconciliation (§6.1, §6.2, §6.4). Écriture immédiate, sans validation. Le cahier prévoit cette permission pour le Directeur des Opérations, l'Admin et le Super Admin ; en Production initiale, seul le profil Super Admin est préconfiguré par Mata Core (§6.1). Motif obligatoire, auteur et horodatage automatiques, audit de modification. Convention de signe (§4.3) : positif = le client doit à Mata.</div>
     <label class="rline"><input type="radio" name="fin-creances-mv" value="creance" checked>Créance sans vente<span class="rh">augmente la position du client</span></label>
     <label class="rline"><input type="radio" name="fin-creances-mv" value="rembours">Remboursement sans versement<span class="rh">diminue la position du client</span></label>
     <div class="fld" style="margin-top:10px"><label for="fin-creances-mv-cp">Contrepartie (Référentiel ERP)</label><select id="fin-creances-mv-cp" class="inp"></select></div>
@@ -150,7 +150,7 @@
     <div class="fld" style="margin-top:10px"><label for="fin-creances-mv-dt">Date métier</label><input id="fin-creances-mv-dt" class="inp mono" type="date" value="2026-08-27"></div>
     <div class="fld" style="margin-top:10px"><label for="fin-creances-mv-mo">Motif (obligatoire, audité)</label><input id="fin-creances-mv-mo" class="inp" placeholder="Ex. régularisation d'une livraison hors circuit Ventes Mata"></div>
     <div class="note-strip"><svg><use href="#i-alert"/></svg><span>Au-delà du seuil d'ajustement inhabituel, <span class="amt" data-amt="500000" data-nocur></span> par écriture ou 3 par jour, l'alerte critique non désactivable part au DG et au Super Admin. Elle ne bloque pas la saisie.</span></div>
-    <div class="note-strip" style="margin-top:10px"><svg><use href="#i-clock"/></svg><span><b>Circuit transitoire.</b> Décision de périmètre V1, hors cahier. Il disparaît une fois la refonte terminée, quand toutes les créances naîtront des ventes reçues de Ventes Mata, seule origine prévue par le cahier (§6.1).</span></div>
+    <div class="note-strip" style="margin-top:10px"><svg><use href="#i-clock"/></svg><span><b>Circuit transitoire.</b> Exception transitoire prévue par le cahier (§6.1). Elle disparaît une fois la refonte terminée, quand toutes les créances naîtront des ventes reçues de Ventes Mata, seule origine prévue par le cahier (§6.1).</span></div>
     <div class="acts"><button class="btn ghost" data-close>Annuler</button><button class="btn pri" data-perm="finance.creances.saisir" data-act="mv-ok"><svg><use href="#i-check"/></svg>Enregistrer</button></div>
   </div></div>
 
@@ -269,15 +269,15 @@ ERP.register('fin-creances', function (root, ctx) {
     var mt = parseInt(($('#fin-creances-mv-mt').value || '').replace(/\D/g, ''), 10), motif = $('#fin-creances-mv-mo').value.trim();
     if (!mt) { ctx.toast('Montant requis : entier positif en FCFA, sans décimales'); return; }
     if (!motif) { ctx.toast('Motif obligatoire : toute écriture manuelle est tracée dans l\'audit'); return; }
-    var rb = $('input[name="fin-creances-mv"]:checked').value === 'rembours', lbl = rb ? 'Remboursement' : 'Créance', part = rb ? 'saisi' : 'saisie';
+    var rb = $('input[name="fin-creances-mv"]:checked').value === 'rembours', lbl = rb ? 'Remboursement' : 'Créance', part = rb ? 'enregistré' : 'enregistrée';
     var dt = ($('#fin-creances-mv-dt').value || '').split('-').reverse().join('/');
     var tr = $('tr[data-ref="' + selMv.value + '"]', tbody), pos = num(tr, 'pos') + (rb ? -mt : mt);
     tr.setAttribute('data-pos', pos); setAmt($('[data-cell="pos"]', tr), pos); ctx.formatAmounts(tr);
     var cell = $('td', tr), old = $('[data-mv]', cell); if (old) old.remove();
-    cell.insertAdjacentHTML('beforeend', '<div data-mv><span class="st info">' + icon('note') + lbl + ' ' + part + ' · ' + dt + ' · ' + fmt(mt) + '</span> <span class="hint">' + esc(motif) + '</span></div>');
+    cell.insertAdjacentHTML('beforeend', '<div data-mv><span class="tag lock">Manuelle</span> <span class="st info">' + icon('note') + lbl + ' ' + part + ' · ' + dt + ' · ' + fmt(mt) + '</span> <span class="hint">' + esc(motif) + '</span></div>');
     applyFilter(); updateKpis();
     ctx.close('fin-creances-manuel'); $('#fin-creances-mv-mt').value = ''; $('#fin-creances-mv-mo').value = '';
-    ctx.toast(lbl + ' de ' + fmt(mt) + ' FCFA sur ' + tr.getAttribute('data-name') + ' · position portée à ' + fmt(pos) + ' FCFA · écriture directe sans validation, circuit transitoire V1 · created_at et updated_by automatiques, audit de modification.' + (mt > 500000 ? ' Au-delà du seuil de ' + fmt(500000) + ' FCFA : alerte « Ajustement inhabituel » au DG et au Super Admin (critique, non désactivable).' : ''));
+    ctx.toast(lbl + ' de ' + fmt(mt) + ' FCFA sur ' + tr.getAttribute('data-name') + ' · position portée à ' + fmt(pos) + ' FCFA · écriture directe sans validation, exception transitoire V1 (§6.1) · created_at et updated_by automatiques, audit de modification.' + (mt > 500000 ? ' Au-delà du seuil de ' + fmt(500000) + ' FCFA : alerte « Ajustement inhabituel » au DG et au Super Admin (critique, non désactivable).' : ''));
   }
   $$('.chip[data-filter]').forEach(function (c) {
     ctx.on(c, 'click', function () { $$('.chip[data-filter]').forEach(function (x) { x.classList.toggle('on', x === c); }); cur = c.getAttribute('data-filter'); applyFilter(); });

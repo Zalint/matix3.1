@@ -900,7 +900,7 @@ svg{display:block;flex:none}
       <div class="ratio" data-ratio-of="58330000">12,9 % du CA de référence · août au 27</div>
     </div>
     <div class="card kpi">
-      <div class="lb">Trésorerie nette fournisseur<span data-blind="f5"><button class="fx" data-f="Trésorerie totale contrôlée − Dettes fournisseurs. Le transit est inclus car il est considéré comme reçu avant le paiement fournisseur." data-c="61 305 000 − 23 250 000 · avances fournisseurs 350 000 affichées à part, hors calcul" data-src="Moteur financier · §8.1, §8.2" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></span></div>
+      <div class="lb">Tréso si paiement fournisseur<span data-blind="f5"><button class="fx" data-f="Trésorerie totale contrôlée − Dettes fournisseurs. Le transit est inclus car il est considéré comme reçu avant le paiement fournisseur." data-c="61 305 000 − 23 250 000 · avances fournisseurs 350 000 affichées à part, hors calcul" data-src="Moteur financier · §8.1, §8.2" aria-label="Voir la formule"><svg><use href="#i-info"/></svg></button></span></div>
       <div class="v amt" data-amt="38055000"></div>
       <div class="ratio" data-ratio-of="38055000">8,4 % du CA de référence · ce qui resterait si tous les fournisseurs étaient payés</div>
     </div>
@@ -909,7 +909,7 @@ svg{display:block;flex:none}
     <div class="ch"><h3>Évolution de la trésorerie — 30 derniers jours</h3><span class="hint-r">En millions de FCFA · cocher une ou plusieurs séries pour les comparer sur le même graphique · même moteur financier que Visualisation</span></div>
     <div class="cb">
       <div class="serpick">
-        <label><input type="checkbox" data-series-toggle="dispo" checked> Trésorerie disponible</label><label><input type="checkbox" data-series-toggle="transit"> Trésorerie en transit</label><label><input type="checkbox" data-series-toggle="treso" checked> Trésorerie totale contrôlée</label><label><input type="checkbox" data-series-toggle="netfou"> Trésorerie nette fournisseur</label><label><input type="checkbox" data-series-toggle="pfn"> Position financière nette</label>
+        <label><input type="checkbox" data-series-toggle="dispo" checked> Trésorerie disponible</label><label><input type="checkbox" data-series-toggle="transit"> Trésorerie en transit</label><label><input type="checkbox" data-series-toggle="treso" checked> Trésorerie totale contrôlée</label><label><input type="checkbox" data-series-toggle="netfou"> Tréso si paiement fournisseur</label><label><input type="checkbox" data-series-toggle="pfn"> Position financière nette</label>
       </div>
       <div class="multichart" data-series="dispo,treso" style="height:250px"></div>
     </div>
@@ -2109,7 +2109,7 @@ ERP.register('fin-fournisseurs', function (root, ctx) {
     var isDecl = ctx.profile.id === 'dirops';
     ['F4', 'F5'].forEach(function (id) {
       var c = card(id), p = q('[data-pos]', c), m = q('[data-mask]', c);
-      if (isDecl && !m) p.insertAdjacentHTML('afterend', '<span class="maskbox" data-mask><svg><use href="#i-lock"/></svg>Position <span class="dots">••••••••</span> jamais affichée, ni avant ni après (§3 durci en V1, §5.5)</span>'); else if (!isDecl && m) m.remove();
+      if (isDecl && !m) p.insertAdjacentHTML('afterend', '<span class="maskbox" data-mask><svg><use href="#i-lock"/></svg>Position <span class="dots">••••••••</span> jamais affichée, ni avant ni après (§3, §5.5)</span>'); else if (!isDecl && m) m.remove();
       p.hidden = isDecl; qa('.fx', c).forEach(function (b) { b.hidden = isDecl; });
       /* dette = max(0 ; −position) et son pourcentage redonnent la position masquée : les cacher aussi.
          On masque sans retirer les nœuds, recalc() continue d'y écrire. */
@@ -2266,7 +2266,7 @@ ERP.register('fin-fournisseurs', function (root, ctx) {
   <!-- Modale : saisie manuelle d'une créance ou d'un remboursement (R-10, circuit transitoire) -->
   <div class="mback" data-ov="fin-creances-manuel"><div class="modal" role="dialog" aria-modal="true" aria-label="Saisie manuelle d'un mouvement de position client">
     <h3><svg><use href="#i-note"/></svg>Saisie manuelle d'un mouvement</h3>
-    <div class="exp">Enregistre directement un mouvement sur la position d'un client, sans vente en amont pour une créance, sans versement en amont pour un remboursement. Écriture immédiate, sans validation : le Directeur des Opérations détient ce droit par défaut. Motif obligatoire, auteur et horodatage automatiques, audit de modification. Convention de signe (§4.3) : positif = le client doit à Mata.</div>
+    <div class="exp">Enregistre directement un mouvement sur la position d'un client, sans vente en amont pour une créance, sans encaissement en amont pour un remboursement. L'opération est marquée « Manuelle », ne passe pas par le compte Ajustement, et n'est jamais assimilée à une vente ou à un encaissement du jour dans la réconciliation (§6.1, §6.2, §6.4). Écriture immédiate, sans validation. Le cahier prévoit cette permission pour le Directeur des Opérations, l'Admin et le Super Admin ; en Production initiale, seul le profil Super Admin est préconfiguré par Mata Core (§6.1). Motif obligatoire, auteur et horodatage automatiques, audit de modification. Convention de signe (§4.3) : positif = le client doit à Mata.</div>
     <label class="rline"><input type="radio" name="fin-creances-mv" value="creance" checked>Créance sans vente<span class="rh">augmente la position du client</span></label>
     <label class="rline"><input type="radio" name="fin-creances-mv" value="rembours">Remboursement sans versement<span class="rh">diminue la position du client</span></label>
     <div class="fld" style="margin-top:10px"><label for="fin-creances-mv-cp">Contrepartie (Référentiel ERP)</label><select id="fin-creances-mv-cp" class="inp"></select></div>
@@ -2274,7 +2274,7 @@ ERP.register('fin-fournisseurs', function (root, ctx) {
     <div class="fld" style="margin-top:10px"><label for="fin-creances-mv-dt">Date métier</label><input id="fin-creances-mv-dt" class="inp mono" type="date" value="2026-08-27"></div>
     <div class="fld" style="margin-top:10px"><label for="fin-creances-mv-mo">Motif (obligatoire, audité)</label><input id="fin-creances-mv-mo" class="inp" placeholder="Ex. régularisation d'une livraison hors circuit Ventes Mata"></div>
     <div class="note-strip"><svg><use href="#i-alert"/></svg><span>Au-delà du seuil d'ajustement inhabituel, <span class="amt" data-amt="500000" data-nocur></span> par écriture ou 3 par jour, l'alerte critique non désactivable part au DG et au Super Admin. Elle ne bloque pas la saisie.</span></div>
-    <div class="note-strip" style="margin-top:10px"><svg><use href="#i-clock"/></svg><span><b>Circuit transitoire.</b> Décision de périmètre V1, hors cahier. Il disparaît une fois la refonte terminée, quand toutes les créances naîtront des ventes reçues de Ventes Mata, seule origine prévue par le cahier (§6.1).</span></div>
+    <div class="note-strip" style="margin-top:10px"><svg><use href="#i-clock"/></svg><span><b>Circuit transitoire.</b> Exception transitoire prévue par le cahier (§6.1). Elle disparaît une fois la refonte terminée, quand toutes les créances naîtront des ventes reçues de Ventes Mata, seule origine prévue par le cahier (§6.1).</span></div>
     <div class="acts"><button class="btn ghost" data-close>Annuler</button><button class="btn pri" data-perm="finance.creances.saisir" data-act="mv-ok"><svg><use href="#i-check"/></svg>Enregistrer</button></div>
   </div></div>
 
@@ -2393,15 +2393,15 @@ ERP.register('fin-creances', function (root, ctx) {
     var mt = parseInt(($('#fin-creances-mv-mt').value || '').replace(/\D/g, ''), 10), motif = $('#fin-creances-mv-mo').value.trim();
     if (!mt) { ctx.toast('Montant requis : entier positif en FCFA, sans décimales'); return; }
     if (!motif) { ctx.toast('Motif obligatoire : toute écriture manuelle est tracée dans l\'audit'); return; }
-    var rb = $('input[name="fin-creances-mv"]:checked').value === 'rembours', lbl = rb ? 'Remboursement' : 'Créance', part = rb ? 'saisi' : 'saisie';
+    var rb = $('input[name="fin-creances-mv"]:checked').value === 'rembours', lbl = rb ? 'Remboursement' : 'Créance', part = rb ? 'enregistré' : 'enregistrée';
     var dt = ($('#fin-creances-mv-dt').value || '').split('-').reverse().join('/');
     var tr = $('tr[data-ref="' + selMv.value + '"]', tbody), pos = num(tr, 'pos') + (rb ? -mt : mt);
     tr.setAttribute('data-pos', pos); setAmt($('[data-cell="pos"]', tr), pos); ctx.formatAmounts(tr);
     var cell = $('td', tr), old = $('[data-mv]', cell); if (old) old.remove();
-    cell.insertAdjacentHTML('beforeend', '<div data-mv><span class="st info">' + icon('note') + lbl + ' ' + part + ' · ' + dt + ' · ' + fmt(mt) + '</span> <span class="hint">' + esc(motif) + '</span></div>');
+    cell.insertAdjacentHTML('beforeend', '<div data-mv><span class="tag lock">Manuelle</span> <span class="st info">' + icon('note') + lbl + ' ' + part + ' · ' + dt + ' · ' + fmt(mt) + '</span> <span class="hint">' + esc(motif) + '</span></div>');
     applyFilter(); updateKpis();
     ctx.close('fin-creances-manuel'); $('#fin-creances-mv-mt').value = ''; $('#fin-creances-mv-mo').value = '';
-    ctx.toast(lbl + ' de ' + fmt(mt) + ' FCFA sur ' + tr.getAttribute('data-name') + ' · position portée à ' + fmt(pos) + ' FCFA · écriture directe sans validation, circuit transitoire V1 · created_at et updated_by automatiques, audit de modification.' + (mt > 500000 ? ' Au-delà du seuil de ' + fmt(500000) + ' FCFA : alerte « Ajustement inhabituel » au DG et au Super Admin (critique, non désactivable).' : ''));
+    ctx.toast(lbl + ' de ' + fmt(mt) + ' FCFA sur ' + tr.getAttribute('data-name') + ' · position portée à ' + fmt(pos) + ' FCFA · écriture directe sans validation, exception transitoire V1 (§6.1) · created_at et updated_by automatiques, audit de modification.' + (mt > 500000 ? ' Au-delà du seuil de ' + fmt(500000) + ' FCFA : alerte « Ajustement inhabituel » au DG et au Super Admin (critique, non désactivable).' : ''));
   }
   $$('.chip[data-filter]').forEach(function (c) {
     ctx.on(c, 'click', function () { $$('.chip[data-filter]').forEach(function (x) { x.classList.toggle('on', x === c); }); cur = c.getAttribute('data-filter'); applyFilter(); });
@@ -2650,7 +2650,7 @@ ERP.register('fin-creances', function (root, ctx) {
       <li><b>Position théorique des Fournisseurs</b> — recalculée à partir de la dernière position réconciliée, des paiements/avances et des dépenses. AGNEAUX (F1) passe à <span class="amt" data-amt="-12400000" data-nocur></span> FCFA après l'achat du jour, validé sans écart ; les 6 fournisseurs se répartissent en 3 validés, 2 en attente, 1 sans mouvement (§5.5).</li>
       <li><b>Fraîcheur des sources</b> — le bandeau affiche 7 sources à l'état OK (Ventes Mata 20:30, Bictorys 08:12…) ; une source Manquante, en Erreur ou Non à jour bloquerait l'auto-validation mais resterait visible avec son horodatage (§6.5).</li>
     </ul>
-    <div class="note-strip"><svg><use href="#i-shield"/></svg>Réconciliation en aveugle : le solde théorique et l'écart ne vous sont jamais affichés sur un périmètre que vous devez déclarer, ni avant ni après votre déclaration (§3, durci en V1). Les périmètres dont vous n'êtes pas le déclarant restent visibles.</div>
+    <div class="note-strip"><svg><use href="#i-shield"/></svg>Réconciliation en aveugle : le solde théorique et l'écart ne vous sont jamais affichés sur un périmètre que vous devez déclarer, ni avant ni après votre déclaration (§3). Les périmètres dont vous n'êtes pas le déclarant restent visibles.</div>
     <div class="hint">Sources : Cahier Mata Finance §3.1, §4.8, §5.5, §6.3, §6.4, §6.5</div>
     <div class="acts"><button class="btn ghost" data-close>Fermer</button></div>
   </div></div>
@@ -2834,7 +2834,7 @@ ERP.register('fin-reconciliation', function (root, ctx) {
         <div class="ch"><h3>Caisse générale</h3><span data-st-head="cg"><span class="st mut"><svg><use href="#i-eyeoff"/></svg>À déclarer</span></span><span class="hint-r">CG · Trésorerie · CALCULÉ · a bougé aujourd'hui · dernière réconciliation 26/08</span></div>
         <div class="cb">
           <div data-form="cg">
-            <div class="maskbox"><svg><use href="#i-lock"/></svg>Solde système <span class="dots">••••••••</span> jamais affiché, ni avant ni après votre déclaration (§3, durci en V1)</div>
+            <div class="maskbox"><svg><use href="#i-lock"/></svg>Solde système <span class="dots">••••••••</span> jamais affiché, ni avant ni après votre déclaration (§3)</div>
             <div class="declform">
               <div class="fld"><label for="fin-declarations-cg-montant">Solde réellement détenu (compté)</label><input id="fin-declarations-cg-montant" class="inp mono" inputmode="numeric" placeholder="Montant compté, FCFA sans décimales" data-inp="cg"></div>
               <div class="fld"><label for="fin-declarations-cg-note">Commentaire (facultatif)</label><input id="fin-declarations-cg-note" class="inp" placeholder="Ex. : comptage à deux, coffre vérifié"></div>
@@ -2844,7 +2844,7 @@ ERP.register('fin-reconciliation', function (root, ctx) {
           </div>
           <div data-res="cg" hidden>
             <div class="declres two"><div><div class="k">Votre déclaration</div><div class="val" data-r-decl></div></div><div><div class="k">Statut</div><div class="val sm" data-r-st></div></div></div>
-            <div class="maskbox" style="margin-top:10px"><svg><use href="#i-lock"/></svg>Solde système et écart <span class="dots">••••••••</span> jamais affichés au déclarant, ni avant ni après (§3, durci en V1)</div>
+            <div class="maskbox" style="margin-top:10px"><svg><use href="#i-lock"/></svg>Solde système et écart <span class="dots">••••••••</span> jamais affichés au déclarant, ni avant ni après (§3)</div>
             <div class="actionbar"><span class="hint" data-after-ok>Votre déclaration est égale au solde système : le compte est réconcilié. Le montant comparé ne vous est pas communiqué (§3).</span><span class="hint" data-after-ko hidden>Votre déclaration diffère du solde système : le compte reste « À réconcilier » et l'écart est investigué par l'Admin, le DG et le Collecteur, seuls destinataires du montant. Une correction éventuelle passe par Ajustement (motif obligatoire, deux validateurs distincts, §4.7).</span><div class="sp"></div><button class="btn ghost" data-goto="fin-reconciliation" data-after-ko hidden><svg><use href="#i-search"/></svg>Investiguer</button><button class="btn pri" data-perm="finance.ajustements.initier" data-goto="fin-reconciliation" data-after-ko hidden><svg><use href="#i-scale"/></svg>Corriger par Ajustement</button></div>
           </div>
         </div>
@@ -2879,7 +2879,7 @@ ERP.register('fin-reconciliation', function (root, ctx) {
       <div class="cb">
         <div class="fcode" style="margin-top:0">Somme des versements déclarés = Montant déclaré par le collecteur</div>
         <div data-form="collecte">
-          <div class="maskbox" style="margin-top:12px"><svg><use href="#i-lock"/></svg>Source A · Σ des 12 déclarations MaaS <span class="dots">••••••••</span> jamais affichée, ni avant ni après votre déclaration (§3, durci en V1)</div>
+          <div class="maskbox" style="margin-top:12px"><svg><use href="#i-lock"/></svg>Source A · Σ des 12 déclarations MaaS <span class="dots">••••••••</span> jamais affichée, ni avant ni après votre déclaration (§3)</div>
           <div class="declform">
             <div class="fld"><label for="fin-declarations-col-montant">Montant total collecté (Source B)</label><input id="fin-declarations-col-montant" class="inp mono" inputmode="numeric" placeholder="Montant remis en Caisse, FCFA" data-inp="collecte"></div>
             <div class="fld"><label for="fin-declarations-col-date">Date métier de la collecte · 12 MaaS</label><input id="fin-declarations-col-date" class="inp" value="27/08/2026" disabled></div>
@@ -2889,7 +2889,7 @@ ERP.register('fin-reconciliation', function (root, ctx) {
         </div>
         <div data-res="collecte" hidden>
           <div class="declres two" style="margin-top:12px"><div><div class="k">Source B · votre déclaration</div><div class="val" data-r-decl></div></div><div><div class="k">Statut</div><div class="val sm" data-r-st></div></div></div>
-          <div class="maskbox" style="margin-top:10px"><svg><use href="#i-lock"/></svg>Source A et écart <span class="dots">••••••••</span> jamais affichés à la Source B, ni avant ni après (§3 durci en V1, §6.3)</div>
+          <div class="maskbox" style="margin-top:10px"><svg><use href="#i-lock"/></svg>Source A et écart <span class="dots">••••••••</span> jamais affichés à la Source B, ni avant ni après (§3, §6.3)</div>
           <div class="actionbar"><span class="hint" data-after-ok>Les deux sources concordent : la collecte sera validée automatiquement vers 02:00, la Caisse générale créditée et les remboursements affectés aux 12 comptes clients MaaS. Le montant de la Source A ne vous est pas communiqué (§3, §6.3).</span><span class="hint" data-after-ko hidden>Les deux sources divergent : aucune auto-validation possible, la collecte reste ouverte. Le montant de l'écart part à l'Admin et au DG (règle critique non désactivable) et l'investigation est menée hors de votre vue.</span><div class="sp"></div><button class="btn ghost" data-goto="fin-reconciliation" data-after-ko hidden><svg><use href="#i-search"/></svg>Investiguer</button></div>
         </div>
       </div>
@@ -2932,7 +2932,7 @@ ERP.register('fin-reconciliation', function (root, ctx) {
       <div class="ch"><h3>Sous-caisse Livraisons</h3><span class="st ok"><svg><use href="#i-check"/></svg>Réconciliée 20:48</span><span class="hint-r">SCL · Trésorerie · déclarée par F. Sarr · solde système et écart jamais affichés au déclarant (§3)</span></div>
       <div class="cb">
         <div class="declres two"><div><div class="k">Votre déclaration</div><div class="val"><span class="amt" data-amt="640000" data-nocur></span></div></div><div><div class="k">Statut</div><div class="val sm">Réconciliée</div></div></div>
-        <div class="maskbox" style="margin-top:10px"><svg><use href="#i-lock"/></svg>Solde système et écart <span class="dots">••••••••</span> jamais affichés au déclarant, ni avant ni après (§3, durci en V1)</div>
+        <div class="maskbox" style="margin-top:10px"><svg><use href="#i-lock"/></svg>Solde système et écart <span class="dots">••••••••</span> jamais affichés au déclarant, ni avant ni après (§3)</div>
         <div class="note-strip" style="margin-top:12px"><svg><use href="#i-alert"/></svg><span><b>Clôture du périmètre suspendue.</b> La dépense « Pas sûr » Carburant véhicule livraison (<span class="amt" data-amt="85000" data-nocur></span>, montant payé inconnu) bloque uniquement le périmètre Sous-caisse Livraisons ; notification à 23:00 au Directeur des Opérations, aux Admins et au Super Admin si non résolue (§5.1).</span></div>
         <div class="actionbar"><div class="sp"></div><button class="btn ghost" data-goto="fin-depenses" data-perm="finance.depenses.modifier"><svg><use href="#i-receipt"/></svg>Résoudre la dépense « Pas sûr »</button></div>
       </div>
@@ -5889,7 +5889,7 @@ ERP.register('core-utilisateurs', function (root, ctx) {
   function audit(u) { return u.audit || 'Aucune attribution de droit enregistrée le 27/08 pour ' + u.s + ' · profil en vigueur avant la journée · historique complet dans l’Audit central (§5.4).'; }
   function tagsHtml(u) { return u.cats.map(function (c) { return '<span class="tag lock"><svg><use href="#i-' + (IC[c] || 'user') + '"/></svg>' + esc(c) + '</span>'; }).join(''); }
   function dj(d) { return d < 0 ? 'expiré' : d === 0 ? 'expire aujourd’hui' : 'dans ' + d + ' jour' + (d > 1 ? 's' : ''); }
-  var SELF = 'Refus : désactivation de son propre compte non autorisée (hypothèse maquette, hors cahier) · un autre acteur habilité doit agir';
+  var SELF = 'Refus : désactivation de son propre compte non autorisée (hypothèse maquette : le cahier ne tranche pas ce cas) · un autre acteur habilité doit agir';
   function perms() { ctx.applyPerms(); qa('[data-deact]').forEach(function (b) { var u = U[b.getAttribute('data-u') || cur]; if (u && u.n === ctx.profile.user && !b.classList.contains('denied')) { b.disabled = true; b.classList.add('denied'); b.title = SELF; } }); }
   function expHtml(u) { return u.temp ? '<span class="expire"><svg><use href="#i-clock"/></svg>expire le ' + u.temp.fin + ' · ' + dj(u.temp.days) + '</span>' : '<span class="hint">—</span>'; }
   function stHtml(u) { return u.st === 'actif' ? '<span class="st ok"><svg><use href="#i-check"/></svg>Actif</span>' : '<span class="st bad"><svg><use href="#i-eyeoff"/></svg>Désactivé</span><div class="hint">le ' + u.since + ' · jamais supprimé</div>'; }
@@ -7343,7 +7343,7 @@ ERP.register('core-audit', function (root, ctx) {
           <li><svg><use href="#i-clock"/></svg><span><b>Override temporaire.</b> Un modèle plus coûteux peut être choisi pour une requête ou une période limitée ; l'override est audité, expire automatiquement et revient au routage par défaut ; le plafond reste applicable sauf relèvement explicite.</span></li>
           <li><svg><use href="#i-layers"/></svg><span><b>Sobriété V1.</b> Aucun agent n'exploite de base vectorielle dédiée, ni d'indexation sémantique globale, ni de conservation massive des conversations pour créer une mémoire implicite ; seules les traces nécessaires à l'audit et les données explicitement utiles sont conservées (Technique §10).</span></li>
           <li><svg><use href="#i-scale"/></svg><span><b>Principe : si une règle déterministe suffit, ne pas utiliser l'IA.</b> Le routage privilégie par défaut le modèle répondant au besoin au coût le plus faible.</span></li>
-          <li><svg><use href="#i-sliders"/></svg><span><b>Création guidée, modèle proposé, remplacement à deux validations.</b> Décision de périmètre V1, hors cahier : l'agent n'est plus configuré librement. Le besoin est décrit en français, rapproché de la grille « types de tâches → modèles » tenue dans les Paramètres, et le modèle le moins cher capable de la tâche est proposé ; le remplacer demande deux détenteurs de core.agents.budget, distincts de l'initiateur et distincts entre eux, l'agent restant inactif jusqu'à la seconde validation. Dans la matrice de démonstration, seul le profil Super Admin détient cette permission (FIXTURES §2) : la seconde validation ne peut donc pas être acquise tant qu'un second détenteur n'est pas désigné.</span></li>
+          <li><svg><use href="#i-sliders"/></svg><span><b>Création guidée, modèle proposé, remplacement à deux validations.</b> Le cahier (Core §7.2) pose la création guidée : l'agent n'est plus configuré librement. Le besoin est décrit en français, rapproché de la grille « types de tâches → modèles » tenue dans les Paramètres, et le modèle le moins cher capable de la tâche est proposé ; le remplacer demande deux détenteurs de core.agents.budget, distincts de l'initiateur et distincts entre eux, l'agent restant inactif jusqu'à la seconde validation. Dans la matrice de démonstration, seul le profil Super Admin détient cette permission (FIXTURES §2) : la seconde validation ne peut donc pas être acquise tant qu'un second détenteur n'est pas désigné.</span></li>
           <li><svg><use href="#i-alert"/></svg><span><b>Écriture encadrée.</b> Un agent ayant des droits d'écriture doit passer en Test/Recette avant Production ; le Conseiller financier ne modifie pas directement les écritures financières et ne dispose pas d'une console SQL utilisateur (Finance §9.3).</span></li>
         </ul>
         <div class="note-strip"><svg><use href="#i-info"/></svg><span><b>Compromis assumé</b> (Technique §10) : sans base vectorielle ni indexation sémantique, un agent ne peut pas retrouver rapidement des situations passées similaires par recherche floue ; il raisonne sur les données structurées interrogées à la demande. Acceptable au volume actuel ; à revisiter explicitement, agent par agent, si l'usage évolue.</span></div>
@@ -7377,7 +7377,7 @@ ERP.register('core-audit', function (root, ctx) {
     <h3><svg><use href="#i-bot"/></svg>Nouvel agent — parcours guidé</h3>
     <ol class="steps" data-w="steps"><li class="on">Besoin</li><li>Modèle</li><li>Création</li></ol>
     <div data-pane="1">
-      <div class="exp">Décrivez en français ce que l'agent doit faire. L'application rapproche cette description de la grille « types de tâches → modèles » tenue dans les Paramètres et modifiable sans redéploiement : aucun modèle n'est appelé à ce stade, la reconnaissance est faite par l'application (périmètre V1, hors cahier).</div>
+      <div class="exp">Décrivez en français ce que l'agent doit faire. L'application rapproche cette description de la grille « types de tâches → modèles » tenue dans les Paramètres et modifiable sans redéploiement : aucun modèle n'est appelé à ce stade, la reconnaissance est faite par l'application (Core §6.4, §7.2).</div>
       <div class="fld"><label for="core-agents-n-name">Nom de l'agent</label><input id="core-agents-n-name" class="inp" data-n="name" placeholder="Ex. Assistant échéances fournisseurs"></div>
       <div class="fld"><label for="core-agents-n-need">Ce que l'agent doit faire</label><textarea id="core-agents-n-need" class="inp" rows="3" data-n="need" placeholder="Ex. répondre aux questions sur les échéances fournisseurs et signaler celles qui sont dépassées"></textarea><span class="hint">Phrase libre · sert à reconnaître le type de tâche · conservée dans la fiche registre et dans l'audit</span></div>
       <div class="note-strip"><svg><use href="#i-lock"/></svg><span><b>Lecture seule, borné à votre périmètre.</b> Un agent IA est une API de lecture uniquement, bornée au périmètre de l'utilisateur qui l'interroge (§7.2, §10.2). Le parcours ne crée donc que des agents de catégorie Conseiller, autonomie Conseil, sans aucune écriture : ces trois points ne sont pas modifiables ici, et les droits effectifs restent l'intersection avec ceux du profil qui pose la question.</span></div>
@@ -7422,8 +7422,8 @@ ERP.register('core-audit', function (root, ctx) {
     <ul class="help-list">
       <li><b>Deux catégories, mais création en lecture seule.</b> Le registre distingue Conseiller (consulte, recommande, jamais d'écriture directe) et Exécutant (uniquement les actions explicitement autorisées) : 2 Conseillers et 1 Exécutant sur 3 agents ; AG-02, seul Exécutant, reste en Test / Recette avant Production et n'a pas de console SQL (§7.2, Finance §9.3). Un agent IA étant une API de lecture uniquement bornée au périmètre de l'utilisateur, le parcours de création ne produit que des Conseillers en lecture (§7.2, §10.2).</li>
       <li><b>Interrogation à la demande uniquement.</b> Aucun agent n'est appelé automatiquement par un écran (dashboard, rafraîchissement de KPI) : le compteur « Requêtes déclenchées par un écran » reste à 0 (§7.2).</li>
-      <li><b>Le besoin est décrit, l'application propose le modèle.</b> Décision de périmètre V1, hors cahier : au lieu de configurer l'agent librement, on écrit en français ce qu'il doit faire. L'application rapproche cette phrase de la grille « types de tâches → modèles » tenue dans les Paramètres et modifiable sans redéploiement, puis propose le modèle le moins cher capable de la tâche, en montrant le type reconnu, la capacité requise et le rang de coût. Aucun modèle n'est appelé pour cette analyse ; la liste des modèles et leurs coûts viennent de Mata Core.</li>
-      <li><b>Remplacer le modèle proposé demande deux validations.</b> Décision de périmètre V1, hors cahier : si l'on retient un autre modèle que celui proposé, deux détenteurs de core.agents.budget, distincts de l'initiateur et distincts l'un de l'autre, doivent valider. L'agent est créé Inactif et le reste tant que la deuxième validation n'est pas acquise. Dans la matrice de démonstration, seul le Super Admin détient cette permission (FIXTURES §2) : le parcours montre les deux refus (initiateur, permission absente) mais ne peut pas aller jusqu'à la seconde validation.</li>
+      <li><b>Le besoin est décrit, l'application propose le modèle.</b> Création guidée prévue par le cahier (Core §7.2) : au lieu de configurer l'agent librement, on écrit en français ce qu'il doit faire. L'application rapproche cette phrase de la grille « types de tâches → modèles » tenue dans les Paramètres et modifiable sans redéploiement, puis propose le modèle le moins cher capable de la tâche, en montrant le type reconnu, la capacité requise et le rang de coût. Aucun modèle n'est appelé pour cette analyse ; la liste des modèles et leurs coûts viennent de Mata Core.</li>
+      <li><b>Remplacer le modèle proposé demande deux validations.</b> Le cahier (Core §7.2) l'exige : si l'on retient un autre modèle que celui proposé, deux détenteurs de core.agents.budget, distincts de l'initiateur et distincts l'un de l'autre, doivent valider. L'agent est créé Inactif et le reste tant que la deuxième validation n'est pas acquise. Dans la matrice de démonstration, seul le Super Admin détient cette permission (FIXTURES §2) : le parcours montre les deux refus (initiateur, permission absente) mais ne peut pas aller jusqu'à la seconde validation.</li>
       <li><b>Budget mensuel plafond.</b> Au-delà de son plafond, un agent cesse de répondre jusqu'au mois suivant ou jusqu'à relèvement explicite. AG-01 a consommé <span class="amt" data-amt="93000" data-nocur></span> sur <span class="amt" data-amt="150000" data-nocur></span> en août, soit 62 % (§7.2).</li>
       <li><b>Droits effectifs = droits de l'agent ∩ droits du profil utilisateur.</b> La ligne « Droits effectifs pour vous » de chaque carte recalcule ce croisement pour le profil actif ; sensibilité, validation et audit restent applicables (§10.2).</li>
       <li><b>Override temporaire de modèle.</b> Un utilisateur autorisé force un modèle plus coûteux pour une requête ou une durée limitée ; le retour au modèle par défaut est automatique. 1 override est actif : AG-01, modèle avancé, jusqu'au 27/08 · 18:00 (Technique §10).</li>
@@ -7446,7 +7446,7 @@ ERP.register('core-agents', function (root, ctx) {
   };
   var clock = 21 * 60 + 30, cur = 'AG-01', seq = 4, ls = 1, W = { g: null };
   var MODELS = [{ n: 'Économique', c: 'rang 1 · coût le plus faible du référentiel' }, { n: 'Modèle avancé', c: 'rang 2 · plus coûteux' }]; // Référentiel des modèles : Mata Core (FIXTURES §11) ; aucun coût unitaire n'y est publié, seul l'ordre de coût est affiché.
-  var GRID = [ // Grille types de tâches → modèles, tenue dans les Paramètres, modifiable sans redéploiement (périmètre V1, hors cahier).
+  var GRID = [ // Grille types de tâches → modèles, tenue dans les paramètres transverses de Mata Core avec le catalogue des modèles et leurs coûts de référence, modifiable sans redéploiement (Core §6.4).
     { t: 'Conseil et analyse financière', cap: 'Restitution et synthèse de données financières déjà structurées', m: 'Économique', mod: 'Mata Finance (lecture)', k: /financ|trésor|tresor|dépens|depens|fournis|créanc|creanc|p&l|kpi|analys|conseil|échéanc|echeanc|budget|marge|solde/gi },
     { t: 'Préparation de réconciliation', cap: 'Rapprochement de deux jeux de lignes et mise en évidence des écarts', m: 'Économique', mod: 'Mata Finance (réconciliation)', k: /réconcil|reconcil|rapproch|écart|ecart|caisse|encaiss|déclar|declar|relevé|releve/gi },
     { t: 'Assistance aux demandes administratives', cap: 'Classement d\'une demande et rédaction courte', m: 'Économique', mod: 'Mata Core (Demandes)', k: /demande|administrat|utilisateur|habilitation|profil|entité|entite|client/gi }];
@@ -7499,7 +7499,7 @@ ERP.register('core-agents', function (root, ctx) {
     a.ov = { model: model, until: dur ? (d === 'close' ? '27/08 · 23:59' : hm(clock + Number(d))) : '', by: ctx.profile.short, scope: dur ? 'durée' : 'requête' }; log(id, 'Override modèle agent : ' + model.toLowerCase() + (dur ? ' jusqu\'au ' + a.ov.until : ' pour une requête') + ' · motif : ' + why + ' · Sensible', true);
     q('[data-o="why"]').value = ''; paint(id); stats(); if (q('[data-ov="core-agents-fiche"]').classList.contains('on')) fiche(id); ctx.close('core-agents-override'); ctx.toast(id + ' : ' + a.ov.model + (dur ? ' jusqu\'au ' + a.ov.until : ' pour la prochaine requête') + ' · expire automatiquement · audité · le plafond reste applicable' + (capped(a) ? ' (atteint : l\'agent ne répond plus)' : ''));
   }
-  function wWarn() { var sel = q('[data-n="model"]').value, dif = W.g && sel !== W.g.m, w = q('[data-w="warn"]'); w.hidden = !dif; if (dif) w.innerHTML = '<svg><use href="#i-alert"/></svg><div><b>Remplacement du modèle proposé</b> : ' + esc(W.g.m) + ' → ' + esc(sel) + ' (' + esc(costOf(sel)) + '). Deux détenteurs de la permission core.agents.budget, distincts de vous et distincts entre eux, devront valider ce remplacement ; l\'agent est créé et reste inactif tant que la deuxième validation n\'est pas acquise (périmètre V1, hors cahier).</div>'; }
+  function wWarn() { var sel = q('[data-n="model"]').value, dif = W.g && sel !== W.g.m, w = q('[data-w="warn"]'); w.hidden = !dif; if (dif) w.innerHTML = '<svg><use href="#i-alert"/></svg><div><b>Remplacement du modèle proposé</b> : ' + esc(W.g.m) + ' → ' + esc(sel) + ' (' + esc(costOf(sel)) + '). Deux détenteurs de la permission core.agents.budget, distincts de vous et distincts entre eux, devront valider ce remplacement ; l\'agent est créé et reste inactif tant que la deuxième validation n\'est pas acquise (Core §6.4, §7.2).</div>'; }
   function wNext() { if (W.step === 1) wAnalyse(); else wStep(3); }
   function pendOk(id) { var a = A[id], pd = a.pend; if (pd.vs.indexOf(ctx.profile.short) < 0) pd.vs.push(ctx.profile.short); log(id, 'Validation du remplacement de modèle ' + pd.from + ' → ' + pd.to + ' (' + pd.vs.length + '/2) · Sensible', true); if (pd.vs.length >= 2) { a.model = pd.to; a.pend = null; ctx.toast(id + ' : remplacement ' + pd.from + ' → ' + pd.to + ' acquis · deux validations distinctes de l\'initiateur et entre elles · l\'agent peut être activé'); } else ctx.toast(id + ' : 1re validation enregistrée · une seconde, par un autre détenteur de core.agents.budget, reste requise · l\'agent reste inactif'); paint(id); stats(); if (q('[data-ov="core-agents-fiche"]').classList.contains('on')) fiche(id); }
   function wStep(n) {
@@ -7901,7 +7901,7 @@ ERP.register('core-notifications', function (root, ctx) {
     <button class="btn ghost" data-goto="core-notifications" data-perm="core.notifications.view"><svg><use href="#i-inbox"/></svg>Centre de notifications</button>
     <button class="btn ghost" data-goto="core-parametres" data-perm="core.parametres.view"><svg><use href="#i-sliders"/></svg>Seuils (Paramètres)</button>
   </div>
-  <div class="note-strip" style="margin-top:0"><svg><use href="#i-info"/></svg><span><b>Cet écran configure les règles, il n'en crée pas.</b> Le catalogue est fermé en V1, par décision de périmètre : les 10 règles définies au cahier (Core §6.1) sont livrées telles quelles, sans création ni suppression ; seules l'activation et la désactivation motivée se règlent ici. La boîte de réception est le <button class="linkish" data-goto="core-notifications" data-perm="core.notifications.view">centre de notifications</button> ; les seuils (gel 23:59, notification « Pas sûr » 23:00, relais ancien 2 jours, ajustement inhabituel <span class="amt" data-amt="500000" data-nocur></span> et 3 par jour, sauvegarde tous les 3 jours) sont des paramètres transverses réglés dans <button class="linkish" data-goto="core-parametres" data-perm="core.parametres.view">Paramètres</button> (Core §6.4, §17), jamais ici.</span></div>
+  <div class="note-strip" style="margin-top:0"><svg><use href="#i-info"/></svg><span><b>Cet écran configure les règles, il n'en crée pas.</b> Le catalogue est fermé en V1 par le cahier lui-même (Finance §10.4, Core §6.1) : les 10 règles y sont définies et livrées telles quelles, sans création ni suppression ; seules l'activation et la désactivation motivée se règlent ici. La boîte de réception est le <button class="linkish" data-goto="core-notifications" data-perm="core.notifications.view">centre de notifications</button> ; les seuils (gel 23:59, notification « Pas sûr » 23:00, relais ancien 2 jours, ajustement inhabituel <span class="amt" data-amt="500000" data-nocur></span> et 3 par jour, sauvegarde tous les 3 jours) sont des paramètres transverses réglés dans <button class="linkish" data-goto="core-parametres" data-perm="core.parametres.view">Paramètres</button> (Core §6.4, §17), jamais ici.</span></div>
 
   <div class="grid2">
     <div>
@@ -8045,7 +8045,7 @@ ERP.register('core-notifications', function (root, ctx) {
       <li><b>Signaux de qualité financière</b> — le Dashboard et les notifications doivent rendre visibles les signaux de qualité (écarts, dépenses Pas sûr, sources non à jour, ajustements inhabituels, échéances dépassées, corrections post-clôture) ; ceux couverts par une règle sont horodatés dès qu'ils surviennent, comme les <b>4</b> déclenchements du 27/08 — 21:15 Écart de réconciliation, 17:30 Échéance fournisseur dépassée, 15:24 Plafond d'encours dépassé, 12:00 Relais ouvert au-delà du seuil (§10.4).</li>
       <li><b>Dépense « Pas sûr » à 23:00</b> — s'il reste une dépense du jour « Pas sûr », une notification part à 23:00 vers le Directeur des Opérations, les Admins concernés et le Super Admin, avec accès à la liste à résoudre : ici Carburant véhicule livraison <span class="amt" data-amt="85000" data-nocur></span> (Sous-caisse Livraisons) (§5.2).</li>
       <li><b>Relais ouvert au-delà du seuil</b> — un solde relais resté ouvert au-delà d'un seuil configurable génère une alerte : « Bictorys → Banque en cours » <span class="amt" data-amt="350000" data-nocur></span>, créé 24/08, âge 3 jours au-dessus du seuil de 2 jours (§4.6).</li>
-      <li><b>Catalogue fermé en V1</b> — les 10 règles listées sont celles définies au cahier (§6.1). Décision de périmètre V1, hors cahier : aucune règle ne peut être ajoutée ni supprimée. Restent configurables l'activation, la désactivation motivée et les seuils, ces derniers réglés dans Paramètres (§6.4).</li>
+      <li><b>Catalogue fermé en V1</b> — les 10 règles listées sont celles définies au cahier, qui pose lui-même que cette liste constitue le catalogue V1 et qu'aucune règle ne peut être ajoutée ni supprimée (Finance §10.4, Core §6.1). Restent configurables l'activation, la désactivation motivée et les seuils, ces derniers réglés dans Paramètres (§6.4).</li>
       <li><b>Plafond d'encours dépassé</b> — un dépassement du plafond fournisseur déclenche une alerte informative sans bloquer la saisie : AGNEAUX, dette <span class="amt" data-amt="12400000" data-nocur></span> pour un plafond de <span class="amt" data-amt="10000000" data-nocur></span> (§5.4).</li>
     </ul>
     <div class="note-strip"><svg><use href="#i-shield"/></svg><b>Refus par défaut.</b> Consulter et modifier sont deux permissions distinctes : le DG consulte les règles, seul le Super Admin les active ou les désactive avec motif — sans jamais en créer, le catalogue étant fermé en V1.</div>
@@ -9628,7 +9628,7 @@ var SERIES={
 var AV_F=0.35,AV_C=0.15;
 function derive(f){return SERIES.treso.v.map(function(t,i){return +f(t,i).toFixed(3);});}
 SERIES.dispo={name:'Trésorerie disponible',c:'--d2',dash:false,v:derive(function(t,i){return t-SERIES.transit.v[i];})};
-SERIES.netfou={name:'Trésorerie nette fournisseur',c:'--d2',dash:true,v:derive(function(t,i){return t-SERIES.dettes.v[i];})};
+SERIES.netfou={name:'Tréso si paiement fournisseur',c:'--d2',dash:true,v:derive(function(t,i){return t-SERIES.dettes.v[i];})};
 SERIES.pfn={name:'Position financière nette',c:'--d1',dash:true,v:derive(function(t,i){return t+AV_F+SERIES.creances.v[i]-SERIES.dettes.v[i]-AV_C;})};
 var NS='http://www.w3.org/2000/svg';
 function E(n,a){var el=document.createElementNS(NS,n);for(var k in a)el.setAttribute(k,a[k]);return el;}
